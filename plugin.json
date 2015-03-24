@@ -1,0 +1,26 @@
+{
+    "label": {
+        "de": "Backend Bestellungen erstellen",
+        "en": "Create Backend order"
+    },
+    "copyright": "(c) by shopware AG",
+    "license": "proprietary",
+    "link": "http://store.shopware.com",
+    "author": "shopware AG",
+
+    "currentVersion": "1.0.0",
+
+    "changelog": {
+        "de": {
+        },
+        "en": {
+        }
+    },
+
+    "compatibility": {
+        "minimumVersion": "5.0.0",
+        "maximumVersion": null,
+        "blacklist": [
+        ]
+    }
+}
