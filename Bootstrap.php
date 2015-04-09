@@ -178,8 +178,8 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_Backend_Customer_ValidateEmail',
-                'onValidateEmail'
+                'Enlight_Controller_Action_PostDispatch_Backend_Customer',
+                'onPostDispatchCustomer'
         );
 
         // Register AboCommerce-Resource
@@ -195,14 +195,17 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
      * @param Enlight_Event_EventArgs $arguments
      * @return bool
      */
-    public function onValidateEmail(Enlight_Event_EventArgs $arguments)
+    public function onPostDispatchCustomer(Enlight_Event_EventArgs $arguments)
     {
         $mail = $arguments->getSubject()->Request()->getParam('value');
+        $action = $arguments->getSubject()->Request()->getParam('action');
 
-        if ($this->Config()->get('validationMail') == $mail) {
-            Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
-            echo true;
-            return true;
+        if ( !empty($mail) && $action !== 'validateEmail') {
+            if ($this->Config()->get('validationMail') == $mail) {
+                Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
+                echo true;
+                return true;
+            }
         }
     }
 
