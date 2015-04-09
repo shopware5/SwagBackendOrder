@@ -173,8 +173,8 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_PostDispatch_Backend_Customer',
-                'onCustomerPostDispatch'
+                'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer',
+                'onCustomerPostDispatchSecure'
         );
 
         $this->subscribeEvent(
@@ -250,7 +250,7 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
      *
      * @param Enlight_Event_EventArgs $args
      */
-    public function onCustomerPostDispatch(Enlight_Event_EventArgs $args)
+    public function onCustomerPostDispatchSecure(Enlight_Event_EventArgs $args)
     {
         $view = $args->getSubject()->View();
 
