@@ -163,29 +163,29 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
     private function registerEvents()
     {
         $this->subscribeEvent(
-                'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagCreateBackendOrder',
-                'onGetBackendController'
+            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagCreateBackendOrder',
+            'onGetBackendController'
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_PostDispatch_Backend_Order',
-                'onOrderPostDispatch'
+            'Enlight_Controller_Action_PostDispatch_Backend_Order',
+            'onOrderPostDispatch'
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer',
-                'onCustomerPostDispatchSecure'
+            'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer',
+            'onCustomerPostDispatchSecure'
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_PostDispatch_Backend_Customer',
-                'onPostDispatchCustomer'
+            'Enlight_Controller_Action_PostDispatch_Backend_Customer',
+            'onPostDispatchCustomer'
         );
 
         // Register AboCommerce-Resource
         $this->subscribeEvent(
-                'Enlight_Bootstrap_InitResource_CreateBackendOrder',
-                'onInitCreateBackendOrderResource'
+            'Enlight_Bootstrap_InitResource_CreateBackendOrder',
+            'onInitCreateBackendOrderResource'
         );
     }
 
