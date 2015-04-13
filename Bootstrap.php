@@ -33,6 +33,7 @@
 class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
     extends Shopware_Components_Plugin_Bootstrap
 {
+    //@TODO: plugin json
     /**
      * returns the label
      *
@@ -42,7 +43,7 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
     {
         $pluginJson = $this->getPluginJson();
 
-        return $pluginJson['label'];
+        return $pluginJson['label']['de'];
     }
 
     /**
@@ -68,18 +69,6 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
             'supplier' => 'shopware AG',
             'description' => 'Ermöglicht es Bestellungen über das Backend zu erstellen.',
             'link' => 'www.shopware.com'
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getCapabilities()
-    {
-        return array(
-            'install' => true,
-            'update' => true,
-            'enable' => true
         );
     }
 
@@ -174,23 +163,29 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
     private function registerEvents()
     {
         $this->subscribeEvent(
-                'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagCreateBackendOrder',
-                'onGetBackendController'
+            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagCreateBackendOrder',
+            'onGetBackendController'
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_PostDispatch_Backend_Order',
-                'onOrderPostDispatch'
+            'Enlight_Controller_Action_PostDispatch_Backend_Order',
+            'onOrderPostDispatch'
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_PostDispatch_Backend_Customer',
-                'onCustomerPostDispatch'
+            'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer',
+            'onCustomerPostDispatchSecure'
         );
 
         $this->subscribeEvent(
-                'Enlight_Controller_Action_Backend_Customer_ValidateEmail',
-                'onValidateEmail'
+            'Enlight_Controller_Action_PostDispatch_Backend_Customer',
+            'onPostDispatchCustomer'
+        );
+
+        // Register AboCommerce-Resource
+        $this->subscribeEvent(
+            'Enlight_Bootstrap_InitResource_CreateBackendOrder',
+            'onInitCreateBackendOrderResource'
         );
     }
 
@@ -200,14 +195,17 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
      * @param Enlight_Event_EventArgs $arguments
      * @return bool
      */
-    public function onValidateEmail(Enlight_Event_EventArgs $arguments)
+    public function onPostDispatchCustomer(Enlight_Event_EventArgs $arguments)
     {
         $mail = $arguments->getSubject()->Request()->getParam('value');
+        $action = $arguments->getSubject()->Request()->getParam('action');
 
-        if ($this->Config()->get('validationMail') == $mail) {
-            Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
-            echo true;
-            return true;
+        if ( !empty($mail) && $action !== 'validateEmail') {
+            if ($this->Config()->get('validationMail') == $mail) {
+                Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
+                echo true;
+                return true;
+            }
         }
     }
 
@@ -255,7 +253,7 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
      *
      * @param Enlight_Event_EventArgs $args
      */
-    public function onCustomerPostDispatch(Enlight_Event_EventArgs $args)
+    public function onCustomerPostDispatchSecure(Enlight_Event_EventArgs $args)
     {
         $view = $args->getSubject()->View();
 
@@ -289,5 +287,33 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
         $pluginInfo = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'plugin.json'), true);
 
         return $pluginInfo;
+    }
+
+    /**
+     * Event listener function of the Enlight_Bootstrap_InitResource_CreateBackendOrder event.
+     * Fired on $this->Application->CreateBackendOrder();
+     *
+     * @return Shopware_Components_CreateBackendOrder
+     */
+    public function onInitCreateBackendOrderResource()
+    {
+        $this->Application()->Loader()->registerNamespace('Shopware_Components', $this->Path() . 'Components/');
+
+        $createBackendOrder = Enlight_Class::Instance('Shopware_Components_CreateBackendOrder');
+        $this->getShopwareBootstrap()->registerResource('CreateBackendOrder', $createBackendOrder);
+
+        return $createBackendOrder;
+    }
+
+    /**
+     * Shopware application bootstrap class.
+     *
+     * Used to register plugin components.
+     *
+     * @return Enlight_Bootstrap
+     */
+    public function getShopwareBootstrap()
+    {
+        return $this->Application()->Bootstrap();
     }
 }
