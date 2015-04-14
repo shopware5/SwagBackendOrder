@@ -33,7 +33,7 @@
 class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
     extends Shopware_Components_Plugin_Bootstrap
 {
-    //@TODO: plugin json
+    //@TODO: plugin json translations
     /**
      * returns the label
      *
