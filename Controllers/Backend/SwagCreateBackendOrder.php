@@ -831,8 +831,9 @@ class Shopware_Controllers_Backend_SwagCreateBackendOrder
         $shippingCostsNet = 0;
 
         foreach ($positions as $position) {
-            $total += $position->price;
-            $totalWithoutTax += $this->calculateNetPrice($position->price, $position->taxRate);
+            $total           += $position->price * $position->quantity;
+            $priceWithoutTax  = $this->calculateNetPrice($position->price, $position->taxRate) * $position->quantity;
+            $totalWithoutTax += $priceWithoutTax;
 
             if (!isset($taxSums[$position->taxRate])) {
                 $taxSums[$position->taxRate] = array();
