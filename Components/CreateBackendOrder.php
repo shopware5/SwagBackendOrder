@@ -387,7 +387,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      * @param $paymentId
      * @return Shopware\Models\Customer\PaymentData
      */
-    private function getCustomerPaymentData($customerId, $paymentId) {
+    public function getCustomerPaymentData($customerId, $paymentId) {
 
         $PaymentDataRepository = Shopware()->Models()->getRepository('Shopware\Models\Customer\PaymentData');
         $paymentModel          = $PaymentDataRepository->findBy(array('paymentMeanId' => $paymentId, 'customer' => $customerId));

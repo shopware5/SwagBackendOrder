@@ -500,7 +500,7 @@ class Shopware_Controllers_Backend_SwagCreateBackendOrder
         $paymentId  = $request['paymentId'];
 
         /** @var Shopware\Models\Customer\PaymentData $payment */
-        $paymentModel = $this->CreateBackendOrder()->getCustomerPaymentData($customerId, $paymentId);
+        $paymentModel = Shopware()->CreateBackendOrder()->getCustomerPaymentData($customerId, $paymentId);
         $payment = Shopware()->Models()->toArray($paymentModel);
 
         $this->view->assign(array(
