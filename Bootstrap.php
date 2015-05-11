@@ -27,7 +27,7 @@
  *
  * @category Shopware
  * @package Shopware\Plugins\SwagCreateBackendOrder
- * @copyright Copyright (c) 2015, shopware AG (http://www.shopware.de)
+ * @copyright Copyright (c) 2015, shopware AG (http://www.shopware.com)
  * @author Simon Bäumer
  */
 class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap

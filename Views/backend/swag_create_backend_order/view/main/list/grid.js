@@ -295,7 +295,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
                         iconCls:'sprite-inbox',
                         handler:function (view, rowIndex, colIndex, item) {
                             var store = view.getStore(),
-                                    record = store.getAt(rowIndex);
+                                record = store.getAt(rowIndex);
 
                             me.fireEvent('openArticle', record);
                         }

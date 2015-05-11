@@ -126,6 +126,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.controller.Main', {
         var me     = this,
             errmsg = "";
         me.modus = modus;
+        me.window.disable(true);
 
         /**
          * get the grid component for the position listing
@@ -764,6 +765,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.controller.Main', {
 
         me.orderModel.set('languageShopId', languageShopId);
     }
+
 });
 //
 //{/block}
