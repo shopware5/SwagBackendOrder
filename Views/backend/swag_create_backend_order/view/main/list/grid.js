@@ -35,6 +35,14 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
             articleNumberText: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/error/article_number_text"}Article number is invalid: {/s}',
             esdTitle: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/error/esd_title"}Invalid article{/s}',
             esdText: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/error/esd_text"}ESD article are not available in the backend order module: {/s}'
+        },
+        confirmMsg: {
+            deleteRowTitle: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/confirmMsg/deleteRowTitle"}Delete position{/s}',
+            deleteRowMsg1: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/confirmMsg/deleteRowMsg1"}Are you sure you want to delete{/s}',
+            deleteRowMsg2: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/confirmMsg/deleteRowMsg2"}?{/s}',
+            deleteMarkedTitle: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/confirmMsg/deleteMarkedTitle"}Delete all marked articles{/s}',
+            deleteMarkedMsg1: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/confirmMsg/deleteMarkedMsg1"}Are you sure you want to delete{/s}',
+            deleteMarkedMsg2: '{s namespace="backend/swag_create_backend_order/view/grid" name="swag_create_backend_order/position/grid/confirmMsg/deleteMarkedMsg2"}positions?{/s}'
         }
     },
 
@@ -288,7 +296,17 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
                     {
                         iconCls:'sprite-minus-circle-frame',
                         handler: function(view, rowIndex, colIndex, item) {
-                            me.store.removeAt(rowIndex);
+                            var articleName = me.store.getAt(rowIndex).get('articleName');
+
+                            Ext.MessageBox.confirm(
+                                me.snippets.confirmMsg.deleteRowTitle,
+                                me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + articleName + '</b> ' + me.snippets.confirmMsg.deleteRowMsg2,
+                                function(button){
+                                    if(button == 'yes'){
+                                        me.store.removeAt(rowIndex);
+                                    }
+                                },
+                            this);
                         }
                     },
                     {
@@ -342,9 +360,29 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
             handler: function() {
                 var selModel = me.getSelectionModel();
                 var sel = selModel.selected.items;
-                for (var i = 0; i < sel.length; i++) {
-                    me.store.remove(sel[i]);
+
+                var title = me.snippets.confirmMsg.deleteMarkedTitle;
+                var message = me.snippets.confirmMsg.deleteMarkedMsg1 + ' <b>' + sel.length + '</b> ' + me.snippets.confirmMsg.deleteMarkedMsg2;
+
+                if (sel.length == 1) {
+                    title = me.snippets.confirmMsg.deleteRowTitle;
+                    message = me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + sel[0].get('articleName') + '</b>' + me.snippets.confirmMsg.deleteRowMsg2;
                 }
+
+                Ext.MessageBox.confirm(
+                    title,
+                    message,
+                    function(button){
+                        if(button == 'yes'){
+                            for (var i = 0; i < sel.length; i++) {
+                                me.store.remove(sel[i]);
+                            }
+                        }
+                    },
+                this);
+
+
+
             }
         });
 

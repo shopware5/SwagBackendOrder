@@ -159,6 +159,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.controller.Main', {
         }
 
         if (errmsg.length > 0) {
+            me.window.enable(true);
             Shopware.Notification.createGrowlMessage(me.snippets.error.title, errmsg);
             return;
         }
@@ -220,6 +221,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.controller.Main', {
                 var articleNumber = response.proxy.reader.rawData.data.articleNumber;
 
                 Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textArticleNumber + ' ' + articleNumber);
+                me.window.enable(true);
             }
         });
 
