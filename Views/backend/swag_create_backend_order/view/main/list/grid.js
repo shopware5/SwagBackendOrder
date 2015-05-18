@@ -188,6 +188,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
                                 record.set('price', 0);
                                 record.set('quantity', 0);
                                 record.set('inStock', 0);
+                                record.set('articleId', 0);
                                 editor.startEdit(record, 0);
                                 break;
                             case 'articleNumber':
@@ -366,7 +367,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
 
                 if (sel.length == 1) {
                     title = me.snippets.confirmMsg.deleteRowTitle;
-                    message = me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + sel[0].get('articleName') + '</b>' + me.snippets.confirmMsg.deleteRowMsg2;
+                    message = me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + sel[0].get('articleName') + '</b> ' + me.snippets.confirmMsg.deleteRowMsg2;
                 }
 
                 Ext.MessageBox.confirm(
@@ -499,7 +500,6 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
             me.store.getAt(row).set('taxRate', taxRate);
             me.store.getAt(row).set('taxId', taxId);
         }
-
         return taxRate;
     }
 });
