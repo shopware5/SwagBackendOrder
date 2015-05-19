@@ -236,7 +236,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
                 editor: {
                     xtype: 'numberfield',
                     allowBlank: false,
-                    minValue: 0
+                    minValue: 1
                 }
             },
             {
@@ -274,7 +274,8 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
                     xtype: 'combo',
                     store: me.taxStore,
                     valueField: 'id',
-                    displayField: 'tax'
+                    displayField: 'tax',
+                    editable: false
                 }
             },
             {
@@ -343,7 +344,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
                 me.rowEditing.cancelEdit();
 
                 var r = Ext.create('Shopware.apps.SwagCreateBackendOrder.model.Position', {
-                    quantity: 0,
+                    quantity: 1,
                     price: '0',
                     taxRate: '19',
                     inStock: '0'
@@ -459,6 +460,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.list.Grid', {
         var symbol = currencyStore.getAt(currencyStoreIndex).get('symbol');
         var total = record.data.quantity * record.data.price;
 
+        total = total.toFixed(2);
         total = total + ' ' + symbol;
         return total;
     },

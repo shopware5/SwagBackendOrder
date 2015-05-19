@@ -29,12 +29,28 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.model.Position', {
         { name: 'quantity', type:'int' },
         { name: 'statusId', type:'int' },
         { name: 'statusDescription', type:'string' },
-        { name: 'price', type:'float' },
+        {
+            name: 'price',
+            type:'float',
+            convert: function (v, record) {
+                v = parseFloat(v);
+                if (typeof v !== 'number') { v = 0.0 }
+                return v.toFixed(2);
+            }
+        },
         { name: 'taxId', type:'int' },
         { name: 'taxRate', type:'float' },
         { name: 'taxDescription', type:'string' },
         { name: 'inStock', type:'int' },
-        { name: 'total', type:'float' }
+        {
+            name: 'total',
+            type:'float',
+            convert: function (v, record) {
+                v = parseFloat(v);
+                if (typeof v !== 'number') { v = 0.0 }
+                return v.toFixed(2);
+            }
+        }
     ]
 });
 //
