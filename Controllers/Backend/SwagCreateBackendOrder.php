@@ -72,7 +72,7 @@ class Shopware_Controllers_Backend_SwagCreateBackendOrder
                 )
                 ->orWhere('billing.company LIKE :search')
                 ->orWhere('shipping.company LIKE :search')
-                ->orWhere('billing.number = :search')
+                ->orWhere('billing.number LIKE :search')
                 ->orWhere('customers.email LIKE :search')
                 ->setParameter('search', $search)
                 ->groupBy('customers.id')
