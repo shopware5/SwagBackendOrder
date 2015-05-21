@@ -8,7 +8,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.Window', {
      */
     extend: 'Enlight.app.Window',
 
-    height: 768,
+    height: 850,
 
     width: 1100,
 

@@ -150,7 +150,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.CustomerSearch', {
         fieldConfig = Ext.apply({
             componentLayout: 'textfield',
             triggerCls: 'reset',
-            padding: '10 0 0 5',
+            padding: '10 0 0 0',
             emptyText: '{s namespace="backend/swag_create_backend_order/view/customer_search" name="customer_search/search_default_text"}Customer search...{/s}',
             fieldLabel: (me.fieldLabel || undefined),
             cls:  'searchfield', //Ext.baseCSSPrefix + 'search-article-live-field'
