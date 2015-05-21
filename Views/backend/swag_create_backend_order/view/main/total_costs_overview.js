@@ -97,7 +97,6 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.TotalCostsOverview', 
             flex: 1,
             name: 'totalCostsContainer',
             layout: 'hbox',
-            overflowY: true,
             renderTo: document.body,
             items:[
                 me.createNetCheckbox(),
