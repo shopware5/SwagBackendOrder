@@ -17,7 +17,8 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.CustomerInformation.C
 
     flex: 2,
 
-    padding: '10 0 0 5',
+    //default margin is 0 5 0 0, so we need only a padding of 5 instead of 10
+    padding: '10 5 0 10',
 
     layout: {
         type: 'hbox',

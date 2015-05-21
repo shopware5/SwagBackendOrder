@@ -19,6 +19,8 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.CustomerInformation.B
 
     flex: 1,
 
+    autoScroll: true,
+
     snippets: {
         title: '{s namespace="backend/swag_create_backend_order/view/customer_information" name="swag_create_backend_order/customer_information/billing/title"}Billing address{/s}',
         salutation: {

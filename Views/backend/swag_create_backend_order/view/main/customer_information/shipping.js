@@ -13,6 +13,8 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.CustomerInformation.S
 
     flex: 1,
 
+    autoScroll: true,
+
     paddingRight: 5,
 
     snippets: {

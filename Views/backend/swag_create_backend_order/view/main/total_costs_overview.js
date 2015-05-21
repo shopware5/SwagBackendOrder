@@ -24,7 +24,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.TotalCostsOverview', 
 
     autoScroll: true,
 
-    padding: '5 5 0 5',
+    padding: '5 10 0 10',
 
     snippets: {
         sum: '{s namespace="backend/swag_create_backend_order/view/costs_overview" name="swag_create_backend_order/costs_overview/sum"}Sum: {/s}',
@@ -97,7 +97,6 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.TotalCostsOverview', 
             flex: 1,
             name: 'totalCostsContainer',
             layout: 'hbox',
-            overflowY: true,
             renderTo: document.body,
             items:[
                 me.createNetCheckbox(),
@@ -131,10 +130,10 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.TotalCostsOverview', 
 
         me.totalCostsTempalte = new Ext.XTemplate(
             '{literal}<tpl for=".">',
-            '<div style="padding-left: 10px; font-size: 13px;">',
+            '<div style="padding-left: 10px; font-size: 13px; text-align: right;">',
                 '<p>{sum} '+ me.currencySymbol +'</p>',
                 '<p>{shippingCosts} '+ me.currencySymbol +'</p>',
-                '<p style="font-size: 15px;"><b>{total} '+ me.currencySymbol +'</b></p>',
+                '<p><b>{total} '+ me.currencySymbol +'</b></p>',
                 '<p>{totalWithoutTax} '+ me.currencySymbol +'</p>',
                 '<p>{taxSum} '+ me.currencySymbol +'</p>',
             '</div>',

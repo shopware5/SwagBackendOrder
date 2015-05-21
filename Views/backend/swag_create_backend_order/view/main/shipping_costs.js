@@ -13,7 +13,9 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.ShippingCosts', {
 
     layout: 'hbox',
 
-    padding: '15 0 0 5',
+    padding: '15 0 0 10',
+
+    autoScroll: true,
 
     snippets: {
         title: '{s namespace="backend/swag_create_backend_order/view/shipping_costs" name="swagcreatebackendorder/shipping_costs/title"}Shipping costs{/s}',

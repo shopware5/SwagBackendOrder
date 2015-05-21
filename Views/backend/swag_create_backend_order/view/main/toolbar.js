@@ -13,7 +13,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.Toolbar', {
 
     ui: 'shopware-ui',
 
-    padding: '0 5 0 5',
+    padding: '0 10 0 10',
 
     snippets: {
         buttons: {
