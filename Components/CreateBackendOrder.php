@@ -73,9 +73,10 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         $orderModel->setOrderTime(new DateTime('now'));
 
-        $data['desktopType'] = self::DEFAULT_DESKTOP_TYPE;
         if ($data['desktopType'] !== '' && $data['desktopType'] !== null && isset($data['desktopType'])) {
             $orderModel->setDeviceType($data['desktopType']);
+        } else {
+            $orderModel->setDeviceType(self::DEFAULT_DESKTOP_TYPE);
         }
 
         $orderModel->setTransactionId('');
