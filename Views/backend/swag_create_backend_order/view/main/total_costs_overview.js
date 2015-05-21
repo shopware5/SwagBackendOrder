@@ -24,7 +24,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.TotalCostsOverview', 
 
     autoScroll: true,
 
-    padding: '5 5 0 5',
+    padding: '5 10 0 10',
 
     snippets: {
         sum: '{s namespace="backend/swag_create_backend_order/view/costs_overview" name="swag_create_backend_order/costs_overview/sum"}Sum: {/s}',

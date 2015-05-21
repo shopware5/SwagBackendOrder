@@ -8,7 +8,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.Window', {
      */
     extend: 'Enlight.app.Window',
 
-    height: 870,
+    height: 750,
 
     width: 1100,
 
@@ -174,7 +174,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.Window', {
         var me = this;
 
         return Ext.create('Ext.container.Container', {
-            padding: '10 5 0 5',
+            padding: '10 10 0 10',
             items: [
                 me.createPositionGrid()
             ]

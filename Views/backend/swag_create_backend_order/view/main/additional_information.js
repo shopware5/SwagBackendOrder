@@ -13,7 +13,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.AdditionalInformation
 
     layout: 'hbox',
 
-    padding: '15 5 0 5',
+    padding: '15 10 0 5',
 
     overflowY: 'auto',
 
@@ -26,7 +26,7 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.AdditionalInformation
             attribute4Label: '{s namespace="backend/swag_create_backend_order/view/additional_information" name="swag_create_backend_order/additional/attribute4/label"}Attribute 4{/s}',
             attribute5Label: '{s namespace="backend/swag_create_backend_order/view/additional_information" name="swag_create_backend_order/additional/attribute5/label"}Attribute 5{/s}',
             attribute6Label: '{s namespace="backend/swag_create_backend_order/view/additional_information" name="swag_create_backend_order/additional/attribute6/label"}Attribute 6{/s}',
-            desktopType: '{s namespace="backend/swag_create_backend_order/view/additional_information" name="swag_create_backend_order/additional/desktop_type/label"}Desktop-Type{/s}'
+            desktopType: '{s namespace="backend/swag_create_backend_order/view/additional_information" name="swag_create_backend_order/additional/device_type/label"}Device-Type{/s}'
         }
     },
 
