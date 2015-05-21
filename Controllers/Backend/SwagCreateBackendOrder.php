@@ -772,16 +772,6 @@ class Shopware_Controllers_Backend_SwagCreateBackendOrder
     }
 
     /**
-     * deletes the empty row
-     */
-    private function deleteOrder()
-    {
-        if ( isset($this->orderId) && $this->orderId > 0) {
-            Shopware()->Db()->delete('s_order', ['id' => $this->orderId]);
-        }
-    }
-
-    /**
      * @param int $price
      * @param int $taxRate
      * @return float

@@ -408,4 +408,14 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     {
         return array_keys($array) !== range(0, count($array) -1);
     }
+
+    /**
+     * deletes the empty row
+     */
+    private function deleteOrder()
+    {
+        if ( isset($this->orderId) && $this->orderId > 0) {
+            Shopware()->Db()->delete('s_order', ['id' => $this->orderId]);
+        }
+    }
 }
