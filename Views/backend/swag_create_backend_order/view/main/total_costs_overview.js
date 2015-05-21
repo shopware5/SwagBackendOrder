@@ -130,10 +130,10 @@ Ext.define('Shopware.apps.SwagCreateBackendOrder.view.main.TotalCostsOverview', 
 
         me.totalCostsTempalte = new Ext.XTemplate(
             '{literal}<tpl for=".">',
-            '<div style="padding-left: 10px; font-size: 13px;">',
+            '<div style="padding-left: 10px; font-size: 13px; text-align: right;">',
                 '<p>{sum} '+ me.currencySymbol +'</p>',
                 '<p>{shippingCosts} '+ me.currencySymbol +'</p>',
-                '<p style="font-size: 15px;"><b>{total} '+ me.currencySymbol +'</b></p>',
+                '<p><b>{total} '+ me.currencySymbol +'</b></p>',
                 '<p>{totalWithoutTax} '+ me.currencySymbol +'</p>',
                 '<p>{taxSum} '+ me.currencySymbol +'</p>',
             '</div>',
