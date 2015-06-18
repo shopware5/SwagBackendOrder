@@ -14,7 +14,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.List', {
             iconCls: 'sprite-plus-circle-frame',
             handler: function() {
                 Shopware.app.Application.addSubApplication({
-                    name: 'Shopware.apps.SwagCreateBackendOrder'
+                    name: 'Shopware.apps.SwagBackendOrder'
                 });
             }
         });
