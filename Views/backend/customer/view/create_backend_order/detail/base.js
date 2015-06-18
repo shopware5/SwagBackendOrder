@@ -20,7 +20,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
                 fieldLabel:me.snippets.email.label,
                 labelWidth:150,
                 name:'email',
-                supportText: '{s namespace="backend/customer/view/main" name="swag_create_backend_order/customer/mail/support_text"}Guest email:{/s} ' + me.record.get('email'),
+                supportText: '{s namespace="backend/customer/view/main" name="swag_backend_order/customer/mail/support_text"}Guest email:{/s} ' + me.record.get('email'),
                 disabled: false,
                 allowBlank:false,
                 required:true,

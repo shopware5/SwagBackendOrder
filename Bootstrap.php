@@ -23,14 +23,14 @@
  */
 
 /**
- * Shopware SwagCreateBackendOrder Plugin - Bootstrap
+ * Shopware SwagBackendOrder Plugin - Bootstrap
  *
  * @category Shopware
- * @package Shopware\Plugins\SwagCreateBackendOrder
+ * @package Shopware\Plugins\SwagBackendOrder
  * @copyright Copyright (c) 2015, shopware AG (http://www.shopware.com)
  * @author Simon Bäumer
  */
-class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
+class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
     extends Shopware_Components_Plugin_Bootstrap
 {
     //@TODO: plugin json translations
@@ -163,7 +163,7 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
     private function registerEvents()
     {
         $this->subscribeEvent(
-            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagCreateBackendOrder',
+            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagBackendOrder',
             'onGetBackendController'
         );
 
@@ -224,7 +224,7 @@ class Shopware_Plugins_Backend_SwagCreateBackendOrder_Bootstrap
             $this->Path() . 'Snippets/'
         );
 
-        return $this->Path() . '/Controllers/Backend/SwagCreateBackendOrder.php';
+        return $this->Path() . '/Controllers/Backend/SwagBackendOrder.php';
     }
 
     /**

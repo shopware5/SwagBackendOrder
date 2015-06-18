@@ -71,7 +71,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
         var me = this;
 
         Shopware.app.Application.addSubApplication({
-            name: 'Shopware.apps.SwagCreateBackendOrder',
+            name: 'Shopware.apps.SwagBackendOrder',
             action: 'detail',
             params: {
                 userId: record.data.id

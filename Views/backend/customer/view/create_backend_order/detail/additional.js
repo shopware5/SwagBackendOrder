@@ -21,7 +21,7 @@ Ext.define('Shopware.apps.CreateBackendOrder..view.detail.Additional', {
         buttons.push(me.performOrderBtn);
 
         me.performBackendOrderBtn = Ext.create('Ext.button.Button', {
-            text: '{s namespace="backend/customer/view/main" name="swag_create_backend_order/customer/additional/create_backend_order"}Create order in the backend{/s}',
+            text: '{s namespace="backend/customer/view/main" name="swag_backend_order/customer/additional/create_backend_order"}Create order in the backend{/s}',
             handler:function () {
                 me.fireEvent('performBackendOrder', me.record);
             }
