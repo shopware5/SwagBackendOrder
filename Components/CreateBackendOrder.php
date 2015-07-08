@@ -8,6 +8,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     const DEFAULT_DESKTOP_TYPE = 'Backend';
 
     private $orderId;
+    private $equalBillingAddress = false;
 
     public function createOrder($data, $ordernumber)
     {
@@ -417,5 +418,13 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         if ( isset($this->orderId) && $this->orderId > 0) {
             Shopware()->Db()->delete('s_order', ['id' => $this->orderId]);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEqualBillingAddress()
+    {
+        return $this->equalBillingAddress;
     }
 }
