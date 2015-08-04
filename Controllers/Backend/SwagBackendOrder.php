@@ -43,67 +43,17 @@ class Shopware_Controllers_Backend_SwagBackendOrder
     {
         $data = $this->Request()->getParams();
 
-        $builder = Shopware()->Models()->createQueryBuilder();
+        /** @var Shopware_Components_CustomerInformationHandler $customerInformationHandler */
+        $customerInformationHandler = Shopware()->CustomerInformationHandler();
 
-        $builder->select(array('customers, billing', 'shipping', 'debit', 'shop'))
-                ->from('Shopware\Models\Customer\Customer', 'customers')
-                ->leftJoin('customers.billing', 'billing')
-                ->leftJoin('customers.shipping', 'shipping')
-                ->leftJoin('customers.debit', 'debit')
-                ->leftJoin('customers.shop', 'shop')
-                ->where('customers.id = :search');
-
-         /**
-         * checks if a search was done or a selection from the drop down field
-         */
+        //Checks if the user used the live search or selected a customer from the drop down list
         if (isset($data['filter'][0]['value'])) {
-            $search = $data['filter'][0]['value'];
-
-            /**
-             * adding where statements
-             * concats the first name and the last name to a full name for the search (uses the billing table)
-             */
-            $builder->where($builder->expr()->like(
-                            $builder->expr()->concat('billing.firstName',
-                                    $builder->expr()->concat($builder->expr()->literal(' '), 'billing.lastName')
-                            ),
-                            $builder->expr()->literal($search)
-                    )
-                )
-                ->orWhere('billing.company LIKE :search')
-                ->orWhere('shipping.company LIKE :search')
-                ->orWhere('billing.number LIKE :search')
-                ->orWhere('customers.email LIKE :search')
-                ->setParameter('search', $search)
-                ->groupBy('customers.id')
-                ->orderBy('billing.firstName');
-
-            $result = $builder->getQuery()->getArrayResult();
-
-            /**
-             * gets data for the customer drop down search field
-             */
-            foreach ($result as &$customer) {
-                $customer['customerCompany'] = $customer['billing']['company'];
-                $customer['customerNumber']  = $customer['billing']['number'];
-                $customer['customerName']    = $customer['billing']['firstName'] . ' ' . $customer['billing']['lastName'];
-            }
-
+            $result = $customerInformationHandler->getCustomerList($data['filter'][0]['value']);
         } else {
             $search = $this->Request()->get('searchParam');
-            $builder->setParameter('search', $search);
-
-            $billingAddresses      = $this->getOrderAddresses($search, 'Shopware\Models\Order\Billing', 'billings');
-            $shippingAddresses     = $this->getOrderAddresses($search, 'Shopware\Models\Order\Shipping', 'shipping');
-            $result                = $builder->getQuery()->getArrayResult();
-            if ($billingAddresses) {
-                $result[0]['billing']  = $billingAddresses;
-            }
-
-            if ($shippingAddresses) {
-                $result[0]['shipping'] = $shippingAddresses;
-            }
+            $result = $customerInformationHandler->getCustomer($search);
         }
+
         $total = count($result);
 
         $this->view->assign(array(
@@ -111,68 +61,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder
             'total' => $total,
             'success' => true
         ));
-    }
-
-    /**
-     * gets shipping and billing addresses
-     *
-     * @param string $searchParam
-     * @param string $table doctrine model
-     * @param string $alias
-     * @return array
-     */
-    private function getOrderAddresses($searchParam, $table, $alias)
-    {
-        $builderBilling = Shopware()->Models()->createQueryBuilder();
-
-        $builderBilling->select(array($alias, 'country', 'state'))
-                        ->from($table, $alias)
-                        ->leftJoin($alias.'.country', 'country')
-                        ->leftJoin($alias.'.state', 'state')
-                        ->where($alias.'.customerId = :search')
-                        ->setParameter('search', $searchParam)
-                        ->groupBy($alias.'.customerId');
-
-        $fieldsGroupBy = array(
-                'company',
-                'countryId',
-                'stateId',
-                'salutation',
-                'zipCode',
-                'department',
-                'firstName',
-                'lastName',
-                'street',
-                'city'
-        );
-
-        if ($table === 'Shopware\Models\Order\Billing') {
-            array_push($fieldsGroupBy,
-                'phone',
-                'fax',
-                'vatId'
-            );
-        }
-
-        /**
-         * creates group by statements to get unique addresses
-         */
-        foreach ($fieldsGroupBy as $groupBy) {
-            $builderBilling->addGroupBy($alias . '.' . $groupBy);
-        }
-        $result = $builderBilling->getQuery()->getArrayResult();
-
-        /**
-         * renames the association key to be sure where the id belongs to
-         */
-        foreach ($result as &$address) {
-            $address['orderAddressId'] = $address['id'];
-            $address['country']        = $address['country']['name'];
-            $address['state']          = $address['state']['name'];
-            unset($address['id']);
-        }
-
-        return $result;
     }
 
     /**
@@ -411,6 +299,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder
     public function setShippingAddressAction()
     {
         $data = $this->Request()->getParams();
+        //we need to set this because of a bug in the shopware models
+        if (!isset($data['stateId'])) {
+            $data['stateId'] = 0;
+        }
 
         /** @var Shopware\Models\Customer\Customer $customerModel */
         $customerModel = Shopware()->Models()->find('Shopware\Models\Customer\Customer', $data['userId']);
@@ -680,7 +572,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder
             $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
         }
 
-        if ($this->equalBillingAddress) {
+        if (Shopware()->CreateBackendOrder()->getEqualBillingAddress()) {
             $shippingAddress = $billingAddress;
         } else {
             $shippingAddress = Shopware()->Db()->fetchRow('SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?', array($orderModel->getId()));

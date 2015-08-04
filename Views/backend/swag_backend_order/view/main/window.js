@@ -22,7 +22,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
 
     confirmClosed: false,
 
-    autoScroll: true,
+    //autoScroll: true,
 
     snippets: {
         title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/title"}Create Order{/s}',

@@ -182,10 +182,16 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
             'onPostDispatchCustomer'
         );
 
-        // Register AboCommerce-Resource
+        // Register CreateBackendOrder-Resource
         $this->subscribeEvent(
             'Enlight_Bootstrap_InitResource_CreateBackendOrder',
             'onInitCreateBackendOrderResource'
+        );
+
+        // Register CustomerInformationHandler-Resource
+        $this->subscribeEvent(
+                'Enlight_Bootstrap_InitResource_CustomerInformationHandler',
+                'onInitCustomerInformationHandlerResource'
         );
     }
 
@@ -303,6 +309,19 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
         $this->getShopwareBootstrap()->registerResource('CreateBackendOrder', $createBackendOrder);
 
         return $createBackendOrder;
+    }
+
+    /**
+     * @return Shopware_Components_CustomerInformationHandler
+     */
+    public function onInitCustomerInformationHandlerResource()
+    {
+        $this->Application()->Loader()->registerNamespace('Shopware_Components', $this->Path() . 'Components/');
+
+        $customerInformationHandler = Enlight_Class::Instance('Shopware_Components_CustomerInformationHandler');
+        $this->getShopwareBootstrap()->registerResource('CustomerInformationHandler', $customerInformationHandler);
+
+        return $customerInformationHandler;
     }
 
     /**

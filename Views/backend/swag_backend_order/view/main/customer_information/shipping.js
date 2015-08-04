@@ -85,6 +85,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             queryMode: 'local',
             store: me.shippingStore,
             flex: 1,
+            disabled: true,
             displayField: 'displayField',
             valueField: 'displayField',
             listConfig: {
@@ -128,7 +129,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             inputValue: true,
             uncheckedValue: false,
             checked: true,
-            height: 35
+            height: 35,
+            listeners: {
+                change: function(field, value) {
+                    if (value) {
+                        me.shippingAddressComboBox.disable();
+                    } else {
+                        me.shippingAddressComboBox.enable();
+                        me.shippingAddressComboBox.setValue(me.shippingStore.getAt(0).get(me.shippingAddressComboBox.valueField));
+                    }
+                }
+            }
         });
 
         return [ me.shippingAddressComboBox, me.billingAsShippingCheckbox];
