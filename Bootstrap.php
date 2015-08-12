@@ -103,7 +103,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
             array(
                 'label' => 'Gast Konto eMail',
                 'required' => true,
-                'description' => 'Die eMail-Adresse mit der Gast Konten angelegt werden sollen.')
+                'description' => 'Die eMail-Adresse mit der Gast Konten angelegt werden sollen. Gastkonten sind Accounts für Kunden die sich nicht in ihrem Shop registriert haben. So haben Sie die möglichkeit Bestellungen einzutragen die Beispielsweise über Telefon eingangen sind.')
         );
 
         $form->addElement('text', 'desktopTypes',
@@ -123,7 +123,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
             'en_GB' => array(
                 'validationMail' => array(
                     'label' => 'Guest account e-mail',
-                    'description' => 'The e-mail address which guest accounts use.'
+                    'description' => 'The e-mail address which guest accounts use. Guest accounts are accounts for customers who don\'t have a registered account in your shop. With these accounts your are able to create orders for customers who ordered something via telephone.'
                 ),
                 'desktopTypes' => array(
                     'label' => 'Desktop types',
@@ -279,6 +279,9 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
             );
             $view->extendsTemplate(
                     'backend/customer/view/create_backend_order/detail/additional.js'
+            );
+            $view->extendsTemplate(
+                    'backend/customer/view/create_backend_order/detail/window.js'
             );
         }
     }

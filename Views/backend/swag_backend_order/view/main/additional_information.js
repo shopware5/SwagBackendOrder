@@ -13,7 +13,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
 
     layout: 'hbox',
 
-    padding: '15 10 0 5',
+    margin: '15 10 0 5',
 
     overflowY: 'auto',
 
@@ -26,7 +26,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             attribute4Label: '{s namespace="backend/swag_backend_order/view/additional_information" name="swag_backend_order/additional/attribute4/label"}Attribute 4{/s}',
             attribute5Label: '{s namespace="backend/swag_backend_order/view/additional_information" name="swag_backend_order/additional/attribute5/label"}Attribute 5{/s}',
             attribute6Label: '{s namespace="backend/swag_backend_order/view/additional_information" name="swag_backend_order/additional/attribute6/label"}Attribute 6{/s}',
-            desktopType: '{s namespace="backend/swag_backend_order/view/additional_information" name="swag_backend_order/additional/device_type/label"}Device-Type{/s}'
+            desktopType: '{s namespace="backend/swag_backend_order/view/additional_information" name="swag_backend_order/additional/device_type/label"}Device-Type{/s}',
+            desktopTypeHelpText: '{s namespace="backend/swag_backend_order/view/additional_information" name="swag_backend_order/additional/device_type/help_text"}The device type determines via which communication channel the order has been placed, for example fax, telephone or personally in your local store. The turnover by device types can be viewed in the statistics under "Turnover by device type".{/s}'
         }
     },
 
@@ -143,6 +144,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             layout: 'hbox',
             flex: 10,
             title: 'left',
+            padding: '10 0 0 10',
             autoHeight: true,
             items: [
                 additionalInfoContainer
@@ -160,10 +162,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
 
         var desktopType = Ext.create('Ext.form.field.ComboBox', {
             name: 'desktop-type',
-            width: 200,
+            width: 220,
             queryMode: 'local',
             store: me.subApplication.getStore('DesktopTypes'),
-            displayField: 'name',
+            displayField: me.snippets.additionalInformation.desktopType,
+            helpTitle: me.snippets.additionalInformation.desktopType,
+            helpText: me.snippets.additionalInformation.desktopTypeHelpText,
             valueField: 'id',
             fieldLabel: me.snippets.additionalInformation.desktopType,
             listeners: {
@@ -177,6 +181,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             layout: 'hbox',
             flex: 9,
             title: 'right',
+            padding: '10 0 0 10',
             autoHeight: true,
             items: [
                 desktopType

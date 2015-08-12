@@ -13,7 +13,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
 
     layout: 'hbox',
 
-    padding: '15 0 0 10',
+    margin: '15 0 0 10',
 
     autoScroll: true,
 
@@ -104,6 +104,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             flex: 3,
             width: '50%',
             title: 'left',
+            padding: '10 0 0 10',
             autoHeight: true,
             items: [
                 shippingArt
@@ -146,6 +147,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             flex: 2,
             width: '50%',
             title: 'right',
+            padding: '10 0 0 10',
             autoHeight: true,
             items: [
                 shippingCostsContainer

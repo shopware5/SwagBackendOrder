@@ -78,6 +78,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             name: 'totalCostsView',
             store: me.createTotalCostsStore(),
             height: 100,
+            width: 85,
             tpl: me.createTotalCostsTemplate()
         });
 
