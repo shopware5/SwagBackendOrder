@@ -82,6 +82,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder
         /** @var Shopware\Models\Order\Order $orderModel */
         $orderModel = $createBackendOrder->createOrder($data, $ordernumber);
 
+        if (!$orderModel instanceof \Shopware\Models\Order\Order) {
+            $this->view->assign($orderModel);
+            return false;
+        }
+
         //sends and prepares the order confirmation mail
         $this->sendOrderConfirmationMail($orderModel);
 
@@ -448,11 +453,18 @@ class Shopware_Controllers_Backend_SwagBackendOrder
         $articleModels = $builder->getQuery()->getResult();
 
         if (count($articleModels) < 1) {
+            if (!empty($articleNumber)) {
+                $this->view->assign(array(
+                    'data' => array('articleNumber' => $articleNumber, 'error' => 'articleNumber'),
+                    'success' => false
+                ));
+                return false;
+            }
+
             $this->view->assign(array(
-                'data' => array('articleNumber' => $articleNumber, 'error' => 'articleNumber'),
+                'data' => array('articleName' => $data['articleName'], 'error' => 'articleName'),
                 'success' => false
             ));
-
             return false;
         }
 

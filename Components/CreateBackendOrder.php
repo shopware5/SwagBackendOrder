@@ -102,17 +102,19 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         if ( $this->isAssoc($positions)) {
             $details[] = $this->createOrderDetail($positions, $orderModel);
 
-            if ( !end($details)) {
+            $lastDetail = end($details);
+            if ( !$lastDetail instanceof Shopware\Models\Order\Detail) {
                 $this->deleteOrder();
-                return false;
+                return $lastDetail;
             }
         } else {
             foreach ($positions as $position) {
                 $details[] = $this->createOrderDetail($position, $orderModel);
 
-                if ( !end($details)) {
+                $lastDetail = end($details);
+                if ( !$lastDetail instanceof Shopware\Models\Order\Detail) {
                     $this->deleteOrder();
-                    return false;
+                    return $lastDetail;
                 }
             }
         }
@@ -177,12 +179,8 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         //checks if the article exists
         if ( empty($articleIds)) {
-            $this->view->assign(array(
-                            'success' => false,
-                            'data' => array('articleNumber' => $position['articleNumber'])
-                    ));
-
-            return false;
+            $articleIdentification = $this->createInvalidArticleIdentificationForErrorMessage($position);
+            return array('success' => false, 'article' => $articleIdentification);
         }
 
         $articleId = $articleIds['id'];
@@ -426,5 +424,25 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     public function getEqualBillingAddress()
     {
         return $this->equalBillingAddress;
+    }
+
+    /**
+     * If the user entered an invalid product he needs to know which article was invalid. This will return the information
+     * we have of the product.
+     *
+     * @param array $position
+     * @return string
+     */
+    private function createInvalidArticleIdentificationForErrorMessage($position)
+    {
+        if (empty($position['articleName'])) {
+            return $position['articleNumber'];
+        }
+
+        if (empty($position['articleNumber'])) {
+            return $position['articleName'];
+        }
+
+        return $position['articleNumber'] . ' - ' . $position['articleName'];
     }
 }

@@ -33,6 +33,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         error: {
             articleNumberTitle: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/article_number_title"}Invalid article{/s}',
             articleNumberText: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/article_number_text"}Article number is invalid: {/s}',
+            articleNameTitle: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/article_name_title"}Invalid article{/s}',
+            articleNameText: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/article_name_text"}Article name is invalid: {/s}',
             esdTitle: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/esd_title"}Invalid article{/s}',
             esdText: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/esd_text"}ESD article are not available in the backend order module: {/s}'
         },
@@ -193,6 +195,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                                 break;
                             case 'articleNumber':
                                 Ext.Msg.alert(me.snippets.error.articleNumberTitle, me.snippets.error.articleNumberText + responseObj.data.articleNumber);
+                                editor.startEdit(record, 0);
+                                break;
+                            case 'articleName':
+                                Ext.Msg.alert(me.snippets.error.articleNameTitle, me.snippets.error.articleNameText + responseObj.data.articleName);
                                 editor.startEdit(record, 0);
                                 break;
                             default:

@@ -14,7 +14,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             payment: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/payment"}Please select a payment method.{/s}',
             shippingArt: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/shipping_art"}Please select a shipping art.{/s}',
             positions: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/positions"}Please add positions.{/s}',
-            textArticleNumber: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/textArticleNumber"}Wrong article number: {/s}',
+            textInvalidArticle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/invalid_article"}Invalid article: {/s}',
             title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/title"}Error!{/s}',
             instanceTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceTitle"}Error!{/s}',
             instanceText: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceText"}You can not create more than one order at the same time.{/s}'
@@ -218,9 +218,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 me.window.close();
             },
             failure: function(response) {
-                var articleNumber = response.proxy.reader.rawData.data.articleNumber;
+                var article = response.proxy.reader.rawData.article;
 
-                Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textArticleNumber + ' ' + articleNumber);
+                Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textInvalidArticle + ' ' + article);
                 me.window.enable(true);
             }
         });
