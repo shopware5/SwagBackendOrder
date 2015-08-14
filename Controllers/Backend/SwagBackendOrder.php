@@ -77,23 +77,48 @@ class Shopware_Controllers_Backend_SwagBackendOrder
 
         $ordernumber = $this->getOrderNumber();
 
+        /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
         $createBackendOrder = Shopware()->CreateBackendOrder();
+        $hasMailError = false;
 
-        /** @var Shopware\Models\Order\Order $orderModel */
-        $orderModel = $createBackendOrder->createOrder($data, $ordernumber);
+        try {
+            /** @var Shopware\Models\Order\Order $orderModel */
+            $orderModel = $createBackendOrder->createOrder($data, $ordernumber);
 
-        if (!$orderModel instanceof \Shopware\Models\Order\Order) {
-            $this->view->assign($orderModel);
-            return false;
+            if (!$orderModel instanceof \Shopware\Models\Order\Order) {
+                $this->view->assign($orderModel);
+                return false;
+            }
+        } catch (\Exception $e) {
+            $this->view->assign([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+            return;
         }
 
-        //sends and prepares the order confirmation mail
-        $this->sendOrderConfirmationMail($orderModel);
+        try {
+            //sends and prepares the order confirmation mail
+            $this->sendOrderConfirmationMail($orderModel);
+        } catch(\Exception $e) {
+            $hasMailError = $e->getMessage();
+        }
 
-        $this->view->assign(array(
-            'success' => true,
-            'orderId' => $orderModel->getId()
-        ));
+        if ($hasMailError) {
+            $this->view->assign(array(
+                'success' => true,
+                'orderId' => $orderModel->getId(),
+                'mail' => $e->getMessage()
+            ));
+            return;
+        }
+
+        $this->view->assign([
+                'success' => true,
+                'mail' =>  $e->getMessage(),
+                'orderId' => $orderModel->getId()
+        ]);
+
     }
 
     /**

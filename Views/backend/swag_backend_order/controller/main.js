@@ -15,9 +15,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             shippingArt: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/shipping_art"}Please select a shipping art.{/s}',
             positions: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/positions"}Please add positions.{/s}',
             textInvalidArticle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/invalid_article"}Invalid article: {/s}',
-            title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/title"}Error!{/s}',
-            instanceTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceTitle"}Error!{/s}',
-            instanceText: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceText"}You can not create more than one order at the same time.{/s}'
+            invalidArticleTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/invalid_article_title"}Error!{/s}',
+            instanceText: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceText"}You can not create more than one order at the same time.{/s}',
+            instanceTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceTitle"}Erro!{/s}',
+            title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/title"}Error! Couldn\'t create order{/s}',
+            mailTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/mail_title"}Error! Couldn\'t send mail{/s}'
         },
         success: {
             text: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/success/text"}Order was created successfully.{/s}',
@@ -189,6 +191,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         me.createBackendOrderStore.sync({
             success: function(response) {
                 me.orderId = response.proxy.reader.rawData.orderId;
+                me.mailErrorMessage = response.proxy.reader.rawData.mail;
 
                 switch (me.modus) {
                     case 'new':
@@ -209,6 +212,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                                 }
                             });
                         }
+                        Shopware.Notification.createGrowlMessage(me.snippets.error.mailTitle, me.mailErrorMessage);
                         Shopware.Notification.createGrowlMessage(me.snippets.success.title, me.snippets.success.text);
                         break;
                     default:
@@ -220,7 +224,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             failure: function(response) {
                 var article = response.proxy.reader.rawData.article;
 
-                Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textInvalidArticle + ' ' + article);
+                if (article || article == "") {
+                    Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textInvalidArticle + ' ' + article);
+                } else {
+                    Shopware.Notification.createGrowlMessage(me.snippets.error.title, response.proxy.reader.rawData.data.message);
+                }
+
                 me.window.enable(true);
             }
         });

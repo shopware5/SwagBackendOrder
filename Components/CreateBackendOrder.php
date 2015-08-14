@@ -34,32 +34,30 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderModel->setCustomer($customerModel);
 
         /** @var Shopware\Models\Dispatch\Dispatch $dispatchModel */
-        $dispatchModel = Shopware()->Models()->find('Shopware\Models\Dispatch\Dispatch', $data['dispatchId']);
+        $dispatchModel = Shopware()->Models()->getReference('Shopware\Models\Dispatch\Dispatch', $data['dispatchId']);
         $orderModel->setDispatch($dispatchModel);
 
 
         /** @var Shopware\Models\Payment\Payment $paymentModel */
-        $paymentModel = Shopware()->Models()->find('Shopware\Models\Payment\Payment', $data['paymentId']);
+        $paymentModel = Shopware()->Models()->getReference('Shopware\Models\Payment\Payment', $data['paymentId']);
         $orderModel->setPayment($paymentModel);
 
         /**
          * 0 = order status open
          * @var Shopware\Models\Order\Status $orderStatusModel
          */
-        $orderStatusModel = Shopware()->Models()->find('Shopware\Models\Order\Status', 0);
+        $orderStatusModel = Shopware()->Models()->getReference('Shopware\Models\Order\Status', 0);
         $orderModel->setOrderStatus($orderStatusModel);
 
         /**
          * 17 = payment status open
          * @var Shopware\Models\Order\Status $paymentStatusModel
          */
-        $paymentStatusModel = Shopware()->Models()->find('Shopware\Models\Order\Status', 17);
+        $paymentStatusModel = Shopware()->Models()->getReference('Shopware\Models\Order\Status', 17);
         $orderModel->setPaymentStatus($paymentStatusModel);
 
-        /**
-         * @var Shopware\Models\Shop\Shop $languageSubShopModel
-         */
-        $languageSubShopModel = Shopware()->Models()->find('Shopware\Models\Shop\Shop', $data['languageShopId']);
+        /** @var Shopware\Models\Shop\Shop $languageSubShopModel */
+        $languageSubShopModel = Shopware()->Models()->getReference('Shopware\Models\Shop\Shop', $data['languageShopId']);
         $orderModel->setLanguageSubShop($languageSubShopModel);
 
         $orderModel->setInvoiceShippingNet($data['shippingCostsNet']);
@@ -91,7 +89,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderModel->setRemoteAddress('');
 
         /** @var Shopware\Models\Shop\Currency $currencyModel */
-        $currencyModel = Shopware()->Models()->find('Shopware\Models\Shop\Currency', $data['currencyId']);
+        $currencyModel = Shopware()->Models()->getReference('Shopware\Models\Shop\Currency', $data['currencyId']);
         $orderModel->setCurrencyFactor($currencyModel->getFactor());
         $orderModel->setCurrency($currencyModel->getCurrency());
 
@@ -414,7 +412,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     private function deleteOrder()
     {
         if ( isset($this->orderId) && $this->orderId > 0) {
-            Shopware()->Db()->delete('s_order', ['id' => $this->orderId]);
+            Shopware()->Db()->query('DELETE FROM s_order WHERE id  = ?', $this->orderId);
         }
     }
 
@@ -443,6 +441,6 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
             return $position['articleName'];
         }
 
-        return $position['articleNumber'] . ' - ' . $position['articleName'];
+        return $position['articleName'] . ' - ' . $position['articleNumber'];
     }
 }
