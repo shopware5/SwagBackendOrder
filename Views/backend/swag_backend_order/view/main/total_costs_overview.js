@@ -45,10 +45,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         var me = this;
 
         me.currencyStore = me.subApplication.getStore('Currency');
-
         me.items = [
             me.createTotalCostsOverviewContainer()
         ];
+
         me.updateTotalCostsEvents();
 
         me.netCheckBox.on('change', function(netCheckbox, newValue, oldValue) {
@@ -56,6 +56,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         });
 
         me.callParent(arguments);
+
+        //Firefox bugfix for get the correct currency symbol
+        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+            me.updateCurrency();
+        }
     },
 
     /**

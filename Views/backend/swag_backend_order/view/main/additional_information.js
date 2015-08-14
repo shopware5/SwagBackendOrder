@@ -165,7 +165,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             width: 220,
             queryMode: 'local',
             store: me.subApplication.getStore('DesktopTypes'),
-            displayField: me.snippets.additionalInformation.desktopType,
+            displayField: 'name',
             helpTitle: me.snippets.additionalInformation.desktopType,
             helpText: me.snippets.additionalInformation.desktopTypeHelpText,
             valueField: 'id',
