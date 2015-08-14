@@ -22,7 +22,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             mailTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/mail_title"}Error! Couldn\'t send mail{/s}'
         },
         success: {
-            text: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/success/text"}Order was created successfully.{/s}',
+            text: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/success/text"}Order was created successfully. Ordernumber: {/s}',
             title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/success/title"}Success!{/s}'
         },
         title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/title/selected_user"}Create order for{/s}'
@@ -191,16 +191,24 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         me.createBackendOrderStore.sync({
             success: function(response) {
                 me.orderId = response.proxy.reader.rawData.orderId;
+                me.ordernumber = response.proxy.reader.rawData.ordernumber;
                 me.mailErrorMessage = response.proxy.reader.rawData.mail;
 
                 switch (me.modus) {
                     case 'new':
+                        me.window.close();
+                        if (response.proxy.reader.rawData.mail) {
+                            Shopware.Notification.createGrowlMessage(me.snippets.error.mailTitle, me.mailErrorMessage);
+                        }
+                        Shopware.Notification.createGrowlMessage(me.snippets.success.title, me.snippets.success.text + me.ordernumber);
+
                         Shopware.app.Application.addSubApplication({
                             name: 'Shopware.apps.SwagBackendOrder',
                             action: 'detail'
                         });
                         break;
                     case 'close':
+                        me.window.close();
                         break;
                     case 'detail':
                         if (me.orderId > 0) {
@@ -211,15 +219,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                                     orderId: me.orderId
                                 }
                             });
+
                         }
-                        Shopware.Notification.createGrowlMessage(me.snippets.error.mailTitle, me.mailErrorMessage);
-                        Shopware.Notification.createGrowlMessage(me.snippets.success.title, me.snippets.success.text);
+                        if (response.proxy.reader.rawData.mail) {
+                            Shopware.Notification.createGrowlMessage(me.snippets.error.mailTitle, me.mailErrorMessage);
+                        }
+                        Shopware.Notification.createGrowlMessage(me.snippets.success.title, me.snippets.success.text + ' - ' + me.ordernumber);
+                        me.window.close();
                         break;
                     default:
                         break;
                 }
-
-                me.window.close();
             },
             failure: function(response) {
                 var article = response.proxy.reader.rawData.article;

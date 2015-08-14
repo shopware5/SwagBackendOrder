@@ -108,15 +108,16 @@ class Shopware_Controllers_Backend_SwagBackendOrder
             $this->view->assign(array(
                 'success' => true,
                 'orderId' => $orderModel->getId(),
-                'mail' => $e->getMessage()
+                'mail' => $e->getMessage(),
+                'ordernumber' => $orderModel->getNumber()
             ));
             return;
         }
 
         $this->view->assign([
-                'success' => true,
-                'mail' =>  $e->getMessage(),
-                'orderId' => $orderModel->getId()
+            'success' => true,
+            'orderId' => $orderModel->getId(),
+            'ordernumber' => $orderModel->getNumber()
         ]);
 
     }
