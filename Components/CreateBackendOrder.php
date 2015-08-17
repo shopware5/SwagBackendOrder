@@ -210,7 +210,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         $orderDetailModel->setArticleId($articleModel->getId());
         $orderDetailModel->setArticleName($articleModel->getName());
-        $orderDetailModel->setArticleNumber($articleModel->getMainDetail()->getNumber());
+        $orderDetailModel->setArticleNumber($articleDetailModel->getNumber());
         $orderDetailModel->setPrice($position['price']);
         $orderDetailModel->setMode(4);
         $orderDetailModel->setQuantity($position['quantity']);
