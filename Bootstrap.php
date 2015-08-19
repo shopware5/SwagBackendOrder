@@ -77,11 +77,28 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
      */
     public function install()
     {
+        // Check if shopware version matches
+        if (!$this->assertVersionGreaterThen('5.0.0')) {
+            throw new Exception("This plugin requires Shopware 5.0.0 or a later version");
+        }
+
         $this->createConfiguration();
 
         $this->registerEvents();
 
         return array('success' => true, 'invalidateCache' => array('backend'));
+    }
+
+    public function update()
+    {
+        // Check if shopware version matches
+        if (!$this->assertVersionGreaterThen('5.0.0')) {
+            throw new Exception("This plugin requires Shopware 5.0.0 or a later version");
+        }
+
+        $this->registerEvents();
+
+        return true;
     }
 
     /**
