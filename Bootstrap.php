@@ -125,7 +125,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
 
         $form->addElement('text', 'desktopTypes',
             array(
-                'label' => 'Desktop-Types',
+                'label' => 'Geräte-Typen',
                 'value' => 'Backend',
                 'description' => 'Hier kann angegeben werden über welchen Kommunikatoinskanal die Bestellung eingegagen ist. Zum Beispiel Telefon, Handy, Geschäft, ... \n Die Verschiedenen Typen werden durch ein Komma (,) getrennt.'
             )
