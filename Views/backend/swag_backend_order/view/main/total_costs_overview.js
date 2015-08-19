@@ -211,9 +211,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
 
         var currencyIndex = me.currencyStore.findExact('selected', 1);
         var currencyModel = me.currencyStore.getAt(currencyIndex);
-        me.currencySymbol = currencyModel.get('symbol');
-        me.totalCostsView.tpl = me.createTotalCostsTemplate();
-        me.updateTotalCosts();
+
+        if (typeof currencyModel !== "undefined") {
+            me.currencySymbol = currencyModel.get('symbol');
+            me.totalCostsView.tpl = me.createTotalCostsTemplate();
+            me.updateTotalCosts();
+        }
     },
 
     createNetCheckbox: function() {
