@@ -26,7 +26,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
         }
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.title = me.snippets.title;
@@ -37,7 +37,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
          * sets the new shipping costs if an position was added
          */
         me.totalCostsStore = me.subApplication.getStore('TotalCosts');
-        me.totalCostsStore.on('update', function(store, record) {
+        me.totalCostsStore.on('update', function (store, record) {
             me.shippingCostsNetNumber.setValue(record.data.shippingCostsNet);
         });
 
@@ -50,16 +50,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
      *
      * @return void
      */
-    registerEvents: function() {
+    registerEvents: function () {
         this.addEvents(
-                'addShippingCosts'
+            'addShippingCosts'
         );
     },
 
-    createShippingCostsItems: function() {
+    createShippingCostsItems: function () {
         var me = this;
 
-        return [ me.createShippingCostsContainerLeft(), me.createShippingCostsContainerRight() ];
+        return [me.createShippingCostsContainerLeft(), me.createShippingCostsContainerRight()];
     },
 
     /**
@@ -67,7 +67,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
      *
      * @returns [Ext.container.Container]
      */
-    createShippingCostsContainerLeft: function() {
+    createShippingCostsContainerLeft: function () {
         var me = this;
 
         var shippingArt = Ext.create('Ext.form.field.ComboBox', {
@@ -80,18 +80,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             allowBlank: false,
             fieldLabel: me.snippets.fields.art,
             listeners: {
-                select: function(combo, records, eOpts) {
+                select: function (combo, records, eOpts) {
                     me.shippingCostsNumber.setValue(records[0].data.value);
 
                     if (typeof me.totalCostsStore.getAt(0) === 'undefined') {
                         me.shippingCostsNetNumber.setValue(0);
                     }
 
-                    var shippingFieldsArray = [ me.shippingCostsNumber, me.shippingCostsNetNumber ];
+                    var shippingFieldsArray = [me.shippingCostsNumber, me.shippingCostsNetNumber];
 
-                    var shippingCosts      = me.shippingCostsNumber.getValue(),
-                        shippingCostsNet   = me.shippingCostsNetNumber.getValue();
-                    me.dispatchId          = records[0].data.id;
+                    var shippingCosts = me.shippingCostsNumber.getValue(),
+                        shippingCostsNet = me.shippingCostsNetNumber.getValue();
+                    me.dispatchId = records[0].data.id;
 
                     me.fireEvent('addShippingCosts', shippingCosts, shippingCostsNet, me.dispatchId, shippingFieldsArray);
                     me.fireEvent('calculateTax');
@@ -117,7 +117,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
      *
      * @returns [Ext.container.Container]
      */
-    createShippingCostsContainerRight: function() {
+    createShippingCostsContainerRight: function () {
         var me = this;
 
         me.shippingCostsNumber = Ext.create('Ext.form.field.Number', {
@@ -155,13 +155,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
         });
     },
 
-    createShippingCostsEvents: function() {
+    createShippingCostsEvents: function () {
         var me = this;
 
         me.shippingCosts = me.shippingCostsNumber.getValue();
         me.shippingCostsNet = me.shippingCostsNetNumber.getValue();
 
-        me.shippingCostsNumber.on('change', function(numberField, newValue, oldValue) {
+        me.shippingCostsNumber.on('change', function (numberField, newValue, oldValue) {
             me.shippingCostsNet = me.orderModel.get('shippingCostsNet');
             me.fireEvent('addShippingCosts', newValue, me.shippingCostsNet, me.dispatchId, undefined);
         });

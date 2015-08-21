@@ -32,14 +32,14 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
     /**
      *
      */
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.items = me.createToolbarItems();
 
         me.languageStore = Ext.create('Ext.data.Store', {
             name: 'languageStore',
-            fields: [ 'id', 'mainId', 'categoryId', 'name', 'title', 'default' ]
+            fields: ['id', 'mainId', 'categoryId', 'name', 'title', 'default']
         });
 
         /**
@@ -47,7 +47,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
          */
         me.currencyStore = me.subApplication.getStore('Currency');
 
-        me.currencyStore.on('load', function() {
+        me.currencyStore.on('load', function () {
             me.changeCurrencyComboBox.bindStore(me.currencyStore);
             var standardCurrency = me.currencyStore.findExact('default', 1);
 
@@ -63,12 +63,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
 
         });
 
-        me.customerSearchField.on('valueselect', function() {
+        me.customerSearchField.on('valueselect', function () {
             me.openCustomerButton.setDisabled(false);
         });
 
         var customerStore = me.subApplication.getStore('Customer');
-        customerStore.on('load', function() {
+        customerStore.on('load', function () {
             if (typeof customerStore.getAt(0) !== 'undefined') {
                 var shopName = customerStore.getAt(0).shop().getAt(0).get('name');
                 me.shopLabel.setText(me.snippets.shop.default + shopName);
@@ -84,7 +84,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
     /**
      * register the events
      */
-    registerEvents: function() {
+    registerEvents: function () {
         this.addEvents(
             'changeSearchField'
         )
@@ -95,21 +95,21 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
      *
      * @returns []
      */
-    createToolbarItems: function() {
+    createToolbarItems: function () {
         var me = this;
 
         me.customerSearchField = me.createCustomerSearch('customerName', 'id', 'email');
 
         me.createCustomerButton = Ext.create('Ext.button.Button', {
             text: me.snippets.buttons.createCustomer,
-            handler:function () {
+            handler: function () {
                 me.fireEvent('createCustomer', false);
             }
         });
 
         me.createGuestButton = Ext.create('Ext.button.Button', {
             text: me.snippets.buttons.createGuest,
-            handler:function () {
+            handler: function () {
                 me.fireEvent('createCustomer', true);
             }
         });
@@ -118,7 +118,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
             text: me.snippets.buttons.openCustomer,
             disabled: true,
             margin: '0 30 0 0',
-            handler:function () {
+            handler: function () {
                 me.fireEvent('openCustomer');
             }
         });
@@ -163,8 +163,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
             }
         });
 
-        return [ me.changeCurrencyComboBox, me.languageComboBox, me.shopLabel, '->',
-                 me.createCustomerButton, me.createGuestButton, me.openCustomerButton, me.customerSearchField ];
+        return [
+            me.changeCurrencyComboBox, me.languageComboBox, me.shopLabel, '->',
+            me.createCustomerButton, me.createGuestButton, me.openCustomerButton, me.customerSearchField
+        ];
     },
 
     /**
@@ -174,7 +176,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
      * @param name
      * @return Shopware.form.field.ArticleSearch
      */
-    createCustomerSearch: function(returnValue, hiddenReturnValue, name ) {
+    createCustomerSearch: function (returnValue, hiddenReturnValue, name) {
         var me = this;
         me.customerStore = me.subApplication.getStore('Customer');
 
@@ -185,11 +187,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
             hiddenReturnValue: hiddenReturnValue,
             articleStore: me.customerStore,
             allowBlank: false,
-            getValue: function() {
+            getValue: function () {
                 me.store.getAt(me.record.rowIdx).set(name, this.getSearchField().getValue());
                 return this.getSearchField().getValue();
             },
-            setValue: function(value) {
+            setValue: function (value) {
                 this.getSearchField().setValue(value);
             }
         });
@@ -198,7 +200,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
     /**
      * @param mainShopId
      */
-    getLanguageShops: function(mainShopId) {
+    getLanguageShops: function (mainShopId) {
         var me = this;
 
         Ext.Ajax.request({
@@ -206,11 +208,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
             params: {
                 mainShopId: mainShopId
             },
-            success: function(response) {
+            success: function (response) {
                 me.languageStore.removeAll();
                 var languageSubShops = Ext.JSON.decode(response.responseText);
 
-                languageSubShops.data.forEach(function(record) {
+                languageSubShops.data.forEach(function (record) {
                     me.languageStore.add(record);
                 });
                 me.languageComboBox.bindStore(me.languageStore);

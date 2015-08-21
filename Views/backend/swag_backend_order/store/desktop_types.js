@@ -4,7 +4,7 @@
 Ext.define('Shopware.apps.SwagBackendOrder.store.DesktopTypes', {
     extend: 'Ext.data.Store',
 
-    model : 'Shopware.apps.SwagBackendOrder.model.DesktopTypes'
+    model: 'Shopware.apps.SwagBackendOrder.model.DesktopTypes'
 });
 //
 //{/block}

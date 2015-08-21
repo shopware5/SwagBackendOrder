@@ -28,12 +28,9 @@
  * @category Shopware
  * @package Shopware\Plugins\SwagBackendOrder
  * @copyright Copyright (c) 2015, shopware AG (http://www.shopware.com)
- * @author Simon Bäumer
  */
-class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
-    extends Shopware_Components_Plugin_Bootstrap
+class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
-    //@TODO: plugin json translations
     /**
      * returns the label
      *
@@ -74,6 +71,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
 
     /**
      * @return array|bool
+     * @throws Exception
      */
     public function install()
     {
@@ -89,6 +87,10 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
         return array('success' => true, 'invalidateCache' => array('backend'));
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function update()
     {
         // Check if shopware version matches
@@ -96,6 +98,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
             throw new Exception("This plugin requires Shopware 5.0.0 or a later version");
         }
 
+        $this->createConfiguration();
         $this->registerEvents();
 
         return true;
@@ -116,14 +119,19 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
     {
         $form = $this->Form();
 
-        $form->addElement('text', 'validationMail',
+        $form->addElement(
+            'text',
+            'validationMail',
             array(
                 'label' => 'Gast Konto eMail',
                 'required' => true,
-                'description' => 'Die eMail-Adresse mit der Gast Konten angelegt werden sollen. Gastkonten sind Accounts für Kunden die sich nicht in ihrem Shop registriert haben. So haben Sie die möglichkeit Bestellungen einzutragen die Beispielsweise über Telefon eingangen sind.')
+                'description' => 'Die eMail-Adresse mit der Gast Konten angelegt werden sollen. Gastkonten sind Accounts für Kunden die sich nicht in ihrem Shop registriert haben. So haben Sie die möglichkeit Bestellungen einzutragen die Beispielsweise über Telefon eingangen sind.'
+            )
         );
 
-        $form->addElement('text', 'desktopTypes',
+        $form->addElement(
+            'text',
+            'desktopTypes',
             array(
                 'label' => 'Geräte-Typen',
                 'value' => 'Backend',
@@ -207,8 +215,8 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
 
         // Register CustomerInformationHandler-Resource
         $this->subscribeEvent(
-                'Enlight_Bootstrap_InitResource_CustomerInformationHandler',
-                'onInitCustomerInformationHandlerResource'
+            'Enlight_Bootstrap_InitResource_CustomerInformationHandler',
+            'onInitCustomerInformationHandlerResource'
         );
     }
 
@@ -223,10 +231,11 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
         $mail = $arguments->getSubject()->Request()->getParam('value');
         $action = $arguments->getSubject()->Request()->getParam('action');
 
-        if ( !empty($mail) && $action !== 'validateEmail') {
+        if (!empty($mail) && $action !== 'validateEmail') {
             if ($this->Config()->get('validationMail') == $mail) {
                 Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
                 echo true;
+
                 return true;
             }
         }
@@ -239,9 +248,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
      */
     public function onGetBackendController()
     {
-        $this->Application()->Template()->addTemplateDir(
-                $this->Path() . 'Views/'
-        );
+        $this->Application()->Template()->addTemplateDir($this->Path() . 'Views/');
 
         $this->Application()->Snippets()->addConfigDir(
             $this->Path() . 'Snippets/'
@@ -280,26 +287,14 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap
     {
         $view = $args->getSubject()->View();
 
-        $args->getSubject()->View()->addTemplateDir(
-                $this->Path() . 'Views/'
-        );
+        $args->getSubject()->View()->addTemplateDir($this->Path() . 'Views/');
 
-        if($args->getRequest()->getActionName() === 'load') {
-            $view->extendsTemplate(
-                'backend/customer/controller/create_backend_order/detail.js'
-            );
-            $view->extendsTemplate(
-                    'backend/customer/controller/create_backend_order/main.js'
-            );
-            $view->extendsTemplate(
-                    'backend/customer/view/create_backend_order/detail/base.js'
-            );
-            $view->extendsTemplate(
-                    'backend/customer/view/create_backend_order/detail/additional.js'
-            );
-            $view->extendsTemplate(
-                    'backend/customer/view/create_backend_order/detail/window.js'
-            );
+        if ($args->getRequest()->getActionName() === 'load') {
+            $view->extendsTemplate('backend/customer/controller/create_backend_order/detail.js');
+            $view->extendsTemplate('backend/customer/controller/create_backend_order/main.js');
+            $view->extendsTemplate('backend/customer/view/create_backend_order/detail/base.js');
+            $view->extendsTemplate('backend/customer/view/create_backend_order/detail/additional.js');
+            $view->extendsTemplate('backend/customer/view/create_backend_order/detail/window.js');
         }
     }
 

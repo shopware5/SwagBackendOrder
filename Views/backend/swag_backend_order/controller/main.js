@@ -35,7 +35,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      *
      * @return void
      */
-    init: function() {
+    init: function () {
         var me = this;
 
         //checks if a window is already open
@@ -124,8 +124,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * creates the order
      */
-    onCreateOrder: function(positionsGridContainer, modus) {
-        var me     = this,
+    onCreateOrder: function (positionsGridContainer, modus) {
+        var me = this,
             errmsg = "";
         me.modus = modus;
         me.window.disable(true);
@@ -141,13 +141,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var customerStore = me.subApplication.getStore('Customer');
         if (customerStore.count() > 0) {
 
-            if(me.orderModel.get('billingAddressId') == 0) {
+            if (me.orderModel.get('billingAddressId') == 0) {
                 errmsg += me.snippets.error.billing + '<br>';
             }
-            if(me.orderModel.get('paymentId') == 0) {
+            if (me.orderModel.get('paymentId') == 0) {
                 errmsg += me.snippets.error.payment + '<br>';
             }
-            if(me.orderModel.get('dispatchId') == 0) {
+            if (me.orderModel.get('dispatchId') == 0) {
                 errmsg += me.snippets.error.shippingArt + '<br>';
             }
 
@@ -174,7 +174,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
         //iterates the created positions and adds every record to the positionModel
         positionsStore.each(
-            function(record) {
+            function (record) {
                 positionOrderStore.add(record);
             }
         );
@@ -189,7 +189,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         me.orderModel.set('totalWithoutTax', me.totalCostsModel.get('totalWithoutTax'));
 
         me.createBackendOrderStore.sync({
-            success: function(response) {
+            success: function (response) {
                 me.orderId = response.proxy.reader.rawData.orderId;
                 me.ordernumber = response.proxy.reader.rawData.ordernumber;
                 me.mailErrorMessage = response.proxy.reader.rawData.mail;
@@ -231,7 +231,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                         break;
                 }
             },
-            failure: function(response) {
+            failure: function (response) {
                 var article = response.proxy.reader.rawData.article;
 
                 if (article || article == "") {
@@ -254,13 +254,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param dispatchId
      * @param shippingCostsFields
      */
-    onAddShippingCosts: function(shippingCosts, shippingCostsNet, dispatchId, shippingCostsFields) {
+    onAddShippingCosts: function (shippingCosts, shippingCostsNet, dispatchId, shippingCostsFields) {
         var me = this;
 
         if (shippingCostsFields !== undefined) {
             me.shippingCostsFields = shippingCostsFields;
 
-            shippingCosts    = me.calculateCurrency(shippingCosts);
+            shippingCosts = me.calculateCurrency(shippingCosts);
             shippingCostsNet = me.calculateCurrency(shippingCostsNet);
 
             shippingCostsFields[0].setValue(shippingCosts);
@@ -285,7 +285,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param record
      * @param billing
      */
-    onSelectBillingAddress: function(record, billing) {
+    onSelectBillingAddress: function (record, billing) {
         var me = this;
         record = record[0].data;
 
@@ -307,7 +307,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 department: record.department,
                 userId: me.customerStore.getAt(0).get('id')
             },
-            success: function(response) {
+            success: function (response) {
                 var responseObj = Ext.JSON.decode(response.responseText);
                 me.orderModel.set('billingAddressId', responseObj.billingAddressId);
             }
@@ -319,7 +319,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      *
      * @param record
      */
-    onSelectShippingAddress: function(record) {
+    onSelectShippingAddress: function (record) {
         var me = this;
         record = record[0].data;
 
@@ -339,7 +339,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 department: record.department,
                 userId: me.customerStore.getAt(0).get('id')
             },
-            success: function(response) {
+            success: function (response) {
                 var responseObj = Ext.JSON.decode(response.responseText);
                 me.orderModel.set('shippingAddressId', responseObj.shippingAddressId);
             }
@@ -352,7 +352,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      *
      * @param record
      */
-    onSelectPayment: function(record) {
+    onSelectPayment: function (record) {
         var me = this;
         me.orderModel.set('paymentId', record[0].data.id);
     },
@@ -365,7 +365,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param [string] value - Value of the Ext.form.field.Trigger
      * @param [object] record - Selected record
      */
-    onArticleSelect: function(editor, value, record) {
+    onArticleSelect: function (editor, value, record) {
         var me = this;
 
         var columns = editor.editor.items.items,
@@ -413,9 +413,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param grid
      * @param eOpts
      */
-    onCancelEdit: function(grid, eOpts) {
+    onCancelEdit: function (grid, eOpts) {
         var record = eOpts.record,
-                store = eOpts.store;
+            store = eOpts.store;
 
         if (!(record instanceof Ext.data.Model) || !(store instanceof Ext.data.Store)) {
             return;
@@ -431,14 +431,14 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param newValue
      * @param customerId
      */
-    onSelectCustomer: function(newValue, customerId) {
+    onSelectCustomer: function (newValue, customerId) {
         var me = this;
 
         me.customerStore = me.subApplication.getStore('Customer').load({
             params: { searchParam: customerId }
         });
 
-        me.customerStore.on('load', function() {
+        me.customerStore.on('load', function () {
             if (Ext.isObject(me.customerStore)) {
                 me.orderModel.set('customerId', customerId);
                 me.customerSelected = true;
@@ -449,9 +449,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 var billingModel = me.customerStore.getAt(0).billing().getAt(0);
 
                 var title = me.snippets.title + ' ' +
-                        billingModel.get('firstName') +
-                        ' ' +
-                        billingModel.get('lastName');
+                    billingModel.get('firstName') +
+                    ' ' +
+                    billingModel.get('lastName');
 
                 if (billingModel.get('number')) {
                     title += ' - ' + billingModel.get('number');
@@ -471,7 +471,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      *
      * @param record
      */
-    onOpenArticle: function(record) {
+    onOpenArticle: function (record) {
         Shopware.app.Application.addSubApplication({
             name: 'Shopware.apps.Article',
             action: 'detail',
@@ -484,7 +484,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * opens the selected customer
      */
-    onOpenCustomer: function() {
+    onOpenCustomer: function () {
         var me = this,
             customerId = me.subApplication.getStore('Customer').getAt(0).get('id');
 
@@ -500,12 +500,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * @param createGuest
      */
-    onCreateCustomer: function(createGuest) {
+    onCreateCustomer: function (createGuest) {
         var me = this,
             email = '',
             guest = false;
 
-        if (createGuest)  {
+        if (createGuest) {
             email = me.validationMail;
             guest = true;
         }
@@ -528,9 +528,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param oldValue
      * @param eOpts
      */
-    onChangeCurrency: function(comboBox, newValue, oldValue, eOpts) {
-        var me               = this,
-            shippingCosts    = 0,
+    onChangeCurrency: function (comboBox, newValue, oldValue, eOpts) {
+        var me = this,
+            shippingCosts = 0,
             shippingCostsNet = 0;
 
         me.orderModel.set('currencyId', newValue);
@@ -563,7 +563,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 shippingCosts: me.orderModel.get('shippingCosts'),
                 shippingCostsNet: me.orderModel.get('shippingCostsNet')
             },
-            success: function(response) {
+            success: function (response) {
                 var responseObj = Ext.JSON.decode(response.responseText).data;
 
                 if (typeof responseObj === 'undefined') {
@@ -591,7 +591,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param price
      * @returns
      */
-    calculateCurrency: function(price) {
+    calculateCurrency: function (price) {
         var me = this;
         var index = me.currencyStore.findExact('selected', 1);
 
@@ -606,21 +606,27 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param newValue
      * @param oldValue
      */
-    onChangeAttrField: function(field, newValue, oldValue) {
+    onChangeAttrField: function (field, newValue, oldValue) {
         var me = this;
 
-        switch(field.name) {
-            case 'attr1TxtBox': me.orderAttributeModel.set('attribute1', field.getValue());
+        switch (field.name) {
+            case 'attr1TxtBox':
+                me.orderAttributeModel.set('attribute1', field.getValue());
                 break;
-            case 'attr2TxtBox': me.orderAttributeModel.set('attribute2', field.getValue());
+            case 'attr2TxtBox':
+                me.orderAttributeModel.set('attribute2', field.getValue());
                 break;
-            case 'attr3TxtBox': me.orderAttributeModel.set('attribute3', field.getValue());
+            case 'attr3TxtBox':
+                me.orderAttributeModel.set('attribute3', field.getValue());
                 break;
-            case 'attr4TxtBox': me.orderAttributeModel.set('attribute4', field.getValue());
+            case 'attr4TxtBox':
+                me.orderAttributeModel.set('attribute4', field.getValue());
                 break;
-            case 'attr5TxtBox': me.orderAttributeModel.set('attribute5', field.getValue());
+            case 'attr5TxtBox':
+                me.orderAttributeModel.set('attribute5', field.getValue());
                 break;
-            case 'attr6TxtBox': me.orderAttributeModel.set('attribute6', field.getValue());
+            case 'attr6TxtBox':
+                me.orderAttributeModel.set('attribute6', field.getValue());
                 break;
             default:
                 break;
@@ -635,7 +641,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param comboBox
      * @param newValue
      */
-    onChangeDesktopType: function(comboBox, newValue) {
+    onChangeDesktopType: function (comboBox, newValue) {
         var me = this;
 
         var desktopType = comboBox.findRecordByValue(newValue);
@@ -645,16 +651,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * reads the plugin configuration
      */
-    getPluginConfig: function() {
+    getPluginConfig: function () {
         var me = this;
 
         Ext.Ajax.request({
             url: '{url action=getPluginConfig}',
-            success: function(response, opts) {
+            success: function (response, opts) {
                 var pluginConfigObj = Ext.decode(response.responseText);
 
                 me.validationMail = pluginConfigObj.data.validationMail;
-                me.desktopTypes   = pluginConfigObj.data.desktopTypes;
+                me.desktopTypes = pluginConfigObj.data.desktopTypes;
 
                 me.subApplication.getStore('DesktopTypes').loadData(me.desktopTypes, false);
             }
@@ -664,7 +670,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * deselects the shipping address
      */
-    onSelectBillingAsShippingAddress: function() {
+    onSelectBillingAsShippingAddress: function () {
         var me = this;
         me.orderModel.set('shippingAddressId', null);
     },
@@ -672,7 +678,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * calculates the tax costs for every tax rate and the shipping tax
      */
-    onCalculateTax: function() {
+    onCalculateTax: function () {
         var me = this;
 
         me.positionStore = me.subApplication.getStore('Position');
@@ -685,7 +691,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         });
         var positionJsonString = Ext.JSON.encode(positionArray);
 
-
         Ext.Ajax.request({
             url: '{url action="calculateTax"}',
             params: {
@@ -693,11 +698,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 shippingCosts: me.orderModel.get('shippingCosts'),
                 net: me.orderModel.get('net')
             },
-            success: function(response) {
+            success: function (response) {
                 var totalCostsJson = Ext.JSON.decode(response.responseText);
                 var record = totalCostsJson.data;
 
-                me.totalCostsModel.set('totalWithoutTax',record.totalWithoutTax);
+                me.totalCostsModel.set('totalWithoutTax', record.totalWithoutTax);
                 me.totalCostsModel.set('sum', record.sum);
                 me.totalCostsModel.set('total', record.total);
                 me.totalCostsModel.set('shippingCosts', record.shippingCosts);
@@ -715,7 +720,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param taxRate
      * @returns number
      */
-    calculateNetPrice: function(value, taxRate) {
+    calculateNetPrice: function (value, taxRate) {
         taxRate = parseInt(taxRate);
         return value / ((100 + taxRate) / 100);
     },
@@ -723,7 +728,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * resets all setted data which belongs to the customer which was selected by the user
      */
-    onChangeCustomer: function() {
+    onChangeCustomer: function () {
         var me = this;
 
         me.orderModel.set('billingAddressId', null);
@@ -737,7 +742,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * calculates the new prices and sets the net flag to true
      * @param net
      */
-    onChangeNetCheckbox: function(net) {
+    onChangeNetCheckbox: function (net) {
         var me = this;
         me.orderModel.set('net', net);
 
@@ -746,7 +751,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         }
 
         var positionStore = me.subApplication.getStore('Position');
-        if ( !(positionStore instanceof Ext.data.Store)) return;
+        if (!(positionStore instanceof Ext.data.Store)) return;
 
         var positionArray = [];
         positionStore.each(function (record) {
@@ -763,7 +768,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 positions: positionJsonString,
                 net: net
             },
-            success: function(response) {
+            success: function (response) {
                 var responseObj = Ext.JSON.decode(response.responseText);
                 var positions = responseObj.data;
 
@@ -781,7 +786,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      *
      * @param languageShopId
      */
-    onChangeLanguage: function(languageShopId) {
+    onChangeLanguage: function (languageShopId) {
         var me = this;
 
         me.orderModel.set('languageShopId', languageShopId);

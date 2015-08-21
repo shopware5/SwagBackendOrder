@@ -26,7 +26,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
         }
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.title = me.snippets.title;
@@ -35,7 +35,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
          * gets the customer store and loads the selected customer
          */
         me.customerStore = me.subApplication.getStore('Customer');
-        me.customerStore.on('load', function() {
+        me.customerStore.on('load', function () {
             if (Ext.isObject(me.customerStore) && me.customerStore.count() == 1) {
                 me.shippingStore = me.customerStore.getAt(0).shipping();
                 me.shippingAddressComboBox.bindStore(me.shippingStore);
@@ -46,7 +46,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
 
         me.items = me.createShippingContainer();
 
-        me.billingAsShippingCheckbox.on('change', function() {
+        me.billingAsShippingCheckbox.on('change', function () {
             if (me.billingAsShippingCheckbox.getValue()) {
                 me.shippingAddressComboBox.setValue('');
                 me.remove('shippingDataView', true);
@@ -59,13 +59,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
         me.callParent(arguments);
     },
 
-    registerEvents: function() {
+    registerEvents: function () {
         this.addEvents(
             'selectShippingAddress'
         );
     },
 
-    createShippingContainer: function() {
+    createShippingContainer: function () {
         var me = this;
 
         return Ext.create('Ext.container.Container', {
@@ -74,7 +74,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
         });
     },
 
-    createShippingItems: function() {
+    createShippingItems: function () {
         var me = this;
 
         /**
@@ -93,9 +93,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             },
             tpl: me.createShippingAddressComboTpl(),
             listeners: {
-                'select': function(comboBox, record) {
+                'select': function (comboBox, record) {
                     me.fireEvent(
-                            'selectShippingAddress', record
+                        'selectShippingAddress', record
                     );
 
                     me.billingAsShippingCheckbox.setValue(false);
@@ -131,7 +131,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             checked: true,
             height: 35,
             listeners: {
-                change: function(field, value) {
+                change: function (field, value) {
                     if (value) {
                         me.shippingAddressComboBox.disable();
                     } else {
@@ -142,90 +142,86 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             }
         });
 
-        return [ me.shippingAddressComboBox, me.billingAsShippingCheckbox];
+        return [me.shippingAddressComboBox, me.billingAsShippingCheckbox];
     },
 
-    createShippingAddressComboTpl: function() {
+    createShippingAddressComboTpl: function () {
         var me = this;
 
         return new Ext.XTemplate(
-                '{literal}<tpl for=".">',
-                    '<div class= "x-combo-list-item x-boundlist-item">',
-                        '<tpl if="company">',
-                            '{company},<br/>',
-                        '</tpl>',
-                        '<tpl switch="salutation">',
-                            '<tpl case="mr">',
-                                me.snippets.salutation.mister + ' ',
-                            '<tpl case="ms">',
-                                me.snippets.salutation.miss + ' ',
-                            '<tpl default>',
-                                '{salutation} ',
-                        '</tpl>',
-                            '{firstName} {lastName},<br/>{zipCode} {city},<br/>{street}',
-                        '<tpl if="state">',
-                            ',<br/>{state}',
-                        '</tpl>',
-                        '<tpl if="country">',
-                            ',<br/>{country}',
-                        '</tpl>',
-                    '</div>',
-                '</tpl>{/literal}'
+            '{literal}<tpl for=".">',
+            '<div class= "x-combo-list-item x-boundlist-item">',
+            '<tpl if="company">',
+            '{company},<br/>',
+            '</tpl>',
+            '<tpl switch="salutation">',
+            '<tpl case="mr">',
+            me.snippets.salutation.mister + ' ',
+            '<tpl case="ms">',
+            me.snippets.salutation.miss + ' ',
+            '</tpl>',
+            '{firstName} {lastName},<br/>{zipCode} {city},<br/>{street}',
+            '<tpl if="state">',
+            ',<br/>{state}',
+            '</tpl>',
+            '<tpl if="country">',
+            ',<br/>{country}',
+            '</tpl>',
+            '</div>',
+            '</tpl>{/literal}'
         );
     },
 
-    createShippingTemplate: function() {
+    createShippingTemplate: function () {
         var me = this;
 
         return new Ext.XTemplate(
-                '{literal}<tpl for=".">',
-                '<div class="customeer-info-pnl">',
-                '<div class="base-info">',
-                '<p>',
-                '<span>{company}</span>',
-                '</p>',
-                '<p>',
-                '<tpl switch="salutation">',
-                '<tpl case="mr">',
-                me.snippets.salutation.mister + ' ',
-                '<tpl case="ms">',
-                me.snippets.salutation.miss + ' ',
-                '<tpl default>',
-                '{salutation} ',
-                '</tpl>',
-                '<span>{firstName}</span>&nbsp;',
-                '<span>{lastName}</span>',
-                '</p>',
-                '<p>',
-                '<span>{street}</span>',
-                '</p>',
-                '<tpl if="additionalAddressLine1">',
-                '<p>',
-                '<span>{additionalAddressLine1}</span>',
-                '</p>',
-                '</tpl>',
-                '<tpl if="additionalAddressLine2">',
-                '<p>',
-                '<span>{additionalAddressLine1}</span>',
-                '</p>',
-                '</tpl>',
-                '<p>',
-                '<span>{zipCode}</span>&nbsp;',
-                '<span>{city}</span>',
-                '</p>',
-                '<p>',
-                '<span>{state}</span>',
-                '</p>',
-                '<p>',
-                '<span>{country}</span>',
-                '</p>',
-                '</div>',
-                '</div>',
-                '</tpl>{/literal}'
+            '{literal}<tpl for=".">',
+            '<div class="customeer-info-pnl">',
+            '<div class="base-info">',
+            '<p>',
+            '<span>{company}</span>',
+            '</p>',
+            '<p>',
+            '<tpl switch="salutation">',
+            '<tpl case="mr">',
+            me.snippets.salutation.mister + ' ',
+            '<tpl case="ms">',
+            me.snippets.salutation.miss + ' ',
+            '</tpl>',
+            '<span>{firstName}</span>&nbsp;',
+            '<span>{lastName}</span>',
+            '</p>',
+            '<p>',
+            '<span>{street}</span>',
+            '</p>',
+            '<tpl if="additionalAddressLine1">',
+            '<p>',
+            '<span>{additionalAddressLine1}</span>',
+            '</p>',
+            '</tpl>',
+            '<tpl if="additionalAddressLine2">',
+            '<p>',
+            '<span>{additionalAddressLine1}</span>',
+            '</p>',
+            '</tpl>',
+            '<p>',
+            '<span>{zipCode}</span>&nbsp;',
+            '<span>{city}</span>',
+            '</p>',
+            '<p>',
+            '<span>{state}</span>',
+            '</p>',
+            '<p>',
+            '<span>{country}</span>',
+            '</p>',
+            '</div>',
+            '</div>',
+            '</tpl>{/literal}'
         );
     },
 
-    resetFields: function() {
+    resetFields: function () {
         var me = this;
 
         me.shippingAddressComboBox.setValue('');

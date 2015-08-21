@@ -18,7 +18,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'total',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') { v = 0.0 }
+                if (v == '') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         },
@@ -26,7 +28,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'sum',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') { v = 0.0 }
+                if (v == '') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         },
@@ -34,7 +38,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'totalWithoutTax',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') { v = 0.0 }
+                if (v == '') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         },
@@ -42,7 +48,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'shippingCosts',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') { v = 0.0 }
+                if (v == '') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         },
@@ -50,7 +58,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'shippingCostsNet',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') { v = 0.0 }
+                if (v == '') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         },
@@ -58,7 +68,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'taxSum',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') { v = 0.0 }
+                if (v == '') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         }

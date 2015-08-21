@@ -4,7 +4,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.OrderAttribute', {
 
     extend: 'Ext.data.Model',
 
-    fields:[
+    fields: [
         { name: 'attribute1', type: 'string' },
         { name: 'attribute2', type: 'string' },
         { name: 'attribute3', type: 'string' },

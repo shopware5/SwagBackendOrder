@@ -10,32 +10,32 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
      *
      * @return [Array] Contains the different form field of the left container
      */
-    createBaseFormLeft:function () {
+    createBaseFormLeft: function () {
         var me = this,
             baseFormLeft = me.callParent(arguments),
             email;
 
         if (me.record.get('guest')) {
             email = Ext.create('Ext.form.field.Text', {
-                fieldLabel:me.snippets.email.label,
-                labelWidth:150,
-                name:'email',
+                fieldLabel: me.snippets.email.label,
+                labelWidth: 150,
+                name: 'email',
                 supportText: '{s namespace="backend/customer/view/main" name="swag_backend_order/customer/mail/support_text"}Guest email:{/s} ' + me.record.get('email'),
                 disabled: false,
-                allowBlank:false,
-                required:true,
-                enableKeyEvents:true,
-                checkChangeBuffer:700,
-                vtype:'remote',
+                allowBlank: false,
+                required: true,
+                enableKeyEvents: true,
+                checkChangeBuffer: 700,
+                vtype: 'remote',
                 validationUrl: null,
-                validationRequestParams:{ 'param' : me.record.get('id'),'subshopId' : me.record.get('shopId')},
-                validationErrorMsg:me.snippets.email.message,
+                validationRequestParams: { 'param': me.record.get('id'), 'subshopId': me.record.get('shopId') },
+                validationErrorMsg: me.snippets.email.message,
                 listeners: {
                     scope: me,
-                    afterrender: function(field) {
+                    afterrender: function (field) {
                         //only validates the email field if the mail is not the guest account email which can be configured in the plugin config
                         if (field.getValue() != me.record.get('email')) {
-                            window.setTimeout(function() {
+                            window.setTimeout(function () {
                                 field.validationUrl = '{url action="validateEmail"}';
                             }, 500);
                         }
@@ -46,7 +46,6 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
 
             baseFormLeft[0] = email;
         }
-
 
         baseFormLeft.push = {
             /*{if {config name=shopwareManagedCustomerNumbers}==1}*/
@@ -62,12 +61,12 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
         return baseFormLeft;
     },
 
-    createBaseFormRight: function() {
+    createBaseFormRight: function () {
         var me = this,
             baseFormRight = me.callParent(arguments);
 
         if (me.record.get('guest')) {
-            return [  ];
+            return [];
         }
 
         return baseFormRight;

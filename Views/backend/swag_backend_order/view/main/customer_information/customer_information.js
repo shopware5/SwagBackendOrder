@@ -30,7 +30,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
         height: 200
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.items = [
@@ -47,7 +47,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
      *
      * @returns [SwagBackendOrder.view.main.CustomerInformation.Billing]
      */
-    getBillingPanel: function() {
+    getBillingPanel: function () {
         var me = this;
 
         return Ext.create('SwagBackendOrder.view.main.CustomerInformation.Billing', {
@@ -60,7 +60,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
      *
      * @returns [SwagBackendOrder.view.main.CustomerInformation.Shipping]
      */
-    getShippingPanel: function() {
+    getShippingPanel: function () {
         var me = this;
 
         return Ext.create('SwagBackendOrder.view.main.CustomerInformation.Shipping', {
@@ -73,7 +73,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
      *
      * @returns [SwagBackendOrder.view.main.CustomerInformation.Payment]
      */
-    getPaymentPanel: function() {
+    getPaymentPanel: function () {
         var me = this;
 
         return Ext.create('SwagBackendOrder.view.main.CustomerInformation.Payment', {

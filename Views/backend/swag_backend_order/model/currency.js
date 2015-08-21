@@ -16,21 +16,21 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Currency', {
      * unique id
      * @int
      */
-    idProperty : 'id',
+    idProperty: 'id',
 
     /**
      * The fields used for this model
      * @array
      */
     fields: [
-        { name : 'id', type : 'int' },
-        { name : 'name', type : 'string' },
-        { name : 'symbol', type : 'string' },
-        { name : 'currency', type : 'string' },
-        { name : 'factor', type: 'float' },
-        { name : 'default', type: 'int' },
+        { name: 'id', type: 'int' },
+        { name: 'name', type: 'string' },
+        { name: 'symbol', type: 'string' },
+        { name: 'currency', type: 'string' },
+        { name: 'factor', type: 'float' },
+        { name: 'default', type: 'int' },
         //if currency is selected -> true
-        { name : 'selected', type: 'int', defaultValue: 0 }
+        { name: 'selected', type: 'int', defaultValue: 0 }
     ]
 });
 //

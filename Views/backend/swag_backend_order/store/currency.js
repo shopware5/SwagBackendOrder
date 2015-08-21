@@ -4,7 +4,7 @@
 Ext.define('Shopware.apps.SwagBackendOrder.store.Currency', {
     extend: 'Ext.data.Store',
 
-    model : 'Shopware.apps.SwagBackendOrder.model.Currency',
+    model: 'Shopware.apps.SwagBackendOrder.model.Currency',
 
     proxy: {
         type: 'ajax',

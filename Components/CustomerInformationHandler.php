@@ -13,8 +13,8 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
         $result = $builder->getQuery()->getArrayResult();
 
-        $billingAddresses           = $this->getOrderAddresses($customerId, 'Shopware\Models\Order\Billing', 'billings');
-        $shippingAddresses          = $this->getOrderAddresses($customerId, 'Shopware\Models\Order\Shipping', 'shipping');
+        $billingAddresses = $this->getOrderAddresses($customerId, 'Shopware\Models\Order\Billing', 'billings');
+        $shippingAddresses = $this->getOrderAddresses($customerId, 'Shopware\Models\Order\Shipping', 'shipping');
         $alternativeShippingAddress = $this->getAlternativeShippingAddress($customerId);
 
         if (!$this->isEqualShippingAddresses($shippingAddresses, $alternativeShippingAddress)) {
@@ -22,7 +22,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
         }
 
         if ($billingAddresses) {
-            $result[0]['billing']  = $billingAddresses;
+            $result[0]['billing'] = $billingAddresses;
         }
 
         if ($shippingAddresses) {
@@ -45,9 +45,11 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
          * adding where statements
          * concats the first name and the last name to a full name for the search (uses the billing table)
          */
-        $builder->where($builder->expr()->like(
-                $builder->expr()->concat('billing.firstName',
-                        $builder->expr()->concat($builder->expr()->literal(' '), 'billing.lastName')
+        $builder->where(
+            $builder->expr()->like(
+                $builder->expr()->concat(
+                    'billing.firstName',
+                    $builder->expr()->concat($builder->expr()->literal(' '), 'billing.lastName')
                 ),
                 $builder->expr()->literal($search)
             )
@@ -67,8 +69,8 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
          */
         foreach ($result as &$customer) {
             $customer['customerCompany'] = $customer['billing']['company'];
-            $customer['customerNumber']  = $customer['billing']['number'];
-            $customer['customerName']    = $customer['billing']['firstName'] . ' ' . $customer['billing']['lastName'];
+            $customer['customerNumber'] = $customer['billing']['number'];
+            $customer['customerName'] = $customer['billing']['firstName'] . ' ' . $customer['billing']['lastName'];
         }
 
         return $result;
@@ -99,7 +101,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
      */
     private function getAlternativeShippingAddress($customerId)
     {
-        $builder = $this->getCustomerShippingAddressQueryBuilder($customerId);;
+        $builder = $this->getCustomerShippingAddressQueryBuilder($customerId);
 
         $result = $builder->getQuery()->getArrayResult();
 
@@ -147,8 +149,8 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
          */
         foreach ($result as &$address) {
             $address['orderAddressId'] = $address['id'];
-            $address['country']        = $address['country']['name'];
-            $address['state']          = $address['state']['name'];
+            $address['country'] = $address['country']['name'];
+            $address['state'] = $address['state']['name'];
             unset($address['id']);
         }
 
@@ -175,7 +177,8 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
         );
 
         if ($model === 'Shopware\Models\Order\Billing') {
-            array_push($fieldsGroupBy,
+            array_push(
+                $fieldsGroupBy,
                 'phone',
                 'fax',
                 'vatId'
@@ -187,13 +190,13 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
     /**
      * Gets the query builder for the alternative shipping address which is placed in the `s_user_shippingaddress` table
+     *
      * @param string $searchParam
      * @param string $model
      * @param string $alias
      * @return \Doctrine\ORM\QueryBuilder
      */
-    private function getCustomerShippingAddressQueryBuilder($searchParam, $model = 'Shopware\Models\Customer\Shipping', $alias = 'shippingCustomer')
-    {
+    private function getCustomerShippingAddressQueryBuilder($searchParam, $model = 'Shopware\Models\Customer\Shipping', $alias = 'shippingCustomer') {
         $builder = Shopware()->Models()->createQueryBuilder();
 
         $builder->select(array($alias, 'country', 'state'))
@@ -230,6 +233,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
     /**
      * Checks the shipping addresses for an address with matches exactly the alternative shipping address
+     *
      * @param array $shippingAddresses
      * @param array $alternativeShippingAddress
      * @return bool
@@ -247,6 +251,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
                 return true;
             }
         }
+
         return false;
     }
 }

@@ -6,7 +6,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.store.Payment', {
      * Extends the standard Ext Model
      * @string
      */
-    extend:'Ext.data.Store',
+    extend: 'Ext.data.Store',
 
     model: 'Shopware.apps.SwagBackendOrder.model.Payment',
 

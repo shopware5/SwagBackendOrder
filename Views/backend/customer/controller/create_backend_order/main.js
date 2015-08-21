@@ -46,7 +46,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
      * @params customerId - The main controller can handle a customerId parameter to open the customer detail page directly
      * @return void
      */
-    init:function () {
+    init: function () {
         var me = this;
 
         if (me.subApplication.action && me.subApplication.action.toLowerCase() === 'detail') {
@@ -61,11 +61,11 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
                 me.mainWindow.setLoading(true);
 
                 store.load({
-                    callback:function (records) {
+                    callback: function (records) {
                         var customer = records[0];
                         var store = Ext.create('Shopware.apps.Customer.store.Batch');
                         store.load({
-                            callback:function (records) {
+                            callback: function (records) {
                                 var storeData = records[0];
                                 me.mainWindow.record = customer;
                                 me.mainWindow.record.data['guest'] = false;
@@ -94,12 +94,12 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
             } else {
                 var store = Ext.create('Shopware.apps.Customer.store.Batch');
                 store.load({
-                    callback:function (records) {
+                    callback: function (records) {
                         var storeData = records[0];
 
                         me.mainWindow = me.subApplication.getView('detail.Window').create().show();
                         me.mainWindow.setLoading(true);
-                        me.mainWindow.record =  Ext.create('Shopware.apps.Customer.model.Customer');
+                        me.mainWindow.record = Ext.create('Shopware.apps.Customer.model.Customer');
 
                         /**
                          * checks if additional params was passed and sets the default guest email
@@ -123,7 +123,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
         } else {
             //open the customer listing window
             me.mainWindow = me.getView('main.Window').create({
-                listStore:me.subApplication.getStore('List').load()
+                listStore: me.subApplication.getStore('List').load()
             });
         }
     }

@@ -36,7 +36,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
         }
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.title = me.snippets.title;
@@ -46,7 +46,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
         var customerStore = me.subApplication.getStore('Customer');
 
         me.customerId = -1;
-        customerStore.on('load', function() {
+        customerStore.on('load', function () {
             var customerModel = customerStore.getAt(0);
             if (customerModel !== undefined) {
                 me.customerId = customerModel.get('id');
@@ -54,8 +54,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
             me.resetFields();
         });
 
-        me.paymentComboBox.on('change', function(combo, newValue, oldValue) {
-            if (newValue === '' ) return false;
+        me.paymentComboBox.on('change', function (combo, newValue, oldValue) {
+            if (newValue === '') return false;
 
             Ext.Ajax.request({
                 url: '{url action="getCustomerPaymentData"}',
@@ -63,7 +63,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
                     paymentId: newValue,
                     customerId: me.customerId
                 },
-                success: function(response) {
+                success: function (response) {
                     me.responseObj = Ext.decode(response.responseText);
 
                     if (me.responseObj.data.length === 0) {
@@ -74,7 +74,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
                             name: 'noDataView',
                             tpl: new Ext.XTemplate(
                                 '<div>',
-                                '<p>'+ me.snippets.paymentData.noPaymentData +'</p>',
+                                '<p>' + me.snippets.paymentData.noPaymentData + '</p>',
                                 '</div>'
                             )
                         });
@@ -91,7 +91,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
                     }
 
                     me.paymentUserStore = Ext.create('Ext.data.Store', {
-                        fields: [ 'accountHolder', 'accountNumber', 'bankCode', 'bankName', 'bic', 'iban', 'id', 'paymentMeanId'],
+                        fields: [
+                            'accountHolder',
+                            'accountNumber',
+                            'bankCode',
+                            'bankName',
+                            'bic',
+                            'iban',
+                            'id',
+                            'paymentMeanId'
+                        ],
                         data: me.responseObj.data
                     });
 
@@ -111,13 +120,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
     /**
      * registers events
      */
-    registerEvents: function() {
+    registerEvents: function () {
         this.addEvents(
-                'selectPayment'
+            'selectPayment'
         );
     },
 
-    createPaymentContainer: function() {
+    createPaymentContainer: function () {
         var me = this;
 
         return Ext.create('Ext.container.Container', {
@@ -126,7 +135,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
         });
     },
 
-    createPaymentItems: function() {
+    createPaymentItems: function () {
         var me = this;
 
         me.paymentComboBox = Ext.create('Ext.form.field.ComboBox', {
@@ -137,7 +146,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
             allowBlank: false,
             valueField: 'id',
             listeners: {
-                'select': function(comboBox, record) {
+                'select': function (comboBox, record) {
                     me.fireEvent('selectPayment', record);
                 }
             }
@@ -150,39 +159,39 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
             tpl: me.createPaymentTemplate()
         });
 
-        return [ me.paymentComboBox, me.paymentDataView ];
+        return [me.paymentComboBox, me.paymentDataView];
     },
 
     createPaymentTemplate: function () {
         var me = this;
 
         return new Ext.XTemplate(
-                '{literal}',
-                '<tpl for=".">',
-                '<div>',
-                '<p><b>' + me.snippets.paymentData.accountHolder + '</b> {accountHolder}</p>',
-                '<tpl if="accountNumber">',
-                '<p><b>' + me.snippets.paymentData.accountNumber + '</b> {accountNumber}</p>',
-                '</tpl>',
-                '<tpl if="iban">',
-                '<p><b>' + me.snippets.paymentData.iban + '</b> {iban}</p>',
-                '</tpl>',
-                '<tpl if="bankCode">',
-                '<p><b>' + me.snippets.paymentData.bankCode + '</b> {bankCode}</p>',
-                '</tpl>',
-                '<tpl if="bic">',
-                '<p><b>' + me.snippets.paymentData.bic + '</b> {bic}</p>',
-                '</tpl>',
-                '<tpl if="bankName">',
-                '<p><b>' + me.snippets.paymentData.bankName + '</b> {bankName}</p>',
-                '</tpl>',
-                '</div>',
-                '</tpl>',
-                '{/literal}'
+            '{literal}',
+            '<tpl for=".">',
+            '<div>',
+            '<p><b>' + me.snippets.paymentData.accountHolder + '</b> {accountHolder}</p>',
+            '<tpl if="accountNumber">',
+            '<p><b>' + me.snippets.paymentData.accountNumber + '</b> {accountNumber}</p>',
+            '</tpl>',
+            '<tpl if="iban">',
+            '<p><b>' + me.snippets.paymentData.iban + '</b> {iban}</p>',
+            '</tpl>',
+            '<tpl if="bankCode">',
+            '<p><b>' + me.snippets.paymentData.bankCode + '</b> {bankCode}</p>',
+            '</tpl>',
+            '<tpl if="bic">',
+            '<p><b>' + me.snippets.paymentData.bic + '</b> {bic}</p>',
+            '</tpl>',
+            '<tpl if="bankName">',
+            '<p><b>' + me.snippets.paymentData.bankName + '</b> {bankName}</p>',
+            '</tpl>',
+            '</div>',
+            '</tpl>',
+            '{/literal}'
         );
     },
 
-    resetFields: function() {
+    resetFields: function () {
         var me = this;
 
         me.paymentComboBox.setValue('');

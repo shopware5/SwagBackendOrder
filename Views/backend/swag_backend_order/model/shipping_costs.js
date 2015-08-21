@@ -1,6 +1,6 @@
 //{block name="backend/create_backend_order/model/shipping_costs"}
 //
-Ext.define('Shopware.apps.SwagBackendOrder.model.ShippingCosts',{
+Ext.define('Shopware.apps.SwagBackendOrder.model.ShippingCosts', {
 
     extend: 'Ext.data.Model',
 

@@ -31,7 +31,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
         }
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.title = me.snippets.title;
@@ -40,10 +40,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
         me.callParent(arguments);
     },
 
-    createAdditionalInformationItems: function() {
+    createAdditionalInformationItems: function () {
         var me = this;
 
-        return [ me.createAdditionalInformationContainerLeft(), me.createAdditionalInformationContainerRight() ]
+        return [me.createAdditionalInformationContainerLeft(), me.createAdditionalInformationContainerRight()]
     },
 
     /**
@@ -51,7 +51,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
      *
      * @returns [Ext.container.Container]
      */
-    createAdditionalInformationContainerLeft: function() {
+    createAdditionalInformationContainerLeft: function () {
         var me = this;
 
         var attr1TxtBox = Ext.create('Ext.form.TextField', {
@@ -60,7 +60,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             fieldLabel: me.snippets.additionalInformation.attribute1Label,
             maxLengthText: 255,
             listeners: {
-                change: function(field, newValue, oldValue, eOpts) {
+                change: function (field, newValue, oldValue, eOpts) {
                     me.fireEvent('changeAttrField', field, newValue, oldValue);
                 }
             }
@@ -72,7 +72,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             fieldLabel: me.snippets.additionalInformation.attribute2Label,
             maxLengthText: 255,
             listeners: {
-                change: function(field, newValue, oldValue, eOpts) {
+                change: function (field, newValue, oldValue, eOpts) {
                     me.fireEvent('changeAttrField', field, newValue, oldValue);
                 }
             }
@@ -84,7 +84,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             fieldLabel: me.snippets.additionalInformation.attribute3Label,
             maxLengthText: 255,
             listeners: {
-                change: function(field, newValue, oldValue, eOpts) {
+                change: function (field, newValue, oldValue, eOpts) {
                     me.fireEvent('changeAttrField', field, newValue, oldValue);
                 }
             }
@@ -96,7 +96,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             fieldLabel: me.snippets.additionalInformation.attribute4Label,
             maxLengthText: 255,
             listeners: {
-                change: function(field, newValue, oldValue, eOpts) {
+                change: function (field, newValue, oldValue, eOpts) {
                     me.fireEvent('changeAttrField', field, newValue, oldValue);
                 }
             }
@@ -108,7 +108,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             fieldLabel: me.snippets.additionalInformation.attribute5Label,
             maxLengthText: 255,
             listeners: {
-                change: function(field, newValue, oldValue, eOpts) {
+                change: function (field, newValue, oldValue, eOpts) {
                     me.fireEvent('changeAttrField', field, newValue, oldValue);
                 }
             }
@@ -120,7 +120,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             fieldLabel: me.snippets.additionalInformation.attribute6Label,
             maxLengthText: 255,
             listeners: {
-                change: function(field, newValue, oldValue, eOpts) {
+                change: function (field, newValue, oldValue, eOpts) {
                     me.fireEvent('changeAttrField', field, newValue, oldValue);
                 }
             }
@@ -157,7 +157,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
      *
      * @returns [Ext.container.Container]
      */
-    createAdditionalInformationContainerRight: function() {
+    createAdditionalInformationContainerRight: function () {
         var me = this;
 
         var desktopType = Ext.create('Ext.form.field.ComboBox', {
@@ -171,7 +171,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.AdditionalInformation', {
             valueField: 'id',
             fieldLabel: me.snippets.additionalInformation.desktopType,
             listeners: {
-                change: function(comboBox, newValue, oldValue) {
+                change: function (comboBox, newValue, oldValue) {
                     me.fireEvent('changeDesktopType', comboBox, newValue);
                 }
             }

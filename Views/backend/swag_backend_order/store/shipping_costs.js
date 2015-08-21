@@ -1,7 +1,7 @@
 //
 //{block name="backend/create_backend_order/store/shipping_costs"}
 //
-Ext.define('Shopware.apps.SwagBackendOrder.store.ShippingCosts',{
+Ext.define('Shopware.apps.SwagBackendOrder.store.ShippingCosts', {
 
     extend: 'Ext.data.Store',
 

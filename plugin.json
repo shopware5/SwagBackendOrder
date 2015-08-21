@@ -1,8 +1,9 @@
 {
     "label": {
         "de": "Backend Bestellungen",
-        "en": "Backend order"
+        "en": "Backend orders"
     },
+
     "copyright": "(c) by shopware AG",
     "license": "proprietary",
     "link": "http://store.shopware.com",
@@ -12,8 +13,10 @@
 
     "changelog": {
         "de": {
+            "1.0.0": "PT-3272 - Erstveröffentlichung;"
         },
         "en": {
+            "1.0.0": "PT-3272 - First release;"
         }
     },
 

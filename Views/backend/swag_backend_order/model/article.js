@@ -13,23 +13,23 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
      */
     fields: [
         { name: 'id', type: 'int' },
-        { name: 'additionalText', type: 'string'},
+        { name: 'additionalText', type: 'string' },
         { name: 'articleName', mapping: 'name', type: 'string' },
         {
             name: 'name',
             type: 'string',
-            convert: function(v, record) {
+            convert: function (v, record) {
                 if (record.get('additionalText') == "") {
-                    return record.get( 'articleName' )
+                    return record.get('articleName')
                 }
-                return record.get( 'articleName' ) + ' ' + record.get( 'additionalText' )
+                return record.get('articleName') + ' ' + record.get('additionalText')
             }
         },
         { name: 'articleId', type: 'int' },
         { name: 'taxId', type: 'int' },
         { name: 'inStock', type: 'int' },
         { name: 'number', type: 'string' },
-        { name: 'tax', type: 'int'},
+        { name: 'tax', type: 'int' },
         { name: 'price', type: 'float' },
         { name: 'description', type: 'string' },
         { name: 'supplierName', type: 'string' },

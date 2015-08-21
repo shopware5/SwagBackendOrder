@@ -7,7 +7,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
      * Extends the standard Ext Model
      * @string
      */
-    extend:'Ext.data.Model',
+    extend: 'Ext.data.Model',
 
     /**
      * alternate class name to identitfy this model
@@ -18,36 +18,40 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
      * The fields used for this model
      * @array
      */
-    fields:[
-        { name: 'id', type:'int' },
-        { name: 'create_backend_order_id', type:'int' },
-        { name: 'mode', type:'int' },
-        { name: 'articleId', type:'int' },
-        { name: 'detailId', type:'int' },
-        { name: 'articleNumber', type:'string' },
-        { name: 'articleName', type:'string' },
-        { name: 'quantity', type:'int' },
-        { name: 'statusId', type:'int' },
-        { name: 'statusDescription', type:'string' },
+    fields: [
+        { name: 'id', type: 'int' },
+        { name: 'create_backend_order_id', type: 'int' },
+        { name: 'mode', type: 'int' },
+        { name: 'articleId', type: 'int' },
+        { name: 'detailId', type: 'int' },
+        { name: 'articleNumber', type: 'string' },
+        { name: 'articleName', type: 'string' },
+        { name: 'quantity', type: 'int' },
+        { name: 'statusId', type: 'int' },
+        { name: 'statusDescription', type: 'string' },
         {
             name: 'price',
-            type:'float',
+            type: 'float',
             convert: function (v, record) {
                 v = parseFloat(v);
-                if (typeof v !== 'number') { v = 0.0 }
+                if (typeof v !== 'number') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         },
-        { name: 'taxId', type:'int' },
-        { name: 'taxRate', type:'float' },
-        { name: 'taxDescription', type:'string' },
-        { name: 'inStock', type:'int' },
+        { name: 'taxId', type: 'int' },
+        { name: 'taxRate', type: 'float' },
+        { name: 'taxDescription', type: 'string' },
+        { name: 'inStock', type: 'int' },
         {
             name: 'total',
-            type:'float',
+            type: 'float',
             convert: function (v, record) {
                 v = parseFloat(v);
-                if (typeof v !== 'number') { v = 0.0 }
+                if (typeof v !== 'number') {
+                    v = 0.0
+                }
                 return v.toFixed(2);
             }
         }

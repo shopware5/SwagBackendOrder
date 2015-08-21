@@ -6,31 +6,31 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
      * Extends the standard Ext Model
      * @string
      */
-    extend:'Shopware.data.Model',
+    extend: 'Shopware.data.Model',
 
     /**
      * The fields used for this model
      * @array
      */
-    fields:[
-        { name:'id', type:'int' },
-        { name:'groupKey', type:'string' },
-        { name:'email', type:'string' },
-        { name:'active', type:'boolean' },
-        { name:'accountMode', type:'int' },
-        { name:'confirmationKey', type:'string' },
-        { name:'paymentId', type:'int', useNull: true },
-        { name:'firstLogin', type:'date' },
-        { name:'lastLogin', type:'date' },
-        { name:'newsletter', type:'int' },
-        { name:'validation', type:'int' },
-        { name:'languageId', type:'int' },
-        { name:'shopId', type:'int', useNull: true },
-        { name:'priceGroupId', type:'int' },
-        { name:'internalComment', type:'string' },
-        { name:'failedLogins', type:'int' },
-        { name:'referer', type:'string' },
-        { name: 'customerName', type: 'string'},
+    fields: [
+        { name: 'id', type: 'int' },
+        { name: 'groupKey', type: 'string' },
+        { name: 'email', type: 'string' },
+        { name: 'active', type: 'boolean' },
+        { name: 'accountMode', type: 'int' },
+        { name: 'confirmationKey', type: 'string' },
+        { name: 'paymentId', type: 'int', useNull: true },
+        { name: 'firstLogin', type: 'date' },
+        { name: 'lastLogin', type: 'date' },
+        { name: 'newsletter', type: 'int' },
+        { name: 'validation', type: 'int' },
+        { name: 'languageId', type: 'int' },
+        { name: 'shopId', type: 'int', useNull: true },
+        { name: 'priceGroupId', type: 'int' },
+        { name: 'internalComment', type: 'string' },
+        { name: 'failedLogins', type: 'int' },
+        { name: 'referer', type: 'string' },
+        { name: 'customerName', type: 'string' },
         { name: 'customerCompany', type: 'string' },
         { name: 'customerNumber', type: 'string' }
     ],

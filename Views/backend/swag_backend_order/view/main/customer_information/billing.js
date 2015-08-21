@@ -31,7 +31,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
 
     paddingRight: 5,
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.title = me.snippets.title;
@@ -40,7 +40,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
          * gets the customer store and loads the selected customer
          */
         me.customerStore = me.subApplication.getStore('Customer');
-        me.customerStore.on('load', function() {
+        me.customerStore.on('load', function () {
             if (Ext.isObject(me.customerStore) && me.customerStore.count() == 1) {
                 me.billingStore = me.customerStore.getAt(0).billing();
                 me.billingAddressComboBox.bindStore(me.billingStore);
@@ -57,7 +57,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
     /**
      * register events
      */
-    registerEvents: function() {
+    registerEvents: function () {
         this.addEvents(
             'selectBillingAddress'
         );
@@ -66,7 +66,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
     /**
      * creates the billing combobox and the data view for the selected address
      */
-    createBillingItems: function() {
+    createBillingItems: function () {
         var me = this;
 
         me.billingAddressComboBox = Ext.create('Ext.form.field.ComboBox', {
@@ -83,7 +83,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
                 maxHeight: 200
             },
             listeners: {
-                'select': function(comboBox, record) {
+                'select': function (comboBox, record) {
                     me.fireEvent('selectBillingAddress', record, me);
 
                     var billingAddressTemplateStore = Ext.create('Ext.data.Store', {
@@ -107,7 +107,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             }
         });
 
-        return [ me.billingAddressComboBox ];
+        return [me.billingAddressComboBox];
     },
 
     /**
@@ -115,32 +115,30 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
      *
      * @returns [Ext.XTemplate]
      */
-    createBillingAddressComboTpl: function() {
+    createBillingAddressComboTpl: function () {
         var me = this;
 
         return new Ext.XTemplate(
-                '{literal}<tpl for=".">',
-                    '<div class= "x-combo-list-item x-boundlist-item">',
-                        '<tpl if="company">',
-                            '{company},<br/>',
-                        '</tpl>',
-                        '<tpl switch="salutation">',
-                            '<tpl case="mr">',
-                                me.snippets.salutation.mister + ' ',
-                            '<tpl case="ms">',
-                                me.snippets.salutation.miss + ' ',
-                            '<tpl default>',
-                                '{salutation} ',
-                        '</tpl>',
-                        '{firstName} {lastName},<br/>{zipCode} {city},<br/>{street}',
-                        '<tpl if="state">',
-                            ',<br/>{state}',
-                        '</tpl>',
-                        '<tpl if="country">',
-                            ',<br/>{country}',
-                        '</tpl>',
-                    '</div>',
-                '</tpl>{/literal}'
+            '{literal}<tpl for=".">',
+            '<div class= "x-combo-list-item x-boundlist-item">',
+            '<tpl if="company">',
+            '{company},<br/>',
+            '</tpl>',
+            '<tpl switch="salutation">',
+            '<tpl case="mr">',
+            me.snippets.salutation.mister + ' ',
+            '<tpl case="ms">',
+            me.snippets.salutation.miss + ' ',
+            '</tpl>',
+            '{firstName} {lastName},<br/>{zipCode} {city},<br/>{street}',
+            '<tpl if="state">',
+            ',<br/>{state}',
+            '</tpl>',
+            '<tpl if="country">',
+            ',<br/>{country}',
+            '</tpl>',
+            '</div>',
+            '</tpl>{/literal}'
         );
     },
 
@@ -149,60 +147,58 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
      *
      * @returns [Ext.XTemplate|*]
      */
-    createBillingTemplate: function() {
+    createBillingTemplate: function () {
         var me = this;
 
         me.billingTemplate = new Ext.XTemplate(
-                '{literal}<tpl for=".">',
-                '<div class="customeer-info-pnl">',
-                '<div class="base-info">',
-                '<p>',
-                '<span>{company}</span>',
-                '</p>',
-                '<p>',
-                '<tpl switch="salutation">',
-                '<tpl case="mr">',
-                me.snippets.salutation.mister + ' ',
-                '<tpl case="ms">',
-                me.snippets.salutation.miss + ' ',
-                '<tpl default>',
-                '{salutation} ',
-                '</tpl>',
-                '<span>{firstName}</span>&nbsp;',
-                '<span>{lastName}</span>',
-                '</p>',
-                '<p>',
-                '<span>{street}</span>',
-                '</p>',
-                '<tpl if="additionalAddressLine1">',
-                '<p>',
-                '<span>{additionalAddressLine1}</span>',
-                '</p>',
-                '</tpl>',
-                '<tpl if="additionalAddressLine2">',
-                '<p>',
-                '<span>{additionalAddressLine2}</span>',
-                '</p>',
-                '</tpl>',
-                '<p>',
-                '<span>{zipCode}</span>&nbsp;',
-                '<span>{city}</span>',
-                '</p>',
-                '<p>',
-                '<span>{state}</span>',
-                '</p>',
-                '<p>',
-                '<span>{country}</span>',
-                '</p>',
-                '</div>',
-                '</div>',
-                '</tpl>{/literal}'
+            '{literal}<tpl for=".">',
+            '<div class="customeer-info-pnl">',
+            '<div class="base-info">',
+            '<p>',
+            '<span>{company}</span>',
+            '</p>',
+            '<p>',
+            '<tpl switch="salutation">',
+            '<tpl case="mr">',
+            me.snippets.salutation.mister + ' ',
+            '<tpl case="ms">',
+            me.snippets.salutation.miss + ' ',
+            '</tpl>',
+            '<span>{firstName}</span>&nbsp;',
+            '<span>{lastName}</span>',
+            '</p>',
+            '<p>',
+            '<span>{street}</span>',
+            '</p>',
+            '<tpl if="additionalAddressLine1">',
+            '<p>',
+            '<span>{additionalAddressLine1}</span>',
+            '</p>',
+            '</tpl>',
+            '<tpl if="additionalAddressLine2">',
+            '<p>',
+            '<span>{additionalAddressLine2}</span>',
+            '</p>',
+            '</tpl>',
+            '<p>',
+            '<span>{zipCode}</span>&nbsp;',
+            '<span>{city}</span>',
+            '</p>',
+            '<p>',
+            '<span>{state}</span>',
+            '</p>',
+            '<p>',
+            '<span>{country}</span>',
+            '</p>',
+            '</div>',
+            '</div>',
+            '</tpl>{/literal}'
         );
 
         return me.billingTemplate;
     },
 
-    resetFields: function() {
+    resetFields: function () {
         var me = this;
 
         me.billingAddressComboBox.setValue('');

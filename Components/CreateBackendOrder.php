@@ -44,6 +44,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         /**
          * 0 = order status open
+         *
          * @var Shopware\Models\Order\Status $orderStatusModel
          */
         $orderStatusModel = Shopware()->Models()->getReference('Shopware\Models\Order\Status', 0);
@@ -51,6 +52,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         /**
          * 17 = payment status open
+         *
          * @var Shopware\Models\Order\Status $paymentStatusModel
          */
         $paymentStatusModel = Shopware()->Models()->getReference('Shopware\Models\Order\Status', 17);
@@ -97,12 +99,13 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $details = array();
 
         //checks if more than one position was passed
-        if ( $this->isAssoc($positions)) {
+        if ($this->isAssoc($positions)) {
             $details[] = $this->createOrderDetail($positions, $orderModel);
 
             $lastDetail = end($details);
-            if ( !$lastDetail instanceof Shopware\Models\Order\Detail) {
+            if (!$lastDetail instanceof Shopware\Models\Order\Detail) {
                 $this->deleteOrder();
+
                 return $lastDetail;
             }
         } else {
@@ -110,8 +113,9 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
                 $details[] = $this->createOrderDetail($position, $orderModel);
 
                 $lastDetail = end($details);
-                if ( !$lastDetail instanceof Shopware\Models\Order\Detail) {
+                if (!$lastDetail instanceof Shopware\Models\Order\Detail) {
                     $this->deleteOrder();
+
                     return $lastDetail;
                 }
             }
@@ -146,15 +150,11 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         Shopware()->Models()->persist($orderModel);
         Shopware()->Models()->flush();
 
-        if ( is_null($billingModel->getState()))  {
-            Shopware()->Db()->update('s_order_billingaddress', array('stateID' => 0), array('id' => $billingModel->getId()));
+        if (is_null($billingModel->getState())) {
+            Shopware()->Db()->update('s_order_billingaddress', ['stateID' => 0], ['id' => $billingModel->getId()]);
         }
-        if ( is_null($shippingModel->getState())) {
-            Shopware()->Db()->update(
-                    's_order_shippingaddress',
-                    array('stateID' => 0),
-                    array('id' => $shippingModel->getId())
-            );
+        if (is_null($shippingModel->getState())) {
+            Shopware()->Db()->update('s_order_shippingaddress', ['stateID' => 0], ['id' => $shippingModel->getId()]);
         }
 
         return $orderModel;
@@ -169,15 +169,18 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     {
         $orderDetailModel = new Shopware\Models\Order\Detail();
 
-        $articleIds = Shopware()->Db()->fetchRow("SELECT a.id, ad.id AS detailId
-                                                  FROM s_articles a, s_articles_details ad
-                                                  WHERE a.id = ad.articleID
-                                                  AND ad.ordernumber = ?",
-                array($position['articleNumber']));
+        $articleIds = Shopware()->Db()->fetchRow(
+            "SELECT a.id, ad.id AS detailId
+              FROM s_articles a, s_articles_details ad
+              WHERE a.id = ad.articleID
+              AND ad.ordernumber = ?",
+            array($position['articleNumber'])
+        );
 
         //checks if the article exists
-        if ( empty($articleIds)) {
+        if (empty($articleIds)) {
             $articleIdentification = $this->createInvalidArticleIdentificationForErrorMessage($position);
+
             return array('success' => false, 'article' => $articleIdentification);
         }
 
@@ -190,7 +193,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         /** @var Shopware\Models\Article\Detail $articleDetailModel */
         $articleDetailModel = Shopware()->Models()->find('Shopware\Models\Article\Detail', $articleDetailId);
 
-        if ( is_object($articleDetailModel->getUnit())) {
+        if (is_object($articleDetailModel->getUnit())) {
             $unitName = $articleDetailModel->getUnit()->getName();
         } else {
             $unitName = 0;
@@ -385,10 +388,10 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      * @param $paymentId
      * @return Shopware\Models\Customer\PaymentData
      */
-    public function getCustomerPaymentData($customerId, $paymentId) {
-
+    public function getCustomerPaymentData($customerId, $paymentId)
+    {
         $PaymentDataRepository = Shopware()->Models()->getRepository('Shopware\Models\Customer\PaymentData');
-        $paymentModel          = $PaymentDataRepository->findBy(array('paymentMeanId' => $paymentId, 'customer' => $customerId));
+        $paymentModel = $PaymentDataRepository->findBy(array('paymentMeanId' => $paymentId, 'customer' => $customerId));
 
         return $paymentModel;
     }
@@ -403,7 +406,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      */
     private function isAssoc($array)
     {
-        return array_keys($array) !== range(0, count($array) -1);
+        return array_keys($array) !== range(0, count($array) - 1);
     }
 
     /**
@@ -411,7 +414,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      */
     private function deleteOrder()
     {
-        if ( isset($this->orderId) && $this->orderId > 0) {
+        if (isset($this->orderId) && $this->orderId > 0) {
             Shopware()->Db()->query('DELETE FROM s_order WHERE id  = ?', $this->orderId);
         }
     }
@@ -425,8 +428,8 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     }
 
     /**
-     * If the user entered an invalid product he needs to know which article was invalid. This will return the information
-     * we have of the product.
+     * If the user entered an invalid product he needs to know which article was invalid. This will return the
+     * information we have of the product.
      *
      * @param array $position
      * @return string

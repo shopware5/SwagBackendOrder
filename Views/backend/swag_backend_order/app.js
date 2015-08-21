@@ -11,16 +11,16 @@ Ext.define('Shopware.apps.SwagBackendOrder', {
      * Enable bulk loading
      * @boolean
      */
-    bulkLoad:true,
+    bulkLoad: true,
 
     /**
      * Sets the loading path for the sub-application.
      *
      * @string
      */
-    loadPath:'{url controller="SwagBackendOrder" action="load"}',
+    loadPath: '{url controller="SwagBackendOrder" action="load"}',
 
-    controllers: [ 'Main' ],
+    controllers: ['Main'],
 
     views: [
         'main.Window',
@@ -88,7 +88,7 @@ Ext.define('Shopware.apps.SwagBackendOrder', {
         'TotalCosts'
     ],
 
-    launch: function() {
+    launch: function () {
         var me = this,
             mainController = me.getController('Main');
 

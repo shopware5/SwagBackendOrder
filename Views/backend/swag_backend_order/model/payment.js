@@ -5,7 +5,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Payment', {
      * Extends the standard Ext Model
      * @string
      */
-    extend:'Ext.data.Model',
+    extend: 'Ext.data.Model',
 
     /**
      * define an alternate class name for an easier identification
@@ -16,13 +16,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Payment', {
      * The fields used for this model
      * @array
      */
-    fields:[
+    fields: [
         //{block name="backend/base/model/payment/fields"}{/block}
-        { name:'id', type: 'int' },
-        { name:'name', type: 'string' },
-        { name:'description', type: 'string' },
-        { name:'position', type: 'int' },
-        { name:'active', type: 'boolean' }
+        { name: 'id', type: 'int' },
+        { name: 'name', type: 'string' },
+        { name: 'description', type: 'string' },
+        { name: 'position', type: 'int' },
+        { name: 'active', type: 'boolean' }
     ]
 });
 //

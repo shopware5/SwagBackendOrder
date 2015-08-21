@@ -8,7 +8,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
     /**
      * override the initComponent method to implement the variant article search
      */
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.registerEvents();
@@ -28,14 +28,14 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
         });
 
         //article store passed to the component?
-        if (Ext.isObject(me.articleStore) && me.articleStore.data.items.length > 0 ) {
+        if (Ext.isObject(me.articleStore) && me.articleStore.data.items.length > 0) {
             me.loadArticleStore(me.articleStore);
         }
 
         me.hiddenField = me.createHiddenField();
         me.searchField = me.createSearchField();
         me.dropDownMenu = me.createDropDownMenu();
-        me.items = [ me.hiddenField, me.searchField, me.dropDownMenu ];
+        me.items = [me.hiddenField, me.searchField, me.dropDownMenu];
 
         me.dropDownStore.on('datachanged', me.onSearchFinish, me);
 

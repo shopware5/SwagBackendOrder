@@ -41,7 +41,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
      * @returns [Ext.container.Container]
      */
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.currencyStore = me.subApplication.getStore('Currency');
@@ -51,7 +51,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
 
         me.updateTotalCostsEvents();
 
-        me.netCheckBox.on('change', function(netCheckbox, newValue, oldValue) {
+        me.netCheckBox.on('change', function (netCheckbox, newValue, oldValue) {
             me.fireEvent('changeNetCheckbox', newValue);
         });
 
@@ -68,7 +68,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
      *
      * @returns [Ext.container.Container]
      */
-    createTotalCostsOverviewContainer: function() {
+    createTotalCostsOverviewContainer: function () {
         var me = this;
 
         me.totalCostsLabelsView = Ext.create('Ext.view.View', {
@@ -104,7 +104,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             name: 'totalCostsContainer',
             layout: 'hbox',
             renderTo: document.body,
-            items:[
+            items: [
                 me.createNetCheckbox(),
                 me.totalCostsFloatContainer
             ]
@@ -113,35 +113,35 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.totalCostsContainer;
     },
 
-    createTotalLabelTemplate: function() {
+    createTotalLabelTemplate: function () {
         var me = this;
 
         me.totalLabelTempalte = new Ext.XTemplate(
-                '{literal}',
-                '<div style="font-size: 13px;">',
-                '<p>' + me.snippets.sum + '</p>',
-                '<p>' + me.snippets.shippingCosts + '</p>',
-                '<p><b>' + me.snippets.total + '</b></p>',
-                '<p>' + me.snippets.totalWithoutTax + '</p>',
-                '<p>' + me.snippets.taxSum + '</p>',
-                '</div>',
-                '{/literal}'
+            '{literal}',
+            '<div style="font-size: 13px;">',
+            '<p>' + me.snippets.sum + '</p>',
+            '<p>' + me.snippets.shippingCosts + '</p>',
+            '<p><b>' + me.snippets.total + '</b></p>',
+            '<p>' + me.snippets.totalWithoutTax + '</p>',
+            '<p>' + me.snippets.taxSum + '</p>',
+            '</div>',
+            '{/literal}'
         );
 
         return me.totalLabelTempalte;
     },
 
-    createTotalCostsTemplate: function() {
+    createTotalCostsTemplate: function () {
         var me = this;
 
         me.totalCostsTempalte = new Ext.XTemplate(
             '{literal}<tpl for=".">',
             '<div style="padding-left: 10px; font-size: 13px; text-align: right;">',
-                '<p>{sum} '+ me.currencySymbol +'</p>',
-                '<p>{shippingCosts} '+ me.currencySymbol +'</p>',
-                '<p><b>{total} '+ me.currencySymbol +'</b></p>',
-                '<p>{totalWithoutTax} '+ me.currencySymbol +'</p>',
-                '<p>{taxSum} '+ me.currencySymbol +'</p>',
+            '<p>{sum} ' + me.currencySymbol + '</p>',
+            '<p>{shippingCosts} ' + me.currencySymbol + '</p>',
+            '<p><b>{total} ' + me.currencySymbol + '</b></p>',
+            '<p>{totalWithoutTax} ' + me.currencySymbol + '</p>',
+            '<p>{taxSum} ' + me.currencySymbol + '</p>',
             '</div>',
             '</tpl>{/literal}'
         );
@@ -149,7 +149,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.totalCostsTempalte;
     },
 
-    createTotalCostsStore: function() {
+    createTotalCostsStore: function () {
         var me = this;
         me.totalCostsModel = Ext.create('Shopware.apps.SwagBackendOrder.model.TotalCosts', {});
 
@@ -164,32 +164,32 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.totalCostsStore;
     },
 
-    updateTotalCostsEvents: function() {
+    updateTotalCostsEvents: function () {
         var me = this;
 
         me.positionStore = me.subApplication.getStore('Position');
 
-        me.positionStore.on('update', function(store, record, operation, modifiedFieldNames) {
+        me.positionStore.on('update', function (store, record, operation, modifiedFieldNames) {
             if (modifiedFieldNames[0] == 'price' || modifiedFieldNames[0] == 'total' || modifiedFieldNames[0] == 'taxRate') {
                 me.fireEvent('calculateTax');
                 me.updateTotalCosts();
             }
         });
 
-        me.positionStore.on('remove', function() {
+        me.positionStore.on('remove', function () {
             me.fireEvent('calculateTax');
             me.updateTotalCosts();
         });
 
-        me.currencyStore.on('load', function() {
+        me.currencyStore.on('load', function () {
             me.updateCurrency();
         });
 
-        me.currencyStore.on('update', function() {
+        me.currencyStore.on('update', function () {
             me.updateCurrency();
         });
 
-        me.totalCostsStore.on('update', function(store, record, operation, modifiedFieldNames) {
+        me.totalCostsStore.on('update', function (store, record, operation, modifiedFieldNames) {
             if (modifiedFieldNames[0] == 'shippingCosts') {
                 me.fireEvent('calculateTax');
             }
@@ -197,7 +197,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         });
     },
 
-    updateTotalCosts: function() {
+    updateTotalCosts: function () {
         var me = this;
 
         me.remove('totalCostsContainer', true);
@@ -206,7 +206,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         me.doLayout();
     },
 
-    updateCurrency: function() {
+    updateCurrency: function () {
         var me = this;
 
         var currencyIndex = me.currencyStore.findExact('selected', 1);
@@ -219,7 +219,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         }
     },
 
-    createNetCheckbox: function() {
+    createNetCheckbox: function () {
         var me = this;
 
         me.netCheckBox = Ext.create('Ext.form.field.Checkbox', {

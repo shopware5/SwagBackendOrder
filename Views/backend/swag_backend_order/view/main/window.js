@@ -16,8 +16,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
 
     layout: {
         type: 'vbox',
-        align : 'stretch',
-        pack  : 'start'
+        align: 'stretch',
+        pack: 'start'
     },
 
     confirmClosed: false,
@@ -38,7 +38,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
 
     },
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.title = me.snippets.title;
@@ -59,18 +59,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
          * confirmation alert message if the user wants to close this window and made changes
          */
         var positionStore = me.subApplication.getStore('Position');
-        me.on('beforeclose', function() {
-            if(!me.confirmClosed && (positionStore.count() > 0 || me.checkOrderModel() || me.createBackendOrderStore.count() == 1)) {
+        me.on('beforeclose', function () {
+            if (!me.confirmClosed && (positionStore.count() > 0 || me.checkOrderModel() || me.createBackendOrderStore.count() == 1)) {
                 Ext.MessageBox.confirm(
                     me.snippets.message.closeConfirmTitle,
                     me.snippets.message.closeConfirmText,
-                    function(button){
-                        if(button == 'yes'){
+                    function (button) {
+                        if (button == 'yes') {
                             me.confirmClosed = true;
                             this[this.closeAction]();
                         }
                     },
-                this);
+                    this);
 
                 return false;
             }
@@ -82,7 +82,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
     /**
      * Registers the addition component events.
      */
-    registerEvents: function() {
+    registerEvents: function () {
         this.addEvents(
             /**
              * Event will be fired when the user clicks the create button
@@ -96,7 +96,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
      * which holds the billing, shipping and payment panel
      *
      */
-    createCustomerInformation: function() {
+    createCustomerInformation: function () {
         var me = this;
 
         return Ext.create('SwagBackendOrder.main.CustomerInformation', {
@@ -107,7 +107,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
     /**
      * returns the toolbar
      */
-    createToolbar: function() {
+    createToolbar: function () {
         var me = this;
 
         return Ext.create('SwagBackendOrder.view.main.Toolbar', {
@@ -115,8 +115,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
         });
     },
 
-
-    createShippingInformationPanel: function() {
+    createShippingInformationPanel: function () {
         var me = this;
 
         var shippingCostsStore = me.subApplication.getStore('ShippingCosts').load();
@@ -145,15 +144,15 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
      * both panels must include in the middle container
      * to create the horziontal layout for the panels
      */
-    createMiddleContainer: function() {
+    createMiddleContainer: function () {
         var me = this;
 
         return Ext.create('Ext.Container', {
             flex: 2,
             name: 'middle-container',
             items: [
-                    me.createShippingInformationPanel(),
-                    me.createAdditionalInformationPanel()
+                me.createShippingInformationPanel(),
+                me.createAdditionalInformationPanel()
             ],
             defaults: {
                 height: 175
@@ -170,7 +169,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
      *
      * @returns [Ext.Container]
      */
-    createPositionContainer: function() {
+    createPositionContainer: function () {
         var me = this;
 
         return Ext.create('Ext.container.Container', {
@@ -186,7 +185,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
      *
      * @returns [Shopware.apps.SwagBackendOrder.view.main.list.Positions]
      */
-    createPositionGrid: function() {
+    createPositionGrid: function () {
         var me = this;
 
         return me.positionsGrid = Ext.create('SwagBackendOrder.view.main.list.Positions', {
@@ -200,43 +199,43 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
      *
      * @returns [Ext.container.Container]
      */
-    createSaveContainer: function() {
+    createSaveContainer: function () {
         var me = this;
 
         me.cancelButton = Ext.create('Ext.button.Button', {
             cls: 'secondary',
             text: me.snippets.buttons.cancel,
-            handler: function() {
+            handler: function () {
                 me.fireEvent('beforeclose');
             }
         });
 
         me.saveButton = Ext.create('Ext.button.Button', {
-            cls:'primary',
+            cls: 'primary',
             text: me.snippets.buttons.create,
             action: 'create-order',
             name: 'create-order',
-            handler: function() {
+            handler: function () {
                 me.confirmClosed = true;
                 me.fireEvent(
-                        'createOrder', me.positionsGrid, 'detail'
+                    'createOrder', me.positionsGrid, 'detail'
                 );
             }
         });
 
         me.saveAndNewButton = Ext.create('Ext.button.Button', {
-            cls:'secondary',
+            cls: 'secondary',
             text: me.snippets.buttons.createAndNew,
-            handler: function() {
+            handler: function () {
                 me.confirmClosed = true;
                 me.fireEvent(
-                        'createOrder', me.positionsGrid, 'new'
+                    'createOrder', me.positionsGrid, 'new'
                 );
             }
         });
 
         return Ext.create('Ext.toolbar.Toolbar', {
-            dock:'bottom',
+            dock: 'bottom',
             float: 'right',
             ui: 'shopware-ui',
             items: [
@@ -249,7 +248,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
         });
     },
 
-    createTotalCostsOverview: function() {
+    createTotalCostsOverview: function () {
         var me = this;
 
         return Ext.create('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
@@ -264,7 +263,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
      *
      * @returns boolean
      */
-    checkOrderModel: function() {
+    checkOrderModel: function () {
         var me = this;
 
         var orderModelItems = me.orderModel.fields.items;
@@ -272,17 +271,20 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
             var fieldName = orderModelItems[field].name;
 
             switch (fieldName) {
-                case 'currency': continue;
+                case 'currency':
+                    continue;
                     break;
-                case 'languageShopId': continue;
+                case 'languageShopId':
+                    continue;
                     break;
-                case 'currencyId': continue;
+                case 'currencyId':
+                    continue;
                     break;
                 default:
                     break;
             }
 
-            if(me.orderModel.get(fieldName) > 0) {
+            if (me.orderModel.get(fieldName) > 0) {
                 return true;
             }
 

@@ -28,7 +28,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Positions', {
 
     autoScroll: true,
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.items = [
@@ -41,7 +41,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Positions', {
     /**
      * create the positions grid where positions can be added or deleted
      */
-    createOrderPositionGrid: function() {
+    createOrderPositionGrid: function () {
         var me = this;
 
         me.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
