@@ -117,8 +117,12 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
 
         form.getForm().updateRecord(model);
 
-        var password = me.generateRandomPassword();
-        model.set('newPassword', password);
+        if (typeof me.subApplication.params != 'undefined') {
+            if (me.subApplication.params.guest == true) {
+                var password = me.generateRandomPassword();
+                model.set('newPassword', password);
+            }
+        }
 
         //save the model and check in the callback function if the operation was successfully
         model.save({
