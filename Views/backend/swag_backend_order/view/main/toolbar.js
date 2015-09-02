@@ -23,7 +23,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
         },
         shop: {
             noCustomer: '{s namespace="backend/swag_backend_order/view/toolbar" name="swag_backend_order/toolbar/shop/label/no_costumer"}Shop: No customer selected.{/s}',
-            default: '{s namespace="backend/swag_backend_order/view/toolbar" name="swag_backend_order/toolbar/shop/label/default"}Main shop: {/s}'
+            default: '{s namespace="backend/swag_backend_order/view/toolbar" name="swag_backend_order/toolbar/shop/label/default"}Shop: {/s}'
         },
         currencyLabel: '{s namespace="backend/swag_backend_order/view/toolbar" name="swag_backend_order/toolbar/currency/label"}Choose currency{/s}',
         languageLabel: '{s namespace="backend/swag_backend_order/view/toolbar" name="swag_backend_order/toolbar/language/label"}Language{/s}'
@@ -67,14 +67,27 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
             me.openCustomerButton.setDisabled(false);
         });
 
+        //selects and loads the language sub shops
         var customerStore = me.subApplication.getStore('Customer');
         customerStore.on('load', function () {
             if (typeof customerStore.getAt(0) !== 'undefined') {
-                var shopName = customerStore.getAt(0).shop().getAt(0).get('name');
+                var shopName = '',
+                    customerModel = customerStore.getAt(0);
+
+                var languageId = customerModel.get('languageId');
+                var index      = customerModel.languageSubShop().findExact('id', languageId);
+
+                if (index >= 0) {
+                    shopName = customerModel.languageSubShop().getAt(index).get('name');
+                } else {
+                    index = customerModel.shop().findExact('id', languageId);
+                    shopName = customerModel.shop().getAt(index).get('name');
+                }
+
                 me.shopLabel.setText(me.snippets.shop.default + shopName);
                 me.fireEvent('changeCustomer');
 
-                me.getLanguageShops(customerStore.getAt(0).shop().getAt(0).get('id'));
+                me.getLanguageShops(customerModel.shop().getAt(0).get('id'), customerStore.getAt(0).get('languageId'));
             }
         });
 
@@ -199,8 +212,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
 
     /**
      * @param mainShopId
+     * @param languageId
      */
-    getLanguageShops: function (mainShopId) {
+    getLanguageShops: function (mainShopId, languageId) {
         var me = this;
 
         Ext.Ajax.request({
@@ -219,7 +233,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Toolbar', {
 
                 //selects the default language shop
                 var languageIndex = me.languageStore.findExact('mainId', null);
-                var languageId = me.languageStore.getAt(languageIndex).get('id');
                 me.languageComboBox.setValue(languageId);
             }
         });

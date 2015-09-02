@@ -84,11 +84,12 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
     {
         $builder = Shopware()->Models()->createQueryBuilder();
 
-        $builder->select(array('customers, billing', 'shipping', 'debit', 'shop'))
+        $builder->select(array('customers', 'billing', 'shipping', 'debit', 'shop', 'languageSubShop'))
                 ->from('Shopware\Models\Customer\Customer', 'customers')
                 ->leftJoin('customers.billing', 'billing')
                 ->leftJoin('customers.shipping', 'shipping')
                 ->leftJoin('customers.debit', 'debit')
+                ->leftJoin('customers.languageSubShop', 'languageSubShop')
                 ->leftJoin('customers.shop', 'shop')
                 ->where('customers.id = :search');
 

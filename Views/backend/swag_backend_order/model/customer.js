@@ -70,6 +70,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
             name: 'shop',
             model: 'Shopware.apps.Base.model.Shop',
             associationKey: 'shop'
+        },
+        {
+            name: 'languageSubShop',
+            model: 'Shopware.apps.Base.model.Shop',
+            associationKey: 'languageSubShop'
         }
     ]
 });
