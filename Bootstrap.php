@@ -88,23 +88,6 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     }
 
     /**
-     * @return bool
-     * @throws Exception
-     */
-    public function update()
-    {
-        // Check if shopware version matches
-        if (!$this->assertVersionGreaterThen('5.0.0')) {
-            throw new Exception("This plugin requires Shopware 5.0.0 or a later version");
-        }
-
-        $this->createConfiguration();
-        $this->registerEvents();
-
-        return true;
-    }
-
-    /**
      * @return array|bool
      */
     public function uninstall()
@@ -349,5 +332,29 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     public function getShopwareBootstrap()
     {
         return $this->Application()->Bootstrap();
+    }
+
+    /**
+     * @param string $oldVersion
+     * @return bool
+     * @throws Exception
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function update($oldVersion)
+    {
+        if (!$this->assertMinimumVersion('5.0.0')) {
+            throw new Exception('This plugin requires Shopware 5 or a later version');
+        }
+
+        $orderDetailIds = Shopware()->Db()->fetchCol('SELECT id FROM s_order_details WHERE id NOT IN (SELECT detailID FROM s_order_details_attributes);');
+
+        if (version_compare($oldVersion, '1.0.1', '<')) {
+            foreach ($orderDetailIds as $orderDetailId) {
+                $sql = 'INSERT INTO `s_order_details_attributes` (detailID) VALUES (?)';
+                Shopware()->Db()->query($sql, [$orderDetailId]);
+            }
+        }
+
+        return true;
     }
 }
