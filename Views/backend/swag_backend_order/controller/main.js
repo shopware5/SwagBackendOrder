@@ -371,39 +371,62 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var columns = editor.editor.items.items,
             updateButton = editor.editor.floatingButtons.items.items[0];
 
-        var price = me.calculateCurrency(record.get('price'));
+        updateButton.setDisabled(true);
 
-        if (me.orderModel.get('net')) {
-            price = me.calculateNetPrice(price, record.get('tax'));
-        }
+        //sends a request to get the price for the customer group
+        Ext.Ajax.request({
+            url: '{url action="getCustomerGroupPriceByOrdernumber"}',
+            params: {
+                ordernumber: record.get('number'),
+                customerId: me.orderModel.get('customerId')
+            },
+            success: function (response) {
+                var responseObj = Ext.JSON.decode(response.responseText);
+                var result = responseObj.data;
 
-        /**
-         * columns[0] -> selected
-         * columns[1] -> articlenumber
-         * columns[2] -> articlename
-         * columns[3] -> quantity
-         * columns[4] -> price
-         * columns[5] -> total
-         * columns[6] -> tax
-         * columns[7] -> instock
-         */
-        updateButton.setDisabled(false);
-        columns[1].setValue(record.get('number'));
-        columns[2].setValue(record.get('name'));
-        columns[3].setValue(1);
-        columns[7].setValue(record.get('inStock'));
-        columns[4].setValue(price);
+                var price = 0;
+                if (responseObj.success == true) {
+                    price = me.calculateCurrency(result.price);
+                } else {
+                    price = me.calculateCurrency(record.get('price'));
+                }
 
-        var taxComboStore = columns[6].store;
-        var valueField = columns[6].valueField;
-        var displayField = columns[6].displayField;
+                if (me.orderModel.get('net')) {
+                    price = me.calculateNetPrice(price, record.get('tax'));
+                }
 
-        var recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
+                /**
+                 * columns[0] -> selected
+                 * columns[1] -> articlenumber
+                 * columns[2] -> articlename
+                 * columns[3] -> quantity
+                 * columns[4] -> price
+                 * columns[5] -> total
+                 * columns[6] -> tax
+                 * columns[7] -> instock
+                 */
+                columns[1].setValue(record.get('number'));
+                columns[2].setValue(record.get('name'));
+                columns[3].setValue(1);
+                columns[4].setValue(price);
+                columns[7].setValue(record.get('inStock'));
 
-        var displayValue = taxComboStore.getAt(recordNumber).data[displayField];
-        columns[6].setValue(record.get('taxRate'));
-        columns[6].setRawValue(displayValue);
-        columns[6].selectedIndex = recordNumber;
+                var taxComboStore = columns[6].store;
+                var valueField = columns[6].valueField;
+                var displayField = columns[6].displayField;
+
+                var recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
+
+                var displayValue = taxComboStore.getAt(recordNumber).data[displayField];
+                columns[6].setValue(record.get('taxRate'));
+                columns[6].setRawValue(displayValue);
+                columns[6].selectedIndex = recordNumber;
+                updateButton.setDisabled(false);
+            }
+
+        });
+
+
     },
 
     /**
