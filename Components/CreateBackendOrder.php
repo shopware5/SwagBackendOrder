@@ -224,6 +224,16 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderDetailModel->setNumber($orderModel->getNumber());
         $orderDetailModel->setOrder($orderModel);
 
+        /** @var \Shopware\Models\Attribute\OrderDetail $orderDetailAttributeModel */
+        $orderDetailAttributeModel = new \Shopware\Models\Attribute\OrderDetail();
+        $orderDetailAttributeModel->setAttribute1('');
+        $orderDetailAttributeModel->setAttribute2('');
+        $orderDetailAttributeModel->setAttribute3('');
+        $orderDetailAttributeModel->setAttribute4('');
+        $orderDetailAttributeModel->setAttribute5('');
+        $orderDetailAttributeModel->setAttribute6('');
+        $orderDetailModel->setAttribute($orderDetailAttributeModel);
+
         return $orderDetailModel;
     }
 
