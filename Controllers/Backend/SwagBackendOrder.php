@@ -472,6 +472,13 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 ->setParameter('mainShopId', $mainShopId);
 
         $result = $builder->getQuery()->getArrayResult();
+
+        //Gets the correct language name for every shop
+        foreach ($result as &$shop) {
+            /** @var \Shopware\Models\Shop\Shop $shopModel */
+            $shopModel = Shopware()->Models()->find('Shopware\Models\Shop\Shop', $shop['id']);
+            $shop['name'] = $shopModel->getLocale()->getLanguage();
+        }
         $total = count($result);
 
         $this->view->assign(
