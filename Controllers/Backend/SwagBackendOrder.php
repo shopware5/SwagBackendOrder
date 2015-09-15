@@ -992,4 +992,53 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         return round($price, $digits);
     }
+
+    /**
+     * Gets the customer group price
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
+    public function getCustomerGroupPriceByOrdernumberAction()
+    {
+        $data = $this->Request()->getParams();
+
+        if (empty($data['customerId']) || empty($data['ordernumber'])) {
+            $this->view->assign(array(
+                'success' => false
+            ));
+            return;
+        }
+
+        /** @var \Shopware\Models\Customer\Customer $customerModel */
+        $customerModel = $this->getModelManager()->find('Shopware\Models\Customer\Customer', $data['customerId']);
+
+        /** @var \Shopware\Models\Article\Repository $productRepository */
+        $productRepository = $this->getModelManager()->getRepository('Shopware\Models\Article\Detail');
+
+        /** @var Shopware\Models\Article\Detail $productModel */
+        $productModel = $productRepository->findOneBy(['number' => $data['ordernumber']]);
+        $prices = $productModel->getPrices();
+
+        $priceForCustomerGroup = 0;
+
+        /** @var \Shopware\Models\Article\Price $price */
+        foreach ($prices as $price) {
+            if ($price->getCustomerGroup()->getKey() == $customerModel->getGroup()->getKey()) {
+                $priceForCustomerGroup = $price->getPrice();
+                break;
+            }
+            $priceForCustomerGroup = $price->getPrice();
+        }
+
+        $priceForCustomerGroup = $this->calculateGrossPrice($priceForCustomerGroup, $productModel->getArticle()->getTax()->getTax());
+
+        $this->view->assign(array(
+            'data' => array(
+                'price' => $priceForCustomerGroup
+            ),
+            'success' => true
+        ));
+    }
 }
