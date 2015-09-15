@@ -9,13 +9,15 @@
     "link": "http://store.shopware.com",
     "author": "shopware AG",
 
-    "currentVersion": "1.0.0",
+    "currentVersion": "1.0.1",
 
     "changelog": {
         "de": {
+            "1.0.1": "PT-3663 - Bugfix: Sprach- und Shopauswahl; PT-3675 - Bugfix: Kompatibilität zu anderen Plugins; PT-3709 - Bugfix: Problem mit Passwort zurücksetzen; PT-3789 - Bugfix: Versand Bestellbestätigung an Shopbetreiber; PT-3790 - Bugfix: Preise der Kundengruppe;",
             "1.0.0": "PT-3272 - Erstveröffentlichung;"
         },
         "en": {
+            "1.0.1": "PT-3663 - Bugfix: Selection of language and shop; PT-3675 - Bugfix: Compatibility to other plugins; PT-3709 - Bugfix: Problem with password reset; PT-3789 - Bugfix: Send order confirmation to shop owner; PT-3790 - Bugfix: Prices of customer group;",
             "1.0.0": "PT-3272 - First release;"
         }
     },
