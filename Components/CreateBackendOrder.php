@@ -13,6 +13,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     public function createOrder($data, $ordernumber)
     {
         $positions = $data['position'];
+        $net = $data['net'];
 
         /**
          * creates an empty row
@@ -63,7 +64,11 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderModel->setLanguageSubShop($languageSubShopModel);
 
         $orderModel->setInvoiceShippingNet($data['shippingCostsNet']);
-        $orderModel->setInvoiceShipping($data['shippingCosts']);
+        if ($net) {
+            $orderModel->setInvoiceShipping($data['shippingCostsNet']);
+        } else {
+            $orderModel->setInvoiceShipping($data['shippingCosts']);
+        }
 
         $orderModel->setInvoiceAmount($data['total']);
         $orderModel->setInvoiceAmountNet($data['totalWithoutTax']);
@@ -84,8 +89,8 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderModel->setComment('');
         $orderModel->setCustomerComment('');
         $orderModel->setInternalComment('');
-        $orderModel->setNet($data['net']);
-        $orderModel->setTaxFree($data['net']);
+        $orderModel->setNet($net);
+        $orderModel->setTaxFree($net);
         $orderModel->setTemporaryId('');
         $orderModel->setReferer('');
         $orderModel->setTrackingCode('');
