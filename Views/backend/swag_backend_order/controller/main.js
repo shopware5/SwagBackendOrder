@@ -732,12 +732,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 var totalCostsJson = Ext.JSON.decode(response.responseText);
                 var record = totalCostsJson.data;
 
-                me.totalCostsModel.set('totalWithoutTax', record.totalWithoutTax);
-                me.totalCostsModel.set('sum', record.sum);
-                me.totalCostsModel.set('total', record.total);
-                me.totalCostsModel.set('shippingCosts', record.shippingCosts);
-                me.totalCostsModel.set('shippingCostsNet', record.shippingCostsNet);
-                me.totalCostsModel.set('taxSum', record.taxSum);
+                me.totalCostsModel.beginEdit();
+                try {
+                    me.totalCostsModel.set('totalWithoutTax', record.totalWithoutTax);
+                    me.totalCostsModel.set('sum', record.sum);
+                    me.totalCostsModel.set('total', record.total);
+                    me.totalCostsModel.set('shippingCosts', record.shippingCosts);
+                    me.totalCostsModel.set('shippingCostsNet', record.shippingCostsNet);
+                    me.totalCostsModel.set('taxSum', record.taxSum);
+                } finally {
+                    me.totalCostsModel.endEdit();
+                }
 
                 me.orderModel.set('shippingCostsNet', record.shippingCostsNet);
             }
