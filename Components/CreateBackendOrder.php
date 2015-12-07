@@ -85,6 +85,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderModel->setCustomerComment('');
         $orderModel->setInternalComment('');
         $orderModel->setNet($data['net']);
+        $orderModel->setTaxFree($data['net']);
         $orderModel->setTemporaryId('');
         $orderModel->setReferer('');
         $orderModel->setTrackingCode('');
