@@ -866,7 +866,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $sum = $total;
-        $total = $shippingCosts + $total;
+        if ($net === 'true') {
+            $total = $shippingCostsNet + $total;
+        } else {
+            $total = $shippingCosts + $total;
+        }
         $totalWithoutTax = $shippingCostsNet + $totalWithoutTax;
 
         $taxSum = $total - $totalWithoutTax;
