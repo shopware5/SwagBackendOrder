@@ -203,7 +203,11 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         /** @var Shopware\Models\Tax\Tax $taxModel */
         $taxModel = Shopware()->Models()->find('Shopware\Models\Tax\Tax', $position['taxId']);
         $orderDetailModel->setTax($taxModel);
-        $orderDetailModel->setTaxRate($position['taxRate']);
+        if ($orderModel->getNet()) {
+            $orderDetailModel->setTaxRate(0);
+        } else {
+            $orderDetailModel->setTaxRate($position['taxRate']);
+        }
 
         /** checks if it is an esdArticle */
         $orderDetailModel->setEsdArticle(0);
