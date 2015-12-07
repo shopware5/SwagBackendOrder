@@ -809,8 +809,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
                 for (var index = 0; index < positionStore.count(); index++) {
                     var actualPosition = positionStore.getAt(index);
-                    actualPosition.set('price', positions[index].price);
-                    actualPosition.set('total', positions[index].total);
+                    actualPosition.beginEdit();
+                    try {
+                        actualPosition.set('price', positions[index].price);
+                        actualPosition.set('total', positions[index].total);
+                    } finally {
+                        actualPosition.endEdit();
+                    }
                 }
             }
         });
