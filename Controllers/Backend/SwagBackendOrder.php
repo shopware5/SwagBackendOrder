@@ -39,6 +39,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $result = $customerInformationHandler->getCustomer($search);
         }
 
+        foreach ($result as $i => $customer) {
+            $result[$i] = $this->extractCustomerData($customer);
+        }
+
         $total = count($result);
 
         $this->view->assign(
@@ -47,6 +51,29 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 'total' => $total,
                 'success' => true
             )
+        );
+    }
+
+    /**
+     * Only return relevant information about the customer (e.g. not their
+     * password hash).
+     */
+    private function extractCustomerData($customer)
+    {
+        return array(
+            'id' => $customer['id'],
+            'billing' => $customer['billing'],
+            'debit' => $customer['debit'],
+            'shipping' => $customer['shipping'],
+            'shop' => $customer['shop'],
+            'shopId' => $customer['shopId'],
+            'languageId' => $customer['languageId'],
+            'languageSubShop' => $customer['languageSubShop'],
+
+            // Used for search:
+            'customerCompany' => $customer['customerCompany'],
+            'customerName' => $customer['customerName'],
+            'customerNumber' => $customer['customerNumber']
         );
     }
 
