@@ -317,11 +317,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * selects the correct shipping address and updates it to the default address
      *
-     * @param record
+     * @param record false for no selected record, otherwise a single data model
      */
     onSelectShippingAddress: function (record) {
         var me = this;
-        record = record[0].data;
+
+        if (record === false) { // No shipping address selected.
+            var EMPTY_SHIPPING_ADDRESS_ID = 0; // Magic constant
+            me.orderModel.set('shippingAddressId', EMPTY_SHIPPING_ADDRESS_ID);
+            return;
+        }
+
+        record = record.data;
 
         Ext.Ajax.request({
             url: '{url action="setShippingAddress"}',
