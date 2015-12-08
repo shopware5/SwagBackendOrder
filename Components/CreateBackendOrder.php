@@ -7,7 +7,18 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      */
     const DEFAULT_DESKTOP_TYPE = 'Backend';
 
+    /**
+     * holds the order id
+     *
+     * @var int
+     */
     private $orderId;
+
+    /**
+     * is true if billing and shipping are equal
+     *
+     * @var int
+     */
     private $equalBillingAddress = false;
 
     public function createOrder($data, $ordernumber)

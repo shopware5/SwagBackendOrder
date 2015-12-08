@@ -10,20 +10,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     const PRICE_PRECISION = 2;
 
     /**
-     * holds the order id
-     *
-     * @var int
-     */
-    private $orderId;
-
-    /**
-     * is true if billing and shipping are equal
-     *
-     * @var int
-     */
-    private $equalBillingAddress = false;
-
-    /**
      * Disable template engine for all actions
      *
      * @return void
