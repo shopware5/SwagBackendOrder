@@ -102,13 +102,18 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
     /**
      * @param int $customerId
-     * @return array
+     * @return array|bool
      */
     private function getAlternativeShippingAddress($customerId)
     {
         $builder = $this->getCustomerShippingAddressQueryBuilder($customerId);
 
         $result = $builder->getQuery()->getArrayResult();
+
+        // return false if no shipping address is set for customer
+        if (empty($result)) {
+            return false;
+        }
 
         return $this->mapAlternativeShippingAddressResult($result);
     }
