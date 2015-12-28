@@ -17,11 +17,16 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     /**
      * is true if billing and shipping are equal
      *
-     * @var int
+     * @var bool
      */
     private $equalBillingAddress = false;
 
-    public function createOrder($data, $ordernumber)
+    /**
+     * @param array $data
+     * @param int|string $orderNumber
+     * @return \Shopware\Models\Order\Order
+     */
+    public function createOrder(array $data, $orderNumber)
     {
         $positions = $data['position'];
         $net = $data['net'];
@@ -30,13 +35,12 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
          * creates an empty row
          * -> workaround for the partner model (you must pass one, but not every order has a partner)
          */
-        $sql = 'INSERT INTO s_order (ordernumber)
-                        VALUES (?)';
+        $sql = 'INSERT INTO s_order (ordernumber) VALUES (?)';
 
-        Shopware()->Db()->query($sql, array($ordernumber));
+        Shopware()->Db()->query($sql, [$orderNumber]);
 
         $sql = 'SELECT id FROM s_order WHERE ordernumber = ?';
-        $this->orderId = Shopware()->Db()->fetchOne($sql, array($ordernumber));
+        $this->orderId = Shopware()->Db()->fetchOne($sql, [$orderNumber]);
 
         /** @var Shopware\Models\Order\Order $orderModel */
         $orderModel = Shopware()->Models()->find('Shopware\Models\Order\Order', $this->orderId);
@@ -86,7 +90,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         $orderModel->setShop($customerModel->getShop());
 
-        $orderModel->setNumber($ordernumber);
+        $orderModel->setNumber($orderNumber);
 
         $orderModel->setOrderTime(new DateTime('now'));
 
@@ -113,7 +117,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $orderModel->setCurrency($currencyModel->getCurrency());
 
         /** @var Shopware\Models\Order\Detail[] $details */
-        $details = array();
+        $details = [];
 
         //checks if more than one position was passed
         if ($this->isAssoc($positions)) {
@@ -160,7 +164,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         Shopware()->Models()->flush();
 
         /*
-         * I don't know why but the amountNet changes to the amount after the first flushing but it was written correct to the db
+         * the 'amountNet' changes to the 'amount' after the first flushing but it was written correctly to the db
          * this is only for using the model without problems
          */
         $orderModel->setInvoiceAmountNet($data['totalWithoutTax']);
@@ -191,14 +195,14 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
               FROM s_articles a, s_articles_details ad
               WHERE a.id = ad.articleID
               AND ad.ordernumber = ?",
-            array($position['articleNumber'])
+            [$position['articleNumber']]
         );
 
         //checks if the article exists
         if (empty($articleIds)) {
             $articleIdentification = $this->createInvalidArticleIdentificationForErrorMessage($position);
 
-            return array('success' => false, 'article' => $articleIdentification);
+            return ['success' => false, 'article' => $articleIdentification];
         }
 
         $articleId = $articleIds['id'];
@@ -261,10 +265,10 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     /**
      * sets the order attributes
      *
-     * @param $attributes
+     * @param array $attributes
      * @return \Shopware\Models\Attribute\Order
      */
-    private function setOrderAttributes($attributes)
+    private function setOrderAttributes(array $attributes)
     {
         $orderAttributeModel = new \Shopware\Models\Attribute\Order();
         $orderAttributeModel->setAttribute1($attributes['attribute1']);
@@ -368,10 +372,10 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     }
 
     /**
-     * @param Shopware\Models\Order\Order $orderModel
-     * @return string
+     * @param \Shopware\Models\Order\Order $orderModel
+     * @return \Shopware\Models\Payment\PaymentInstance
      */
-    private function preparePaymentInstance($orderModel)
+    private function preparePaymentInstance(\Shopware\Models\Order\Order $orderModel)
     {
         $paymentId = $orderModel->getPayment()->getId();
         $customerId = $orderModel->getCustomer()->getId();
@@ -415,14 +419,14 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     /**
      * selects the payment data by user and payment id
      *
-     * @param $customerId
-     * @param $paymentId
+     * @param int $customerId
+     * @param int $paymentId
      * @return Shopware\Models\Customer\PaymentData
      */
     public function getCustomerPaymentData($customerId, $paymentId)
     {
         $PaymentDataRepository = Shopware()->Models()->getRepository('Shopware\Models\Customer\PaymentData');
-        $paymentModel = $PaymentDataRepository->findBy(array('paymentMeanId' => $paymentId, 'customer' => $customerId));
+        $paymentModel = $PaymentDataRepository->findBy(['paymentMeanId' => $paymentId, 'customer' => $customerId]);
 
         return $paymentModel;
     }
@@ -432,10 +436,10 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      * to distinguish between an order with one or an order with more than
      * one position
      *
-     * @param $array
+     * @param array $array
      * @return bool
      */
-    private function isAssoc($array)
+    private function isAssoc(array $array)
     {
         return array_keys($array) !== range(0, count($array) - 1);
     }
@@ -451,7 +455,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getEqualBillingAddress()
     {
