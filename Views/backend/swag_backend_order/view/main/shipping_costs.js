@@ -130,7 +130,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             name: 'shippingCostsNet',
             width: 170,
             fieldLabel: me.snippets.fields.costsNet,
-            disabled: true
+            readOnly: true
         });
 
         var shippingCostsContainer = Ext.create('Ext.Container', {
