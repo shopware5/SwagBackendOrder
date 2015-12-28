@@ -237,7 +237,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 if (article || article == "") {
                     Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textInvalidArticle + ' ' + article);
                 } else {
-                    Shopware.Notification.createGrowlMessage(me.snippets.error.title, response.proxy.reader.rawData.data.message);
+                    Shopware.Notification.createGrowlMessage(me.snippets.error.title, response.proxy.reader.rawData.message);
                 }
 
                 me.window.enable(true);
