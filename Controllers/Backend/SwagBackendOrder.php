@@ -64,6 +64,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         return [
             'id' => $customer['id'],
+            'email' => $customer['email'],
             'billing' => $customer['billing'],
             'debit' => $customer['debit'],
             'shipping' => $customer['shipping'],
