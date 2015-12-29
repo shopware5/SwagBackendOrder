@@ -129,7 +129,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
         me.shippingCostsNetNumber = Ext.create('Ext.form.field.Number', {
             name: 'shippingCostsNet',
             width: 170,
-            fieldLabel: me.snippets.fields.costsNet
+            fieldLabel: me.snippets.fields.costsNet,
+            readOnly: true
         });
 
         var shippingCostsContainer = Ext.create('Ext.Container', {

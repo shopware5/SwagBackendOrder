@@ -237,7 +237,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 if (article || article == "") {
                     Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.textInvalidArticle + ' ' + article);
                 } else {
-                    Shopware.Notification.createGrowlMessage(me.snippets.error.title, response.proxy.reader.rawData.data.message);
+                    Shopware.Notification.createGrowlMessage(me.snippets.error.title, response.proxy.reader.rawData.message);
                 }
 
                 me.window.enable(true);
@@ -317,11 +317,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * selects the correct shipping address and updates it to the default address
      *
-     * @param record
+     * @param record false for no selected record, otherwise a single data model
      */
     onSelectShippingAddress: function (record) {
         var me = this;
-        record = record[0].data;
+
+        if (record === false) { // No shipping address selected.
+            var EMPTY_SHIPPING_ADDRESS_ID = 0; // Magic constant
+            me.orderModel.set('shippingAddressId', EMPTY_SHIPPING_ADDRESS_ID);
+            return;
+        }
+
+        record = record.data;
 
         Ext.Ajax.request({
             url: '{url action="setShippingAddress"}',
@@ -725,12 +732,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 var totalCostsJson = Ext.JSON.decode(response.responseText);
                 var record = totalCostsJson.data;
 
-                me.totalCostsModel.set('totalWithoutTax', record.totalWithoutTax);
-                me.totalCostsModel.set('sum', record.sum);
-                me.totalCostsModel.set('total', record.total);
-                me.totalCostsModel.set('shippingCosts', record.shippingCosts);
-                me.totalCostsModel.set('shippingCostsNet', record.shippingCostsNet);
-                me.totalCostsModel.set('taxSum', record.taxSum);
+                me.totalCostsModel.beginEdit();
+                try {
+                    me.totalCostsModel.set('totalWithoutTax', record.totalWithoutTax);
+                    me.totalCostsModel.set('sum', record.sum);
+                    me.totalCostsModel.set('total', record.total);
+                    me.totalCostsModel.set('shippingCosts', record.shippingCosts);
+                    me.totalCostsModel.set('shippingCostsNet', record.shippingCostsNet);
+                    me.totalCostsModel.set('taxSum', record.taxSum);
+                } finally {
+                    me.totalCostsModel.endEdit();
+                }
 
                 me.orderModel.set('shippingCostsNet', record.shippingCostsNet);
             }
@@ -797,8 +809,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
                 for (var index = 0; index < positionStore.count(); index++) {
                     var actualPosition = positionStore.getAt(index);
-                    actualPosition.set('price', positions[index].price);
-                    actualPosition.set('total', positions[index].total);
+                    actualPosition.beginEdit();
+                    try {
+                        actualPosition.set('price', positions[index].price);
+                        actualPosition.set('total', positions[index].total);
+                    } finally {
+                        actualPosition.endEdit();
+                    }
                 }
             }
         });

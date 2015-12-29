@@ -60,13 +60,13 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
      */
     public function getInfo()
     {
-        return array(
+        return [
             'version' => $this->getVersion(),
             'label' => $this->getLabel(),
             'supplier' => 'shopware AG',
             'description' => 'Ermöglicht es Bestellungen über das Backend zu erstellen.',
             'link' => 'www.shopware.com'
-        );
+        ];
     }
 
     /**
@@ -76,7 +76,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     public function install()
     {
         // Check if shopware version matches
-        if (!$this->assertVersionGreaterThen('5.0.0')) {
+        if (!$this->assertMinimumVersion('5.0.0')) {
             throw new Exception("This plugin requires Shopware 5.0.0 or a later version");
         }
 
@@ -84,7 +84,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
 
         $this->registerEvents();
 
-        return array('success' => true, 'invalidateCache' => array('backend'));
+        return ['success' => true, 'invalidateCache' => ['backend']];
     }
 
     /**
@@ -92,7 +92,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
      */
     public function uninstall()
     {
-        return array('success' => true, 'invalidateCache' => array('backend'));
+        return ['success' => true, 'invalidateCache' => ['backend']];
     }
 
     /**
@@ -105,64 +105,37 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
         $form->addElement(
             'text',
             'validationMail',
-            array(
+            [
                 'label' => 'Gast Konto eMail',
                 'required' => true,
                 'description' => 'Die eMail-Adresse mit der Gast Konten angelegt werden sollen. Gastkonten sind Accounts für Kunden die sich nicht in ihrem Shop registriert haben. So haben Sie die möglichkeit Bestellungen einzutragen die Beispielsweise über Telefon eingangen sind.'
-            )
+            ]
         );
 
         $form->addElement(
             'text',
             'desktopTypes',
-            array(
+            [
                 'label' => 'Geräte-Typen',
                 'value' => 'Backend',
                 'description' => 'Hier kann angegeben werden über welchen Kommunikatoinskanal die Bestellung eingegagen ist. Zum Beispiel Telefon, Handy, Geschäft, ... \n Die Verschiedenen Typen werden durch ein Komma (,) getrennt.'
-            )
+            ]
         );
 
-        /**
-         * translation for the configuration fields
-         */
-        $shopRepository = Shopware()->Models()->getRepository('Shopware\Models\Shop\Locale');
-
-        $translations = array(
-            'en_GB' => array(
-                'validationMail' => array(
+        $translations = [
+            'en_GB' => [
+                'validationMail' => [
                     'label' => 'Guest account e-mail',
                     'description' => 'The e-mail address which guest accounts use. Guest accounts are accounts for customers who don\'t have a registered account in your shop. With these accounts your are able to create orders for customers who ordered something via telephone.'
-                ),
-                'desktopTypes' => array(
+                ],
+                'desktopTypes' => [
                     'label' => 'Desktop types',
                     'description' => 'You can choose which communication channel are available. For example telephone, mobile phone, store, and so on.\n The different types are separated by a comma (,).'
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
-        foreach ($translations as $locale => $snippets) {
-            /** @var Shopware\Models\Shop\Locale $localeModel */
-            $localeModel = $shopRepository->findOneBy(array('locale' => $locale));
-
-            if (is_null($localeModel)) {
-                continue;
-            }
-
-            foreach ($snippets as $element => $snippet) {
-                $elementModel = $form->getElement($element);
-
-                if (is_null($element)) {
-                    continue;
-                }
-
-                $translationModel = new Shopware\Models\Config\ElementTranslation();
-                $translationModel->setLabel($snippet['label']);
-                $translationModel->setDescription($snippet['description']);
-                $translationModel->setLocale($localeModel);
-
-                $elementModel->addTranslation($translationModel);
-            }
-        }
+        $this->addFormTranslations($translations);
     }
 
     /**
@@ -206,10 +179,10 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     /**
      * checks if the fake email was used to create accounts with the same email
      *
-     * @param Enlight_Event_EventArgs $arguments
+     * @param Enlight_Controller_ActionEventArgs $arguments
      * @return bool
      */
-    public function onPostDispatchCustomer(Enlight_Event_EventArgs $arguments)
+    public function onPostDispatchCustomer(Enlight_Controller_ActionEventArgs $arguments)
     {
         $mail = $arguments->getSubject()->Request()->getParam('value');
         $action = $arguments->getSubject()->Request()->getParam('action');
@@ -231,11 +204,8 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
      */
     public function onGetBackendController()
     {
-        $this->Application()->Template()->addTemplateDir($this->Path() . 'Views/');
-
-        $this->Application()->Snippets()->addConfigDir(
-            $this->Path() . 'Snippets/'
-        );
+        $this->get('template')->addTemplateDir($this->Path() . 'Views/');
+        $this->get('snippets')->addConfigDir($this->Path() . 'Snippets/');
 
         return $this->Path() . '/Controllers/Backend/SwagBackendOrder.php';
     }
@@ -243,9 +213,9 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     /**
      * adds the templates directories which expand the order module
      *
-     * @param Enlight_Event_EventArgs $args
+     * @param Enlight_Controller_ActionEventArgs $args
      */
-    public function onOrderPostDispatch(Enlight_Event_EventArgs $args)
+    public function onOrderPostDispatch(Enlight_Controller_ActionEventArgs $args)
     {
         $view = $args->getSubject()->View();
 
@@ -264,9 +234,9 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     /**
      * adds the templates directories which expand the customer module
      *
-     * @param Enlight_Event_EventArgs $args
+     * @param Enlight_Controller_ActionEventArgs $args
      */
-    public function onCustomerPostDispatchSecure(Enlight_Event_EventArgs $args)
+    public function onCustomerPostDispatchSecure(Enlight_Controller_ActionEventArgs $args)
     {
         $view = $args->getSubject()->View();
 
@@ -338,7 +308,6 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
      * @param string $oldVersion
      * @return bool
      * @throws Exception
-     * @throws \Doctrine\DBAL\DBALException
      */
     public function update($oldVersion)
     {
@@ -346,9 +315,10 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
             throw new Exception('This plugin requires Shopware 5 or a later version');
         }
 
-        $orderDetailIds = Shopware()->Db()->fetchCol('SELECT id FROM s_order_details WHERE id NOT IN (SELECT detailID FROM s_order_details_attributes);');
-
         if (version_compare($oldVersion, '1.0.1', '<')) {
+            $orderDetailIds = Shopware()->Db()->fetchCol(
+                'SELECT id FROM s_order_details WHERE id NOT IN (SELECT detailID FROM s_order_details_attributes);'
+            );
             foreach ($orderDetailIds as $orderDetailId) {
                 $sql = 'INSERT INTO `s_order_details_attributes` (detailID) VALUES (?)';
                 Shopware()->Db()->query($sql, [$orderDetailId]);

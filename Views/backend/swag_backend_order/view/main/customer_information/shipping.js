@@ -93,16 +93,23 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             },
             tpl: me.createShippingAddressComboTpl(),
             listeners: {
-                'select': function (comboBox, record) {
+                'change': function (comboBox, value) {
+                    var record = this.findRecordByValue(value);
+
                     me.fireEvent(
                         'selectShippingAddress', record
                     );
+
+                    if (record === false) {
+                        // Do nothing if there is no corresponding record.
+                        return;
+                    }
 
                     me.billingAsShippingCheckbox.setValue(false);
 
                     var shippingAddressTemplateStore = Ext.create('Ext.data.Store', {
                         model: 'Shopware.apps.SwagBackendOrder.model.Shipping',
-                        data: record[0].data
+                        data: record.data
                     });
 
                     me.dataView = Ext.create('Ext.view.View', {

@@ -1,9 +1,11 @@
 <?php
 
+use Doctrine\ORM\Query\Expr\Join;
+
 class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 {
     /**
-     * @param int $customerId
+     * @param string $customerId
      * @return array
      */
     public function getCustomer($customerId)
@@ -34,6 +36,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
     /**
      * Gets the customer list for the drop down live search list
+     *
      * @param string $search
      * @return array
      */
@@ -78,33 +81,39 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
     /**
      * Query builder for customer
-     * @return \Doctrine\ORM\QueryBuilder
+     *
+     * @return \Shopware\Components\Model\QueryBuilder
      */
     public function getCustomerQueryBuilder()
     {
         $builder = Shopware()->Models()->createQueryBuilder();
 
-        $builder->select(array('customers', 'billing', 'shipping', 'debit', 'shop', 'languageSubShop'))
-                ->from('Shopware\Models\Customer\Customer', 'customers')
-                ->leftJoin('customers.billing', 'billing')
-                ->leftJoin('customers.shipping', 'shipping')
-                ->leftJoin('customers.debit', 'debit')
-                ->leftJoin('customers.languageSubShop', 'languageSubShop')
-                ->leftJoin('customers.shop', 'shop')
-                ->where('customers.id = :search');
+        $builder->select(['customers', 'billing', 'shipping', 'debit', 'shop', 'languageSubShop'])
+            ->from('Shopware\Models\Customer\Customer', 'customers')
+            ->leftJoin('customers.billing', 'billing')
+            ->leftJoin('customers.shipping', 'shipping')
+            ->leftJoin('customers.debit', 'debit')
+            ->leftJoin('customers.languageSubShop', 'languageSubShop')
+            ->leftJoin('customers.shop', 'shop')
+            ->where('customers.id = :search');
 
         return $builder;
     }
 
     /**
-     * @param $customerId
-     * @return array
+     * @param int $customerId
+     * @return array|bool
      */
     private function getAlternativeShippingAddress($customerId)
     {
         $builder = $this->getCustomerShippingAddressQueryBuilder($customerId);
 
         $result = $builder->getQuery()->getArrayResult();
+
+        // return false if no shipping address is set for customer
+        if (empty($result)) {
+            return false;
+        }
 
         return $this->mapAlternativeShippingAddressResult($result);
     }
@@ -113,7 +122,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
      * @param array $result
      * @return array
      */
-    private function mapAlternativeShippingAddressResult($result)
+    private function mapAlternativeShippingAddressResult(array $result)
     {
         $alternativeShippingAddress = $result[0];
         $alternativeShippingAddress['country'] = $result[1]['name'];
@@ -164,7 +173,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
      */
     public function getGroupByFieldsForOrderAddresses($model)
     {
-        $fieldsGroupBy = array(
+        $fieldsGroupBy = [
             'company',
             'countryId',
             'stateId',
@@ -175,7 +184,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
             'lastName',
             'street',
             'city'
-        );
+        ];
 
         if ($model === 'Shopware\Models\Order\Billing') {
             array_push(
@@ -193,20 +202,20 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
      * Gets the query builder for the alternative shipping address which is placed in the `s_user_shippingaddress` table
      *
      * @param string $searchParam
-     * @param string $model
-     * @param string $alias
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return \Shopware\Components\Model\QueryBuilder
      */
-    private function getCustomerShippingAddressQueryBuilder($searchParam, $model = 'Shopware\Models\Customer\Shipping', $alias = 'shippingCustomer') {
+    private function getCustomerShippingAddressQueryBuilder($searchParam)
+    {
         $builder = Shopware()->Models()->createQueryBuilder();
+        $alias = 'shippingCustomer';
 
-        $builder->select(array($alias, 'country', 'state'))
-                ->from($model, $alias)
-                ->leftJoin('Shopware\Models\Country\Country', 'country', \Doctrine\ORM\Query\Expr\Join::LEFT_JOIN, 'country.id = ' . $alias.'.countryId')
-                ->leftJoin('Shopware\Models\Country\State', 'state', \Doctrine\ORM\Query\Expr\Join::LEFT_JOIN, 'state.id = ' . $alias.'.stateId')
-                ->where($alias.'.customerId = :search')
-                ->setParameter('search', $searchParam)
-                ->groupBy($alias.'.customerId');
+        $builder->select([$alias, 'country', 'state'])
+            ->from('Shopware\Models\Customer\Shipping', $alias)
+            ->leftJoin('Shopware\Models\Country\Country', 'country', Join::LEFT_JOIN, 'country.id = ' . $alias . '.countryId')
+            ->leftJoin('Shopware\Models\Country\State', 'state', Join::LEFT_JOIN, 'state.id = ' . $alias . '.stateId')
+            ->where($alias . '.customerId = :search')
+            ->setParameter('search', $searchParam)
+            ->groupBy($alias . '.customerId');
 
         return $builder;
     }
@@ -215,19 +224,19 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
      * @param string $searchParam
      * @param string $model
      * @param string $alias
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return \Shopware\Components\Model\QueryBuilder
      */
     private function getOrderAddressesQueryBuilder($searchParam, $model, $alias)
     {
         $builder = Shopware()->Models()->createQueryBuilder();
 
-        $builder->select(array($alias, 'country', 'state'))
-                ->from($model, $alias)
-                ->leftJoin($alias.'.country', 'country')
-                ->leftJoin($alias.'.state', 'state')
-                ->where($alias.'.customerId = :search')
-                ->setParameter('search', $searchParam)
-                ->groupBy($alias.'.customerId');
+        $builder->select([$alias, 'country', 'state'])
+            ->from($model, $alias)
+            ->leftJoin($alias . '.country', 'country')
+            ->leftJoin($alias . '.state', 'state')
+            ->where($alias . '.customerId = :search')
+            ->setParameter('search', $searchParam)
+            ->groupBy($alias . '.customerId');
 
         return $builder;
     }

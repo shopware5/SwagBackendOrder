@@ -10,33 +10,19 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     const PRICE_PRECISION = 2;
 
     /**
-     * holds the order id
-     *
-     * @var int
-     */
-    private $orderId;
-
-    /**
-     * is true if billing and shipping are equal
-     *
-     * @var int
-     */
-    private $equalBillingAddress = false;
-
-    /**
      * Disable template engine for all actions
      *
      * @return void
      */
     public function preDispatch()
     {
-        if (!in_array($this->Request()->getActionName(), array('index', 'load'))) {
+        if (!in_array($this->Request()->getActionName(), ['index', 'load'])) {
             $this->Front()->Plugins()->Json()->setRenderer(true);
         }
     }
 
     /**
-     * gets customers by the email, customernumber, company or fullname
+     * gets customers by the email, customer number, company or full name
      */
     public function getCustomerAction()
     {
@@ -53,30 +39,56 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $result = $customerInformationHandler->getCustomer($search);
         }
 
+        foreach ($result as $i => $customer) {
+            $result[$i] = $this->extractCustomerData($customer);
+        }
+
         $total = count($result);
 
         $this->view->assign(
-            array(
+            [
                 'data' => $result,
                 'total' => $total,
                 'success' => true
-            )
+            ]
         );
     }
 
     /**
-     * method to create an order
+     * Only return relevant information about the customer (e.g. not their password hash).
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @param array $customer
+     * @return array
+     */
+    private function extractCustomerData(array $customer)
+    {
+        return [
+            'id' => $customer['id'],
+            'email' => $customer['email'],
+            'billing' => $customer['billing'],
+            'debit' => $customer['debit'],
+            'shipping' => $customer['shipping'],
+            'shop' => $customer['shop'],
+            'shopId' => $customer['shopId'],
+            'languageId' => $customer['languageId'],
+            'languageSubShop' => $customer['languageSubShop'],
+
+            // Used for search:
+            'customerCompany' => $customer['customerCompany'],
+            'customerName' => $customer['customerName'],
+            'customerNumber' => $customer['customerNumber']
+        ];
+    }
+
+    /**
+     * method to create an order
      */
     public function createOrderAction()
     {
         $data = $this->Request()->getParams();
         $data = $data['data'];
 
-        $ordernumber = $this->getOrderNumber();
+        $orderNumber = $this->getOrderNumber();
 
         /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
         $createBackendOrder = Shopware()->CreateBackendOrder();
@@ -84,7 +96,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         try {
             /** @var Shopware\Models\Order\Order $orderModel */
-            $orderModel = $createBackendOrder->createOrder($data, $ordernumber);
+            $orderModel = $createBackendOrder->createOrder($data, $orderNumber);
 
             if (!$orderModel instanceof \Shopware\Models\Order\Order) {
                 $this->view->assign($orderModel);
@@ -111,12 +123,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         if ($hasMailError) {
             $this->view->assign(
-                array(
+                [
                     'success' => true,
                     'orderId' => $orderModel->getId(),
-                    'mail' => $e->getMessage(),
+                    'mail' => $hasMailError,
                     'ordernumber' => $orderModel->getNumber()
-                )
+                ]
             );
 
             return;
@@ -151,38 +163,39 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
          * the query concats the article name and the additional text field for the search
          */
         $builder->select(
-                'articles.id AS articleId,
-                details.number,
-                articles.name,
-                details.id,
-                details.inStock,
-                articles.taxId,
-                prices.price,
-                details.additionalText,
-                tax.tax')
-                ->from('Shopware\Models\Article\Article', 'articles')
-                ->leftJoin('articles.details', 'details')
-                ->leftJoin('details.prices', 'prices')
-                ->leftJoin('articles.tax', 'tax')
-                ->where(
-                    $builder->expr()->like(
+            'articles.id AS articleId,
+            details.number,
+            articles.name,
+            details.id,
+            details.inStock,
+            articles.taxId,
+            prices.price,
+            details.additionalText,
+            tax.tax'
+        );
+        $builder->from('Shopware\Models\Article\Article', 'articles')
+            ->leftJoin('articles.details', 'details')
+            ->leftJoin('details.prices', 'prices')
+            ->leftJoin('articles.tax', 'tax')
+            ->where(
+                $builder->expr()->like(
+                    $builder->expr()->concat(
+                        'articles.name',
                         $builder->expr()->concat(
-                            'articles.name',
-                            $builder->expr()->concat(
-                                    $builder->expr()->literal(' '),
-                                    'details.additionalText'
-                            )
-                        ),
-                        $builder->expr()->literal($search)
-                    )
+                            $builder->expr()->literal(' '),
+                            'details.additionalText'
+                        )
+                    ),
+                    $builder->expr()->literal($search)
                 )
-                ->orWhere('details.number LIKE :number')
-                ->andWhere('articles.active = 1')
-                ->andWhere('articles.active = 1')
-                ->setParameter('number', $search)
-                ->orderBy('details.number')
-                ->groupBy('details.number')
-                ->setMaxResults(8);
+            )
+            ->orWhere('details.number LIKE :number')
+            ->andWhere('articles.active = 1')
+            ->andWhere('articles.active = 1')
+            ->setParameter('number', $search)
+            ->orderBy('details.number')
+            ->groupBy('details.number')
+            ->setMaxResults(8);
         $result = $builder->getQuery()->getArrayResult();
         $total = count($result);
 
@@ -191,11 +204,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $this->view->assign(
-            array(
+            [
                 'success' => true,
                 'data' => $result,
                 'total' => $total
-            )
+            ]
         );
     }
 
@@ -205,7 +218,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     public function getPaymentAction()
     {
         $builder = Shopware()->Models()->createQueryBuilder();
-        $builder->select(array('payment'))->from('Shopware\Models\Payment\Payment', 'payment');
+        $builder->select(['payment'])
+            ->from('Shopware\Models\Payment\Payment', 'payment');
 
         $paymentMethods = $builder->getQuery()->getArrayResult();
 
@@ -218,22 +232,22 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $total = count($paymentMethods);
 
         $this->view->assign(
-            array(
+            [
                 'data' => $paymentMethods,
                 'total' => $total,
                 'success' => true
-            )
+            ]
         );
     }
 
     /**
      * translates the payment methods
      *
-     * @param $paymentMethod
-     * @param $languageId
-     * @return mixed
+     * @param array $paymentMethod
+     * @param int $languageId
+     * @return array
      */
-    private function translatePayment($paymentMethod, $languageId)
+    private function translatePayment(array $paymentMethod, $languageId)
     {
         $translation = new Shopware_Components_Translation();
         $paymentTranslations = $translation->read($languageId, 'config_payment');
@@ -258,14 +272,13 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $builder = Shopware()->Models()->createQueryBuilder();
 
-        $builder->select(array('dispatch', 'shipping'))
-                ->from('Shopware\Models\Dispatch\ShippingCost', 'shipping')
-                ->innerJoin('shipping.dispatch', 'dispatch')
-                ->groupBy('dispatch.id');
+        $builder->select(['dispatch', 'shipping'])
+            ->from('Shopware\Models\Dispatch\ShippingCost', 'shipping')
+            ->innerJoin('shipping.dispatch', 'dispatch')
+            ->groupBy('dispatch.id');
         $shippingCosts = $builder->getQuery()->getArrayResult();
 
         $languageId = $this->getBackendLanguage();
-
 
         foreach ($shippingCosts as &$shippingCost) {
             $shippingCost['dispatch'] = $this->translateDispatch($shippingCost['dispatch'], $languageId);
@@ -274,22 +287,22 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $total = count($shippingCosts);
 
         $this->view->assign(
-            array(
+            [
                 'data' => $shippingCosts,
                 'total' => $total,
                 'success' => true
-            )
+            ]
         );
     }
 
     /**
      * translates the dispatch fields
      *
-     * @param $dispatch
-     * @param $languageId
-     * @return mixed
+     * @param array $dispatch
+     * @param int $languageId
+     * @return array
      */
-    private function translateDispatch($dispatch, $languageId)
+    private function translateDispatch(array $dispatch, $languageId)
     {
         $translation = new Shopware_Components_Translation();
         $dispatchTranslations = $translation->read($languageId, 'config_dispatch');
@@ -308,10 +321,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * if the billing address changes it updates the address in s_user_billingaddress
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function setBillingAddressAction()
     {
@@ -327,19 +336,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         Shopware()->Models()->persist($billingAddressModel);
         Shopware()->Models()->flush();
 
-        $this->view->assign(
-            array(
-                'billingAddressId' => $billingAddressModel->getId()
-            )
-        );
+        $this->view->assign(['billingAddressId' => $billingAddressModel->getId()]);
     }
 
     /**
      * if the billing address changes it updates the address in s_user_billingaddress
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function setShippingAddressAction()
     {
@@ -352,18 +353,13 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         /** @var Shopware\Models\Customer\Customer $customerModel */
         $customerModel = Shopware()->Models()->find('Shopware\Models\Customer\Customer', $data['userId']);
 
-
         if ($shippingAddressModel = $customerModel->getShipping()) {
             $shippingAddressModel->fromArray($data);
 
             Shopware()->Models()->persist($shippingAddressModel);
             Shopware()->Models()->flush();
 
-            $this->view->assign(
-                array(
-                    'shippingAddressId' => $shippingAddressModel->getId()
-                )
-            );
+            $this->view->assign(['shippingAddressId' => $shippingAddressModel->getId()]);
         }
     }
 
@@ -376,14 +372,14 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $builder = $repository->createQueryBuilder('c');
         $builder->select(
-            array(
+            [
                 'c.id as id',
                 'c.name as name',
                 'c.currency as currency',
                 'c.symbol as symbol',
                 'c.factor as factor',
                 'c.default as default'
-            )
+            ]
         );
 
         $query = $builder->getQuery();
@@ -393,11 +389,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $data = $query->getArrayResult();
 
         $this->View()->assign(
-            array(
+            [
                 'success' => true,
                 'data' => $data,
                 'total' => $total
-            )
+            ]
         );
     }
 
@@ -406,6 +402,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPluginConfigAction()
     {
+        /** @var \Enlight_Config $config */
         $config = Shopware()->Plugins()->Backend()->SwagBackendOrder()->Config();
 
         $desktopTypes = $config->get('desktopTypes');
@@ -427,11 +424,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $total = count($config);
 
         $this->view->assign(
-            array(
+            [
                 'success' => true,
                 'data' => $config,
                 'total' => $total
-            )
+            ]
         );
     }
 
@@ -444,15 +441,17 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customerId = $request['customerId'];
         $paymentId = $request['paymentId'];
 
+        /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
+        $createBackendOrder = Shopware()->CreateBackendOrder();
+        $paymentModel = $createBackendOrder->getCustomerPaymentData($customerId, $paymentId);
         /** @var Shopware\Models\Customer\PaymentData $payment */
-        $paymentModel = Shopware()->CreateBackendOrder()->getCustomerPaymentData($customerId, $paymentId);
         $payment = Shopware()->Models()->toArray($paymentModel);
 
         $this->view->assign(
-            array(
+            [
                 'success' => true,
                 'data' => $payment
-            )
+            ]
         );
     }
 
@@ -465,11 +464,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $builder = Shopware()->Models()->createQueryBuilder();
         $builder->select('shops')
-                ->from('Shopware\Models\Shop\Shop', 'shops')
-                ->where('shops.mainId = :mainShopId')
-                ->orWhere('shops.id = :mainShopId')
-                ->andWhere('shops.active = 1')
-                ->setParameter('mainShopId', $mainShopId);
+            ->from('Shopware\Models\Shop\Shop', 'shops')
+            ->where('shops.mainId = :mainShopId')
+            ->orWhere('shops.id = :mainShopId')
+            ->andWhere('shops.active = 1')
+            ->setParameter('mainShopId', $mainShopId);
 
         $result = $builder->getQuery()->getArrayResult();
 
@@ -482,11 +481,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $total = count($result);
 
         $this->view->assign(
-            array(
+            [
                 'data' => $result,
                 'success' => true,
                 'total' => $total
-            )
+            ]
         );
     }
 
@@ -503,10 +502,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = Shopware()->Models()->createQueryBuilder();
 
         $builder->select('articles')
-                ->from('Shopware\Models\Article\Article', 'articles')
-                ->leftJoin('articles.details', 'details')
-                ->where('details.number = :articleNumber')
-                ->setParameter('articleNumber', $articleNumber);
+            ->from('Shopware\Models\Article\Article', 'articles')
+            ->leftJoin('articles.details', 'details')
+            ->where('details.number = :articleNumber')
+            ->setParameter('articleNumber', $articleNumber);
 
         /** @var Shopware\Models\Article\Article[] $articleModels */
         $articleModels = $builder->getQuery()->getResult();
@@ -514,20 +513,20 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         if (count($articleModels) < 1) {
             if (!empty($articleNumber)) {
                 $this->view->assign(
-                    array(
-                        'data' => array('articleNumber' => $articleNumber, 'error' => 'articleNumber'),
+                    [
+                        'data' => ['articleNumber' => $articleNumber, 'error' => 'articleNumber'],
                         'success' => false
-                    )
+                    ]
                 );
 
                 return false;
             }
 
             $this->view->assign(
-                array(
-                    'data' => array('articleName' => $data['articleName'], 'error' => 'articleName'),
+                [
+                    'data' => ['articleName' => $data['articleName'], 'error' => 'articleName'],
                     'success' => false
-                )
+                ]
             );
 
             return false;
@@ -535,10 +534,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         if ($articleModels[0]->getMainDetail()->getEsd()) {
             $this->view->assign(
-                array(
-                    'data' => array('articleNumber' => $articleNumber, 'error' => 'esd'),
+                [
+                    'data' => ['articleNumber' => $articleNumber, 'error' => 'esd'],
                     'success' => false
-                )
+                ]
             );
 
             return false;
@@ -548,9 +547,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param Shopware\Models\Order\Order $orderModel
+     * @param \Shopware\Models\Order\Order $orderModel
      */
-    public function sendOrderConfirmationMail($orderModel)
+    private function sendOrderConfirmationMail($orderModel)
     {
         $context = $this->prepareOrderConfirmationMailData($orderModel);
         $context['sOrderDetails'] = $this->prepareOrderDetailsConfirmationMailData($orderModel);
@@ -570,12 +569,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * prepares the correct array structure for the mail template
      *
-     * @param Shopware\Models\Order\Order $orderModel
+     * @param \Shopware\Models\Order\Order $orderModel
      * @return array
      */
     private function prepareOrderDetailsConfirmationMailData($orderModel)
     {
-        $details = Shopware()->Db()->fetchAll('SELECT * FROM s_order_details WHERE orderID = ?', array($orderModel->getId()));
+        $details = Shopware()->Db()->fetchAll(
+            'SELECT * FROM s_order_details WHERE orderID = ?',
+            [$orderModel->getId()]
+        );
 
         //we need to fake a shop instance if we want to use the Articles Module
         $shop = Shopware()->Models()->getRepository('Shopware\Models\Shop\Shop')->getActiveById($orderModel->getLanguageSubShop()->getId());
@@ -585,7 +587,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             /** @var Shopware\Models\Article\Repository $articleDetailRepository */
             $articleDetailRepository = Shopware()->Models()->getRepository('Shopware\Models\Article\Detail');
             /** @var Shopware\Models\Article\Detail[] $articleDetailModel */
-            $articleDetailModel = $articleDetailRepository->findBy(array('number' => $detail['articleordernumber']));
+            $articleDetailModel = $articleDetailRepository->findBy(['number' => $detail['articleordernumber']]);
             /** @var Shopware\Models\Article\Detail $articleDetailModel */
             $articleDetailModel = $articleDetailModel[0];
 
@@ -647,33 +649,35 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param Shopware\Models\Order\Order $orderModel
-     * @return mixed
+     * @param \Shopware\Models\Order\Order $orderModel
+     * @return array
      */
     private function prepareOrderConfirmationMailData($orderModel)
     {
         $billingAddress = Shopware()->Db()->fetchRow(
             'SELECT *, userID AS customerBillingId FROM s_order_billingaddress WHERE orderID = ?',
-            array($orderModel->getId())
+            [$orderModel->getId()]
         );
         $billingAddressAttributes = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_order_billingaddress_attributes WHERE billingID = ?',
-            array($billingAddress['id'])
+            [$billingAddress['id']]
         );
         if (!empty($billingAddressAttributes)) {
             $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
         }
 
-        if (Shopware()->CreateBackendOrder()->getEqualBillingAddress()) {
+        /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
+        $createBackendOrder = Shopware()->CreateBackendOrder();
+        if ($createBackendOrder->getEqualBillingAddress()) {
             $shippingAddress = $billingAddress;
         } else {
             $shippingAddress = Shopware()->Db()->fetchRow(
                 'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
-                array($orderModel->getId())
+                [$orderModel->getId()]
             );
             $shippingAddressAttributes = Shopware()->Db()->fetchRow(
-                'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingId = ?',
-                array($shippingAddress['id'])
+                'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
+                [$shippingAddress['id']]
             );
             if (!empty($shippingAddressAttributes)) {
                 $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
@@ -700,66 +704,66 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $orderAttributes = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_order_attributes WHERE orderID = ?',
-            array($orderModel->getId())
+            [$orderModel->getId()]
         );
         $context['attributes'] = $orderAttributes;
 
         $dispatch = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_premium_dispatch WHERE id = ?',
-            array($orderModel->getDispatch()->getId())
+            [$orderModel->getDispatch()->getId()]
         );
         $dispatch = $this->translateDispatch($dispatch, $orderModel->getLanguageSubShop()->getId());
         $context['sDispatch'] = $dispatch;
 
         $user = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_user WHERE id = ?',
-            array($orderModel->getCustomer()->getId())
+            [$orderModel->getCustomer()->getId()]
         );
         $context['additional']['user'] = $user;
 
         $country = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_core_countries WHERE id = ?',
-            array($orderModel->getBilling()->getCountry()->getId())
+            [$orderModel->getBilling()->getCountry()->getId()]
         );
         $context['additional']['country'] = $country;
 
-        $context['additional']['state'] = array();
+        $context['additional']['state'] = [];
         if ($orderModel->getBilling()->getState()) {
             $state = Shopware()->Db()->fetchRow(
                 'SELECT * FROM s_core_countries_states WHERE id = ?',
-                array($orderModel->getBilling()->getState()->getId())
+                [$orderModel->getBilling()->getState()->getId()]
             );
             $context['additional']['state'] = $state;
         }
 
         $country = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_core_countries WHERE id = ?',
-            array($orderModel->getShipping()->getCountry()->getId())
+            [$orderModel->getShipping()->getCountry()->getId()]
         );
         $context['additional']['countryShipping'] = $country;
 
-        $context['additional']['stateShipping'] = array();
+        $context['additional']['stateShipping'] = [];
         if ($orderModel->getShipping()->getState()) {
             $state = Shopware()->Db()->fetchRow(
                 'SELECT * FROM s_core_countries_states WHERE id = ?',
-                array($orderModel->getShipping()->getState()->getId())
+                [$orderModel->getShipping()->getState()->getId()]
             );
             $context['additional']['stateShipping'] = $state;
         }
 
         $payment = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_core_paymentmeans WHERE id = ?',
-            array($orderModel->getPayment()->getId())
+            [$orderModel->getPayment()->getId()]
         );
         $payment = $this->translatePayment($payment, $orderModel->getLanguageSubShop()->getId());
 
         $context['additional']['payment'] = $payment;
 
-        $context['sPaymentTable'] = array();
+        $context['sPaymentTable'] = [];
         if ($context['additional']['payment']['name'] === 'debit') {
             $paymentTable = Shopware()->Db()->fetchRow(
                 'SELECT * FROM s_core_payment_data WHERE user_id = ?',
-                array($orderModel->getCustomer()->getId())
+                [$orderModel->getCustomer()->getId()]
             );
             $context['sPaymentTable'] = $paymentTable;
         }
@@ -785,8 +789,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param int $price
-     * @param int $taxRate
+     * @param float $price
+     * @param float $taxRate
      * @return float
      */
     private function calculateNetPrice($price, $taxRate)
@@ -795,8 +799,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param $price
-     * @param $taxRate
+     * @param float $price
+     * @param float $taxRate
      * @return float
      */
     private function calculateGrossPrice($price, $taxRate)
@@ -809,6 +813,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function getBackendLanguage()
     {
+        /** @var Shopware_Components_Auth $auth */
         $auth = Shopware()->Plugins()->Backend()->Auth()->checkAuth();
         $identity = $auth->getIdentity();
 
@@ -827,9 +832,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $shippingCosts = $data['shippingCosts'];
         $net = $data['net'];
         $total = 0;
-        $sum = 0;
-        $taxSum = 0;
-        $taxSums = array();
+        $taxSums = [];
         $totalWithoutTax = 0;
         $articleNumber = 0;
         $shippingCostsNet = 0;
@@ -840,7 +843,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $totalWithoutTax += $priceWithoutTax;
 
             if (!isset($taxSums[$position->taxRate])) {
-                $taxSums[$position->taxRate] = array();
+                $taxSums[$position->taxRate] = [];
                 $taxSums[$position->taxRate]['sum'] = 0;
                 $taxSums[$position->taxRate]['count'] = 0;
             }
@@ -851,9 +854,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         if ($shippingCosts != 0 && !is_null($shippingCosts) && $shippingCosts != '') {
-            $taxRelation = 0;
-            $shippingCostsRelation = 0;
-
             foreach ($taxSums as $taxRate => $taxRow) {
                 $taxRelation = $articleNumber / $taxRow['count'];
                 $shippingCostsRelation = $shippingCosts / $taxRelation;
@@ -866,7 +866,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $sum = $total;
-        $total = $shippingCosts + $total;
+        if ($net === 'true') {
+            $total = $shippingCostsNet + $total;
+        } else {
+            $total = $shippingCosts + $total;
+        }
         $totalWithoutTax = $shippingCostsNet + $totalWithoutTax;
 
         $taxSum = $total - $totalWithoutTax;
@@ -875,34 +879,30 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         if ($net === 'true') {
-            $shippingCostsNet = $shippingCosts;
+            $shippingCosts = $shippingCostsNet;
             $totalWithoutTax = $total;
             $taxSum = 0;
         }
 
-        $result = array(
+        $result = [
             'totalWithoutTax' => $this->roundPrice($totalWithoutTax),
             'sum' => $this->roundPrice($sum),
             'total' => $this->roundPrice($total),
             'shippingCosts' => $this->roundPrice($shippingCosts),
             'shippingCostsNet' => $this->roundPrice($shippingCostsNet),
             'taxSum' => $this->roundPrice($taxSum)
-        );
+        ];
 
         $this->view->assign(
-            array(
+            [
                 'data' => $result,
                 'success' => true
-            )
+            ]
         );
     }
 
     /**
      * calculates the new currency and returns the actual prices
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function calculateCurrencyAction()
     {
@@ -940,10 +940,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $data['positions'] = $positions;
 
         $this->view->assign(
-            array(
+            [
                 'data' => $data,
                 'success' => true
-            )
+            ]
         );
     }
 
@@ -976,15 +976,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $this->view->assign(
-            array(
+            [
                 'data' => $positions,
                 'success' => true
-            )
+            ]
         );
     }
 
     /**
-     * @param float|int $price
+     * @param float $price
      * @param int $digits
      * @return float
      */
@@ -995,19 +995,14 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * Gets the customer group price
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function getCustomerGroupPriceByOrdernumberAction()
     {
         $data = $this->Request()->getParams();
 
         if (empty($data['customerId']) || empty($data['ordernumber'])) {
-            $this->view->assign(array(
-                'success' => false
-            ));
+            $this->view->assign(['success' => false]);
+
             return;
         }
 
@@ -1032,13 +1027,16 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $priceForCustomerGroup = $price->getPrice();
         }
 
-        $priceForCustomerGroup = $this->calculateGrossPrice($priceForCustomerGroup, $productModel->getArticle()->getTax()->getTax());
+        $priceForCustomerGroup = $this->calculateGrossPrice(
+            $priceForCustomerGroup,
+            $productModel->getArticle()->getTax()->getTax()
+        );
 
-        $this->view->assign(array(
-            'data' => array(
-                'price' => $priceForCustomerGroup
-            ),
-            'success' => true
-        ));
+        $this->view->assign(
+            [
+                'data' => ['price' => $priceForCustomerGroup],
+                'success' => true
+            ]
+        );
     }
 }
