@@ -88,7 +88,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $data = $this->Request()->getParams();
         $data = $data['data'];
 
-        $orderNumber = $this->getOrderNumber();
+        $orderNumber = Shopware()->Modules()->Order()->sGetOrderNumber();
 
         /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
         $createBackendOrder = Shopware()->CreateBackendOrder();
@@ -772,20 +772,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $context['additional']['charge_var'] = 1;
 
         return $context;
-    }
-
-    /**
-     * gets the new order number
-     *
-     * @return int|string
-     */
-    private function getOrderNumber()
-    {
-        $number = Shopware()->Db()->fetchOne("/*NO LIMIT*/ SELECT number FROM s_order_number WHERE name='invoice' FOR UPDATE");
-        Shopware()->Db()->executeUpdate("UPDATE s_order_number SET number = number + 1 WHERE name='invoice'");
-        $number += 1;
-
-        return $number;
     }
 
     /**
