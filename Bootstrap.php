@@ -1,34 +1,11 @@
 <?php
 /**
- * Shopware 5
- * Copyright (c) shopware AG
+ * (c) shopware AG <info@shopware.com>
  *
- * According to our dual licensing model, this program can be used either
- * under the terms of the GNU Affero General Public License, version 3,
- * or under a proprietary license.
- *
- * The texts of the GNU Affero General Public License with an additional
- * permission and of our proprietary license can be found at and
- * in the LICENSE file you have received along with this program.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU Affero General Public License for more details.
- *
- * "Shopware" is a registered trademark of shopware AG.
- * The licensing of the program under the AGPLv3 does not imply a
- * trademark license. Therefore any rights, title and interest in
- * our trademarks remain entirely with us.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-/**
- * Shopware SwagBackendOrder Plugin - Bootstrap
- *
- * @category Shopware
- * @package Shopware\Plugins\SwagBackendOrder
- * @copyright Copyright (c) 2015, shopware AG (http://www.shopware.com)
- */
 class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Components_Plugin_Bootstrap
 {
     /**
@@ -76,8 +53,10 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     public function install()
     {
         // Check if shopware version matches
-        if (!$this->assertMinimumVersion('5.0.0')) {
-            throw new Exception("This plugin requires Shopware 5.0.0 or a later version");
+        if (!$this->assertMinimumVersion($this->getMinimumVersion())) {
+            throw new Exception(
+                sprintf("This plugin requires Shopware %s or a later version", $this->getMinimumVersion())
+            );
         }
 
         $this->createConfiguration();
@@ -311,8 +290,10 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
      */
     public function update($oldVersion)
     {
-        if (!$this->assertMinimumVersion('5.0.0')) {
-            throw new Exception('This plugin requires Shopware 5 or a later version');
+        if (!$this->assertMinimumVersion($this->getMinimumVersion())) {
+            throw new Exception(
+                sprintf('This plugin requires Shopware %s or a later version', $this->getMinimumVersion())
+            );
         }
 
         if (version_compare($oldVersion, '1.0.1', '<')) {
@@ -326,6 +307,15 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
         }
 
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    private function getMinimumVersion()
+    {
+        $pluginInfo = $this->getPluginJson();
+        return $pluginInfo['compatibility']['minimumVersion'];
     }
 
     /**
@@ -348,6 +338,4 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     {
         return true;
     }
-
-
 }
