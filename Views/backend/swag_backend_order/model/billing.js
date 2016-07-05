@@ -33,7 +33,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Billing', {
         { name: 'countryId', type: 'int', useNull: true },
         { name: 'number', type: 'string' },
         { name: 'phone', type: 'string' },
-        { name: 'fax', type: 'string' },
         { name: 'vatId', type: 'string' },
         { name: 'country', type: 'string' },
         { name: 'state', type: 'string' },

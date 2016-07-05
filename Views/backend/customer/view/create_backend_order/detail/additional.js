@@ -1,3 +1,4 @@
+
 //{block name="backend/customer/view/detail/additional" append}
 Ext.define('Shopware.apps.CreateBackendOrder..view.detail.Additional', {
     override: 'Shopware.apps.Customer.view.detail.Additional',

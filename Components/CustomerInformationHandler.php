@@ -1,4 +1,10 @@
 <?php
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 use Doctrine\ORM\Query\Expr\Join;
 
@@ -15,8 +21,8 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
 
         $result = $builder->getQuery()->getArrayResult();
 
-        $billingAddresses = $this->getOrderAddresses($customerId, 'Shopware\Models\Order\Billing', 'billings');
-        $shippingAddresses = $this->getOrderAddresses($customerId, 'Shopware\Models\Order\Shipping', 'shipping');
+        $billingAddresses = $this->getOrderAddresses($customerId, \Shopware\Models\Order\Billing::class, 'billings');
+        $shippingAddresses = $this->getOrderAddresses($customerId, \Shopware\Models\Order\Shipping::class, 'shipping');
         $alternativeShippingAddress = $this->getAlternativeShippingAddress($customerId);
 
         if (!$this->isEqualShippingAddresses($shippingAddresses, $alternativeShippingAddress)) {
@@ -59,11 +65,11 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
         )
             ->orWhere('billing.company LIKE :search')
             ->orWhere('shipping.company LIKE :search')
-            ->orWhere('billing.number LIKE :search')
+            ->orWhere('customers.number LIKE :search')
             ->orWhere('customers.email LIKE :search')
             ->setParameter('search', $search)
             ->groupBy('customers.id')
-            ->orderBy('billing.firstName');
+            ->orderBy('customers.number');
 
         $result = $builder->getQuery()->getArrayResult();
 
@@ -72,7 +78,7 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
          */
         foreach ($result as &$customer) {
             $customer['customerCompany'] = $customer['billing']['company'];
-            $customer['customerNumber'] = $customer['billing']['number'];
+            $customer['customerNumber'] = $customer['number'];
             $customer['customerName'] = $customer['billing']['firstName'] . ' ' . $customer['billing']['lastName'];
         }
 
@@ -88,11 +94,11 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
     {
         $builder = Shopware()->Models()->createQueryBuilder();
 
-        $builder->select(['customers', 'billing', 'shipping', 'debit', 'shop', 'languageSubShop'])
+        $builder->select(['customers', 'billing', 'shipping', 'paymentData', 'shop', 'languageSubShop'])
             ->from('Shopware\Models\Customer\Customer', 'customers')
             ->leftJoin('customers.billing', 'billing')
             ->leftJoin('customers.shipping', 'shipping')
-            ->leftJoin('customers.debit', 'debit')
+            ->leftJoin('customers.paymentData', 'paymentData')
             ->leftJoin('customers.languageSubShop', 'languageSubShop')
             ->leftJoin('customers.shop', 'shop')
             ->where('customers.id = :search');
@@ -186,11 +192,10 @@ class Shopware_Components_CustomerInformationHandler extends Enlight_Class
             'city'
         ];
 
-        if ($model === 'Shopware\Models\Order\Billing') {
+        if ($model === \Shopware\Models\Order\Billing::class) {
             array_push(
                 $fieldsGroupBy,
                 'phone',
-                'fax',
                 'vatId'
             );
         }

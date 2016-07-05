@@ -1,4 +1,10 @@
 <?php
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 class Shopware_Components_CreateBackendOrder extends Enlight_Class
 {
@@ -157,7 +163,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
 
         /** @var Shopware\Models\Payment\PaymentInstance $paymentInstance */
         $paymentInstance = $this->preparePaymentInstance($orderModel);
-        $orderModel->setPaymentInstances($paymentInstance);
+        $orderModel->setPaymentInstances([ $paymentInstance ]);
 
         Shopware()->Models()->persist($paymentInstance);
         Shopware()->Models()->persist($orderModel);
@@ -291,7 +297,7 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
     private function createBillingAddress($data)
     {
         /** @var Shopware\Models\Customer\Billing $billingCustomerModel */
-        $billingCustomerModel = Shopware()->Models()->find('Shopware\Models\Customer\Billing', $data['billingAddressId']);
+        $billingCustomerModel = Shopware()->Models()->find(\Shopware\Models\Customer\Billing::class, $data['billingAddressId']);
 
         $billingOrderModel = new Shopware\Models\Order\Billing();
         $billingOrderModel->setCity($billingCustomerModel->getCity());
@@ -304,21 +310,20 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
         $billingOrderModel->setAdditionalAddressLine2($billingCustomerModel->getAdditionalAddressLine2());
         $billingOrderModel->setVatId($billingCustomerModel->getVatId());
         $billingOrderModel->setPhone($billingCustomerModel->getPhone());
-        $billingOrderModel->setFax($billingCustomerModel->getFax());
         $billingOrderModel->setCompany($billingCustomerModel->getCompany());
         $billingOrderModel->setDepartment($billingCustomerModel->getDepartment());
-        $billingOrderModel->setNumber($billingCustomerModel->getNumber());
+        $billingOrderModel->setNumber($billingCustomerModel->getCustomer()->getNumber());
         $billingOrderModel->setCustomer($billingCustomerModel->getCustomer());
 
         if ($billingCustomerModel->getCountryId()) {
             /** @var Shopware\Models\Country\Country $countryModel */
-            $countryModel = Shopware()->Models()->find('Shopware\Models\Country\Country', $billingCustomerModel->getCountryId());
+            $countryModel = Shopware()->Models()->find(\Shopware\Models\Country\Country::class, $billingCustomerModel->getCountryId());
             $billingOrderModel->setCountry($countryModel);
         }
 
         if ($billingCustomerModel->getStateId()) {
             /** @var Shopware\Models\Country\State $stateModel */
-            $stateModel = Shopware()->Models()->find('Shopware\Models\Country\State', $billingCustomerModel->getStateId());
+            $stateModel = Shopware()->Models()->find(\Shopware\Models\Country\State::class, $billingCustomerModel->getStateId());
             $billingOrderModel->setState($stateModel);
         }
 
@@ -425,8 +430,8 @@ class Shopware_Components_CreateBackendOrder extends Enlight_Class
      */
     public function getCustomerPaymentData($customerId, $paymentId)
     {
-        $PaymentDataRepository = Shopware()->Models()->getRepository('Shopware\Models\Customer\PaymentData');
-        $paymentModel = $PaymentDataRepository->findBy(['paymentMeanId' => $paymentId, 'customer' => $customerId]);
+        $paymentDataRepository = Shopware()->Models()->getRepository(\Shopware\Models\Customer\PaymentData::class);
+        $paymentModel = $paymentDataRepository->findBy(['paymentMeanId' => $paymentId, 'customer' => $customerId]);
 
         return $paymentModel;
     }
