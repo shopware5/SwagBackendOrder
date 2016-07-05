@@ -24,20 +24,22 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
     paddingRight: 5,
 
     snippets: {
-        title: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/title"}Shipping address{/s}',
+        title: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/title"}{/s}',
         paymentData: {
-            accountHolder: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/account_holder"}Account holder:{/s}',
-            bankCode: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/bank_code"}Bank code:{/s}',
-            accountNumber: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/account_number"}Account number:{/s}',
-            bic: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/bic"}BIC:{/s}',
-            iban: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/iban"}IBAN:{/s}',
-            bankName: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/bank_name"}Bank name:{/s}',
-            noPaymentData: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/no_payment_data"}No payment data found.{/s}'
+            bankCode: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/bank_code"}{/s}',
+            accountHolder: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/account_holder"}{/s}',
+            accountNumber: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/account_number"}{/s}',
+            bic: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/bic"}{/s}',
+            iban: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/iban"}{/s}',
+            bankName: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/bank_name"}{/s}',
+            noPaymentData: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/no_payment_data"}{/s}',
+            notSupported: '{s namespace="backend/swag_backend_order/view/customer_information" name="swag_backend_order/customer_information/payment/no_support"}{/s}'
         }
     },
 
     initComponent: function () {
-        var me = this;
+        var me = this,
+            paymentRecord;
 
         me.title = me.snippets.title;
         me.paymentStore = me.subApplication.getStore('Payment').load();
@@ -56,6 +58,14 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
 
         me.paymentComboBox.on('change', function (combo, newValue, oldValue) {
             if (newValue === '') return false;
+
+            //Validate not allowed payment means
+            paymentRecord = combo.store.findRecord('id', newValue);
+            if (paymentRecord.get('name') == 'debit') {
+                Shopware.Notification.createGrowlMessage('', me.snippets.paymentData.notSupported);
+                combo.setValue('');
+                return false;
+            }
 
             Ext.Ajax.request({
                 url: '{url action="getCustomerPaymentData"}',

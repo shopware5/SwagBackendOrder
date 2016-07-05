@@ -33,7 +33,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
     requires: [
         'Shopware.apps.SwagBackendOrder.model.Billing',
         'Shopware.apps.SwagBackendOrder.model.Shipping',
-        'Shopware.apps.SwagBackendOrder.model.Debit',
         'Shopware.apps.Base.model.Shop'
     ],
 
@@ -47,11 +46,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
             name: 'shipping',
             model: 'Shopware.apps.SwagBackendOrder.model.Shipping',
             associationKey: 'shipping'
-        },
-        {
-            name: 'debit',
-            model: 'Shopware.apps.SwagBackendOrder.model.Debit',
-            associationKey: 'debit'
         },
         {
             name: 'shop',
