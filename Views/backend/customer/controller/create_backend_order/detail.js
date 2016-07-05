@@ -32,9 +32,6 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
                 copyAddress: me.onCopyAddress,
                 countryChanged: me.onCountryChanged
             },
-            'customer-debit-field-set': {
-                changePayment: me.onChangePayment
-            },
             'customer-additional-panel': {
                 performOrder: me.onPerformOrder,
                 createAccount: me.onCreateAccount,

@@ -9,8 +9,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.DesktopTypes', {
      */
     extend: 'Ext.data.Model',
 
-    alternateClassName: 'SwagBackendOrder.model.Debit',
-
     fields: [
         { name: 'id', type: 'int' },
         { name: 'name', type: 'string' }

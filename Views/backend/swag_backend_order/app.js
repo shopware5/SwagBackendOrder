@@ -81,7 +81,6 @@ Ext.define('Shopware.apps.SwagBackendOrder', {
          */
         'Billing',
         'Shipping',
-        'Debit',
         'Customer',
 
         /**

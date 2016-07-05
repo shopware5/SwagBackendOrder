@@ -72,7 +72,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'id' => $customer['id'],
             'email' => $customer['email'],
             'billing' => $customer['billing'],
-            'debit' => $customer['debit'],
             'shipping' => $customer['shipping'],
             'shop' => $customer['shop'],
             'shopId' => $customer['shopId'],
@@ -766,13 +765,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $context['additional']['payment'] = $payment;
 
         $context['sPaymentTable'] = [];
-        if ($context['additional']['payment']['name'] === 'debit') {
-            $paymentTable = Shopware()->Db()->fetchRow(
-                'SELECT * FROM s_core_payment_data WHERE user_id = ?',
-                [$orderModel->getCustomer()->getId()]
-            );
-            $context['sPaymentTable'] = $paymentTable;
-        }
 
         $context['additional']['show_net'] = $orderModel->getNet();
         $context['additional']['charge_var'] = 1;
