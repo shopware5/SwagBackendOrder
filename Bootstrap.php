@@ -102,7 +102,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
     {
         $form = $this->Form();
 
-        $form->addElement(
+        $form->setElement(
             'text',
             'validationMail',
             [
@@ -112,7 +112,7 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
             ]
         );
 
-        $form->addElement(
+        $form->setElement(
             'text',
             'desktopTypes',
             [
@@ -327,4 +327,27 @@ class Shopware_Plugins_Backend_SwagBackendOrder_Bootstrap extends Shopware_Compo
 
         return true;
     }
+
+    /**
+     * @return array
+     */
+    public function getCapabilities()
+    {
+        return array(
+            'install' => true,
+            'update' => true,
+            'enable' => true,
+            'secureUninstall' => true
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function secureUninstall()
+    {
+        return true;
+    }
+
+
 }
