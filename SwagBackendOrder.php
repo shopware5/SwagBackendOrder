@@ -43,37 +43,6 @@ class SwagBackendOrder extends Plugin
         }
     }
 
-
-
-//    /**
-//     * @return array|bool
-//     * @throws Exception
-//     */
-//    public function install()
-//    {
-//        // Check if shopware version matches
-//        if (!$this->assertMinimumVersion($this->getMinimumVersion())) {
-//            throw new Exception(
-//                sprintf("This plugin requires Shopware %s or a later version", $this->getMinimumVersion())
-//            );
-//        }
-//
-//        $this->createConfiguration();
-//
-//        $this->registerEvents();
-//
-//        return ['success' => true, 'invalidateCache' => ['backend']];
-//    }
-//
-//    /**
-//     * @return array|bool
-//     */
-//    public function uninstall()
-//    {
-//        return ['success' => true, 'invalidateCache' => ['backend']];
-//    }
-
-
     /**
      * function to register events and hooks
      */
