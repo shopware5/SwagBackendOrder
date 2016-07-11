@@ -407,8 +407,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPluginConfigAction()
     {
-        /** @var \Enlight_Config $config */
-        $config = Shopware()->Plugins()->Backend()->SwagBackendOrder()->Config();
+        /** @var \Shopware_Components_Config $config */
+        $config = $this->get('config');
 
         $desktopTypes = $config->get('desktopTypes');
         $desktopTypes = explode(',', $desktopTypes);
