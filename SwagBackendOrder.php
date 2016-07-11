@@ -14,8 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SwagBackendOrder extends Plugin
 {
-    const MIN_VERSION = '5.2.0';
-
     /**
      * @param ContainerBuilder $container
      */
@@ -28,16 +26,9 @@ class SwagBackendOrder extends Plugin
 
     /**
      * @param UpdateContext $context
-     * @throws \Exception
      */
     public function update(UpdateContext $context)
     {
-        if (!$context->assertMinimumVersion(self::MIN_VERSION)) {
-            throw new \Exception(
-                sprintf('This plugin requires Shopware %s or a later version', self::MIN_VERSION)
-            );
-        }
-
         if (version_compare($context->getUpdateVersion(), '1.0.1', '>=')) {
             $this->updateTo101();
         }
