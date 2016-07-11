@@ -50,26 +50,26 @@ class CreateBackendOrder
         $sql = 'SELECT id FROM s_order WHERE ordernumber = ?';
         $this->orderId = Shopware()->Db()->fetchOne($sql, [$orderNumber]);
 
-        /** @var Shopware\Models\Order\Order $orderModel */
+        /** @var \Shopware\Models\Order\Order $orderModel */
         $orderModel = Shopware()->Models()->find('Shopware\Models\Order\Order', $this->orderId);
 
-        /** @var Shopware\Models\Customer\Customer $customerModel */
+        /** @var \Shopware\Models\Customer\Customer $customerModel */
         $customerModel = Shopware()->Models()->find('Shopware\Models\Customer\Customer', $data['customerId']);
         $orderModel->setCustomer($customerModel);
 
-        /** @var Shopware\Models\Dispatch\Dispatch $dispatchModel */
+        /** @var \Shopware\Models\Dispatch\Dispatch $dispatchModel */
         $dispatchModel = Shopware()->Models()->getReference('Shopware\Models\Dispatch\Dispatch', $data['dispatchId']);
         $orderModel->setDispatch($dispatchModel);
 
 
-        /** @var Shopware\Models\Payment\Payment $paymentModel */
+        /** @var \Shopware\Models\Payment\Payment $paymentModel */
         $paymentModel = Shopware()->Models()->getReference('Shopware\Models\Payment\Payment', $data['paymentId']);
         $orderModel->setPayment($paymentModel);
 
         /**
          * 0 = order status open
          *
-         * @var Shopware\Models\Order\Status $orderStatusModel
+         * @var \Shopware\Models\Order\Status $orderStatusModel
          */
         $orderStatusModel = Shopware()->Models()->getReference('Shopware\Models\Order\Status', 0);
         $orderModel->setOrderStatus($orderStatusModel);
@@ -77,12 +77,12 @@ class CreateBackendOrder
         /**
          * 17 = payment status open
          *
-         * @var Shopware\Models\Order\Status $paymentStatusModel
+         * @var \Shopware\Models\Order\Status $paymentStatusModel
          */
         $paymentStatusModel = Shopware()->Models()->getReference('Shopware\Models\Order\Status', 17);
         $orderModel->setPaymentStatus($paymentStatusModel);
 
-        /** @var Shopware\Models\Shop\Shop $languageSubShopModel */
+        /** @var \Shopware\Models\Shop\Shop $languageSubShopModel */
         $languageSubShopModel = Shopware()->Models()->getReference('Shopware\Models\Shop\Shop', $data['languageShopId']);
         $orderModel->setLanguageSubShop($languageSubShopModel);
 
@@ -100,7 +100,7 @@ class CreateBackendOrder
 
         $orderModel->setNumber($orderNumber);
 
-        $orderModel->setOrderTime(new DateTime('now'));
+        $orderModel->setOrderTime(new \DateTime('now'));
 
         if ($data['desktopType'] !== '' && $data['desktopType'] !== null && isset($data['desktopType'])) {
             $orderModel->setDeviceType($data['desktopType']);
@@ -119,12 +119,12 @@ class CreateBackendOrder
         $orderModel->setTrackingCode('');
         $orderModel->setRemoteAddress('');
 
-        /** @var Shopware\Models\Shop\Currency $currencyModel */
+        /** @var \Shopware\Models\Shop\Currency $currencyModel */
         $currencyModel = Shopware()->Models()->getReference('Shopware\Models\Shop\Currency', $data['currencyId']);
         $orderModel->setCurrencyFactor($currencyModel->getFactor());
         $orderModel->setCurrency($currencyModel->getCurrency());
 
-        /** @var Shopware\Models\Order\Detail[] $details */
+        /** @var \Shopware\Models\Order\Detail[] $details */
         $details = [];
 
         //checks if more than one position was passed
@@ -132,7 +132,7 @@ class CreateBackendOrder
             $details[] = $this->createOrderDetail($positions, $orderModel);
 
             $lastDetail = end($details);
-            if (!$lastDetail instanceof Shopware\Models\Order\Detail) {
+            if (!$lastDetail instanceof \Shopware\Models\Order\Detail) {
                 $this->deleteOrder();
 
                 return $lastDetail;
@@ -142,7 +142,7 @@ class CreateBackendOrder
                 $details[] = $this->createOrderDetail($position, $orderModel);
 
                 $lastDetail = end($details);
-                if (!$lastDetail instanceof Shopware\Models\Order\Detail) {
+                if (!$lastDetail instanceof \Shopware\Models\Order\Detail) {
                     $this->deleteOrder();
 
                     return $lastDetail;
@@ -151,19 +151,19 @@ class CreateBackendOrder
         }
         $orderModel->setDetails($details);
 
-        /** @var Shopware\Models\Attribute\Order[] $orderAttributes */
+        /** @var \Shopware\Models\Attribute\Order[] $orderAttributes */
         $orderAttributes = $this->setOrderAttributes($data['orderAttribute'][0]);
         $orderModel->setAttribute($orderAttributes);
 
-        /** @var Shopware\Models\Order\Billing $billingModel */
+        /** @var \Shopware\Models\Order\Billing $billingModel */
         $billingModel = $this->createBillingAddress($data);
         $orderModel->setBilling($billingModel);
 
-        /** @var Shopware\Models\Order\Shipping $shippingModel */
+        /** @var \Shopware\Models\Order\Shipping $shippingModel */
         $shippingModel = $this->createShippingAddress($data);
         $orderModel->setShipping($shippingModel);
 
-        /** @var Shopware\Models\Payment\PaymentInstance $paymentInstance */
+        /** @var \Shopware\Models\Payment\PaymentInstance $paymentInstance */
         $paymentInstance = $this->preparePaymentInstance($orderModel);
         $orderModel->setPaymentInstances([ $paymentInstance ]);
 
@@ -191,12 +191,12 @@ class CreateBackendOrder
 
     /**
      * @param array $position
-     * @param Shopware\Models\Order\Order $orderModel
+     * @param \Shopware\Models\Order\Order $orderModel
      * @return array
      */
     private function createOrderDetail($position, $orderModel)
     {
-        $orderDetailModel = new Shopware\Models\Order\Detail();
+        $orderDetailModel = new \Shopware\Models\Order\Detail();
 
         $articleIds = Shopware()->Db()->fetchRow(
             "SELECT a.id, ad.id AS detailId
@@ -216,10 +216,10 @@ class CreateBackendOrder
         $articleId = $articleIds['id'];
         $articleDetailId = $articleIds['detailId'];
 
-        /** @var Shopware\Models\Article\Article $articleModel */
+        /** @var \Shopware\Models\Article\Article $articleModel */
         $articleModel = Shopware()->Models()->find('Shopware\Models\Article\Article', $articleId);
 
-        /** @var Shopware\Models\Article\Detail $articleDetailModel */
+        /** @var \Shopware\Models\Article\Detail $articleDetailModel */
         $articleDetailModel = Shopware()->Models()->find('Shopware\Models\Article\Detail', $articleDetailId);
 
         if (is_object($articleDetailModel->getUnit())) {
@@ -228,7 +228,7 @@ class CreateBackendOrder
             $unitName = 0;
         }
 
-        /** @var Shopware\Models\Tax\Tax $taxModel */
+        /** @var \Shopware\Models\Tax\Tax $taxModel */
         $taxModel = Shopware()->Models()->find('Shopware\Models\Tax\Tax', $position['taxId']);
         $orderDetailModel->setTax($taxModel);
         if ($orderModel->getNet()) {
@@ -240,7 +240,7 @@ class CreateBackendOrder
         /** checks if it is an esdArticle */
         $orderDetailModel->setEsdArticle(0);
 
-        /** @var Shopware\Models\Order\DetailStatus $detailStatusModel */
+        /** @var \Shopware\Models\Order\DetailStatus $detailStatusModel */
         $detailStatusModel = Shopware()->Models()->find('Shopware\Models\Order\DetailStatus', 0);
         $orderDetailModel->setStatus($detailStatusModel);
 
@@ -298,10 +298,10 @@ class CreateBackendOrder
      */
     private function createBillingAddress($data)
     {
-        /** @var Shopware\Models\Customer\Billing $billingCustomerModel */
+        /** @var \Shopware\Models\Customer\Billing $billingCustomerModel */
         $billingCustomerModel = Shopware()->Models()->find(\Shopware\Models\Customer\Billing::class, $data['billingAddressId']);
 
-        $billingOrderModel = new Shopware\Models\Order\Billing();
+        $billingOrderModel = new \Shopware\Models\Order\Billing();
         $billingOrderModel->setCity($billingCustomerModel->getCity());
         $billingOrderModel->setStreet($billingCustomerModel->getStreet());
         $billingOrderModel->setSalutation($billingCustomerModel->getSalutation());
@@ -318,13 +318,13 @@ class CreateBackendOrder
         $billingOrderModel->setCustomer($billingCustomerModel->getCustomer());
 
         if ($billingCustomerModel->getCountryId()) {
-            /** @var Shopware\Models\Country\Country $countryModel */
+            /** @var \Shopware\Models\Country\Country $countryModel */
             $countryModel = Shopware()->Models()->find(\Shopware\Models\Country\Country::class, $billingCustomerModel->getCountryId());
             $billingOrderModel->setCountry($countryModel);
         }
 
         if ($billingCustomerModel->getStateId()) {
-            /** @var Shopware\Models\Country\State $stateModel */
+            /** @var \Shopware\Models\Country\State $stateModel */
             $stateModel = Shopware()->Models()->find(\Shopware\Models\Country\State::class, $billingCustomerModel->getStateId());
             $billingOrderModel->setState($stateModel);
         }
@@ -342,15 +342,15 @@ class CreateBackendOrder
     private function createShippingAddress($data)
     {
         if ($data['shippingAddressId']) {
-            /** @var Shopware\Models\Customer\Shipping $addressHolderModel */
+            /** @var \Shopware\Models\Customer\Shipping $addressHolderModel */
             $addressHolderModel = Shopware()->Models()->find('Shopware\Models\Customer\Shipping', $data['shippingAddressId']);
         } else {
-            /** @var Shopware\Models\Customer\Billing $shippingAddressHolder */
+            /** @var \Shopware\Models\Customer\Billing $shippingAddressHolder */
             $addressHolderModel = Shopware()->Models()->find('Shopware\Models\Customer\Billing', $data['billingAddressId']);
             $this->equalBillingAddress = true;
         }
 
-        $shippingOrderModel = new Shopware\Models\Order\Shipping();
+        $shippingOrderModel = new \Shopware\Models\Order\Shipping();
         $shippingOrderModel->setCity($addressHolderModel->getCity());
         $shippingOrderModel->setStreet($addressHolderModel->getStreet());
         $shippingOrderModel->setSalutation($addressHolderModel->getSalutation());
@@ -364,13 +364,13 @@ class CreateBackendOrder
         $shippingOrderModel->setCustomer($addressHolderModel->getCustomer());
 
         if ($addressHolderModel->getCountryId()) {
-            /** @var Shopware\Models\Country\Country $countryModel */
+            /** @var \Shopware\Models\Country\Country $countryModel */
             $countryModel = Shopware()->Models()->find('Shopware\Models\Country\Country', $addressHolderModel->getCountryId());
             $shippingOrderModel->setCountry($countryModel);
         }
 
         if ($addressHolderModel->getStateId()) {
-            /** @var Shopware\Models\Country\State $stateModel */
+            /** @var \Shopware\Models\Country\State $stateModel */
             $stateModel = Shopware()->Models()->find('Shopware\Models\Country\State', $addressHolderModel->getStateId());
             $shippingOrderModel->setState($stateModel);
         }
@@ -387,13 +387,13 @@ class CreateBackendOrder
         $paymentId = $orderModel->getPayment()->getId();
         $customerId = $orderModel->getCustomer()->getId();
 
-        $paymentInstanceModel = new Shopware\Models\Payment\PaymentInstance();
+        $paymentInstanceModel = new \Shopware\Models\Payment\PaymentInstance();
 
-        /** @var Shopware\Models\Customer\PaymentData[] $paymentDataModel */
+        /** @var \Shopware\Models\Customer\PaymentData[] $paymentDataModel */
         $paymentDataModel = $this->getCustomerPaymentData($customerId, $paymentId);
 
-        if ($paymentDataModel[0] instanceof Shopware\Models\Customer\PaymentData) {
-            /** @var Shopware\Models\Customer\PaymentData $paymentDataModel */
+        if ($paymentDataModel[0] instanceof \Shopware\Models\Customer\PaymentData) {
+            /** @var \Shopware\Models\Customer\PaymentData $paymentDataModel */
             $paymentDataModel = $paymentDataModel[0];
 
             $paymentInstanceModel->setBankName($paymentDataModel->getBankName());
@@ -428,7 +428,7 @@ class CreateBackendOrder
      *
      * @param int $customerId
      * @param int $paymentId
-     * @return Shopware\Models\Customer\PaymentData
+     * @return \Shopware\Models\Customer\PaymentData
      */
     public function getCustomerPaymentData($customerId, $paymentId)
     {
