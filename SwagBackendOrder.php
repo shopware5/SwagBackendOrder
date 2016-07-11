@@ -9,65 +9,9 @@
 namespace SwagBackendOrder;
 
 use Shopware\Components\Plugin;
-use Shopware\Components\Plugin\Context\InstallContext;
-use Shopware\Components\Plugin\Context\UninstallContext;
 
 class SwagBackendOrder extends Plugin
 {
-    /**
-     * @inheritdoc
-     */
-    public function install(InstallContext $context)
-    {
-        return parent::install($context);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function uninstall(UninstallContext $context)
-    {
-        return parent::uninstall($context);
-    }
-
-//    /**
-//     * returns the label
-//     *
-//     * @return string
-//     */
-//    public function getLabel()
-//    {
-//        $pluginJson = $this->getPluginJson();
-//
-//        return $pluginJson['label']['de'];
-//    }
-//
-//    /**
-//     * returns the version
-//     *
-//     * @return string
-//     */
-//    public function getVersion()
-//    {
-//        $pluginJson = $this->getPluginJson();
-//
-//        return $pluginJson['currentVersion'];
-//    }
-//
-//    /**
-//     * @return array
-//     */
-//    public function getInfo()
-//    {
-//        return [
-//            'version' => $this->getVersion(),
-//            'label' => $this->getLabel(),
-//            'supplier' => 'shopware AG',
-//            'description' => 'Ermöglicht es Bestellungen über das Backend zu erstellen.',
-//            'link' => 'www.shopware.com'
-//        ];
-//    }
-//
 //    /**
 //     * @return array|bool
 //     * @throws Exception
@@ -96,48 +40,6 @@ class SwagBackendOrder extends Plugin
 //        return ['success' => true, 'invalidateCache' => ['backend']];
 //    }
 //
-//    /**
-//     * configuration for the plugin configuration window
-//     */
-//    private function createConfiguration()
-//    {
-//        $form = $this->Form();
-//
-//        $form->setElement(
-//            'text',
-//            'validationMail',
-//            [
-//                'label' => 'Gast Konto eMail',
-//                'required' => true,
-//                'description' => 'Die eMail-Adresse mit der Gast Konten angelegt werden sollen. Gastkonten sind Accounts für Kunden die sich nicht in ihrem Shop registriert haben. So haben Sie die möglichkeit Bestellungen einzutragen die Beispielsweise über Telefon eingangen sind.'
-//            ]
-//        );
-//
-//        $form->setElement(
-//            'text',
-//            'desktopTypes',
-//            [
-//                'label' => 'Geräte-Typen',
-//                'value' => 'Backend',
-//                'description' => 'Hier kann angegeben werden über welchen Kommunikatoinskanal die Bestellung eingegagen ist. Zum Beispiel Telefon, Handy, Geschäft, ... \n Die Verschiedenen Typen werden durch ein Komma (,) getrennt.'
-//            ]
-//        );
-//
-//        $translations = [
-//            'en_GB' => [
-//                'validationMail' => [
-//                    'label' => 'Guest account e-mail',
-//                    'description' => 'The e-mail address which guest accounts use. Guest accounts are accounts for customers who don\'t have a registered account in your shop. With these accounts your are able to create orders for customers who ordered something via telephone.'
-//                ],
-//                'desktopTypes' => [
-//                    'label' => 'Desktop types',
-//                    'description' => 'You can choose which communication channel are available. For example telephone, mobile phone, store, and so on.\n The different types are separated by a comma (,).'
-//                ]
-//            ]
-//        ];
-//
-//        $this->addFormTranslations($translations);
-//    }
 //
 //    /**
 //     * function to register events and hooks
@@ -328,36 +230,6 @@ class SwagBackendOrder extends Plugin
 //            }
 //        }
 //
-//        return true;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    private function getMinimumVersion()
-//    {
-//        $pluginInfo = $this->getPluginJson();
-//        return $pluginInfo['compatibility']['minimumVersion'];
-//    }
-//
-//    /**
-//     * @return array
-//     */
-//    public function getCapabilities()
-//    {
-//        return array(
-//            'install' => true,
-//            'update' => true,
-//            'enable' => true,
-//            'secureUninstall' => true
-//        );
-//    }
-//
-//    /**
-//     * @return bool
-//     */
-//    public function secureUninstall()
-//    {
 //        return true;
 //    }
 }
