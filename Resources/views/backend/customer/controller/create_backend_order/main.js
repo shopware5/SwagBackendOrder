@@ -64,7 +64,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
                     }
                 });
             } else {
-                var store = Ext.create('Shopware.apps.Customer.store.Batch');
+                store = Ext.create('Shopware.apps.Customer.store.Batch');
                 store.load({
                     callback: function (records) {
                         var storeData = records[0];

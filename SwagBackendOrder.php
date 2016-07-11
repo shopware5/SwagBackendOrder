@@ -9,9 +9,6 @@
 namespace SwagBackendOrder;
 
 use Shopware\Components\Plugin;
-use SwagBackendOrder\Subscriber\BackendController;
-use SwagBackendOrder\Subscriber\Customer;
-use SwagBackendOrder\Subscriber\Order;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SwagBackendOrder extends Plugin

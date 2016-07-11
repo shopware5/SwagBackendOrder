@@ -61,7 +61,7 @@ class Customer implements SubscriberInterface
     {
         $view = $args->getSubject()->View();
 
-        $args->getSubject()->View()->addTemplateDir($this->getPluginPath() . '/Views/');
+        $args->getSubject()->View()->addTemplateDir($this->getPluginPath() . '/Resources/views/');
 
         if ($args->getRequest()->getActionName() === 'load') {
             $view->extendsTemplate('backend/customer/controller/create_backend_order/detail.js');

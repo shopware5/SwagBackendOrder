@@ -41,7 +41,7 @@ class Order implements SubscriberInterface
 
         // Add view directory
         $args->getSubject()->View()->addTemplateDir(
-            $this->getPluginPath() . '/Views/'
+            $this->getPluginPath() . '/Resources/views/'
         );
 
         if ($args->getRequest()->getActionName() === 'load') {

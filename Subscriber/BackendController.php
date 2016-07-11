@@ -37,7 +37,7 @@ class BackendController implements SubscriberInterface
      */
     public function onGetBackendController()
     {
-        $this->container->get('template')->addTemplateDir($this->getPluginPath() . '/Views/');
+        $this->container->get('template')->addTemplateDir($this->getPluginPath() . '/Resources/views/');
         $this->container->get('snippets')->addConfigDir($this->getPluginPath() . '/Snippets/');
 
         return $this->getPluginPath() . '/Controllers/Backend/SwagBackendOrder.php';
