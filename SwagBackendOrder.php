@@ -9,9 +9,38 @@
 namespace SwagBackendOrder;
 
 use Shopware\Components\Plugin;
+use SwagBackendOrder\Subscriber\Customer;
 
 class SwagBackendOrder extends Plugin
 {
+    /**
+     * @inheritdoc
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            'Enlight_Controller_Front_StartDispatch' => 'onStartDispatch'
+        ];
+    }
+
+    /**
+     * Add subscriber to the event system.
+     *
+     * @param \Enlight_Event_EventArgs $args
+     */
+    public function onStartDispatch(\Enlight_Event_EventArgs $args)
+    {
+        $subscribers = [
+            new Customer()
+        ];
+
+        foreach ($subscribers as $subscriber) {
+            $this->container->get('events')->addSubscriber($subscriber);
+        }
+    }
+
+
+
 //    /**
 //     * @return array|bool
 //     * @throws Exception
@@ -39,7 +68,7 @@ class SwagBackendOrder extends Plugin
 //    {
 //        return ['success' => true, 'invalidateCache' => ['backend']];
 //    }
-//
+
 //
 //    /**
 //     * function to register events and hooks
@@ -56,15 +85,6 @@ class SwagBackendOrder extends Plugin
 //            'onOrderPostDispatch'
 //        );
 //
-//        $this->subscribeEvent(
-//            'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer',
-//            'onCustomerPostDispatchSecure'
-//        );
-//
-//        $this->subscribeEvent(
-//            'Enlight_Controller_Action_PostDispatch_Backend_Customer',
-//            'onPostDispatchCustomer'
-//        );
 //
 //        // Register CreateBackendOrder-Resource
 //        $this->subscribeEvent(
@@ -78,28 +98,7 @@ class SwagBackendOrder extends Plugin
 //            'onInitCustomerInformationHandlerResource'
 //        );
 //    }
-//
-//    /**
-//     * checks if the fake email was used to create accounts with the same email
-//     *
-//     * @param Enlight_Controller_ActionEventArgs $arguments
-//     * @return bool
-//     */
-//    public function onPostDispatchCustomer(Enlight_Controller_ActionEventArgs $arguments)
-//    {
-//        $mail = $arguments->getSubject()->Request()->getParam('value');
-//        $action = $arguments->getSubject()->Request()->getParam('action');
-//
-//        if (!empty($mail) && $action !== 'validateEmail') {
-//            if ($this->Config()->get('validationMail') == $mail) {
-//                Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
-//                echo true;
-//
-//                return true;
-//            }
-//        }
-//    }
-//
+
 //    /**
 //     * adds the templates and snippets dir
 //     *
