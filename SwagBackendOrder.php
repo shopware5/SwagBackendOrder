@@ -17,34 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class SwagBackendOrder extends Plugin
 {
     /**
-     * @inheritdoc
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            'Enlight_Controller_Front_StartDispatch' => 'onStartDispatch'
-        ];
-    }
-
-    /**
-     * Add subscriber to the event system.
-     *
-     * @param \Enlight_Event_EventArgs $args
-     */
-    public function onStartDispatch(\Enlight_Event_EventArgs $args)
-    {
-        $subscribers = [
-            new BackendController($this->container),
-            new Customer($this->container),
-            new Order($this->container)
-        ];
-
-        foreach ($subscribers as $subscriber) {
-            $this->container->get('events')->addSubscriber($subscriber);
-        }
-    }
-
-    /**
      * @param ContainerBuilder $container
      */
     public function build(ContainerBuilder $container)

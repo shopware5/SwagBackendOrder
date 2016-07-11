@@ -5,9 +5,25 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <!-- Subscriber -->
+        <service id="swag_backend_order.subscriber.backend_controller" class="SwagBackendOrder\Subscriber\BackendController">
+            <argument type="service" id="service_container" />
+            <tag name="shopware.event_subscriber" />
+        </service>
+
+        <service id="swag_backend_order.subscriber.customer" class="SwagBackendOrder\Subscriber\Customer">
+            <argument type="service" id="service_container" />
+            <tag name="shopware.event_subscriber" />
+        </service>
+
+        <service id="swag_backend_order.subscriber.order" class="SwagBackendOrder\Subscriber\Order">
+            <argument type="service" id="service_container" />
+            <tag name="shopware.event_subscriber" />
+        </service>
+
+        <!-- Custom services -->
         <service id="swag_backend_order.create_backend_order" class="SwagBackendOrder\Components\CreateBackendOrder" />
 
-        <service id="swag_backend_order.customer_information_handler"
-                 class="SwagBackendOrder\Components\CustomerInformationHandler"/>
+        <service id="swag_backend_order.customer_information_handler" class="SwagBackendOrder\Components\CustomerInformationHandler"/>
     </services>
 </container>
