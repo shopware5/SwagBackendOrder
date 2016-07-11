@@ -53,66 +53,6 @@ class SwagBackendOrder extends Plugin
 
         parent::build($container);
     }
-
-    /**
-     * function to register events and hooks
-     */
-    private function registerEvents()
-    {
-//
-//        // Register CreateBackendOrder-Resource
-//        $this->subscribeEvent(
-//            'Enlight_Bootstrap_InitResource_CreateBackendOrder',
-//            'onInitCreateBackendOrderResource'
-//        );
-//
-//        // Register CustomerInformationHandler-Resource
-//        $this->subscribeEvent(
-//            'Enlight_Bootstrap_InitResource_CustomerInformationHandler',
-//            'onInitCustomerInformationHandlerResource'
-//        );
-    }
-//
-//    /**
-//     * Event listener function of the Enlight_Bootstrap_InitResource_CreateBackendOrder event.
-//     * Fired on $this->Application->CreateBackendOrder();
-//     *
-//     * @return Shopware_Components_CreateBackendOrder
-//     */
-//    public function onInitCreateBackendOrderResource()
-//    {
-//        $this->Application()->Loader()->registerNamespace('Shopware_Components', $this->Path() . 'Components/');
-
-//        $createBackendOrder = Enlight_Class::Instance('Shopware_Components_CreateBackendOrder');
-//        $this->getShopwareBootstrap()->registerResource('CreateBackendOrder', $createBackendOrder);
-//
-//        return $createBackendOrder;
-//    }
-//
-//    /**
-//     * @return Shopware_Components_CustomerInformationHandler
-//     */
-//    public function onInitCustomerInformationHandlerResource()
-//    {
-//        $this->Application()->Loader()->registerNamespace('Shopware_Components', $this->Path() . 'Components/');
-//
-//        $customerInformationHandler = Enlight_Class::Instance('Shopware_Components_CustomerInformationHandler');
-//        $this->getShopwareBootstrap()->registerResource('CustomerInformationHandler', $customerInformationHandler);
-//
-//        return $customerInformationHandler;
-//    }
-//
-//    /**
-//     * Shopware application bootstrap class.
-//     *
-//     * Used to register plugin components.
-//     *
-//     * @return Enlight_Bootstrap
-//     */
-//    public function getShopwareBootstrap()
-//    {
-//        return $this->Application()->Bootstrap();
-//    }
 //
 //    /**
 //     * @param string $oldVersion

@@ -6,9 +6,11 @@
  * file that was distributed with this source code.
  */
 
+namespace SwagBackendOrder\Components;
+
 use Doctrine\ORM\Query\Expr\Join;
 
-class Shopware_Components_CustomerInformationHandler extends Enlight_Class
+class CustomerInformationHandler
 {
     /**
      * @param string $customerId

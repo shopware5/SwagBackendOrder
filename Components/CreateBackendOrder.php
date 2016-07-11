@@ -6,7 +6,9 @@
  * file that was distributed with this source code.
  */
 
-class Shopware_Components_CreateBackendOrder extends Enlight_Class
+namespace SwagBackendOrder\Components;
+
+class CreateBackendOrder
 {
     /**
      * sets the default desktop type if no desktop type was chosen

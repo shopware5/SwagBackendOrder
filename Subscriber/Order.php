@@ -3,19 +3,19 @@
 namespace SwagBackendOrder\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
-use Shopware\Components\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Order implements SubscriberInterface
 {
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     private $container;
 
     /**
-     * @param Container $container
+     * @param ContainerInterface $container
      */
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }

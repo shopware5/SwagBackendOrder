@@ -34,8 +34,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $data = $this->Request()->getParams();
 
-        /** @var Shopware_Components_CustomerInformationHandler $customerInformationHandler */
-        $customerInformationHandler = Shopware()->CustomerInformationHandler();
+        /** @var \SwagBackendOrder\Components\CustomerInformationHandler $customerInformationHandler */
+        $customerInformationHandler = $this->get('swag_backend_order.customer_information_handler');
 
         //Checks if the user used the live search or selected a customer from the drop down list
         if (isset($data['filter'][0]['value'])) {
@@ -95,8 +95,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $orderNumber = Shopware()->Modules()->Order()->sGetOrderNumber();
 
-        /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
-        $createBackendOrder = Shopware()->CreateBackendOrder();
+        /** @var \SwagBackendOrder\Components\CreateBackendOrder $createBackendOrder */
+        $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
         $hasMailError = false;
 
         try {
@@ -446,8 +446,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customerId = $request['customerId'];
         $paymentId = $request['paymentId'];
 
-        /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
-        $createBackendOrder = Shopware()->CreateBackendOrder();
+        /** @var \SwagBackendOrder\Components\CreateBackendOrder $createBackendOrder */
+        $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
         $paymentModel = $createBackendOrder->getCustomerPaymentData($customerId, $paymentId);
         /** @var Shopware\Models\Customer\PaymentData $payment */
         $payment = Shopware()->Models()->toArray($paymentModel);
@@ -671,8 +671,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
         }
 
-        /** @var \Shopware_Components_CreateBackendOrder $createBackendOrder */
-        $createBackendOrder = Shopware()->CreateBackendOrder();
+        /** @var \SwagBackendOrder\Components\CreateBackendOrder $createBackendOrder */
+        $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
         if ($createBackendOrder->getEqualBillingAddress()) {
             $shippingAddress = $billingAddress;
         } else {
