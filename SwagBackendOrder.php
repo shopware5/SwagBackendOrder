@@ -9,6 +9,7 @@
 namespace SwagBackendOrder;
 
 use Shopware\Components\Plugin;
+use SwagBackendOrder\Subscriber\BackendController;
 use SwagBackendOrder\Subscriber\Customer;
 use SwagBackendOrder\Subscriber\Order;
 
@@ -32,6 +33,7 @@ class SwagBackendOrder extends Plugin
     public function onStartDispatch(\Enlight_Event_EventArgs $args)
     {
         $subscribers = [
+            new BackendController(),
             new Customer(),
             new Order()
         ];
@@ -72,16 +74,11 @@ class SwagBackendOrder extends Plugin
 //    }
 
 
-//    /**
-//     * function to register events and hooks
-//     */
-//    private function registerEvents()
-//    {
-//        $this->subscribeEvent(
-//            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagBackendOrder',
-//            'onGetBackendController'
-//        );
-//
+    /**
+     * function to register events and hooks
+     */
+    private function registerEvents()
+    {
 //
 //        // Register CreateBackendOrder-Resource
 //        $this->subscribeEvent(
@@ -94,53 +91,7 @@ class SwagBackendOrder extends Plugin
 //            'Enlight_Bootstrap_InitResource_CustomerInformationHandler',
 //            'onInitCustomerInformationHandlerResource'
 //        );
-//    }
-
-//    /**
-//     * adds the templates and snippets dir
-//     *
-//     * @return string
-//     */
-//    public function onGetBackendController()
-//    {
-//        $this->get('template')->addTemplateDir($this->Path() . 'Views/');
-//        $this->get('snippets')->addConfigDir($this->Path() . 'Snippets/');
-//
-//        return $this->Path() . '/Controllers/Backend/SwagBackendOrder.php';
-//    }
-
-//
-//    /**
-//     * adds the templates directories which expand the customer module
-//     *
-//     * @param Enlight_Controller_ActionEventArgs $args
-//     */
-//    public function onCustomerPostDispatchSecure(Enlight_Controller_ActionEventArgs $args)
-//    {
-//        $view = $args->getSubject()->View();
-//
-//        $args->getSubject()->View()->addTemplateDir($this->Path() . 'Views/');
-//
-//        if ($args->getRequest()->getActionName() === 'load') {
-//            $view->extendsTemplate('backend/customer/controller/create_backend_order/detail.js');
-//            $view->extendsTemplate('backend/customer/controller/create_backend_order/main.js');
-//            $view->extendsTemplate('backend/customer/view/create_backend_order/detail/base.js');
-//            $view->extendsTemplate('backend/customer/view/create_backend_order/detail/additional.js');
-//            $view->extendsTemplate('backend/customer/view/create_backend_order/detail/window.js');
-//        }
-//    }
-//
-//    /**
-//     * gets the plugin json and decodes it
-//     *
-//     * @return mixed
-//     */
-//    private function getPluginJson()
-//    {
-//        $pluginInfo = json_decode(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'plugin.json'), true);
-//
-//        return $pluginInfo;
-//    }
+    }
 //
 //    /**
 //     * Event listener function of the Enlight_Bootstrap_InitResource_CreateBackendOrder event.
@@ -151,7 +102,7 @@ class SwagBackendOrder extends Plugin
 //    public function onInitCreateBackendOrderResource()
 //    {
 //        $this->Application()->Loader()->registerNamespace('Shopware_Components', $this->Path() . 'Components/');
-//
+
 //        $createBackendOrder = Enlight_Class::Instance('Shopware_Components_CreateBackendOrder');
 //        $this->getShopwareBootstrap()->registerResource('CreateBackendOrder', $createBackendOrder);
 //
