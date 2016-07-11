@@ -10,6 +10,7 @@ namespace SwagBackendOrder;
 
 use Shopware\Components\Plugin;
 use SwagBackendOrder\Subscriber\Customer;
+use SwagBackendOrder\Subscriber\Order;
 
 class SwagBackendOrder extends Plugin
 {
@@ -31,7 +32,8 @@ class SwagBackendOrder extends Plugin
     public function onStartDispatch(\Enlight_Event_EventArgs $args)
     {
         $subscribers = [
-            new Customer()
+            new Customer(),
+            new Order()
         ];
 
         foreach ($subscribers as $subscriber) {
@@ -69,7 +71,7 @@ class SwagBackendOrder extends Plugin
 //        return ['success' => true, 'invalidateCache' => ['backend']];
 //    }
 
-//
+
 //    /**
 //     * function to register events and hooks
 //     */
@@ -78,11 +80,6 @@ class SwagBackendOrder extends Plugin
 //        $this->subscribeEvent(
 //            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagBackendOrder',
 //            'onGetBackendController'
-//        );
-//
-//        $this->subscribeEvent(
-//            'Enlight_Controller_Action_PostDispatch_Backend_Order',
-//            'onOrderPostDispatch'
 //        );
 //
 //
@@ -111,27 +108,7 @@ class SwagBackendOrder extends Plugin
 //
 //        return $this->Path() . '/Controllers/Backend/SwagBackendOrder.php';
 //    }
-//
-//    /**
-//     * adds the templates directories which expand the order module
-//     *
-//     * @param Enlight_Controller_ActionEventArgs $args
-//     */
-//    public function onOrderPostDispatch(Enlight_Controller_ActionEventArgs $args)
-//    {
-//        $view = $args->getSubject()->View();
-//
-//        // Add view directory
-//        $args->getSubject()->View()->addTemplateDir(
-//            $this->Path() . 'Views/'
-//        );
-//
-//        if ($args->getRequest()->getActionName() === 'load') {
-//            $view->extendsTemplate(
-//                'backend/order/view/create_backend_order/list.js'
-//            );
-//        }
-//    }
+
 //
 //    /**
 //     * adds the templates directories which expand the customer module
