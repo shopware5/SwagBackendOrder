@@ -3,9 +3,23 @@
 namespace SwagBackendOrder\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
+use Shopware\Components\DependencyInjection\Container;
 
 class BackendController implements SubscriberInterface
 {
+    /**
+     * @var Container
+     */
+    private $container;
+
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * @inheritdoc
      */
@@ -23,9 +37,17 @@ class BackendController implements SubscriberInterface
      */
     public function onGetBackendController()
     {
-        Shopware()->Container()->get('template')->addTemplateDir(__DIR__ . '/../Views/');
-        Shopware()->Container()->get('snippets')->addConfigDir(__DIR__ . '/../Snippets/');
+        $this->container->get('template')->addTemplateDir($this->getPluginPath() . '/Views/');
+        $this->container->get('snippets')->addConfigDir($this->getPluginPath() . '/Snippets/');
 
-        return __DIR__ . '/../Controllers/Backend/SwagBackendOrder.php';
+        return $this->getPluginPath() . '/Controllers/Backend/SwagBackendOrder.php';
+    }
+
+    /**
+     * @return string
+     */
+    private function getPluginPath()
+    {
+        return $this->container->getParameter('swag_backend_orders.plugin_dir');
     }
 }
