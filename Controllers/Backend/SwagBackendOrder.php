@@ -407,12 +407,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPluginConfigAction()
     {
-        /** @var \Shopware_Components_Config $config */
-        $config = $this->get('config');
+        $configReader = $this->container->get('shopware.plugin.config_reader');
+        $pluginConfig = $configReader->getByPluginName('SwagBackendOrder');
 
-        $desktopTypes = $config->get('desktopTypes');
+        $desktopTypes = $pluginConfig['desktopTypes'];
         $desktopTypes = explode(',', $desktopTypes);
-        $validationMail = $config->get('validationMail');
+        $validationMail = $pluginConfig['validationMail'];
 
         $config = [];
         $config['desktopTypes'] = [];
