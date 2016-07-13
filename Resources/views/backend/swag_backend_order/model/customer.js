@@ -3,13 +3,11 @@
 Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
 
     /**
-     * Extends the standard Ext Model
      * @string
      */
     extend: 'Shopware.data.Model',
 
     /**
-     * The fields used for this model
      * @array
      */
     fields: [
@@ -17,35 +15,30 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
         { name: 'email', type: 'string' },
         { name: 'languageId', type: 'int' },
         { name: 'shopId', type: 'int', useNull: true },
-        { name: 'customerName', type: 'string' },
-        { name: 'customerCompany', type: 'string' },
-        { name: 'customerNumber', type: 'string' }
+        { name: 'firstname', type: 'string' },
+        { name: 'lastname', type: 'string' },
+        { name: 'number', type: 'string' },
+        { name: 'company', type: 'string' },
+        { name: 'city', type: 'string' },
+        { name: 'zipCode', type: 'string' }
     ],
 
-    /**
-     * define an alternate class name as a second identifier
-     */
     alternateClassName: 'SwagBackendOrder.model.Customer',
 
-    /**
-     * required models for this model
-     */
     requires: [
-        'Shopware.apps.SwagBackendOrder.model.Billing',
-        'Shopware.apps.SwagBackendOrder.model.Shipping',
         'Shopware.apps.Base.model.Shop'
     ],
 
     hasMany: [
         {
             name: 'billing',
-            model: 'Shopware.apps.SwagBackendOrder.model.Billing',
-            associationKey: 'billing'
+            model: 'Shopware.apps.SwagBackendOrder.model.Address',
+            associationKey: 'address'
         },
         {
             name: 'shipping',
-            model: 'Shopware.apps.SwagBackendOrder.model.Shipping',
-            associationKey: 'shipping'
+            model: 'Shopware.apps.SwagBackendOrder.model.Address',
+            associationKey: 'address'
         },
         {
             name: 'shop',

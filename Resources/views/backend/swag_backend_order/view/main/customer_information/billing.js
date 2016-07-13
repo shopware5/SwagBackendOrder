@@ -67,7 +67,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
      * creates the billing combobox and the data view for the selected address
      */
     createBillingItems: function () {
-        var me = this;
+        var me = this,
+            billingAddressTemplateStore;
 
         me.billingAddressComboBox = Ext.create('Ext.form.field.ComboBox', {
             name: 'billingAddresses',
@@ -79,15 +80,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             allowBlank: false,
             tpl: me.createBillingAddressComboTpl(),
             anchor: '100%',
+            forceSelection: true,
             listConfig: {
                 maxHeight: 200
             },
             listeners: {
                 'select': function (comboBox, record) {
-                    me.fireEvent('selectBillingAddress', record, me);
+                    me.fireEvent('selectBillingAddress', record[0], me);
 
-                    var billingAddressTemplateStore = Ext.create('Ext.data.Store', {
-                        model: 'Shopware.apps.SwagBackendOrder.model.Billing',
+                    billingAddressTemplateStore = Ext.create('Ext.data.Store', {
+                        model: 'Shopware.apps.SwagBackendOrder.model.Address',
                         data: record[0].data
                     });
 
@@ -113,7 +115,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
     /**
      * returns the template for the billing combox (display field)
      *
-     * @returns [Ext.XTemplate]
+     * @returns { Ext.XTemplate }
      */
     createBillingAddressComboTpl: function () {
         var me = this;
@@ -130,7 +132,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             '<tpl case="ms">',
             me.snippets.salutation.miss + ' ',
             '</tpl>',
-            '{firstName} {lastName},<br/>{zipCode} {city},<br/>{street}',
+            '{firstname} {lastname},<br/>{zipcode} {city},<br/>{street}',
             '<tpl if="state">',
             ',<br/>{state}',
             '</tpl>',
@@ -145,7 +147,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
     /**
      * returns the XTemplate for the data view which shows the billing address
      *
-     * @returns [Ext.XTemplate|*]
+     * @returns { Ext.XTemplate }
      */
     createBillingTemplate: function () {
         var me = this;
@@ -164,8 +166,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             '<tpl case="ms">',
             me.snippets.salutation.miss + ' ',
             '</tpl>',
-            '<span>{firstName}</span>&nbsp;',
-            '<span>{lastName}</span>',
+            '<span>{firstname}</span>&nbsp;',
+            '<span>{lastname}</span>',
             '</p>',
             '<p>',
             '<span>{street}</span>',
@@ -181,7 +183,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             '</p>',
             '</tpl>',
             '<p>',
-            '<span>{zipCode}</span>&nbsp;',
+            '<span>{zipcode}</span>&nbsp;',
             '<span>{city}</span>',
             '</p>',
             '<p>',

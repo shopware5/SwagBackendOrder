@@ -79,7 +79,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
      * @return void
      */
     initComponent: function () {
-        var me = this;
+        var me = this,
+            originalCustomerStore;
+
         me.registerEvents();
 
         if (!(me.customerStore instanceof Ext.data.Store)) {
@@ -121,17 +123,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
 
         /**
          * if the user id was passed to the subApplication
-         * the name will be setted in the search field
+         * the name will be set in the search field
          */
-        var originalCustomerStore = me.subApplication.getStore('Customer');
+        originalCustomerStore = me.subApplication.getStore('Customer');
         originalCustomerStore.on('load', function () {
             if (originalCustomerStore.count() === 1) {
-                var billingModel = originalCustomerStore.getAt(0).billing().getAt(0);
-                me.setValue(
-                    billingModel.get('firstName') +
-                    ' ' +
-                    billingModel.get('lastName')
-                );
+                var customer = originalCustomerStore.first();
+                me.setValue(customer.get('firstname') + ' ' + customer.get('lastname'));
             }
         });
 
@@ -142,10 +140,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
      * Creates the searchfield for the live search.
      *
      * @private
-     * @return [object] input -  created Ext.form.field.Trigger
+     * @return { Ext.form.field.Trigger } input -  created Ext.form.field.Trigger
      */
     createSearchField: function () {
-        var me = this;
+        var me = this,
+            fieldConfig;
 
         fieldConfig = Ext.apply({
             componentLayout: 'textfield',
@@ -178,8 +177,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
             }
         }, me.formFieldConfig);
 
-        var input = Ext.create('Ext.form.field.Trigger', fieldConfig);
-        return input;
+        return Ext.create('Ext.form.field.Trigger', fieldConfig);
     },
 
     /**
@@ -187,36 +185,35 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
      * search result.
      *
      * @private
-     * @return [object] view - created Ext.view.View
+     * @return { Ext.view.View } view - created Ext.view.View
      */
     createDropDownMenu: function () {
-        var me = this,
-            view = Ext.create('Ext.view.View', {
-                floating: true,
-                autoShow: false,
-                autoRender: true,
-                hidden: true,
-                shadow: false,
-                width: 222,
-                toFrontOnShow: true,
-                focusOnToFront: false,
-                store: me.dropDownStore,
-                cls: Ext.baseCSSPrefix + 'search-article-live-drop-down',
-                overItemCls: Ext.baseCSSPrefix + 'drop-down-over',
-                selectedItemCls: Ext.baseCSSPrefix + 'drop-down-over',
-                trackOver: true,
-                itemSelector: 'div.item',
-                singleSelect: true,
-                listeners: {
-                    scope: me,
-                    itemclick: function (view, record) {
-                        me.onSelectCustomer(view, record);
-                    }
-                },
-                tpl: me.createDropDownMenuTpl()
-            });
+        var me = this;
 
-        return view;
+        return Ext.create('Ext.view.View', {
+            floating: true,
+            autoShow: false,
+            autoRender: true,
+            hidden: true,
+            shadow: false,
+            width: 222,
+            toFrontOnShow: true,
+            focusOnToFront: false,
+            store: me.dropDownStore,
+            cls: Ext.baseCSSPrefix + 'search-article-live-drop-down',
+            overItemCls: Ext.baseCSSPrefix + 'drop-down-over',
+            selectedItemCls: Ext.baseCSSPrefix + 'drop-down-over',
+            trackOver: true,
+            itemSelector: 'div.item',
+            singleSelect: true,
+            listeners: {
+                scope: me,
+                itemclick: function (view, record) {
+                    me.onSelectCustomer(view, record);
+                }
+            },
+            tpl: me.createDropDownMenuTpl()
+        });
     },
 
     /**
@@ -227,8 +224,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
      * @return [object] created Ext.XTemplate
      */
     createDropDownMenuTpl: function () {
-        var me = this;
-
         return new Ext.XTemplate(
             '<div class="header">',
             '<div class="header-inner">',
@@ -247,11 +242,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
             '</tpl>',
             '<tpl for=".">',
             '<div class="item">',
-            '<strong class="name">{customerName}</strong>',
-            '<tpl if="customerCompany">',
-            '<span class="company">{customerCompany}</span><br />',
+            '<strong class="name">{firstname} {lastname}</strong>',
+            '<tpl if="company">',
+            '<span class="company">{company}</span><br />',
             '</tpl>',
-            '<span class="email">{email}, {customerNumber}</span>',
+            '<span class="email">{email}, {number}</span>',
             '</div>',
             '</tpl>{/literal}',
             '</div>'
@@ -274,7 +269,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
      *
      * @public
      * @param [object] store - Ext.data.Store which contains preselected articles.
-     * @return void
+     * @return boolean
      */
     loadCustomerStore: function (store) {
         var me = this;

@@ -96,9 +96,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
                 'change': function (comboBox, value) {
                     var record = this.findRecordByValue(value);
 
-                    me.fireEvent(
-                        'selectShippingAddress', record
-                    );
+                    me.fireEvent('selectShippingAddress', record);
 
                     if (record === false) {
                         // Do nothing if there is no corresponding record.
@@ -108,7 +106,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
                     me.billingAsShippingCheckbox.setValue(false);
 
                     var shippingAddressTemplateStore = Ext.create('Ext.data.Store', {
-                        model: 'Shopware.apps.SwagBackendOrder.model.Shipping',
+                        model: 'Shopware.apps.SwagBackendOrder.model.Address',
                         data: record.data
                     });
 
@@ -167,7 +165,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             '<tpl case="ms">',
             me.snippets.salutation.miss + ' ',
             '</tpl>',
-            '{firstName} {lastName},<br/>{zipCode} {city},<br/>{street}',
+            '{firstname} {lastname},<br/>{zipcode} {city},<br/>{street}',
             '<tpl if="state">',
             ',<br/>{state}',
             '</tpl>',
@@ -196,8 +194,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             '<tpl case="ms">',
             me.snippets.salutation.miss + ' ',
             '</tpl>',
-            '<span>{firstName}</span>&nbsp;',
-            '<span>{lastName}</span>',
+            '<span>{firstname}</span>&nbsp;',
+            '<span>{lastname}</span>',
             '</p>',
             '<p>',
             '<span>{street}</span>',
@@ -213,7 +211,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             '</p>',
             '</tpl>',
             '<p>',
-            '<span>{zipCode}</span>&nbsp;',
+            '<span>{zipcode}</span>&nbsp;',
             '<span>{city}</span>',
             '</p>',
             '<p>',

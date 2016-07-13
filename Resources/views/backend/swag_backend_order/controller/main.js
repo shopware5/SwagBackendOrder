@@ -283,35 +283,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * selects the correct billing address and updates it to the default address
      *
      * @param record
-     * @param billing
      */
-    onSelectBillingAddress: function (record, billing) {
+    onSelectBillingAddress: function (record) {
         var me = this;
-        record = record[0].data;
-
-        Ext.Ajax.request({
-            url: '{url action="setBillingAddress"}',
-            params: {
-                salutation: record.salutation,
-                company: record.company,
-                firstName: record.firstName,
-                lastName: record.lastName,
-                city: record.city,
-                zipCode: record.zipCode,
-                countyId: record.countryId,
-                phone: record.phone,
-                street: record.street,
-                vatId: record.vatId,
-                additionalAddressLine1: record.additionalAddressLine1,
-                additionalAddressLine2: record.additionalAddressLine2,
-                department: record.department,
-                userId: me.customerStore.getAt(0).get('id')
-            },
-            success: function (response) {
-                var responseObj = Ext.JSON.decode(response.responseText);
-                me.orderModel.set('billingAddressId', responseObj.billingAddressId);
-            }
-        });
+        me.orderModel.set('billingAddressId', record.get('id'));
     },
 
     /**
@@ -323,34 +298,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
 
         if (record === false) { // No shipping address selected.
-            var EMPTY_SHIPPING_ADDRESS_ID = 0; // Magic constant
-            me.orderModel.set('shippingAddressId', EMPTY_SHIPPING_ADDRESS_ID);
+            me.orderModel.set('shippingAddressId', 0);
             return;
         }
 
-        record = record.data;
-
-        Ext.Ajax.request({
-            url: '{url action="setShippingAddress"}',
-            params: {
-                salutation: record.salutation,
-                company: record.company,
-                firstName: record.firstName,
-                lastName: record.lastName,
-                city: record.city,
-                zipCode: record.zipCode,
-                countyId: record.countryId,
-                street: record.street,
-                additionalAddressLine1: record.additionalAddressLine1,
-                additionalAddressLine2: record.additionalAddressLine2,
-                department: record.department,
-                userId: me.customerStore.getAt(0).get('id')
-            },
-            success: function (response) {
-                var responseObj = Ext.JSON.decode(response.responseText);
-                me.orderModel.set('shippingAddressId', responseObj.shippingAddressId);
-            }
-        });
+        me.orderModel.set('shippingAddressId', record.get('id'));
     },
 
     /**
@@ -368,9 +320,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * Event will be fired when the user search for an article number in the row editor
      * and selects an article in the drop down menu.
      *
-     * @param [object] editor - Ext.grid.plugin.RowEditing
-     * @param [string] value - Value of the Ext.form.field.Trigger
-     * @param [object] record - Selected record
+     * @param { Object } editor - Ext.grid.plugin.RowEditing
+     * @param { String } value - Value of the Ext.form.field.Trigger
+     * @param { Object } record - Selected record
      */
     onArticleSelect: function (editor, value, record) {
         var me = this;
@@ -388,10 +340,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 customerId: me.orderModel.get('customerId')
             },
             success: function (response) {
-                var responseObj = Ext.JSON.decode(response.responseText);
-                var result = responseObj.data;
+                var responseObj = Ext.JSON.decode(response.responseText),
+                    result = responseObj.data,
+                    price = 0,
+                    taxComboStore, valueField, displayField, recordNumber, displayValue;
 
-                var price = 0;
                 if (responseObj.success == true) {
                     price = me.calculateCurrency(result.price);
                 } else {
@@ -418,14 +371,14 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 columns[4].setValue(price);
                 columns[7].setValue(record.get('inStock'));
 
-                var taxComboStore = columns[6].store;
-                var valueField = columns[6].valueField;
-                var displayField = columns[6].displayField;
+                taxComboStore = columns[6].store;
+                valueField = columns[6].valueField;
+                displayField = columns[6].displayField;
 
-                var recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
+                recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
 
-                var displayValue = taxComboStore.getAt(recordNumber).data[displayField];
-                columns[6].setValue(record.get('taxRate'));
+                displayValue = taxComboStore.getAt(recordNumber).data[displayField];
+                columns[6].setValue(record.get('taxId'));
                 columns[6].setRawValue(displayValue);
                 columns[6].selectedIndex = recordNumber;
                 updateButton.setDisabled(false);
@@ -462,7 +415,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param customerId
      */
     onSelectCustomer: function (newValue, customerId) {
-        var me = this;
+        var me = this,
+            customerRecord;
 
         me.customerStore = me.subApplication.getStore('Customer').load({
             params: { searchParam: customerId }
@@ -476,19 +430,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 if (typeof me.customerStore.getAt(0) === 'undefined') {
                     return;
                 }
-                var billingModel = me.customerStore.getAt(0).billing().getAt(0);
 
+                customerRecord = me.customerStore.getAt(0);
                 var title = me.snippets.title + ' ' +
-                    billingModel.get('firstName') +
+                    customerRecord.get('firstname') +
                     ' ' +
-                    billingModel.get('lastName');
+                    customerRecord.get('lastname');
 
-                if (billingModel.get('number')) {
-                    title += ' - ' + billingModel.get('number');
+                if (customerRecord.get('number')) {
+                    title += ' - ' + customerRecord.get('number');
                 }
 
-                if (billingModel.get('company')) {
-                    title += ' - ' + billingModel.get('company');
+                if (customerRecord.get('company')) {
+                    title += ' - ' + customerRecord.get('company');
                 }
 
                 me.window.setTitle(title);

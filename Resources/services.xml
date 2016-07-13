@@ -22,8 +22,30 @@
         </service>
 
         <!-- Custom services -->
-        <service id="swag_backend_order.create_backend_order" class="SwagBackendOrder\Components\CreateBackendOrder" />
+        <service id="swag_backend_order.customer_repository" class="SwagBackendOrder\Components\CustomerRepository">
+            <argument type="service" id="models" />
+        </service>
 
-        <service id="swag_backend_order.customer_information_handler" class="SwagBackendOrder\Components\CustomerInformationHandler"/>
+        <service id="swag_backend_order.order.order_hydrator" class="SwagBackendOrder\Components\Order\Hydrator\OrderHydrator">
+            <argument type="service" id="swag_backend_order.order.position_hydrator" />
+        </service>
+
+        <service id="swag_backend_order.order.position_hydrator" class="SwagBackendOrder\Components\Order\Hydrator\PositionHydrator"/>
+
+        <service id="swag_backend_order.order.order_factory" class="SwagBackendOrder\Components\Order\Factory\OrderFactory">
+            <argument type="service" id="models" />
+            <argument type="service" id="shopware_account.address_service" />
+            <argument type="service" id="swag_backend_order.order.detail_factory" />
+        </service>
+
+        <service id="swag_backend_order.order.detail_factory" class="SwagBackendOrder\Components\Order\Factory\DetailFactory">
+            <argument type="service" id="models" />
+        </service>
+
+        <service id="swag_backend_order.order.service" class="SwagBackendOrder\Components\Order\OrderService">
+            <argument type="service" id="swag_backend_order.order.order_factory" />
+            <argument type="service" id="models" />
+            <argument type="service" id="shopware.number_range_incrementer" />
+        </service>
     </services>
 </container>
