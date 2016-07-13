@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../engine/Shopware/Components/Plugin/schema/plugin.xsd">
+
+    <label lang="de">Backend Bestellungen</label>
+    <label lang="en">Backend orders</label>
+
+    <version>1.1.0</version>
+    <copyright>(c) by shopware AG</copyright>
+    <license>proprietary</license>
+    <link>http://store.shopware.com</link>
+    <author>shopware AG</author>
+    <compatibility minVersion="5.2.0" />
+
+    <changelog version="1.0.0">
+        <changes lang="de">PT-3272 - Erstveröffentlichung;</changes>
+        <changes lang="en">PT-3272 - First release;</changes>
+    </changelog>
+
+    <changelog version="1.0.1">
+        <changes lang="en">PT-3663 - Bugfix: Selection of language and shop; PT-3675 - Bugfix: Compatibility to other plugins; PT-3709 - Bugfix: Problem with password reset; PT-3789 - Bugfix: Send order confirmation to shop owner; PT-3790 - Bugfix: Prices of customer group;</changes>
+        <changes lang="de">PT-3663 - Bugfix: Sprach- und Shopauswahl; PT-3675 - Bugfix: Kompatibilität zu anderen Plugins; PT-3709 - Bugfix: Problem mit Passwort zurücksetzen; PT-3789 - Bugfix: Versand Bestellbestätigung an Shopbetreiber; PT-3790 - Bugfix: Preise der Kundengruppe;</changes>
+    </changelog>
+
+    <changelog version="1.0.2">
+        <changes lang="de">PT-3839 - Bugfix: Einfrieren, wenn ein Fehler beim Erstellen auftritt; Vielen Dank an das Team von <![CDATA[<a href=\"https://www.viison.com\" target=\"_blank\">VIISON</a>]]> für die folgenden Bugfixes; PT-4733 - Bugfix: Positionen auf Lieferschein; PT-4734 - Bugfix: Mehrwertsteuer auf Netto Rechnungen; PT-4735 - Bugfix: Berechnung Gesamtbetrag auf Netto Rechnungen; PT-4736 - Bugfix: Auswahl Lieferadresse; PT-4737, PT-4738, PT-4739 - Bugfix: Unnötige Felder und Events entfernt; PT-4740 - Bugfix: Netto Lieferkosten nur lesbar;</changes>
+        <changes lang="en">PT-3839 - Bugfix: Crashing, if error occurs on creating; Thanks a lot to the team of <![CDATA[<a href=\"https://www.viison.com\" target=\"_blank\">VIISON</a>]]> for the following bugfixes; PT-4733 - Bugfix: Positions on delivery note; PT-4734 - Bugfix: VAT on net invoices; PT-4735 - Bugfix: Calculation of amount on net invoices; PT-4736 - Bugfix: Select shipping address; PT-4737, PT-4738, PT-4739 - Bugfix: Remove unneccessary fields and events; PT-4740 - Bugfix: Net shipping costs only readable;</changes>
+    </changelog>
+</plugin>

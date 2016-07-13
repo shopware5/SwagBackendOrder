@@ -19,12 +19,13 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
      * @return void
      */
     init: function () {
-        var me = this;
+        var me = this,
+            store;
 
         if (me.subApplication.action && me.subApplication.action.toLowerCase() === 'detail') {
             if (me.subApplication.params && me.subApplication.params.customerId) {
                 //open the customer detail page with the passed customer id
-                var store = me.subApplication.getStore('Detail');
+                store = me.subApplication.getStore('Detail');
                 store.getProxy().extraParams = {
                     customerID: me.subApplication.params.customerId
                 };
@@ -64,7 +65,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
                     }
                 });
             } else {
-                var store = Ext.create('Shopware.apps.Customer.store.Batch');
+                store = Ext.create('Shopware.apps.Customer.store.Batch');
                 store.load({
                     callback: function (records) {
                         var storeData = records[0];

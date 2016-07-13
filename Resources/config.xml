@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../engine/Shopware/Components/Plugin/schema/config.xsd">
+
+    <elements>
+        <element required="true" type="text">
+            <name>validationMail</name>
+            <label lang="de">Gast Konto eMail</label>
+            <label lang="en">Guest account e-mail</label>
+            <description lang="de">Die eMail-Adresse mit der Gast Konten angelegt werden sollen. Gastkonten sind Accounts für Kunden die sich nicht in ihrem Shop registriert haben. So haben Sie die möglichkeit Bestellungen einzutragen die Beispielsweise über Telefon eingangen sind.</description>
+            <description lang="en">The e-mail address which guest accounts use. Guest accounts are accounts for customers who don't have a registered account in your shop. With these accounts your are able to create orders for customers who ordered something via telephone.</description>
+        </element>
+
+        <element type="text">
+            <name>desktopTypes</name>
+            <label lang="de">Geräte-Typen</label>
+            <label lang="en">Desktop types</label>
+            <value>Backend</value>
+            <description lang="de">Hier kann angegeben werden über welchen Kommunikatoinskanal die Bestellung eingegagen ist. Zum Beispiel Telefon, Handy, Geschäft, ... \n Die Verschiedenen Typen werden durch ein Komma (,) getrennt.</description>
+            <description lang="en">You can choose which communication channel are available. For example telephone, mobile phone, store, and so on.\n The different types are separated by a comma (,).</description>
+        </element>
+    </elements>
+</config>
