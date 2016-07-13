@@ -6,6 +6,16 @@
  * file that was distributed with this source code.
  */
 
+use Shopware\Models\Article\Article;
+use Shopware\Models\Article\Detail;
+use Shopware\Models\Customer\Customer;
+use Shopware\Models\Dispatch\ShippingCost;
+use Shopware\Models\Order\Order;
+use Shopware\Models\Payment\Payment;
+use Shopware\Models\Shop\Currency;
+use Shopware\Models\Shop\Shop;
+use SwagBackendOrder\Components\CreateBackendOrder;
+
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
     /**
@@ -95,15 +105,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $orderNumber = Shopware()->Modules()->Order()->sGetOrderNumber();
 
-        /** @var \SwagBackendOrder\Components\CreateBackendOrder $createBackendOrder */
+        /** @var CreateBackendOrder $createBackendOrder */
         $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
         $hasMailError = false;
 
         try {
-            /** @var Shopware\Models\Order\Order $orderModel */
+            /** @var Order $orderModel */
             $orderModel = $createBackendOrder->createOrder($data, $orderNumber);
 
-            if (!$orderModel instanceof \Shopware\Models\Order\Order) {
+            if (!$orderModel instanceof Order) {
                 $this->view->assign($orderModel);
 
                 return false;
@@ -178,7 +188,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             details.additionalText,
             tax.tax'
         );
-        $builder->from('Shopware\Models\Article\Article', 'articles')
+        $builder->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
             ->leftJoin('details.prices', 'prices')
             ->leftJoin('articles.tax', 'tax')
@@ -224,7 +234,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $builder = Shopware()->Models()->createQueryBuilder();
         $builder->select(['payment'])
-            ->from('Shopware\Models\Payment\Payment', 'payment');
+            ->from(Payment::class, 'payment');
 
         $paymentMethods = $builder->getQuery()->getArrayResult();
 
@@ -278,7 +288,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = Shopware()->Models()->createQueryBuilder();
 
         $builder->select(['dispatch', 'shipping'])
-            ->from('Shopware\Models\Dispatch\ShippingCost', 'shipping')
+            ->from(ShippingCost::class, 'shipping')
             ->innerJoin('shipping.dispatch', 'dispatch')
             ->groupBy('dispatch.id');
         $shippingCosts = $builder->getQuery()->getArrayResult();
@@ -331,8 +341,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $data = $this->Request()->getParams();
 
-        /** @var Shopware\Models\Customer\Customer $customerModel */
-        $customerModel = Shopware()->Models()->find('Shopware\Models\Customer\Customer', $data['userId']);
+        /** @var Customer $customerModel */
+        $customerModel = Shopware()->Models()->find(Customer::class, $data['userId']);
 
         $billingAddressModel = $customerModel->getBilling();
 
@@ -355,8 +365,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $data['stateId'] = 0;
         }
 
-        /** @var Shopware\Models\Customer\Customer $customerModel */
-        $customerModel = Shopware()->Models()->find('Shopware\Models\Customer\Customer', $data['userId']);
+        /** @var Customer $customerModel */
+        $customerModel = Shopware()->Models()->find(Customer::class, $data['userId']);
 
         if ($shippingAddressModel = $customerModel->getShipping()) {
             $shippingAddressModel->fromArray($data);
@@ -373,7 +383,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getCurrenciesAction()
     {
-        $repository = Shopware()->Models()->getRepository('Shopware\Models\Shop\Currency');
+        $repository = Shopware()->Models()->getRepository(Currency::class);
 
         $builder = $repository->createQueryBuilder('c');
         $builder->select(
@@ -446,10 +456,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customerId = $request['customerId'];
         $paymentId = $request['paymentId'];
 
-        /** @var \SwagBackendOrder\Components\CreateBackendOrder $createBackendOrder */
+        /** @var CreateBackendOrder $createBackendOrder */
         $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
         $paymentModel = $createBackendOrder->getCustomerPaymentData($customerId, $paymentId);
-        /** @var Shopware\Models\Customer\PaymentData $payment */
+        /** @var \Shopware\Models\Customer\PaymentData $payment */
         $payment = Shopware()->Models()->toArray($paymentModel);
 
         $this->view->assign(
@@ -469,7 +479,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $builder = Shopware()->Models()->createQueryBuilder();
         $builder->select('shops')
-            ->from('Shopware\Models\Shop\Shop', 'shops')
+            ->from(Shop::class, 'shops')
             ->where('shops.mainId = :mainShopId')
             ->orWhere('shops.id = :mainShopId')
             ->andWhere('shops.active = 1')
@@ -479,8 +489,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         //Gets the correct language name for every shop
         foreach ($result as &$shop) {
-            /** @var \Shopware\Models\Shop\Shop $shopModel */
-            $shopModel = Shopware()->Models()->find('Shopware\Models\Shop\Shop', $shop['id']);
+            /** @var Shop $shopModel */
+            $shopModel = Shopware()->Models()->find(Shop::class, $shop['id']);
             $shop['name'] = $shopModel->getLocale()->getLanguage();
         }
         $total = count($result);
@@ -507,12 +517,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = Shopware()->Models()->createQueryBuilder();
 
         $builder->select('articles')
-            ->from('Shopware\Models\Article\Article', 'articles')
+            ->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
             ->where('details.number = :articleNumber')
             ->setParameter('articleNumber', $articleNumber);
 
-        /** @var Shopware\Models\Article\Article[] $articleModels */
+        /** @var Article[] $articleModels */
         $articleModels = $builder->getQuery()->getResult();
 
         if (count($articleModels) < 1) {
@@ -552,7 +562,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $orderModel
+     * @param Order $orderModel
      */
     private function sendOrderConfirmationMail($orderModel)
     {
@@ -574,7 +584,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * prepares the correct array structure for the mail template
      *
-     * @param \Shopware\Models\Order\Order $orderModel
+     * @param Order $orderModel
      * @return array
      */
     private function prepareOrderDetailsConfirmationMailData($orderModel)
@@ -590,10 +600,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         foreach ($details as &$detail) {
             /** @var Shopware\Models\Article\Repository $articleDetailRepository */
-            $articleDetailRepository = Shopware()->Models()->getRepository('Shopware\Models\Article\Detail');
-            /** @var Shopware\Models\Article\Detail[] $articleDetailModel */
+            $articleDetailRepository = Shopware()->Models()->getRepository(Detail::class);
+            /** @var Detail[] $articleDetailModel */
             $articleDetailModel = $articleDetailRepository->findBy(['number' => $detail['articleordernumber']]);
-            /** @var Shopware\Models\Article\Detail $articleDetailModel */
+            /** @var Detail $articleDetailModel */
             $articleDetailModel = $articleDetailModel[0];
 
             $detail['articlename'] = $detail['name'];
@@ -654,7 +664,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param \Shopware\Models\Order\Order $orderModel
+     * @param Order $orderModel
      * @return array
      */
     private function prepareOrderConfirmationMailData($orderModel)
@@ -671,7 +681,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
         }
 
-        /** @var \SwagBackendOrder\Components\CreateBackendOrder $createBackendOrder */
+        /** @var CreateBackendOrder $createBackendOrder */
         $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
         if ($createBackendOrder->getEqualBillingAddress()) {
             $shippingAddress = $billingAddress;
@@ -990,11 +1000,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             return;
         }
 
-        /** @var \Shopware\Models\Customer\Customer $customerModel */
+        /** @var Customer $customerModel */
         $customerModel = $this->getModelManager()->find('Shopware\Models\Customer\Customer', $data['customerId']);
 
         /** @var \Shopware\Models\Article\Repository $productRepository */
-        $productRepository = $this->getModelManager()->getRepository('Shopware\Models\Article\Detail');
+        $productRepository = $this->getModelManager()->getRepository(Detail::class);
 
         /** @var Shopware\Models\Article\Detail $productModel */
         $productModel = $productRepository->findOneBy(['number' => $data['ordernumber']]);

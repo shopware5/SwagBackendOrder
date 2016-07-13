@@ -9,6 +9,10 @@
 namespace SwagBackendOrder\Components;
 
 use Doctrine\ORM\Query\Expr\Join;
+use Shopware\Models\Customer\Shipping as CustomerShipping;
+use Shopware\Models\Order\Billing;
+use Shopware\Models\Order\Shipping;
+use Shopware\Models\Customer\Customer;
 
 class CustomerInformationHandler
 {
@@ -23,8 +27,8 @@ class CustomerInformationHandler
 
         $result = $builder->getQuery()->getArrayResult();
 
-        $billingAddresses = $this->getOrderAddresses($customerId, \Shopware\Models\Order\Billing::class, 'billings');
-        $shippingAddresses = $this->getOrderAddresses($customerId, \Shopware\Models\Order\Shipping::class, 'shipping');
+        $billingAddresses = $this->getOrderAddresses($customerId, Billing::class, 'billings');
+        $shippingAddresses = $this->getOrderAddresses($customerId, Shipping::class, 'shipping');
         $alternativeShippingAddress = $this->getAlternativeShippingAddress($customerId);
 
         if (!$this->isEqualShippingAddresses($shippingAddresses, $alternativeShippingAddress)) {
@@ -97,7 +101,7 @@ class CustomerInformationHandler
         $builder = Shopware()->Models()->createQueryBuilder();
 
         $builder->select(['customers', 'billing', 'shipping', 'paymentData', 'shop', 'languageSubShop'])
-            ->from('Shopware\Models\Customer\Customer', 'customers')
+            ->from(Customer::class, 'customers')
             ->leftJoin('customers.billing', 'billing')
             ->leftJoin('customers.shipping', 'shipping')
             ->leftJoin('customers.paymentData', 'paymentData')
@@ -194,7 +198,7 @@ class CustomerInformationHandler
             'city'
         ];
 
-        if ($model === \Shopware\Models\Order\Billing::class) {
+        if ($model === Billing::class) {
             array_push(
                 $fieldsGroupBy,
                 'phone',
@@ -217,7 +221,7 @@ class CustomerInformationHandler
         $alias = 'shippingCustomer';
 
         $builder->select([$alias, 'country', 'state'])
-            ->from('Shopware\Models\Customer\Shipping', $alias)
+            ->from(CustomerShipping::class, $alias)
             ->leftJoin('Shopware\Models\Country\Country', 'country', Join::LEFT_JOIN, 'country.id = ' . $alias . '.countryId')
             ->leftJoin('Shopware\Models\Country\State', 'state', Join::LEFT_JOIN, 'state.id = ' . $alias . '.stateId')
             ->where($alias . '.customerId = :search')
