@@ -167,7 +167,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
     /**
      * creates a container which holds the grid to add new positions
      *
-     * @returns [Ext.Container]
+     * @returns { Ext.Container }
      */
     createPositionContainer: function () {
         var me = this;
@@ -183,7 +183,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
     /**
      * creates the position grid
      *
-     * @returns [Shopware.apps.SwagBackendOrder.view.main.list.Positions]
+     * @returns { Shopware.apps.SwagBackendOrder.view.main.list.Positions }
      */
     createPositionGrid: function () {
         var me = this;
@@ -197,7 +197,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
     /**
      * creates an container holds the create / cancel buttons
      *
-     * @returns [Ext.container.Container]
+     * @returns { Ext.container.Container }
      */
     createSaveContainer: function () {
         var me = this;
@@ -248,6 +248,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
         });
     },
 
+    /**
+     * @returns { Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview }
+     */
     createTotalCostsOverview: function () {
         var me = this;
 

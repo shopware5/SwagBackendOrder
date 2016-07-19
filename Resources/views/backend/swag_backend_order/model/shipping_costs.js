@@ -7,7 +7,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.ShippingCosts', {
     fields: [
         { name: 'id', mapping: 'dispatch.id', type: 'int' },
         { name: 'value', type: 'float' },
-        { name: 'name', mapping: 'dispatch.name', type: 'string' }
+        { name: 'name', mapping: 'dispatch.name', type: 'string' },
+        { name: 'type', mapping: 'dispatch.type', type: 'int' }
     ]
 });
 //{/block}

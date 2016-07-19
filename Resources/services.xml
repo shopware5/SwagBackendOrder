@@ -47,5 +47,18 @@
             <argument type="service" id="models" />
             <argument type="service" id="shopware.number_range_incrementer" />
         </service>
+
+        <service id="swag_backend_order.price_calculation.basket_context_factory" class="SwagBackendOrder\Components\PriceCalculation\Context\BasketContextFactory">
+            <argument type="service" id="models" />
+        </service>
+
+        <service id="swag_backend_order.price_calculation.currency_calculation" class="SwagBackendOrder\Components\PriceCalculation\CurrencyConverter"/>
+
+        <service id="swag_backend_order.price_calculation.tax_calculation" class="SwagBackendOrder\Components\PriceCalculation\TaxCalculation"/>
+
+        <service id="swag_backend_order.price_calculation.basket_service" class="SwagBackendOrder\Components\PriceCalculation\BasketPriceCalculator">
+            <argument type="service" id="swag_backend_order.price_calculation.tax_calculation" />
+            <argument type="service" id="swag_backend_order.price_calculation.currency_calculation" />
+        </service>
     </services>
 </container>

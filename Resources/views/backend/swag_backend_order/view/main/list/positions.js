@@ -40,6 +40,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Positions', {
 
     /**
      * create the positions grid where positions can be added or deleted
+     *
+     * @return { Shopware.apps.SwagBackendOrder.view.main.list.Grid }
      */
     createOrderPositionGrid: function () {
         var me = this;
