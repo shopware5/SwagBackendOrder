@@ -18,7 +18,8 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
         if (me.record.get('guest')) {
             email = Ext.create('Ext.form.field.Text', {
                 fieldLabel: me.snippets.email.label,
-                labelWidth: 150,
+                labelWidth: 155,
+                anchor: '95%',
                 name: 'email',
                 supportText: '{s namespace="backend/customer/view/main" name="swag_backend_order/customer/mail/support_text"}Guest email:{/s} ' + me.record.get('email'),
                 disabled: false,
@@ -51,7 +52,9 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
             /*{if {config name=shopwareManagedCustomerNumbers}==1}*/
             xtype: 'displayfield',
             /*{/if}*/
-            name: 'billing[number]',
+            name: 'number',
+            anchor: '95%',
+            labelWidth: 155,
             fieldLabel: me.snippets.number.label,
             helpText: me.snippets.number.helpText,
             helpWidth: 360,

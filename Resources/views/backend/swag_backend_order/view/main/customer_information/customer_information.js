@@ -45,12 +45,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
     /**
      * creates the billing panel
      *
-     * @returns [SwagBackendOrder.view.main.CustomerInformation.Billing]
+     * @returns { Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing }
      */
     getBillingPanel: function () {
         var me = this;
 
-        return Ext.create('SwagBackendOrder.view.main.CustomerInformation.Billing', {
+        return Ext.create('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing', {
             subApplication: me.subApplication
         });
     },
@@ -58,12 +58,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
     /**
      * creates the shipping panel
      *
-     * @returns [SwagBackendOrder.view.main.CustomerInformation.Shipping]
+     * @returns { Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shipping }
      */
     getShippingPanel: function () {
         var me = this;
 
-        return Ext.create('SwagBackendOrder.view.main.CustomerInformation.Shipping', {
+        return Ext.create('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shipping', {
             subApplication: me.subApplication
         });
     },
@@ -71,12 +71,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Custome
     /**
      * creates the payment panel
      *
-     * @returns [SwagBackendOrder.view.main.CustomerInformation.Payment]
+     * @returns { Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment }
      */
     getPaymentPanel: function () {
         var me = this;
 
-        return Ext.create('SwagBackendOrder.view.main.CustomerInformation.Payment', {
+        return Ext.create('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment', {
             subApplication: me.subApplication
         });
     }

@@ -6,7 +6,7 @@ Ext.define('Shopware.apps.CreateBackendOrder..view.detail.Additional', {
     /**
      * Creates the container for the "Perform order" button which
      * is displayed on bottom of the panel.
-     * @return [Ext.container.Container] - Contains the perform order button and the create account button when the accountMode of the customer is set to 1
+     * @return { Ext.container.Container } - Contains the perform order button and the create account button when the accountMode of the customer is set to 1
      */
     createButtonsContainer: function () {
         var me = this,

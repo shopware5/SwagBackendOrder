@@ -6,15 +6,20 @@
  * file that was distributed with this source code.
  */
 
+use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Article;
 use Shopware\Models\Article\Detail;
 use Shopware\Models\Customer\Customer;
+use Shopware\Models\Customer\PaymentData;
 use Shopware\Models\Dispatch\ShippingCost;
 use Shopware\Models\Order\Order;
 use Shopware\Models\Payment\Payment;
 use Shopware\Models\Shop\Currency;
 use Shopware\Models\Shop\Shop;
-use SwagBackendOrder\Components\CreateBackendOrder;
+use SwagBackendOrder\Components\CustomerRepository;
+use SwagBackendOrder\Components\Order\Hydrator\OrderHydrator;
+use SwagBackendOrder\Components\Order\OrderException;
+use SwagBackendOrder\Components\Order\OrderService;
 
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
@@ -38,124 +43,67 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * gets customers by the email, customer number, company or full name
+     * Return a list of customer on search or return a single customer on select.
      */
     public function getCustomerAction()
     {
-        $data = $this->Request()->getParams();
+        /** @var CustomerRepository $repository */
+        $repository = $this->get('swag_backend_order.customer_repository');
 
-        /** @var \SwagBackendOrder\Components\CustomerInformationHandler $customerInformationHandler */
-        $customerInformationHandler = $this->get('swag_backend_order.customer_information_handler');
+        if ($filter = $this->getListRequestParam()) {
+            $result = $repository->getList($filter);
 
-        //Checks if the user used the live search or selected a customer from the drop down list
-        if (isset($data['filter'][0]['value'])) {
-            $result = $customerInformationHandler->getCustomerList($data['filter'][0]['value']);
-        } else {
-            $search = $this->Request()->get('searchParam');
-            $result = $customerInformationHandler->getCustomer($search);
-        }
-
-        foreach ($result as $i => $customer) {
-            $result[$i] = $this->extractCustomerData($customer);
-        }
-
-        $total = count($result);
-
-        $this->view->assign(
-            [
+            $this->view->assign([
                 'data' => $result,
-                'total' => $total,
+                'total' => count($result),
                 'success' => true
-            ]
-        );
+            ]);
+            return;
+        }
+
+        $customerId = (int) $this->Request()->get('searchParam');
+        $result = $repository->get($customerId);
+
+        $this->view->assign([
+            'data' => $result,
+            'total' => count($result),
+            'success' => true
+        ]);
     }
 
-    /**
-     * Only return relevant information about the customer (e.g. not their password hash).
-     *
-     * @param array $customer
-     * @return array
-     */
-    private function extractCustomerData(array $customer)
-    {
-        return [
-            'id' => $customer['id'],
-            'email' => $customer['email'],
-            'billing' => $customer['billing'],
-            'shipping' => $customer['shipping'],
-            'shop' => $customer['shop'],
-            'shopId' => $customer['shopId'],
-            'languageId' => $customer['languageId'],
-            'languageSubShop' => $customer['languageSubShop'],
-
-            // Used for search:
-            'customerCompany' => $customer['customerCompany'],
-            'customerName' => $customer['customerName'],
-            'customerNumber' => $customer['customerNumber']
-        ];
-    }
-
-    /**
-     * method to create an order
-     */
     public function createOrderAction()
     {
-        $data = $this->Request()->getParams();
-        $data = $data['data'];
-
-        $orderNumber = Shopware()->Modules()->Order()->sGetOrderNumber();
-
-        /** @var CreateBackendOrder $createBackendOrder */
-        $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
-        $hasMailError = false;
+        /** @var ModelManager $modelManager */
+        $modelManager = $this->get('models');
+        $modelManager->getConnection()->beginTransaction();
 
         try {
-            /** @var Order $orderModel */
-            $orderModel = $createBackendOrder->createOrder($data, $orderNumber);
+            /** @var OrderHydrator $orderHydrator */
+            $orderHydrator = $this->get('swag_backend_order.order.order_hydrator');
+            $orderStruct = $orderHydrator->hydrateFromRequest($this->request);
 
-            if (!$orderModel instanceof Order) {
-                $this->view->assign($orderModel);
+            /** @var OrderService $orderService */
+            $orderService = $this->get('swag_backend_order.order.service');
+            $order = $orderService->create($orderStruct);
 
-                return false;
-            }
+            $modelManager->getConnection()->commit();
+
+            $this->sendOrderConfirmationMail($order);
         } catch (\Exception $e) {
-            $this->view->assign(
-                [
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ]
-            );
+            $modelManager->getConnection()->rollBack();
 
+            $this->view->assign([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
             return;
         }
 
-        try {
-            //sends and prepares the order confirmation mail
-            $this->sendOrderConfirmationMail($orderModel);
-        } catch (\Exception $e) {
-            $hasMailError = $e->getMessage();
-        }
-
-        if ($hasMailError) {
-            $this->view->assign(
-                [
-                    'success' => true,
-                    'orderId' => $orderModel->getId(),
-                    'mail' => $hasMailError,
-                    'ordernumber' => $orderModel->getNumber()
-                ]
-            );
-
-            return;
-        }
-
-        $this->view->assign(
-            [
-                'success' => true,
-                'orderId' => $orderModel->getId(),
-                'ordernumber' => $orderModel->getNumber()
-            ]
-        );
+        $this->view->assign([
+            'success' => true,
+            'orderId' => $order->getId(),
+            'ordernumber' => $order->getNumber()
+        ]);
     }
 
     /**
@@ -335,50 +283,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * if the billing address changes it updates the address in s_user_billingaddress
-     */
-    public function setBillingAddressAction()
-    {
-        $data = $this->Request()->getParams();
-
-        /** @var Customer $customerModel */
-        $customerModel = Shopware()->Models()->find(Customer::class, $data['userId']);
-
-        $billingAddressModel = $customerModel->getBilling();
-
-        $billingAddressModel->fromArray($data);
-
-        Shopware()->Models()->persist($billingAddressModel);
-        Shopware()->Models()->flush();
-
-        $this->view->assign(['billingAddressId' => $billingAddressModel->getId()]);
-    }
-
-    /**
-     * if the billing address changes it updates the address in s_user_billingaddress
-     */
-    public function setShippingAddressAction()
-    {
-        $data = $this->Request()->getParams();
-        //we need to set this because of a bug in the shopware models
-        if (!isset($data['stateId'])) {
-            $data['stateId'] = 0;
-        }
-
-        /** @var Customer $customerModel */
-        $customerModel = Shopware()->Models()->find(Customer::class, $data['userId']);
-
-        if ($shippingAddressModel = $customerModel->getShipping()) {
-            $shippingAddressModel->fromArray($data);
-
-            Shopware()->Models()->persist($shippingAddressModel);
-            Shopware()->Models()->flush();
-
-            $this->view->assign(['shippingAddressId' => $shippingAddressModel->getId()]);
-        }
-    }
-
-    /**
      * returns the currencies which are available
      */
     public function getCurrenciesAction()
@@ -456,18 +360,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customerId = $request['customerId'];
         $paymentId = $request['paymentId'];
 
-        /** @var CreateBackendOrder $createBackendOrder */
-        $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
-        $paymentModel = $createBackendOrder->getCustomerPaymentData($customerId, $paymentId);
-        /** @var \Shopware\Models\Customer\PaymentData $payment */
-        $payment = Shopware()->Models()->toArray($paymentModel);
+        $paymentDataRepository = $this->get('models')->getRepository(PaymentData::class);
+        $paymentModel = $paymentDataRepository->findBy(['paymentMeanId' => $paymentId, 'customer' => $customerId]);
 
-        $this->view->assign(
-            [
-                'success' => true,
-                'data' => $payment
-            ]
-        );
+        $payment = $this->get('models')->toArray($paymentModel);
+
+        $this->view->assign([
+            'success' => true,
+            'data' => $payment
+        ]);
     }
 
     /**
@@ -566,18 +467,22 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function sendOrderConfirmationMail($orderModel)
     {
-        $context = $this->prepareOrderConfirmationMailData($orderModel);
-        $context['sOrderDetails'] = $this->prepareOrderDetailsConfirmationMailData($orderModel);
+        try {
+            $context = $this->prepareOrderConfirmationMailData($orderModel);
+            $context['sOrderDetails'] = $this->prepareOrderDetailsConfirmationMailData($orderModel);
 
-        $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
-        $mail->addTo($context["additional"]["user"]["email"]);
-        $mail->send();
-
-        //If configured send an email to the shop owner
-        $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
-        if (!$mailNotToShopOwner) {
-            $mail->addTo(Shopware()->Config()->get('mail'));
+            $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
+            $mail->addTo($context["additional"]["user"]["email"]);
             $mail->send();
+
+            //If configured send an email to the shop owner
+            $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
+            if (!$mailNotToShopOwner) {
+                $mail->addTo(Shopware()->Config()->get('mail'));
+                $mail->send();
+            }
+        } catch (\Exception $e) {
+            $this->view->assign('mail', $e->getMessage());
         }
     }
 
@@ -681,23 +586,18 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
         }
 
-        /** @var CreateBackendOrder $createBackendOrder */
-        $createBackendOrder = $this->get('swag_backend_order.create_backend_order');
-        if ($createBackendOrder->getEqualBillingAddress()) {
-            $shippingAddress = $billingAddress;
-        } else {
-            $shippingAddress = Shopware()->Db()->fetchRow(
-                'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
-                [$orderModel->getId()]
-            );
-            $shippingAddressAttributes = Shopware()->Db()->fetchRow(
-                'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
-                [$shippingAddress['id']]
-            );
-            if (!empty($shippingAddressAttributes)) {
-                $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
-            }
+        $shippingAddress = Shopware()->Db()->fetchRow(
+            'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
+            [ $orderModel->getId() ]
+        );
+        $shippingAddressAttributes = Shopware()->Db()->fetchRow(
+            'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
+            [ $shippingAddress['id'] ]
+        );
+        if (!empty($shippingAddressAttributes)) {
+            $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
         }
+
         $context['billingaddress'] = $billingAddress;
         $context['shippingaddress'] = $shippingAddress;
 
@@ -1032,5 +932,14 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 'success' => true
             ]
         );
+    }
+
+    /**
+     * @return string
+     */
+    private function getListRequestParam()
+    {
+        $data = $this->Request()->getParams();
+        return $data['filter'][0]['value'];
     }
 }

@@ -70,22 +70,12 @@ Ext.define('Shopware.apps.SwagBackendOrder', {
     ],
 
     models: [
-        /**
-         * main model which holds the basic informations to create an order
-         */
         'CreateBackendOrder',
         'DesktopTypes',
 
-        /**
-         * customer models
-         */
-        'Billing',
-        'Shipping',
         'Customer',
+        'Address',
 
-        /**
-         * article models
-         */
         'Article',
         'Position',
 

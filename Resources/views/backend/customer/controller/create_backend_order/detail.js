@@ -28,9 +28,8 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
             'customer-base-field-set': {
                 generatePassword: me.onGeneratePassword
             },
-            'customer-shipping-field-set': {
-                copyAddress: me.onCopyAddress,
-                countryChanged: me.onCountryChanged
+            'customer-debit-field-set':{
+                changePayment:me.onChangePayment
             },
             'customer-additional-panel': {
                 performOrder: me.onPerformOrder,
@@ -65,8 +64,6 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
      * @param record
      */
     onPerformBackendOrder: function (record) {
-        var me = this;
-
         Shopware.app.Application.addSubApplication({
             name: 'Shopware.apps.SwagBackendOrder',
             action: 'detail',
@@ -112,6 +109,24 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
             return;
         }
 
+        if (!model.get('id')) {
+            var addressData = {};
+            Ext.each(me.getDetailWindow().addressForm.query('field'), function(field) {
+                field.submitValue = false;
+                addressData[field.getName()] = field.getValue();
+            });
+
+            var addressModel = Ext.create('Shopware.apps.Customer.model.Address', addressData),
+                billingModel = Ext.create('Shopware.apps.Customer.model.Billing'),
+                shippingModel = Ext.create('Shopware.apps.Customer.model.Shipping');
+
+            billingModel.fromAddress(addressModel);
+            shippingModel.fromAddress(addressModel);
+
+            model.getBilling().add(billingModel);
+            model.getShipping().add(shippingModel);
+        }
+
         form.getForm().updateRecord(model);
 
         if (typeof me.subApplication.params != 'undefined') {
@@ -129,9 +144,21 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
                     rawData = record.getProxy().getReader().rawData;
 
                 if (operation.success === true) {
-                    var billing = model.getBilling().first();
-                    number = billing.get('number');
-                    Shopware.Notification.createGrowlMessage(me.snippets.password.successTitle, Ext.String.format(me.snippets.password.successText, number), me.snippets.growlMessage);
+                    if (typeof addressModel !== 'undefined') {
+                        addressModel.set('user_id', record.get('id'));
+                        addressModel.save();
+                    }
+
+                    number = model.get('number');
+
+                    Shopware.Notification.createGrowlMessage(
+                        me.snippets.password.successTitle,
+                        Ext.String.format(me.snippets.password.successText, number),
+                        me.snippets.growlMessage
+                    );
+
+                    win.attributeForm.saveAttribute(record.get('id'));
+
                     win.destroy();
                     listStore.load();
                 } else {
@@ -141,6 +168,9 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
         });
     },
 
+    /**
+     * @returns { string }
+     */
     generateRandomPassword: function () {
         var pool = '01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
             password = '', i = 8, length = pool.length;
