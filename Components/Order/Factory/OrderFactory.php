@@ -78,7 +78,7 @@ class OrderFactory
 
         $orderStatus = $this->modelManager->getReference(Status::class, self::ORDER_STATUS_OPEN);
         $order->setOrderStatus($orderStatus);
-        
+
         $paymentStatus = $this->modelManager->getReference(Status::class, self::PAYMENT_STATUS_OPEN);
         $order->setPaymentStatus($paymentStatus);
 
@@ -96,7 +96,7 @@ class OrderFactory
         $order->setInvoiceAmountNet($orderStruct->getTotalWithoutTax());
 
         $order->setShop($customer->getShop());
-        
+
         $order->setOrderTime(new \DateTime());
 
         $order->setDeviceType(self::DEFAULT_DEVICE_TYPE);
@@ -133,7 +133,7 @@ class OrderFactory
         $attributes->setOrder($order);
         $order->setAttribute($attributes);
 
-        $order->setPaymentInstances($this->createPaymentInstance($order));
+        $order->setPaymentInstances([ $this->createPaymentInstance($order) ]);
 
         return $order;
     }

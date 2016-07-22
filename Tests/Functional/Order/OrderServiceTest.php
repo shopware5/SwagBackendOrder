@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SwagBackendOrder\Tests\Functional;
+namespace SwagBackendOrder\Tests\Functional\Order;
 
 use phpunit\framework\TestCase;
 use Shopware\Models\Order\Order;
@@ -21,6 +21,7 @@ class OrderServiceTest extends TestCase
      */
     public function testCreateOrder()
     {
+        /** @var OrderService $orderService */
         $orderService = Shopware()->Container()->get('swag_backend_order.order.service');
         $orderStruct = $this->getOrderStruct();
 
