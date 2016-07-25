@@ -113,6 +113,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.totalCostsContainer;
     },
 
+    /**
+     * @returns { Ext.XTemplate }
+     */
     createTotalLabelTemplate: function () {
         var me = this;
 
@@ -131,6 +134,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.totalLabelTempalte;
     },
 
+    /**
+     * @returns { Ext.XTemplate }
+     */
     createTotalCostsTemplate: function () {
         var me = this;
 
@@ -149,6 +155,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.totalCostsTempalte;
     },
 
+    /**
+     * @returns { Shopware.apps.SwagBackendOrder.store.TotalCosts }
+     */
     createTotalCostsStore: function () {
         var me = this;
         me.totalCostsModel = Ext.create('Shopware.apps.SwagBackendOrder.model.TotalCosts', {});
@@ -170,14 +179,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         me.positionStore = me.subApplication.getStore('Position');
 
         me.positionStore.on('update', function (store, record, operation, modifiedFieldNames) {
-            if (modifiedFieldNames[0] == 'price' || modifiedFieldNames[0] == 'total' || modifiedFieldNames[0] == 'taxRate') {
-                me.fireEvent('calculateTax');
-                me.updateTotalCosts();
-            }
+            me.updateTotalCosts();
         });
 
         me.positionStore.on('remove', function () {
-            me.fireEvent('calculateTax');
+            me.fireEvent('calculateBasket');
             me.updateTotalCosts();
         });
 
@@ -190,9 +196,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         });
 
         me.totalCostsStore.on('update', function (store, record, operation, modifiedFieldNames) {
-            if (modifiedFieldNames[0] == 'shippingCosts') {
-                me.fireEvent('calculateTax');
-            }
             me.updateTotalCosts();
         });
     },
@@ -207,10 +210,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     },
 
     updateCurrency: function () {
-        var me = this;
+        var me = this,
+            currencyIndex, currencyModel;
 
-        var currencyIndex = me.currencyStore.findExact('selected', 1);
-        var currencyModel = me.currencyStore.getAt(currencyIndex);
+        currencyIndex = me.currencyStore.findExact('selected', 1);
+        currencyModel = me.currencyStore.getAt(currencyIndex);
 
         if (typeof currencyModel !== "undefined") {
             me.currencySymbol = currencyModel.get('symbol');
@@ -219,6 +223,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         }
     },
 
+    /**
+     * @returns { Ext.form.field.Checkbox }
+     */
     createNetCheckbox: function () {
         var me = this;
 

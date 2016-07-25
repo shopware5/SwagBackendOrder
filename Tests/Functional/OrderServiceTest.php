@@ -17,7 +17,7 @@ use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 class OrderServiceTest extends TestCase
 {
     /**
-     * @covers OrderService::create
+     * @covers OrderService::create()
      */
     public function testCreateOrder()
     {
@@ -98,3 +98,4 @@ class OrderServiceTest extends TestCase
         ];
     }
 }
+

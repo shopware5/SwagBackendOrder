@@ -52,7 +52,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             'createbackendorder-customer-shipping': {
                 selectShippingAddress: me.onSelectShippingAddress,
                 selectBillingAsShippingAddress: me.onSelectBillingAsShippingAddress,
-                calculateTax: me.onCalculateTax
+                calculateBasket: me.onCalculateBasket
             },
             'createbackendorder-customer-payment': {
                 selectPayment: me.onSelectPayment
@@ -81,10 +81,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 openArticle: me.onOpenArticle,
                 articleNameSelect: me.onArticleSelect,
                 articleNumberSelect: me.onArticleSelect,
-                cancelEdit: me.onCancelEdit
+                cancelEdit: me.onCancelEdit,
+                calculateBasket: me.onCalculateBasket
             },
             'createbackendorder-totalcostsoverview': {
-                calculateTax: me.onCalculateTax,
+                calculateBasket: me.onCalculateBasket,
                 changeNetCheckbox: me.onChangeNetCheckbox
             }
         });
@@ -277,6 +278,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
         me.totalCostsModel = me.subApplication.getStore('TotalCosts').getAt(0);
         me.totalCostsModel.set('shippingCosts', shippingCosts);
+
+        me.onCalculateBasket();
     },
 
     /**
@@ -513,9 +516,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param eOpts
      */
     onChangeCurrency: function (comboBox, newValue, oldValue, eOpts) {
-        var me = this,
-            shippingCosts = 0,
-            shippingCostsNet = 0;
+        var me = this;
 
         me.orderModel.set('currencyId', newValue);
 
@@ -529,46 +530,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             oldCurrency.set('selected', 0);
         }
 
-        var positionJsonString = '';
-        if (me.positionStore instanceof Ext.data.Store) {
-            var positionArray = [];
-            me.positionStore.each(function (record) {
-                positionArray.push(record.data);
-            });
-            positionJsonString = Ext.JSON.encode(positionArray);
-        }
-
-        Ext.Ajax.request({
-            url: '{url action="calculateCurrency"}',
-            params: {
-                positions: positionJsonString,
-                oldCurrencyId: oldValue,
-                newCurrencyId: newValue,
-                shippingCosts: me.orderModel.get('shippingCosts'),
-                shippingCostsNet: me.orderModel.get('shippingCostsNet')
-            },
-            success: function (response) {
-                var responseObj = Ext.JSON.decode(response.responseText).data;
-
-                if (typeof responseObj === 'undefined') {
-                    return;
-                }
-
-                for (var i = 0; i < responseObj.positions.length; i++) {
-                    var position = me.positionStore.getAt(i);
-                    position.set('price', responseObj.positions[i].price);
-                    position.set('total', responseObj.positions[i].total);
-                }
-
-                me.orderModel.set('shippingCosts', responseObj.shippingCosts);
-                me.orderModel.set('shippingCostsNet', responseObj.shippingCostsNet);
-
-                if (me.shippingCostsFields !== undefined) {
-                    me.shippingCostsFields[0].setValue(me.orderModel.get('shippingCosts'));
-                    me.shippingCostsFields[1].setValue(me.orderModel.get('shippingCostsNet'));
-                }
-            }
-        });
+        me.onCalculateBasket(newValue, oldValue);
     },
 
     /**
@@ -662,9 +624,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     /**
      * calculates the tax costs for every tax rate and the shipping tax
      */
-    onCalculateTax: function () {
+    onCalculateBasket: function (newCurrencyId, oldCurrencyId) {
         var me = this;
 
+        me.window.setLoading(true);
         me.positionStore = me.subApplication.getStore('Position');
         me.totalCostsStore = me.subApplication.getStore('TotalCosts');
         me.totalCostsModel = me.totalCostsStore.getAt(0);
@@ -676,16 +639,47 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var positionJsonString = Ext.JSON.encode(positionArray);
 
         Ext.Ajax.request({
-            url: '{url action="calculateTax"}',
+            url: '{url action="calculateBasket"}',
             params: {
                 positions: positionJsonString,
                 shippingCosts: me.orderModel.get('shippingCosts'),
-                net: me.orderModel.get('net')
+                shippingCostsNet: me.orderModel.get('shippingCostsNet'),
+                net: me.orderModel.get('net'),
+                oldCurrencyId: oldCurrencyId,
+                newCurrencyId: newCurrencyId,
+                netChanged: me.netChanged,
+                dispatchId: me.orderModel.get('dispatchId')
             },
             success: function (response) {
                 var totalCostsJson = Ext.JSON.decode(response.responseText);
                 var record = totalCostsJson.data;
 
+                me.orderModel.set('shippingCostsNet', record.shippingCostsNet);
+                me.orderModel.set('shippingCosts', record.shippingCosts);
+                //Update shipping costs fields
+                if (me.shippingCostsFields !== undefined) {
+                    me.shippingCostsFields[0].suspendEvents();
+                    me.shippingCostsFields[1].suspendEvents();
+                    me.shippingCostsFields[0].setValue(record.shippingCosts);
+                    me.shippingCostsFields[1].setValue(record.shippingCostsNet);
+                    me.shippingCostsFields[0].resumeEvents();
+                    me.shippingCostsFields[1].resumeEvents();
+                }
+
+
+                //Update position records
+                for (var i = 0; i < record.positions.length; i++) {
+                    var position = me.positionStore.getAt(i);
+                    if (!position) {
+                        continue;
+                    }
+                    position.suspendEvents();
+                    position.set('price', record.positions[i].price);
+                    position.set('total', record.positions[i].total);
+                    position.resumeEvents();
+                }
+
+                //Update total cost overview
                 me.totalCostsModel.beginEdit();
                 try {
                     me.totalCostsModel.set('totalWithoutTax', record.totalWithoutTax);
@@ -697,8 +691,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 } finally {
                     me.totalCostsModel.endEdit();
                 }
-
-                me.orderModel.set('shippingCostsNet', record.shippingCostsNet);
+                me.window.setLoading(false);
             }
         });
     },
@@ -722,8 +715,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
         me.orderModel.set('billingAddressId', null);
         me.orderModel.set('shippingAddressId', null);
-        me.orderModel.set('shippingCosts', null);
-        me.orderModel.set('shippingCostsNet', null);
         me.orderModel.set('paymentId', null);
     },
 
@@ -738,41 +729,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         if (me.totalCostsModel) {
             me.totalCostsModel.set('net', net);
         }
-
-        var positionStore = me.subApplication.getStore('Position');
-        if (!(positionStore instanceof Ext.data.Store)) return;
-
-        var positionArray = [];
-        positionStore.each(function (record) {
-            positionArray.push(record.data);
-        });
-        var positionJsonString = Ext.JSON.encode(positionArray);
-
-        /**
-         * ajax request to calculate the new prices
-         */
-        Ext.Ajax.request({
-            url: '{url action="changedNetBox"}',
-            params: {
-                positions: positionJsonString,
-                net: net
-            },
-            success: function (response) {
-                var responseObj = Ext.JSON.decode(response.responseText);
-                var positions = responseObj.data;
-
-                for (var index = 0; index < positionStore.count(); index++) {
-                    var actualPosition = positionStore.getAt(index);
-                    actualPosition.beginEdit();
-                    try {
-                        actualPosition.set('price', positions[index].price);
-                        actualPosition.set('total', positions[index].total);
-                    } finally {
-                        actualPosition.endEdit();
-                    }
-                }
-            }
-        });
+        me.netChanged = true;
+        me.onCalculateBasket();
+        me.netChanged = false;
     },
 
     /**

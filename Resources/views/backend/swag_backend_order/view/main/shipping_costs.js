@@ -23,6 +23,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             art: '{s namespace="backend/swag_backend_order/view/shipping_costs" name="swagbackendorder/shipping_costs/fields/art"}Shipping art{/s}',
             costs: '{s namespace="backend/swag_backend_order/view/shipping_costs" name="swagbackendorder/shipping_costs/fields/costs"}Shipping costs{/s}',
             costsNet: '{s namespace="backend/swag_backend_order/view/shipping_costs" name="swagbackendorder/shipping_costs/fields/costs_net"}Shipping costs net{/s}'
+        },
+        error: {
+            title: '{s namespace="backend/swag_backend_order/view/shipping_costs" name="error/title"}{/s}',
+            text: '{s namespace="backend/swag_backend_order/view/shipping_costs" name="error/text"}{/s}'
         }
     },
 
@@ -56,6 +60,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
         );
     },
 
+    /**
+     * @returns { Array }
+     */
     createShippingCostsItems: function () {
         var me = this;
 
@@ -65,12 +72,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
     /**
      * creates the left shipping container which holds shipping costs combo box
      *
-     * @returns [Ext.container.Container]
+     * @returns { Ext.container.Container }
      */
     createShippingCostsContainerLeft: function () {
-        var me = this;
+        var me = this,
+            shippingArt, shippingCosts, shippingCostsNet, shippingFieldsArray;
 
-        var shippingArt = Ext.create('Ext.form.field.ComboBox', {
+        shippingArt = Ext.create('Ext.form.field.ComboBox', {
             name: 'shipping',
             width: 250,
             queryMode: 'local',
@@ -81,20 +89,27 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             fieldLabel: me.snippets.fields.art,
             listeners: {
                 select: function (combo, records, eOpts) {
+                    if (!me.isAllowedDispatchType(records[0].data.type)) {
+                        Shopware.Notification.createGrowlMessage(me.snippets.error.title, me.snippets.error.text);
+                        me.dispatchId = null;
+                        me.orderModel.set('dispatchId', null);
+                        combo.setValue(null);
+                        return false;
+                    }
+
                     me.shippingCostsNumber.setValue(records[0].data.value);
 
                     if (typeof me.totalCostsStore.getAt(0) === 'undefined') {
                         me.shippingCostsNetNumber.setValue(0);
                     }
 
-                    var shippingFieldsArray = [me.shippingCostsNumber, me.shippingCostsNetNumber];
+                    shippingFieldsArray = [me.shippingCostsNumber, me.shippingCostsNetNumber];
 
-                    var shippingCosts = me.shippingCostsNumber.getValue(),
-                        shippingCostsNet = me.shippingCostsNetNumber.getValue();
+                    shippingCosts = me.shippingCostsNumber.getValue();
+                    shippingCostsNet = me.shippingCostsNetNumber.getValue();
                     me.dispatchId = records[0].data.id;
 
                     me.fireEvent('addShippingCosts', shippingCosts, shippingCostsNet, me.dispatchId, shippingFieldsArray);
-                    me.fireEvent('calculateTax');
                 }
             }
         });
@@ -115,10 +130,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
     /**
      * creates the shipping container which holds the shipping costs
      *
-     * @returns [Ext.container.Container]
+     * @returns { Ext.container.Container }
      */
     createShippingCostsContainerRight: function () {
-        var me = this;
+        var me = this,
+            shippingCostsContainer;
 
         me.shippingCostsNumber = Ext.create('Ext.form.field.Number', {
             name: 'shippingCosts',
@@ -133,7 +149,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             readOnly: true
         });
 
-        var shippingCostsContainer = Ext.create('Ext.Container', {
+        shippingCostsContainer = Ext.create('Ext.Container', {
             name: 'shippingCostsContainer',
             width: 75,
             height: 'auto',
@@ -166,6 +182,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             me.shippingCostsNet = me.orderModel.get('shippingCostsNet');
             me.fireEvent('addShippingCosts', newValue, me.shippingCostsNet, me.dispatchId, undefined);
         });
+    },
+
+    /**
+     * @param { int } type
+     */
+    isAllowedDispatchType: function (type) {
+        var me = this,
+            blockedDispatchType = 3;
+
+        if (blockedDispatchType == type) {
+            return false;
+        }
+        return true;
     }
 });
 //
