@@ -9,6 +9,8 @@
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Article;
 use Shopware\Models\Article\Detail;
+use Shopware\Models\Customer\Address;
+use Shopware\Models\Customer\AddressRepository;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Customer\PaymentData;
 use Shopware\Models\Dispatch\ShippingCost;
@@ -356,14 +358,31 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getCustomerPaymentDataAction()
     {
+        /** @var ModelManager $modelManager */
+        $modelManager = $this->get('models');
         $request = $this->Request()->getParams();
         $customerId = $request['customerId'];
         $paymentId = $request['paymentId'];
 
         $paymentDataRepository = $this->get('models')->getRepository(PaymentData::class);
+        /** @var PaymentData[] $paymentModel */
         $paymentModel = $paymentDataRepository->findBy(['paymentMeanId' => $paymentId, 'customer' => $customerId]);
+        $paymentModel = $paymentModel[0];
+
+        $accountHolder = false;
+        if (!is_null($paymentModel)) {
+            /** @var Payment $paymentMean */
+            $paymentMean = $paymentModel->getPaymentMean();
+            if ($paymentModel->getUseBillingData() && $paymentMean->getName() == 'sepa') {
+                $accountHolder = $this->getAccountHolder($customerId);
+            }
+        }
+
 
         $payment = $this->get('models')->toArray($paymentModel);
+        if ($accountHolder) {
+            $payment['accountHolder'] = $accountHolder;
+        }
 
         $this->view->assign([
             'success' => true,
@@ -941,5 +960,18 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $data = $this->Request()->getParams();
         return $data['filter'][0]['value'];
+    }
+
+    /**
+     * @param int $customerId
+     * @return string
+     */
+    private function getAccountHolder($customerId)
+    {
+        /** @var ModelManager $modelManager */
+        $modelManager = $this->get('models');
+        $customer = $modelManager->find(Customer::class, $customerId);
+
+        return $customer->getBilling()->getFirstName() . ' ' . $customer->getBilling()->getLastName();
     }
 }
