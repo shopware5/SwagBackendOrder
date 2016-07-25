@@ -156,7 +156,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     },
 
     /**
-     * @returns { Shopware.apps.SwagBackendOrder.model.TotalCosts }
+     * @returns { Shopware.apps.SwagBackendOrder.store.TotalCosts }
      */
     createTotalCostsStore: function () {
         var me = this;
