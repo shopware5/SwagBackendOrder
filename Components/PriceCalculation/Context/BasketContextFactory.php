@@ -8,7 +8,6 @@
 
 namespace SwagBackendOrder\Components\PriceCalculation\Context;
 
-use Doctrine\DBAL\Connection;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Dispatch\Dispatch;
 use Shopware\Models\Shop\Currency;

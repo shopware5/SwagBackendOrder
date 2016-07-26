@@ -46,6 +46,42 @@
             <argument type="service" id="swag_backend_order.order.order_factory" />
             <argument type="service" id="models" />
             <argument type="service" id="shopware.number_range_incrementer" />
+            <argument type="service" id="swag_backend_order.order.order_validator" />
+        </service>
+
+        <service id="swag_backend_order.order.product_validator" class="SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator">
+            <argument type="service" id="validator" />
+        </service>
+
+
+        <service id="swag_backend_order.order.order_validator" class="SwagBackendOrder\Components\Order\Validator\OrderValidator">
+            <argument type="service" id="swag_backend_order.order.product_validator" />
+            <argument type="service" id="models" />
+            <argument type="service" id="snippets" />
+        </service>
+
+        <service id="swag_backend_order.validator.constraint.last_stock" class="SwagBackendOrder\Components\Order\Validator\Constraints\LastStockValidator">
+            <argument type="service" id="snippets" />
+            <argument type="service" id="dbal_connection" />
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.last_stock" />
+        </service>
+
+        <service id="swag_backend_order.validator.constraint.product_exists" class="SwagBackendOrder\Components\Order\Validator\Constraints\ProductExistsValidator">
+            <argument type="service" id="snippets" />
+            <argument type="service" id="dbal_connection" />
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.product_exists" />
+        </service>
+
+        <service id="swag_backend_order.validator.constraint.custom_product" class="SwagBackendOrder\Components\Order\Validator\Constraints\CustomProductsValidation">
+            <argument type="service" id="snippets" />
+            <argument type="service" id="dbal_connection" />
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.custom_product" />
+        </service>
+
+        <service id="swag_backend_order.validator.constraint.esd_product" class="SwagBackendOrder\Components\Order\Validator\Constraints\EsdProductValidator">
+            <argument type="service" id="snippets" />
+            <argument type="service" id="dbal_connection" />
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.esd_product" />
         </service>
 
         <service id="swag_backend_order.price_calculation.basket_context_factory" class="SwagBackendOrder\Components\PriceCalculation\Context\BasketContextFactory">

@@ -176,34 +176,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 url: '{url action="validateEdit"}',
                 params: record.data,
                 success: function (response) {
-                    var responseObj = Ext.JSON.decode(response.responseText);
+                    var responseObj = Ext.JSON.decode(response.responseText),
+                        message = '';
 
-                    if (typeof responseObj.data !== 'undefined') {
-                        switch (responseObj.data.error) {
-                            case 'esd':
-                                Ext.Msg.alert(me.snippets.error.esdTitle, me.snippets.error.esdText + responseObj.data.articleNumber);
-                                record.set('articleNumber', '');
-                                record.set('articleName', '');
-                                record.set('price', 0);
-                                record.set('quantity', 0);
-                                record.set('inStock', 0);
-                                record.set('articleId', 0);
-                                editor.startEdit(record, 0);
-                                break;
-                            case 'articleNumber':
-                                Ext.Msg.alert(me.snippets.error.articleNumberTitle, me.snippets.error.articleNumberText + responseObj.data.articleNumber);
-                                editor.startEdit(record, 0);
-                                break;
-                            case 'articleName':
-                                Ext.Msg.alert(me.snippets.error.articleNameTitle, me.snippets.error.articleNameText + responseObj.data.articleName);
-                                editor.startEdit(record, 0);
-                                break;
-                            default:
-                                break;
-                        }
+                    if (!responseObj.success) {
+                        Ext.Array.forEach(responseObj.violations, function (item) {
+                            message += item + '<br />';
+                        });
+
+                        Ext.Msg.alert('{s namespace="backend/swag_backend_order/validations" name="title"}{/s}', message);
+                        editor.startEdit(record, 0);
                     }
-                },
-                failure: function (response) {
                 }
             });
         });

@@ -9,8 +9,6 @@
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Article;
 use Shopware\Models\Article\Detail;
-use Shopware\Models\Customer\Address;
-use Shopware\Models\Customer\AddressRepository;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Customer\PaymentData;
 use Shopware\Models\Dispatch\ShippingCost;
@@ -21,6 +19,10 @@ use Shopware\Models\Shop\Shop;
 use SwagBackendOrder\Components\CustomerRepository;
 use SwagBackendOrder\Components\Order\Hydrator\OrderHydrator;
 use SwagBackendOrder\Components\Order\OrderService;
+use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
+use SwagBackendOrder\Components\Order\Validator\OrderValidator;
+use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
+use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
 use SwagBackendOrder\Components\PriceCalculation\Context\BasketContext;
 use SwagBackendOrder\Components\PriceCalculation\Context\BasketContextFactory;
 use SwagBackendOrder\Components\PriceCalculation\BasketPriceCalculatorInterface;
@@ -81,13 +83,25 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         /** @var ModelManager $modelManager */
         $modelManager = $this->get('models');
+
+        /** @var OrderHydrator $orderHydrator */
+        $orderHydrator = $this->get('swag_backend_order.order.order_hydrator');
+
+        /** @var OrderValidator $orderValidator */
+        $orderValidator = $this->get('swag_backend_order.order.order_validator');
+
+        $orderStruct = $orderHydrator->hydrateFromRequest($this->request);
+        $violations = $orderValidator->validate($orderStruct);
+        if ($violations->getMessages()) {
+            $this->view->assign([
+                'success' => false,
+                'violations' => $violations->getMessages()
+            ]);
+            return;
+        }
+
         $modelManager->getConnection()->beginTransaction();
-
         try {
-            /** @var OrderHydrator $orderHydrator */
-            $orderHydrator = $this->get('swag_backend_order.order.order_hydrator');
-            $orderStruct = $orderHydrator->hydrateFromRequest($this->request);
-
             /** @var OrderService $orderService */
             $orderService = $this->get('swag_backend_order.order.service');
             $order = $orderService->create($orderStruct);
@@ -95,6 +109,14 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $modelManager->getConnection()->commit();
 
             $this->sendOrderConfirmationMail($order);
+        } catch (InvalidOrderException $e) {
+            $modelManager->getConnection()->rollBack();
+
+            $this->view->assign([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+            return;
         } catch (\Exception $e) {
             $modelManager->getConnection()->rollBack();
 
@@ -368,7 +390,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customerId = $request['customerId'];
         $paymentId = $request['paymentId'];
 
-        $paymentDataRepository = $this->get('models')->getRepository(PaymentData::class);
+        $paymentDataRepository = $modelManager->getRepository(PaymentData::class);
         /** @var PaymentData[] $paymentModel */
         $paymentModel = $paymentDataRepository->findBy(['paymentMeanId' => $paymentId, 'customer' => $customerId]);
         $paymentModel = $paymentModel[0];
@@ -436,53 +458,24 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     public function validateEditAction()
     {
         $data = $this->Request()->getParams();
-        $articleNumber = $data['articleNumber'];
+        $articleNumber = (string) $data['articleNumber'];
+        $quantity = (int) $data['quantity'];
 
-        $builder = Shopware()->Models()->createQueryBuilder();
+        $productContext = new ProductContext($articleNumber, $quantity);
 
-        $builder->select('articles')
-            ->from(Article::class, 'articles')
-            ->leftJoin('articles.details', 'details')
-            ->where('details.number = :articleNumber')
-            ->setParameter('articleNumber', $articleNumber);
+        /** @var ProductValidator $validator */
+        $validator = $this->get('swag_backend_order.order.product_validator');
+        $violations = $validator->validate($productContext);
 
-        /** @var Article[] $articleModels */
-        $articleModels = $builder->getQuery()->getResult();
-
-        if (count($articleModels) < 1) {
-            if (!empty($articleNumber)) {
-                $this->view->assign(
-                    [
-                        'data' => ['articleNumber' => $articleNumber, 'error' => 'articleNumber'],
-                        'success' => false
-                    ]
-                );
-
-                return false;
-            }
-
-            $this->view->assign(
-                [
-                    'data' => ['articleName' => $data['articleName'], 'error' => 'articleName'],
-                    'success' => false
-                ]
-            );
-
-            return false;
+        if ($violations->getMessages()) {
+            $this->view->assign([
+                'success' => false,
+                'violations' => $violations->getMessages()
+            ]);
+            return;
         }
 
-        if ($articleModels[0]->getMainDetail()->getEsd()) {
-            $this->view->assign(
-                [
-                    'data' => ['articleNumber' => $articleNumber, 'error' => 'esd'],
-                    'success' => false
-                ]
-            );
-
-            return false;
-        }
-
-        return true;
+        $this->view->assign('success', true);
     }
 
     /**

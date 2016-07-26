@@ -13,6 +13,8 @@ use Shopware\Components\NumberRangeIncrementerInterface;
 use Shopware\Models\Order\Order;
 use SwagBackendOrder\Components\Order\Factory\OrderFactory;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
+use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
+use SwagBackendOrder\Components\Order\Validator\OrderValidatorInterface;
 
 class OrderService implements OrderServiceInterface
 {
@@ -32,33 +34,50 @@ class OrderService implements OrderServiceInterface
     private $numberRangeIncrementer;
 
     /**
+     * @var OrderValidatorInterface
+     */
+    private $validator;
+
+    /**
      * @param OrderFactory $orderFactory
      * @param ModelManager $modelManager
      * @param NumberRangeIncrementerInterface $numberRangeIncrementer
+     * @param OrderValidatorInterface $validator
      */
     public function __construct(
         OrderFactory $orderFactory,
         ModelManager $modelManager,
-        NumberRangeIncrementerInterface $numberRangeIncrementer
+        NumberRangeIncrementerInterface $numberRangeIncrementer,
+        OrderValidatorInterface $validator
     ) {
         $this->orderFactory = $orderFactory;
         $this->modelManager = $modelManager;
         $this->numberRangeIncrementer = $numberRangeIncrementer;
+        $this->validator = $validator;
     }
 
     /**
      * @param OrderStruct $orderStruct
      * @return Order
+     * @throws InvalidOrderException
      */
     public function create(OrderStruct $orderStruct)
     {
         $number = $this->numberRangeIncrementer->increment('invoice');
         $orderStruct->setNumber($number);
 
+        $violations = $this->validator->validate($orderStruct);
+        if ($violations->getMessages()) {
+            throw new InvalidOrderException("Invalid " . OrderStruct::class . " given.");
+        }
+
         $order = $this->orderFactory->create($orderStruct);
 
         $this->modelManager->persist($order);
-        $this->modelManager->persist($order->getPaymentInstances());
+        foreach ($order->getPaymentInstances() as $instance) {
+            $this->modelManager->persist($instance);
+        }
+
         $this->modelManager->flush();
 
         return $order;
