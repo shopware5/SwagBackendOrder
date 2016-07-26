@@ -134,7 +134,7 @@ class BasketPriceCalculator implements BasketPriceCalculatorInterface
     private function getBaseGrossPrice(BasketContext $context, BasketContext $oldContext, $price)
     {
         $price = $this->getBaseCurrencyPrice($context, $oldContext, $price);
-        if ($oldContext->isNet()) {
+        if ($oldContext->isNet() && $oldContext->getDispatchTaxRate() > 0.00) {
             return $this->taxCalculation->getGrossPrice($price, $context->getDispatchTaxRate());
         }
         return $price;
