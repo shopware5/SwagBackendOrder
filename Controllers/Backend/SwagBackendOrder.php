@@ -729,13 +729,14 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $net = $data['net'] == 'true' ? true : false;
         $netChanged = $data['netChanged'] == 'true' ? true : false;
         $dispatchId = $data['dispatchId'] > 0 ? (int) $data['dispatchId'] : null;
+        $previousDispatchTaxRate = (float) $data['previousDispatchTaxRate'];
         $newCurrencyId = (int) $data['newCurrencyId'];
         $oldCurrencyId = (int) $data['oldCurrencyId'];
         $shippingCosts = (float) $data['shippingCosts'];
         $basketTaxRates = $this->getBasketTaxRates($positions);
 
         $basketContext = $this->getBasketContext($newCurrencyId, $dispatchId, $basketTaxRates, $net);
-        $oldBasketContext = $this->getOldBasketContext($oldCurrencyId, $dispatchId, $net, $netChanged);
+        $oldBasketContext = $this->getOldBasketContext($oldCurrencyId, $dispatchId, $previousDispatchTaxRate, $net, $netChanged);
         $basketPriceCalculator = $this->getBasketPriceCalculator();
 
         $totalNetPrice = 0;
@@ -778,7 +779,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'shippingCosts' => $shippingCosts,
             'shippingCostsNet' => $shippingCostsNet,
             'taxSum' => $taxSum,
-            'positions' => $data['positions']
+            'positions' => $data['positions'],
+            'dispatchTaxRate' => $basketContext->getDispatchTaxRate()
         ];
 
         $this->view->assign([
@@ -877,17 +879,18 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * @param int $oldCurrencyId
      * @param int $dispatchId
+     * @param float $dispatchTaxRate
      * @param boolean $net
      * @param boolean $netChanged
      * @return BasketContext
      */
-    private function getOldBasketContext($oldCurrencyId, $dispatchId, $net, $netChanged)
+    private function getOldBasketContext($oldCurrencyId, $dispatchId, $dispatchTaxRate, $net, $netChanged)
     {
         if ($netChanged) {
             $net = !$net;
         }
         $basketContextFactory = $this->getBasketContextFactory();
-        return $basketContextFactory->create($oldCurrencyId, $dispatchId, [], $net);
+        return $basketContextFactory->create($oldCurrencyId, $dispatchId, [ $dispatchTaxRate ], $net);
     }
 
     /**

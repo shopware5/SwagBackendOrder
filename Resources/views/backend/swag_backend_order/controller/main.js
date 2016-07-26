@@ -7,6 +7,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      */
     extend: 'Ext.app.Controller',
 
+    /**
+     * Tax rate of the previous order
+     */
+    previousDispatchTaxRate: 0.00,
+
     snippets: {
         error: {
             customer: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/customer"}Please select a customer.{/s}',
@@ -648,11 +653,14 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 oldCurrencyId: oldCurrencyId,
                 newCurrencyId: newCurrencyId,
                 netChanged: me.netChanged,
-                dispatchId: me.orderModel.get('dispatchId')
+                dispatchId: me.orderModel.get('dispatchId'),
+                previousDispatchTaxRate: me.previousDispatchTaxRate
             },
             success: function (response) {
                 var totalCostsJson = Ext.JSON.decode(response.responseText);
                 var record = totalCostsJson.data;
+
+                me.previousDispatchTaxRate = record.dispatchTaxRate;
 
                 me.orderModel.set('shippingCostsNet', record.shippingCostsNet);
                 me.orderModel.set('shippingCosts', record.shippingCosts);
