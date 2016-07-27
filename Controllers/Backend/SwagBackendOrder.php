@@ -7,15 +7,16 @@
  */
 
 use Shopware\Components\Model\ModelManager;
-use Shopware\Models\Article\Article;
 use Shopware\Models\Article\Detail;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Customer\PaymentData;
+use Shopware\Models\Dispatch\Dispatch;
 use Shopware\Models\Dispatch\ShippingCost;
 use Shopware\Models\Order\Order;
 use Shopware\Models\Payment\Payment;
 use Shopware\Models\Shop\Currency;
 use Shopware\Models\Shop\Shop;
+use Shopware\Models\Tax\Tax;
 use SwagBackendOrder\Components\CustomerRepository;
 use SwagBackendOrder\Components\Order\Hydrator\OrderHydrator;
 use SwagBackendOrder\Components\Order\OrderService;
@@ -23,11 +24,17 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Components\Order\Validator\OrderValidator;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
-use SwagBackendOrder\Components\PriceCalculation\Context\BasketContext;
-use SwagBackendOrder\Components\PriceCalculation\Context\BasketContextFactory;
-use SwagBackendOrder\Components\PriceCalculation\BasketPriceCalculatorInterface;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
+use SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory;
+use SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator;
+use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
+use SwagBackendOrder\Components\PriceCalculation\Result\TotalPricesResult;
+use SwagBackendOrder\Components\PriceCalculation\Struct\RequestStruct;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
+use SwagBackendOrder\Components\ProductRepository;
 
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
@@ -142,51 +149,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $params = $this->Request()->getParams();
         $search = $params['filter'][0]['value'];
 
-
         if (!isset($params['filter'][0]['value'])) {
             $search = '%' . $this->Request()->get('searchParam') . '%';
         }
-
-        $builder = Shopware()->Models()->createQueryBuilder();
-
-        /**
-         * query to search for article variants or the article ordernumber
-         * the query concats the article name and the additional text field for the search
-         */
-        $builder->select(
-            'articles.id AS articleId,
-            details.number,
-            articles.name,
-            details.id,
-            details.inStock,
-            articles.taxId,
-            prices.price,
-            details.additionalText,
-            tax.tax'
-        );
-        $builder->from(Article::class, 'articles')
-            ->leftJoin('articles.details', 'details')
-            ->leftJoin('details.prices', 'prices')
-            ->leftJoin('articles.tax', 'tax')
-            ->where(
-                $builder->expr()->like(
-                    $builder->expr()->concat(
-                        'articles.name',
-                        $builder->expr()->concat(
-                            $builder->expr()->literal(' '),
-                            'details.additionalText'
-                        )
-                    ),
-                    $builder->expr()->literal($search)
-                )
-            )
-            ->orWhere('details.number LIKE :number')
-            ->andWhere('articles.active = 1')
-            ->andWhere('articles.active = 1')
-            ->setParameter('number', $search)
-            ->orderBy('details.number')
-            ->groupBy('details.number')
-            ->setMaxResults(8);
+        $builder = $this->getProductRepository()->getProductQueryBuilder($search);
         $result = $builder->getQuery()->getArrayResult();
         $total = count($result);
 
@@ -201,6 +167,42 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 'total' => $total
             ]
         );
+    }
+
+    public function getProductAction()
+    {
+        $number = $this->Request()->getParam('ordernumber');
+
+        /** @var RequestHydrator $requestHydrator */
+        $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
+        $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
+
+        $builder = $this->getProductRepository()->getProductQueryBuilder($number);
+        $result = $builder->getQuery()->getArrayResult()[0];
+
+        $currencyFactor = 1;
+        $currency = $this->getModelManager()->find(Currency::class, $requestStruct->getCurrencyId());
+        if ($currency instanceof Currency) {
+            $currencyFactor = $currency->getFactor();
+        }
+
+        $priceContext = new PriceContext(
+            (float) $result['price'],
+            (float) $result['tax'],
+            true,
+            $currencyFactor
+        );
+
+        $price = $this->getProductCalculator()->calculate($priceContext);
+        $result['price'] = $price->getRoundedGrossPrice();
+        if ($requestStruct->isDisplayNet()) {
+            $result['price'] = $price->getRoundedNetPrice();
+        }
+
+        $this->view->assign([
+            'data' => $result,
+            'success' => true
+        ]);
     }
 
     /**
@@ -403,7 +405,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 $accountHolder = $this->getAccountHolder($customerId);
             }
         }
-
 
         $payment = $this->get('models')->toArray($paymentModel);
         if ($accountHolder) {
@@ -715,66 +716,31 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function calculateBasketAction()
     {
-        $data = $this->Request()->getParams();
-        $data['positions'] = json_decode($data['positions']);
-        $positions = $data['positions'];
-
-        $net = $data['net'] == 'true' ? true : false;
-        $netChanged = $data['netChanged'] == 'true' ? true : false;
-        $dispatchId = $data['dispatchId'] > 0 ? (int) $data['dispatchId'] : null;
-        $previousDispatchTaxRate = (float) $data['previousDispatchTaxRate'];
-        $newCurrencyId = (int) $data['newCurrencyId'];
-        $oldCurrencyId = (int) $data['oldCurrencyId'];
-        $shippingCosts = (float) $data['shippingCosts'];
-        $basketTaxRates = $this->getBasketTaxRates($positions);
-
-        $basketContext = $this->getBasketContext($newCurrencyId, $dispatchId, $basketTaxRates, $net);
-        $oldBasketContext = $this->getOldBasketContext($oldCurrencyId, $dispatchId, $previousDispatchTaxRate, $net, $netChanged);
-        $basketPriceCalculator = $this->getBasketPriceCalculator();
-
-        $totalNetPrice = 0;
-        $productSum = 0;
+        /** @var RequestHydrator $requestHydrator */
+        $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
+        $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
         //Basket position price calculation
-        foreach ($positions as &$position) {
-            $priceContext = new PriceContext($position->price, $position->taxRate);
-            $priceStruct = $basketPriceCalculator->calculateProductPrice($basketContext, $oldBasketContext, $priceContext);
+        $positionPrices = [];
+        foreach ($requestStruct->getPositions() as &$position) {
+            $positionPrice = $this->getPositionPrice($position, $requestStruct);
 
-            $position->price = $priceStruct->getRoundedGrossPrice();
-            if ($basketContext->isNet()) {
-                $position->price = $priceStruct->getRoundedNetPrice();
+            $totalPositionPrice = new PriceResult();
+            $totalPositionPrice->setNet($this->getTotalPrice($positionPrice->getRoundedNetPrice(), $position->quantity));
+            $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getRoundedGrossPrice(), $position->quantity));
+            $positionPrices[] = $totalPositionPrice;
+
+            $position->price = $positionPrice->getRoundedGrossPrice();
+            if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
+                $position->price = $positionPrice->getRoundedNetPrice();
             }
             $position->total = $this->getTotalPrice($position->price, $position->quantity);
-
-            //Add total prices
-            $totalNetPrice += $this->getTotalPrice($priceStruct->getRoundedNetPrice(), $position->quantity);
-            $productSum += $position->total;
         }
 
-        //Dispatch price calculation
-        $dispatchPrices = $basketPriceCalculator->calculateDispatchPrice($basketContext, $oldBasketContext, (float) $shippingCosts);
-        $shippingCostsNet = $dispatchPrices->getRoundedNetPrice();
+        $dispatchPrice = $this->getShippingPrice($requestStruct);
 
-        $shippingCosts = $dispatchPrices->getRoundedGrossPrice();
-        if ($basketContext->isNet()) {
-            $shippingCosts = $dispatchPrices->getRoundedNetPrice();
-        }
-
-        //Total prices calculation
-        $totalNetPrice = $totalNetPrice + $shippingCostsNet;
-        $total = $productSum + $shippingCosts;
-        $taxSum = $total - $totalNetPrice;
-
-        $result = [
-            'totalWithoutTax' => $totalNetPrice,
-            'sum' => $productSum,
-            'total' => $total,
-            'shippingCosts' => $shippingCosts,
-            'shippingCostsNet' => $shippingCostsNet,
-            'taxSum' => $taxSum,
-            'positions' => $data['positions'],
-            'dispatchTaxRate' => $basketContext->getDispatchTaxRate()
-        ];
+        $totalPriceResult = $this->getTotalPriceCalculator()->calculate($positionPrices, $dispatchPrice);
+        $result = $this->createBasketCalculationResult($totalPriceResult, $requestStruct);
 
         $this->view->assign([
             'data' => $result,
@@ -849,65 +815,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @return BasketPriceCalculatorInterface
-     */
-    private function getBasketPriceCalculator()
-    {
-        return $this->get('swag_backend_order.price_calculation.basket_service');
-    }
-
-    /**
-     * @param int $currencyId
-     * @param int $dispatchId
-     * @param float[] $basketTaxRates
-     * @param boolean $net
-     * @return BasketContext
-     */
-    private function getBasketContext($currencyId, $dispatchId, $basketTaxRates, $net)
-    {
-        $basketContextFactory = $this->getBasketContextFactory();
-        return $basketContextFactory->create($currencyId, $dispatchId, $basketTaxRates, $net);
-    }
-
-    /**
-     * @param int $oldCurrencyId
-     * @param int $dispatchId
-     * @param float $dispatchTaxRate
-     * @param boolean $net
-     * @param boolean $netChanged
-     * @return BasketContext
-     */
-    private function getOldBasketContext($oldCurrencyId, $dispatchId, $dispatchTaxRate, $net, $netChanged)
-    {
-        if ($netChanged) {
-            $net = !$net;
-        }
-        $basketContextFactory = $this->getBasketContextFactory();
-        return $basketContextFactory->create($oldCurrencyId, $dispatchId, [ $dispatchTaxRate ], $net);
-    }
-
-    /**
-     * @return BasketContextFactory
-     */
-    private function getBasketContextFactory()
-    {
-        return $this->get('swag_backend_order.price_calculation.basket_context_factory');
-    }
-
-    /**
-     * @param array $positions
-     * @return array
-     */
-    private function getBasketTaxRates(array $positions)
-    {
-        $taxRates = [];
-        foreach ($positions as $position) {
-            $taxRates[] = (float) $position->taxRate;
-        }
-        return array_unique($taxRates);
-    }
-
-    /**
      * @return TaxCalculation
      */
     private function getTaxCalculation()
@@ -926,5 +833,175 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customer = $modelManager->find(Customer::class, $customerId);
 
         return $customer->getBilling()->getFirstName() . ' ' . $customer->getBilling()->getLastName();
+    }
+
+    /**
+     * @return TotalPriceCalculator
+     */
+    private function getTotalPriceCalculator()
+    {
+        return $this->get('swag_backend_order.price_calculation.total_price_calculator');
+    }
+
+    /**
+     * @return ShippingPriceCalculator
+     */
+    private function getShippingCalculator()
+    {
+        return $this->get('swag_backend_order.price_calculation.shipping_calculator');
+    }
+
+    /**
+     * @return ProductPriceCalculator
+     */
+    private function getProductCalculator()
+    {
+        return $this->get('swag_backend_order.price_calculation.product_calculator');
+    }
+
+    /**
+     * @param TotalPricesResult $totalPriceResult
+     * @param RequestStruct $requestStruct
+     * @return array
+     */
+    private function createBasketCalculationResult(
+        TotalPricesResult $totalPriceResult,
+        RequestStruct $requestStruct
+    ) {
+        $shippingCosts = $totalPriceResult->getShipping()->getRoundedGrossPrice();
+        $productSum = $totalPriceResult->getSum()->getRoundedGrossPrice();
+        $total = $totalPriceResult->getTotal()->getRoundedGrossPrice();
+        $taxSum = $totalPriceResult->getTaxAmount();
+
+        if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
+            $shippingCosts = $totalPriceResult->getShipping()->getRoundedNetPrice();
+            $productSum = $totalPriceResult->getSum()->getRoundedNetPrice();
+        }
+
+        if ($requestStruct->isTaxFree()) {
+            $total = $totalPriceResult->getTotal()->getRoundedNetPrice();
+            $taxSum = 0.00;
+        }
+
+        //Total prices calculation
+        $totalNetPrice = $totalPriceResult->getTotal()->getRoundedNetPrice();
+        $shippingCostsNet = $totalPriceResult->getShipping()->getRoundedNetPrice();
+
+        return [
+            'totalWithoutTax' => $totalNetPrice,
+            'sum' => $productSum,
+            'total' => $total,
+            'shippingCosts' => $shippingCosts,
+            'shippingCostsNet' => $shippingCostsNet,
+            'taxSum' => $taxSum,
+            'positions' => $requestStruct->getPositions(),
+            'dispatchTaxRate' => $totalPriceResult->getShipping()->getTaxRate()
+        ];
+    }
+
+    /**
+     * @return PriceContextFactory
+     */
+    private function getPriceContextFactory()
+    {
+        return $this->get('swag_backend_order.price_calculation.price_context_factory');
+    }
+
+    /**
+     * @param Object $position
+     * @param RequestStruct $requestStruct
+     * @return PriceResult
+     */
+    private function getPositionPrice($position, $requestStruct)
+    {
+        $previousPriceContext = $this->getPriceContextFactory()->create(
+            $position->price,
+            $position->taxRate,
+            $requestStruct->isPreviousDisplayNet(),
+            $requestStruct->getPreviousCurrencyId()
+        );
+        $basePrice = $this->getProductCalculator()->calculateBasePrice($previousPriceContext);
+
+        $currentPriceContext = $this->getPriceContextFactory()->create(
+            $basePrice,
+            $position->taxRate,
+            true,
+            $requestStruct->getCurrencyId()
+        );
+
+        return $this->getProductCalculator()->calculate($currentPriceContext);
+    }
+
+    /**
+     * @param int $dispatchId
+     * @param float[] $basketTaxRates
+     * @return float
+     * @throws \Exception
+     */
+    private function getDispatchTaxRate($dispatchId, $basketTaxRates = [])
+    {
+        if (is_null($dispatchId)) {
+            return 0.00;
+        }
+
+        /** @var Dispatch $dispatch */
+        $dispatch = $this->getModelManager()->find(Dispatch::class, $dispatchId);
+
+        if (is_null($dispatch)) {
+            throw new \Exception("Can not find given dispatch with id " . $dispatchId);
+        }
+
+        $taxId = $dispatch->getTaxCalculation();
+        $tax = $this->getModelManager()->find(Tax::class, $taxId);
+
+        if (!is_null($tax)) {
+            return $tax->getTax();
+        }
+
+        if (empty($basketTaxRates)) {
+            return 0.00;
+        }
+
+        return $this->getHighestDispatchTaxRate($basketTaxRates);
+    }
+
+    /**
+     * @param float[] $basketTaxRates
+     * @return float
+     */
+    private function getHighestDispatchTaxRate(array $basketTaxRates)
+    {
+        return max($basketTaxRates);
+    }
+
+    /**
+     * @param RequestStruct $requestStruct
+     * @return PriceResult
+     */
+    private function getShippingPrice($requestStruct)
+    {
+        $previousPriceContext = $this->getPriceContextFactory()->create(
+            $requestStruct->getShippingCosts(),
+            $requestStruct->getPreviousShippingTaxRate(),
+            $requestStruct->isPreviousDisplayNet(),
+            $requestStruct->getPreviousCurrencyId()
+        );
+        $baseShippingPrice = $this->getShippingCalculator()->calculateBasePrice($previousPriceContext);
+
+        $currentPriceContext = $this->getPriceContextFactory()->create(
+            $baseShippingPrice,
+            $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates()),
+            $requestStruct->isDisplayNet(),
+            $requestStruct->getCurrencyId()
+        );
+        return $this->getShippingCalculator()->calculate($currentPriceContext);
+    }
+
+    /**
+     * @return ProductRepository
+     */
+    private function getProductRepository()
+    {
+        return $this->get('swag_backend_order.product_repository');
     }
 }

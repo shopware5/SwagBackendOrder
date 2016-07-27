@@ -49,6 +49,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
             name: 'languageSubShop',
             model: 'Shopware.apps.Base.model.Shop',
             associationKey: 'languageSubShop'
+        },
+        {
+            name: 'customerGroup',
+            model: 'Shopware.apps.Base.model.CustomerGroup',
+            associationKey: 'group'
         }
     ]
 });

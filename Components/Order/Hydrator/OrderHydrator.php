@@ -52,7 +52,8 @@ class OrderHydrator
         $orderStruct->setCurrency((string) $data['currency']);
         $orderStruct->setDeviceType((string) $data['desktopType']);
 
-        $orderStruct->setNetOrder((boolean) $data['net']);
+        $orderStruct->setNetOrder((boolean) $data['displayNet']);
+        $orderStruct->setTaxFree((boolean) $data['taxFree']);
 
         $orderStruct->setTotal((float) $data['total']);
         $orderStruct->setTotalWithoutTax((float) $data['totalWithoutTax']);

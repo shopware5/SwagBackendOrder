@@ -1,6 +1,6 @@
 //
 //{block name="backend/create_backend_order/view/total_costs_overview"}
-//
+//{namespace name="backend/swag_backend_order/view/costs_overview"}
 Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
 
     extend: 'Ext.container.Container',
@@ -27,18 +27,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     padding: '5 10 0 10',
 
     snippets: {
-        sum: '{s namespace="backend/swag_backend_order/view/costs_overview" name="swag_backend_order/costs_overview/sum"}Sum: {/s}',
-        shippingCosts: '{s namespace="backend/swag_backend_order/view/costs_overview" name="swag_backend_order/costs_overview/shipping_costs"}Shipping costs: {/s}',
-        total: '{s namespace="backend/swag_backend_order/view/costs_overview" name="swag_backend_order/costs_overview/total"}Total: {/s}',
-        totalWithoutTax: '{s namespace="backend/swag_backend_order/view/costs_overview" name="swag_backend_order/costs_overview/total_without_tax"}Total without tax: {/s}',
-        taxSum: '{s namespace="backend/swag_backend_order/view/costs_overview" name="swag_backend_order/costs_overview/tax_sum"}Tax sum: {/s}',
-        netOrder: '{s namespace="backend/swag_backend_order/view/costs_overview" name="swag_backend_order/costs_overview/net_order"}Net order{/s}'
+        sum: '{s name="swag_backend_order/costs_overview/sum"}{/s}',
+        shippingCosts: '{s name="swag_backend_order/costs_overview/shipping_costs"}{/s}',
+        total: '{s name="swag_backend_order/costs_overview/total"}{/s}',
+        totalWithoutTax: '{s name="swag_backend_order/costs_overview/total_without_tax"}{/s}',
+        taxSum: '{s name="swag_backend_order/costs_overview/tax_sum"}{/s}'
     },
 
     /**
      * horizontal container to add the costs labels under the grid
      *
-     * @returns [Ext.container.Container]
+     * @returns { Ext.container.Container }
      */
 
     initComponent: function () {
@@ -51,8 +50,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
 
         me.updateTotalCostsEvents();
 
-        me.netCheckBox.on('change', function (netCheckbox, newValue, oldValue) {
-            me.fireEvent('changeNetCheckbox', newValue);
+        me.displayNetCheckbox.on('change', function (checkbox, newValue, oldValue) {
+            if (newValue == false) {
+                me.taxFreeCheckbox.setValue(false);
+            }
+            me.fireEvent('changeDisplayNet', newValue, oldValue);
+        });
+
+        me.taxFreeCheckbox.on('change', function (checkbox, newValue, oldValue) {
+            if (newValue == true) {
+                me.displayNetCheckbox.setValue(true);
+            }
+            me.fireEvent('changeTaxFreeCheckbox', newValue, oldValue);
         });
 
         me.callParent(arguments);
@@ -66,7 +75,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     /**
      * container with a vbox layout the get the labels in a vertical row
      *
-     * @returns [Ext.container.Container]
+     * @returns { Ext.container.Container }
      */
     createTotalCostsOverviewContainer: function () {
         var me = this;
@@ -105,7 +114,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             layout: 'hbox',
             renderTo: document.body,
             items: [
-                me.createNetCheckbox(),
+                me.createLeftContainer(),
                 me.totalCostsFloatContainer
             ]
         });
@@ -226,17 +235,48 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     /**
      * @returns { Ext.form.field.Checkbox }
      */
-    createNetCheckbox: function () {
+    createDisplayNetCheckbox: function () {
         var me = this;
 
-        me.netCheckBox = Ext.create('Ext.form.field.Checkbox', {
-            boxLabel: me.snippets.netOrder,
+        me.displayNetCheckbox = Ext.create('Ext.form.field.Checkbox', {
+            boxLabel: '{s name="display_net"}{/s}',
             inputValue: true,
             uncheckedValue: false,
             padding: '0 5 0 0'
         });
 
-        return me.netCheckBox;
+        return me.displayNetCheckbox;
+    },
+
+    /**
+     * @returns { Ext.container.Container }
+     */
+    createLeftContainer: function () {
+        var me = this;
+
+        return Ext.create('Ext.container.Container', {
+            layout: 'vbox',
+            items: [
+                me.createDisplayNetCheckbox(),
+                me.createTaxFreeCheckbox()
+            ]
+        });
+    },
+
+    /**
+     * @returns { Ext.form.field.Checkbox }
+     */
+    createTaxFreeCheckbox: function () {
+        var me = this;
+
+        me.taxFreeCheckbox = Ext.create('Ext.form.field.Checkbox', {
+            boxLabel: '{s name="tax_free"}{/s}',
+            inputValue: true,
+            uncheckedValue: false,
+            padding: '0 5 0 0'
+        });
+
+        return me.taxFreeCheckbox;
     }
 });
 //

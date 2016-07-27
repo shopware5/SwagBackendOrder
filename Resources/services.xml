@@ -84,17 +84,31 @@
             <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.esd_product" />
         </service>
 
-        <service id="swag_backend_order.price_calculation.basket_context_factory" class="SwagBackendOrder\Components\PriceCalculation\Context\BasketContextFactory">
-            <argument type="service" id="models" />
-        </service>
-
-        <service id="swag_backend_order.price_calculation.currency_calculation" class="SwagBackendOrder\Components\PriceCalculation\CurrencyConverter"/>
+        <service id="swag_backend_order.price_calculation.currency_converter" class="SwagBackendOrder\Components\PriceCalculation\CurrencyConverter"/>
 
         <service id="swag_backend_order.price_calculation.tax_calculation" class="SwagBackendOrder\Components\PriceCalculation\TaxCalculation"/>
 
-        <service id="swag_backend_order.price_calculation.basket_service" class="SwagBackendOrder\Components\PriceCalculation\BasketPriceCalculator">
+        <service id="swag_backend_order.price_calculation.shipping_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator">
             <argument type="service" id="swag_backend_order.price_calculation.tax_calculation" />
-            <argument type="service" id="swag_backend_order.price_calculation.currency_calculation" />
+            <argument type="service" id="swag_backend_order.price_calculation.currency_converter" />
         </service>
+
+        <service id="swag_backend_order.price_calculation.product_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator">
+            <argument type="service" id="swag_backend_order.price_calculation.tax_calculation" />
+            <argument type="service" id="swag_backend_order.price_calculation.currency_converter" />
+        </service>
+
+        <service id="swag_backend_order.price_calculation.total_price_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator" />
+
+        <service id="swag_backend_order.price_calculation.request_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator" />
+
+        <service id="swag_backend_order.price_calculation.price_context_factory" class="SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory">
+            <argument type="service" id="models" />
+        </service>
+
+        <service id="swag_backend_order.product_repository" class="SwagBackendOrder\Components\ProductRepository">
+            <argument type="service" id="models"></argument>
+        </service>
+
     </services>
 </container>
