@@ -1,5 +1,6 @@
-//{block name="backend/create_backend_order/controller/main"}
 //
+//{block name="backend/create_backend_order/controller/main"}
+//{namespace name="backend/swag_backend_order/view/main"}
 Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
     /**
@@ -7,30 +8,34 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      */
     extend: 'Ext.app.Controller',
 
+    refs: [
+        { ref: 'totalCostsOverview', selector: 'createbackendorder-totalcostsoverview' }
+    ],
+
     /**
-     * Tax rate of the previous order
+     * @var { number }
      */
     previousDispatchTaxRate: 0.00,
 
     snippets: {
         error: {
-            customer: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/customer"}Please select a customer.{/s}',
-            billing: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/billing"}Please select a billing address.{/s}',
-            payment: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/payment"}Please select a payment method.{/s}',
-            shippingArt: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/shipping_art"}Please select a shipping art.{/s}',
-            positions: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/positions"}Please add positions.{/s}',
-            textInvalidArticle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/invalid_article"}Invalid article: {/s}',
-            invalidArticleTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/invalid_article_title"}Error!{/s}',
-            instanceText: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceText"}You can not create more than one order at the same time.{/s}',
-            instanceTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/instanceTitle"}Erro!{/s}',
-            title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/title"}Error! Couldn\'t create order{/s}',
-            mailTitle: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/error/mail_title"}Error! Couldn\'t send mail{/s}'
+            customer: '{s name="swagbackendorder/error/customer"}{/s}',
+            billing: '{s name="swagbackendorder/error/billing"}{/s}',
+            payment: '{s name="swagbackendorder/error/payment"}{/s}',
+            shippingArt: '{s name="swagbackendorder/error/shipping_art"}{/s}',
+            positions: '{s name="swagbackendorder/error/positions"}{/s}',
+            textInvalidArticle: '{s name="swagbackendorder/error/invalid_article"}{/s}',
+            invalidArticleTitle: '{s name="swagbackendorder/error/invalid_article_title"}{/s}',
+            instanceText: '{s name="swagbackendorder/error/instanceText"}{/s}',
+            instanceTitle: '{s name="swagbackendorder/error/instanceTitle"}{/s}',
+            title: '{s name="swagbackendorder/error/title"}{/s}',
+            mailTitle: '{s name="swagbackendorder/error/mail_title"}{/s}'
         },
         success: {
-            text: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/success/text"}Order was created successfully. Ordernumber: {/s}',
-            title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/success/title"}Success!{/s}'
+            text: '{s name="swagbackendorder/success/text"}{/s}',
+            title: '{s name="swagbackendorder/success/title"}{/s}'
         },
-        title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/title/selected_user"}Create order for{/s}'
+        title: '{s name="swagbackendorder/title/selected_user"}{/s}'
     },
 
     /**
@@ -42,6 +47,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      */
     init: function () {
         var me = this;
+
+        me.previousOrderModel = Ext.create('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder');
+        me.previousOrderModel.set('taxFree', false);
+        me.previousOrderModel.set('displayNet', false);
 
         //checks if a window is already open
         var createOrderWindow = Ext.getCmp('swagBackendOrderWindow');
@@ -91,7 +100,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             },
             'createbackendorder-totalcostsoverview': {
                 calculateBasket: me.onCalculateBasket,
-                changeNetCheckbox: me.onChangeNetCheckbox
+                changeDisplayNet: me.onChangeDisplayNet,
+                changeTaxFreeCheckbox: me.onChangeTaxFree
             }
         });
 
@@ -340,58 +350,49 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
         updateButton.setDisabled(true);
 
-        //sends a request to get the price for the customer group
         Ext.Ajax.request({
-            url: '{url action="getCustomerGroupPriceByOrdernumber"}',
+            url: '{url action="getProduct"}',
             params: {
                 ordernumber: record.get('number'),
-                customerId: me.orderModel.get('customerId')
+                displayNet: me.orderModel.get('displayNet'),
+                newCurrencyId: me.orderModel.get('currencyId'),
+                taxFree: me.orderModel.get('taxFree'),
+                previousDisplayNet: me.previousOrderModel.get('displayNet'),
+                previousTaxFree: me.previousOrderModel.get('taxFree')
             },
             success: function (response) {
                 var responseObj = Ext.JSON.decode(response.responseText),
                     result = responseObj.data,
-                    price = 0,
+                    price = result.price,
                     taxComboStore, valueField, displayField, recordNumber, displayValue;
 
-                if (responseObj.success == true) {
-                    price = me.calculateCurrency(result.price);
-                } else {
-                    price = me.calculateCurrency(record.get('price'));
-                }
+                    /**
+                     * columns[0] -> selected
+                     * columns[1] -> articlenumber
+                     * columns[2] -> articlename
+                     * columns[3] -> quantity
+                     * columns[4] -> price
+                     * columns[5] -> total
+                     * columns[6] -> tax
+                     * columns[7] -> instock
+                     */
+                    columns[1].setValue(record.get('number'));
+                    columns[2].setValue(record.get('name'));
+                    columns[3].setValue(1);
+                    columns[4].setValue(price);
+                    columns[7].setValue(record.get('inStock'));
 
-                if (me.orderModel.get('net')) {
-                    price = me.calculateNetPrice(price, record.get('tax'));
-                }
+                    taxComboStore = columns[6].store;
+                    valueField = columns[6].valueField;
+                    displayField = columns[6].displayField;
 
-                /**
-                 * columns[0] -> selected
-                 * columns[1] -> articlenumber
-                 * columns[2] -> articlename
-                 * columns[3] -> quantity
-                 * columns[4] -> price
-                 * columns[5] -> total
-                 * columns[6] -> tax
-                 * columns[7] -> instock
-                 */
-                columns[1].setValue(record.get('number'));
-                columns[2].setValue(record.get('name'));
-                columns[3].setValue(1);
-                columns[4].setValue(price);
-                columns[7].setValue(record.get('inStock'));
-
-                taxComboStore = columns[6].store;
-                valueField = columns[6].valueField;
-                displayField = columns[6].displayField;
-
-                recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
-
-                displayValue = taxComboStore.getAt(recordNumber).data[displayField];
-                columns[6].setValue(record.get('taxId'));
-                columns[6].setRawValue(displayValue);
-                columns[6].selectedIndex = recordNumber;
-                updateButton.setDisabled(false);
+                    recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
+                    displayValue = taxComboStore.getAt(recordNumber).data[displayField];
+                    columns[6].setValue(record.get('taxId'));
+                    columns[6].setRawValue(displayValue);
+                    columns[6].selectedIndex = recordNumber;
+                    updateButton.setDisabled(false);
             }
-
         });
     },
 
@@ -449,6 +450,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
                 if (customerRecord.get('company')) {
                     title += ' - ' + customerRecord.get('company');
+                }
+
+                if (!customerRecord.customerGroup().getAt(0).get('tax')) {
+                    me.getTotalCostsOverview().displayNetCheckbox.setValue(true);
+                } else {
+                    me.getTotalCostsOverview().displayNetCheckbox.setValue(false);
                 }
 
                 me.window.setTitle(title);
@@ -647,17 +654,21 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 positions: positionJsonString,
                 shippingCosts: me.orderModel.get('shippingCosts'),
                 shippingCostsNet: me.orderModel.get('shippingCostsNet'),
-                net: me.orderModel.get('net'),
+                displayNet: me.orderModel.get('displayNet'),
                 oldCurrencyId: oldCurrencyId,
                 newCurrencyId: newCurrencyId,
-                netChanged: me.netChanged,
                 dispatchId: me.orderModel.get('dispatchId'),
+                taxFree: me.orderModel.get('taxFree'),
+                previousDisplayNet: me.previousOrderModel.get('displayNet'),
+                previousTaxFree: me.previousOrderModel.get('taxFree'),
                 previousDispatchTaxRate: me.previousDispatchTaxRate
             },
             success: function (response) {
                 var totalCostsJson = Ext.JSON.decode(response.responseText);
                 var record = totalCostsJson.data;
 
+                me.previousOrderModel.set('taxFree', me.orderModel.get('taxFree'));
+                me.previousOrderModel.set('displayNet', me.orderModel.get('displayNet'));
                 me.previousDispatchTaxRate = record.dispatchTaxRate;
 
                 me.orderModel.set('shippingCostsNet', record.shippingCostsNet);
@@ -726,18 +737,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
     /**
      * calculates the new prices and sets the net flag to true
-     * @param net
+     * @param { boolean } newValue
      */
-    onChangeNetCheckbox: function (net) {
+    onChangeDisplayNet: function (newValue, oldValue) {
         var me = this;
-        me.orderModel.set('net', net);
-
-        if (me.totalCostsModel) {
-            me.totalCostsModel.set('net', net);
-        }
-        me.netChanged = true;
+        me.orderModel.set('displayNet', newValue);
         me.onCalculateBasket();
-        me.netChanged = false;
     },
 
     /**
@@ -749,8 +754,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
 
         me.orderModel.set('languageShopId', languageShopId);
-    }
+    },
 
+    /**
+     * @param { boolean } newValue
+     */
+    onChangeTaxFree: function (newValue, oldValue) {
+        var me = this;
+        me.orderModel.set('taxFree', newValue);
+        me.onCalculateBasket();
+    }
 });
 //
 //{/block}

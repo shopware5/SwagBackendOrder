@@ -12,6 +12,7 @@ use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\Customer;
+use Shopware\Models\Customer\Group;
 use Shopware\Models\Customer\Repository;
 
 class CustomerRepository
@@ -56,6 +57,7 @@ class CustomerRepository
         $customer['address'] = $addressRepository->getListArray($customerId);
         $customer['billing'] = $customer['address'];
         $customer['shipping'] = $customer['address'];
+        $customer['group'] = $this->getGroup($customer['groupKey']);
 
         return $customer;
     }
@@ -82,5 +84,17 @@ class CustomerRepository
         $builder->setParameter('customerId', $customerId);
 
         return $builder;
+    }
+
+    /**
+     * @param string $key
+     * @return array
+     */
+    private function getGroup($key)
+    {
+        $repository = $this->modelManager->getRepository(Group::class);
+        $group = $repository->findOneBy([ 'key' => $key ]);
+
+        return $this->modelManager->toArray($group);
     }
 }

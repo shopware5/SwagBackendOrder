@@ -28,7 +28,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder', {
         { name: 'totalWithoutTax', type: 'float' },
         { name: 'currencyId', type: 'string' },
         { name: 'desktopType', type: 'string' },
-        { name: 'net', type: 'boolean' }
+        { name: 'displayNet', type: 'boolean' },
+        { name: 'taxFree', type: 'boolean' }
     ],
 
     hasMany: [

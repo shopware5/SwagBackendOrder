@@ -108,12 +108,16 @@ class OrderFactory
         $order->setComment('');
         $order->setCustomerComment('');
         $order->setInternalComment('');
-        $order->setNet($orderStruct->getNetOrder());
-        $order->setTaxFree($orderStruct->getNetOrder());
         $order->setTemporaryId('');
         $order->setReferer('');
         $order->setTrackingCode('');
         $order->setRemoteAddress('');
+
+        $order->setNet($orderStruct->getNetOrder() ? 1 : 0);
+        $order->setTaxFree($orderStruct->isTaxFree() ? 1 : 0);
+        if ($orderStruct->isTaxFree()) {
+            $order->setNet(1);
+        }
 
         /** @var Currency $currency */
         $currency = $this->modelManager->getReference(Currency::class, $orderStruct->getCurrencyId());

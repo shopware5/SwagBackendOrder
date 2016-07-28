@@ -1,0 +1,72 @@
+<?php
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace SwagBackendOrder\Components\PriceCalculation\Calculator;
+
+use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
+use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
+use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
+use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
+
+class ShippingPriceCalculator
+{
+    /**
+     * @var CurrencyConverter
+     */
+    private $currencyConverter;
+    /**
+     * @var TaxCalculation
+     */
+    private $taxCalculation;
+
+    /**
+     * @param TaxCalculation $taxCalculation
+     * @param CurrencyConverter $currencyConverter
+     */
+    public function __construct(TaxCalculation $taxCalculation, CurrencyConverter $currencyConverter)
+    {
+        $this->currencyConverter = $currencyConverter;
+        $this->taxCalculation = $taxCalculation;
+    }
+
+    /**
+     * @param PriceContext $context
+     * @return PriceResult
+     */
+    public function calculate(PriceContext $context)
+    {
+        $priceStruct = new PriceResult();
+
+        $grossPrice = $this->currencyConverter->getCurrencyPrice($context->getPrice(), $context->getCurrencyFactor());
+        $priceStruct->setGross($grossPrice);
+
+        $netPrice = $this->taxCalculation->getNetPrice($grossPrice, $context->getTaxRate());
+        $priceStruct->setNet($netPrice);
+
+        $priceStruct->setTaxRate($context->getTaxRate());
+
+        return $priceStruct;
+    }
+
+    /**
+     * @param PriceContext $context
+     * @return float
+     */
+    public function calculateBasePrice(PriceContext $context)
+    {
+        $baseCurrencyPrice = $this->currencyConverter->getBaseCurrencyPrice(
+            $context->getPrice(), $context->getCurrencyFactor()
+        );
+
+        $basePrice = $baseCurrencyPrice;
+        if ($context->isNetPrice() && $context->getTaxRate() > 0) {
+            $basePrice = $this->taxCalculation->getGrossPrice($basePrice, $context->getTaxRate());
+        }
+        return $basePrice;
+    }
+}

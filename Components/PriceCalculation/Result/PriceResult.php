@@ -6,9 +6,9 @@
  * file that was distributed with this source code.
  */
 
-namespace SwagBackendOrder\Components\PriceCalculation;
+namespace SwagBackendOrder\Components\PriceCalculation\Result;
 
-class PriceStruct
+class PriceResult
 {
     const ROUND_PRECISION = 2;
 
@@ -21,6 +21,11 @@ class PriceStruct
      * @var float
      */
     private $gross;
+
+    /**
+     * @var float
+     */
+    private $taxRate;
 
     /**
      * @return float
@@ -68,5 +73,29 @@ class PriceStruct
     public function getRoundedGrossPrice()
     {
         return round($this->getGross(), self::ROUND_PRECISION);
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxRate()
+    {
+        return $this->taxRate;
+    }
+
+    /**
+     * @param float $taxRate
+     */
+    public function setTaxRate($taxRate)
+    {
+        $this->taxRate = $taxRate;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTaxSum()
+    {
+        return $this->getRoundedGrossPrice() - $this->getRoundedNetPrice();
     }
 }

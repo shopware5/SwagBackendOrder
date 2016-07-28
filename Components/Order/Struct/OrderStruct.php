@@ -91,6 +91,11 @@ class OrderStruct
     private $currencyId;
 
     /**
+     * @var bool
+     */
+    private $taxFree;
+
+    /**
      * @var array
      */
     private $attributes;
@@ -357,6 +362,22 @@ class OrderStruct
     public function setNumber($number)
     {
         $this->number = $number;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTaxFree()
+    {
+        return $this->taxFree;
+    }
+
+    /**
+     * @param boolean $taxFree
+     */
+    public function setTaxFree($taxFree)
+    {
+        $this->taxFree = $taxFree;
     }
 
     /**
