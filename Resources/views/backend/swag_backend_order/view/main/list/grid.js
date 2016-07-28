@@ -174,7 +174,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
 
             Ext.Ajax.request({
                 url: '{url action="validateEdit"}',
-                params: record.data,
+                params: e.newValues,
                 success: function (response) {
                     var responseObj = Ext.JSON.decode(response.responseText),
                         message = '';
