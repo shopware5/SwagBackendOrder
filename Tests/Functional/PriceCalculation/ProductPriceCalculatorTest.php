@@ -8,7 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
-use phpunit\framework\TestCase;
+use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;

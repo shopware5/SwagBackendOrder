@@ -8,7 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Unit;
 
-use phpunit\framework\TestCase;
+use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 
 class CurrencyConverterTest extends TestCase

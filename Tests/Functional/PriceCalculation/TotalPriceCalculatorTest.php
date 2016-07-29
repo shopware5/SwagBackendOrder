@@ -8,7 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
-use phpunit\framework\TestCase;
+use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
 
