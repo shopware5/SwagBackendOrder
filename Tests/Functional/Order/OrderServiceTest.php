@@ -8,7 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Functional\Order;
 
-use phpunit\framework\TestCase;
+use Shopware\Components\Test\Plugin\TestCase;
 use Shopware\Models\Order\Order;
 use SwagBackendOrder\Components\Order\OrderService;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;

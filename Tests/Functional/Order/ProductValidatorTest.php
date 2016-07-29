@@ -8,7 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Functional\Order;
 
-use phpunit\framework\TestCase;
+use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
 
