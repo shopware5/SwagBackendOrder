@@ -39,13 +39,6 @@ use SwagBackendOrder\Components\ProductRepository;
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
     /**
-     * configures how much digits the prices have
-     *
-     * @const int PRICE_PRECISION
-     */
-    const PRICE_PRECISION = 2;
-
-    /**
      * Disable template engine for all actions
      *
      * @return void
@@ -141,9 +134,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
-    /**
-     * method which searches all articles by their ordernumber, name and additional text
-     */
     public function getArticlesAction()
     {
         $params = $this->Request()->getParams();
@@ -234,8 +224,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * translates the payment methods
-     *
      * @param array $paymentMethod
      * @param int $languageId
      * @return array
@@ -289,8 +277,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * translates the dispatch fields
-     *
      * @param array $dispatch
      * @param int $languageId
      * @return array
@@ -312,9 +298,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         return $dispatch;
     }
 
-    /**
-     * returns the currencies which are available
-     */
     public function getCurrenciesAction()
     {
         $repository = Shopware()->Models()->getRepository(Currency::class);
@@ -746,53 +729,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'data' => $result,
             'success' => true
         ]);
-    }
-
-    /**
-     * Gets the customer group price
-     */
-    public function getCustomerGroupPriceByOrdernumberAction()
-    {
-        $data = $this->Request()->getParams();
-
-        if (empty($data['customerId']) || empty($data['ordernumber'])) {
-            $this->view->assign(['success' => false]);
-
-            return;
-        }
-
-        /** @var Customer $customerModel */
-        $customerModel = $this->getModelManager()->find(Customer::class, $data['customerId']);
-
-        /** @var \Shopware\Models\Article\Repository $productRepository */
-        $productRepository = $this->getModelManager()->getRepository(Detail::class);
-
-        /** @var Shopware\Models\Article\Detail $productModel */
-        $productModel = $productRepository->findOneBy(['number' => $data['ordernumber']]);
-        $prices = $productModel->getPrices();
-
-        $priceForCustomerGroup = 0;
-
-        /** @var \Shopware\Models\Article\Price $price */
-        foreach ($prices as $price) {
-            if ($price->getCustomerGroup()->getKey() == $customerModel->getGroup()->getKey()) {
-                $priceForCustomerGroup = $price->getPrice();
-                break;
-            }
-            $priceForCustomerGroup = $price->getPrice();
-        }
-
-        $priceForCustomerGroup = $this->getTaxCalculation()->getGrossPrice(
-            $priceForCustomerGroup,
-            $productModel->getArticle()->getTax()->getTax()
-        );
-
-        $this->view->assign(
-            [
-                'data' => ['price' => $priceForCustomerGroup],
-                'success' => true
-            ]
-        );
     }
 
     /**
