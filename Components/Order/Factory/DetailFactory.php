@@ -16,6 +16,7 @@ use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\DetailStatus;
 use Shopware\Models\Tax\Tax;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
+use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 
 class DetailFactory
 {
@@ -36,15 +37,20 @@ class DetailFactory
      * @param PositionStruct $positionStruct
      * @param boolean $isTaxFree
      * @return Detail
+     * @throws InvalidOrderException
      */
     public function create(PositionStruct $positionStruct, $isTaxFree)
     {
-        $detail = new Detail();
+        if (!$positionStruct->getNumber()) {
+            throw new InvalidOrderException("No product number was passed.");
+        }
 
-        $article = $this->modelManager->find(Article::class, $positionStruct->getArticleId());
+        $detail = new Detail();
 
         $repository = $this->modelManager->getRepository(ArticleDetail::class);
         $articleDetail = $repository->findOneBy([ 'number' => $positionStruct->getNumber() ]);
+        $article = $articleDetail->getArticle();
+
 
         $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());
         $detail->setTax($tax);
