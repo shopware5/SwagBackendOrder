@@ -90,7 +90,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         /** @var OrderValidator $orderValidator */
         $orderValidator = $this->get('swag_backend_order.order.order_validator');
 
-        $orderStruct = $orderHydrator->hydrateFromRequest($this->request);
+        $orderStruct = $orderHydrator->hydrateFromRequest($this->Request());
         $violations = $orderValidator->validate($orderStruct);
         if ($violations->getMessages()) {
             $this->view->assign([
@@ -102,6 +102,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $modelManager->getConnection()->beginTransaction();
         try {
+            //we need to fake a shop instance if we want to use the Articles Module
+            /** @var \Shopware\Models\Shop\Repository $shopRepo */
+            $shopRepo = $this->get('models')->getRepository(Shop::class);
+            $shop = $shopRepo->getActiveById($orderStruct->getLanguageShopId());
+            $shop->registerResources();
+
             /** @var OrderService $orderService */
             $orderService = $this->get('swag_backend_order.order.service');
             $order = $orderService->create($orderStruct);
@@ -176,12 +182,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $currencyFactor = $currency->getFactor();
         }
 
-        $priceContext = new PriceContext(
-            (float) $result['price'],
-            (float) $result['tax'],
-            true,
-            $currencyFactor
-        );
+        $priceContext = new PriceContext((float) $result['price'], (float) $result['tax'], true, $currencyFactor);
 
         $price = $this->getProductCalculator()->calculate($priceContext);
         $result['price'] = $price->getRoundedGrossPrice();
@@ -499,26 +500,23 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [$orderModel->getId()]
         );
 
-        //we need to fake a shop instance if we want to use the Articles Module
-        $shop = Shopware()->Models()->getRepository('Shopware\Models\Shop\Shop')->getActiveById($orderModel->getLanguageSubShop()->getId());
-        $shop->registerResources(Shopware()->Bootstrap());
+        $articleModule = Shopware()->Modules()->Articles();
 
         foreach ($details as &$detail) {
             /** @var Shopware\Models\Article\Repository $articleDetailRepository */
             $articleDetailRepository = Shopware()->Models()->getRepository(Detail::class);
-            /** @var Detail[] $articleDetailModel */
-            $articleDetailModel = $articleDetailRepository->findBy(['number' => $detail['articleordernumber']]);
+
+            $articleOrderNumber = $detail['articleordernumber'];
+            unset($detail['articleordernumber']);
+
             /** @var Detail $articleDetailModel */
-            $articleDetailModel = $articleDetailModel[0];
+            $articleDetailModel = $articleDetailRepository->findOneBy(['number' => $articleOrderNumber]);
 
             $detail['articlename'] = $detail['name'];
             unset($detail['name']);
 
             $detail['userID'] = $orderModel->getCustomer()->getId();
-
-            $detail['ordernumber'] = $detail['articleordernumber'];
-            unset($detail['articleordernumber']);
-
+            $detail['ordernumber'] = $articleOrderNumber;
             $detail['currencyFactor'] = $orderModel->getCurrencyFactor();
             $detail['mainDetailId'] = $articleDetailModel->getArticle()->getMainDetail()->getId();
             $detail['articleDetailId'] = $articleDetailModel->getId();
@@ -544,6 +542,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $detail['amount'] = $detail['price'] * $detail['quantity'];
             $detail['amountnet'] = $detail['netprice'] * $detail['quantity'];
             $detail['priceNumeric'] = $detail['price'];
+            $detail['image'] = $articleModule->sGetArticlePictures(
+                $detail['articleID'],
+                true,
+                Shopware()->Config()->get('sTHUMBBASKET'),
+                $articleOrderNumber
+            );
 
             /**
              * order basket attributes fake
@@ -562,7 +566,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 $detail['unitID'] = $articleDetailModel->getUnit()->getId();
             }
 
-            $detail['additional_details'] = Shopware()->Modules()->Articles()->sGetProductByOrdernumber($detail['ordernumber']);
+            $detail['additional_details'] = $articleModule->sGetProductByOrdernumber($articleOrderNumber);
         }
 
         return $details;
@@ -588,11 +592,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $shippingAddress = Shopware()->Db()->fetchRow(
             'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
-            [ $orderModel->getId() ]
+            [$orderModel->getId()]
         );
         $shippingAddressAttributes = Shopware()->Db()->fetchRow(
             'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
-            [ $shippingAddress['id'] ]
+            [$shippingAddress['id']]
         );
         if (!empty($shippingAddressAttributes)) {
             $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
@@ -737,6 +741,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     private function getListRequestParam()
     {
         $data = $this->Request()->getParams();
+
         return $data['filter'][0]['value'];
     }
 
@@ -930,6 +935,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $requestStruct->isDisplayNet(),
             $requestStruct->getCurrencyId()
         );
+
         return $this->getShippingCalculator()->calculate($currentPriceContext);
     }
 
