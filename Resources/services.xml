@@ -40,7 +40,10 @@
 
         <service id="swag_backend_order.order.detail_factory" class="SwagBackendOrder\Components\Order\Factory\DetailFactory">
             <argument type="service" id="models" />
+            <argument type="service" id="modules"/>
         </service>
+
+        <service id="modules" synthetic="true" />
 
         <service id="swag_backend_order.order.service" class="SwagBackendOrder\Components\Order\OrderService">
             <argument type="service" id="swag_backend_order.order.order_factory" />

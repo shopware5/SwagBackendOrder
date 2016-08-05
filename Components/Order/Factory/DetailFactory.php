@@ -9,28 +9,31 @@
 namespace SwagBackendOrder\Components\Order\Factory;
 
 use Shopware\Components\Model\ModelManager;
-use Shopware\Models\Article\Article;
 use Shopware\Models\Article\Detail as ArticleDetail;
 use Shopware\Models\Attribute\OrderDetail;
 use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\DetailStatus;
 use Shopware\Models\Tax\Tax;
+use Shopware_Components_Modules as Modules;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 
 class DetailFactory
 {
-    /**
-     * @var ModelManager
-     */
+    /** @var ModelManager $modelManager */
     private $modelManager;
+
+    /** @var \sArticles $articleModule */
+    private $articleModule;
 
     /**
      * @param ModelManager $modelManager
+     * @param Modules $modules
      */
-    public function __construct(ModelManager $modelManager)
+    public function __construct(ModelManager $modelManager, Modules $modules)
     {
         $this->modelManager = $modelManager;
+        $this->articleModule = $modules->Articles();
     }
 
     /**
@@ -48,7 +51,7 @@ class DetailFactory
         $detail = new Detail();
 
         $repository = $this->modelManager->getRepository(ArticleDetail::class);
-        $articleDetail = $repository->findOneBy([ 'number' => $positionStruct->getNumber() ]);
+        $articleDetail = $repository->findOneBy(['number' => $positionStruct->getNumber()]);
         $article = $articleDetail->getArticle();
 
 
@@ -65,7 +68,8 @@ class DetailFactory
         $detail->setStatus($detailStatus);
 
         $detail->setArticleId($article->getId());
-        $detail->setArticleName($article->getName());
+        $name = $this->articleModule->sGetArticleNameByOrderNumber($positionStruct->getNumber());
+        $detail->setArticleName($name);
         $detail->setArticleNumber($positionStruct->getNumber());
         $detail->setPrice($positionStruct->getPrice());
         $detail->setMode($positionStruct->getMode());
