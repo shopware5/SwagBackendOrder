@@ -203,7 +203,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $builder = Shopware()->Models()->createQueryBuilder();
         $builder->select(['payment'])
-            ->from(Payment::class, 'payment');
+            ->from(Payment::class, 'payment')
+            ->orderBy("payment.active","DESC");
 
         $paymentMethods = $builder->getQuery()->getArrayResult();
 
