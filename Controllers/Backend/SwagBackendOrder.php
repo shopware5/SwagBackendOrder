@@ -924,6 +924,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     private function getShippingPrice($requestStruct)
     {
         $dispatchTaxRate = $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates());
+
+        // Get base/gross shipping costs (even if taxfree)
         $previousPriceContext = $this->getPriceContextFactory()->create(
             $requestStruct->getShippingCosts(),
             $dispatchTaxRate,
@@ -933,6 +935,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         );
         $baseShippingPrice = $this->getShippingCalculator()->calculateBasePrice($previousPriceContext);
 
+        // Calculate actual gross & net shipping costs for order
         $currentPriceContext = $this->getPriceContextFactory()->create(
             $baseShippingPrice,
             $dispatchTaxRate,
