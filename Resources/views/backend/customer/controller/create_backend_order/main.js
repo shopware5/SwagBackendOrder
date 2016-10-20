@@ -99,6 +99,8 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Main', {
                 listStore: me.subApplication.getStore('List').load()
             });
         }
+
+        this.callParent(arguments);
     }
 
 });
