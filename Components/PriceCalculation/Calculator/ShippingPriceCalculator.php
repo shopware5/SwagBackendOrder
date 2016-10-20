@@ -60,18 +60,18 @@ class ShippingPriceCalculator
 
     /**
      * @param PriceContext $context
-     * @return float
+     * @return float the base/gross shipping price in the standard currency
      */
     public function calculateBasePrice(PriceContext $context)
     {
-        $baseCurrencyPrice = $this->currencyConverter->getBaseCurrencyPrice(
+        $basePrice = $this->currencyConverter->getBaseCurrencyPrice(
             $context->getPrice(), $context->getCurrencyFactor()
         );
 
-        $basePrice = $baseCurrencyPrice;
         if ($context->isTaxfree()) {
             $basePrice = $this->taxCalculation->getGrossPrice($basePrice, $context->getTaxRate());
         }
+
         return $basePrice;
     }
 }
