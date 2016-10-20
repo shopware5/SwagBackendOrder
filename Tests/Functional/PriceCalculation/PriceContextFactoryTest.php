@@ -30,10 +30,11 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $price = 59.99;
         $taxRate = 19.00;
         $isNet = false;
+        $taxFree = false;
         $currencyId = 2;
         $currency = $this->getModelManager()->find(Currency::class, $currencyId);
 
-        $priceContext = $this->SUT->create($price, $taxRate, $isNet, $currencyId);
+        $priceContext = $this->SUT->create($price, $taxRate, $isNet, $taxFree, $currencyId);
 
         $this->assertEquals($price, $priceContext->getPrice());
         $this->assertEquals($taxRate, $priceContext->getTaxRate());
@@ -49,6 +50,7 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $price = 'invalid price';
         $taxRate = 'invalid tax rate';
         $isNet = false;
+        $taxFree = false;
         $currencyId = 2;
 
         $this->expectException(\Exception::class);
@@ -63,10 +65,11 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $price = 59.99;
         $taxRate = 19.00;
         $isNet = false;
+        $taxFree = false;
         $invalidCurrencyId = 123;
         $defaultCurrencyFactor = 1;
 
-        $priceContext = $this->SUT->create($price, $taxRate, $isNet, $invalidCurrencyId);
+        $priceContext = $this->SUT->create($price, $taxRate, $isNet, $taxFree, $invalidCurrencyId);
 
         $this->assertEquals($defaultCurrencyFactor, $priceContext->getCurrencyFactor());
     }
