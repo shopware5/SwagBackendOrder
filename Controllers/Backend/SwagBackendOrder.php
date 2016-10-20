@@ -816,7 +816,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $taxSum = $totalPriceResult->getTaxAmount();
 
         if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
-            $shippingCosts = $totalPriceResult->getShipping()->getRoundedNetPrice();
             $productSum = $totalPriceResult->getSum()->getRoundedNetPrice();
         }
 
@@ -924,9 +923,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function getShippingPrice($requestStruct)
     {
+        $dispatchTaxRate = $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates());
         $previousPriceContext = $this->getPriceContextFactory()->create(
             $requestStruct->getShippingCosts(),
-            $requestStruct->getPreviousShippingTaxRate(),
+            $dispatchTaxRate,
             $requestStruct->isPreviousDisplayNet(),
             $requestStruct->isPreviousTaxFree(),
             $requestStruct->getPreviousCurrencyId()
@@ -935,7 +935,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $currentPriceContext = $this->getPriceContextFactory()->create(
             $baseShippingPrice,
-            $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates()),
+            $dispatchTaxRate,
             $requestStruct->isDisplayNet(),
             $requestStruct->isTaxFree(),
             $requestStruct->getCurrencyId()
