@@ -38,6 +38,7 @@ class RequestHydrator
         $requestStruct->setPreviousCurrencyId((int) $data['oldCurrencyId']);
 
         $requestStruct->setShippingCosts((float) $data['shippingCosts']);
+        $requestStruct->setShippingCostsNet((float) $data['shippingCostsNet']);
 
         if (!empty($requestStruct->getPositions())) {
             $basketTaxRates = $this->getBasketTaxRates($requestStruct->getPositions());

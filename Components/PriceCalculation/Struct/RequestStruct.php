@@ -48,6 +48,11 @@ class RequestStruct
     /**
      * @var float
      */
+    private $shippingCostsNet;
+
+    /**
+     * @var float
+     */
     private $previousShippingTaxRate;
 
     /**
@@ -178,6 +183,22 @@ class RequestStruct
     public function setShippingCosts($shippingCosts)
     {
         $this->shippingCosts = $shippingCosts;
+    }
+
+    /**
+     * @return float
+     */
+    public function getShippingCostsNet()
+    {
+        return $this->shippingCostsNet;
+    }
+
+    /**
+     * @param float $shippingCostsNet
+     */
+    public function setShippingCostsNet($shippingCostsNet)
+    {
+        $this->shippingCostsNet = $shippingCostsNet;
     }
 
     /**
