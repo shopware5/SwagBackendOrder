@@ -41,9 +41,31 @@ class ShippingPriceCalculatorTest extends TestCase
     /**
      * @covers ShippingPriceCalculator::calculateBasePrice()
      */
+    public function testCalculateBasePriceNet()
+    {
+        $context = new PriceContext(5.31, 19.00, false, false, 1.3625);
+
+        $price = $this->SUT->calculateBasePrice($context);
+        $this->assertEquals(3.8972477064220179, $price);
+    }
+
+    /**
+     * @covers ShippingPriceCalculator::calculateBasePrice()
+     */
     public function testCalculateBasePrice()
     {
         $context = new PriceContext(5.31, 19.00, true, false, 1.3625);
+
+        $price = $this->SUT->calculateBasePrice($context);
+        $this->assertEquals(3.8972477064220179, $price);
+    }
+
+    /**
+     * @covers ShippingPriceCalculator::calculateBasePrice()
+     */
+    public function testCalculateBasePriceTaxfree()
+    {
+        $context = new PriceContext(4.47, 19.00, true, true, 1.3625);
 
         $price = $this->SUT->calculateBasePrice($context);
         $this->assertEquals(3.9040733944954122, $price);

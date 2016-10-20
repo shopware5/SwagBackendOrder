@@ -54,12 +54,38 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
         $this->assertTrue($this->View()->success);
         $this->assertEquals(50.41, $result['sum']);
 
-        $this->assertEquals(3.28, $result['shippingCosts']);
+        $this->assertEquals(3.90, $result['shippingCosts']);
         $this->assertEquals(3.28, $result['shippingCostsNet']);
 
         $this->assertEquals(10.20, $result['taxSum']);
 
         $this->assertEquals(63.89, $result['total']);
+        $this->assertEquals(53.69, $result['totalWithoutTax']);
+
+        $this->assertEquals(50.41, $result['positions'][0]->price);
+
+        $this->resetRequest();
+        $this->resetResponse();
+    }
+
+    /**
+     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::calculateBasketAction()
+     */
+    public function testBasketCalculationWithChangedTaxfreeFlag()
+    {
+        $this->Request()->setParams($this->getDemoWithChangedTaxfreeFlag());
+        $this->dispatch('/backend/SwagBackendOrder/calculateBasket');
+        $result = $this->View()->getAssign('data');
+
+        $this->assertTrue($this->View()->success);
+        $this->assertEquals(50.41, $result['sum']);
+
+        $this->assertEquals(3.28, $result['shippingCosts']);
+        $this->assertEquals(3.28, $result['shippingCostsNet']);
+
+        $this->assertEquals(0, $result['taxSum']);
+
+        $this->assertEquals(53.69, $result['total']);
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
         $this->assertEquals(50.41, $result['positions'][0]->price);
@@ -160,13 +186,8 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'shippingCostsNet' => 3.28,
             'displayNet' => 'false',
             'oldCurrencyId' => '1',
-            'newCurrencyId' => '2',
-            'dispatchId' => 9,
-            'taxFree' => 'false',
-            'previousDisplayNet' => 'false',
-            'previousTaxFree' => 'false',
-            'previousDispatchTaxRate' => '19'
-        ];
+            'newCurrencyId' => '2'
+        ] + $this->getDemoData();
     }
 
     /**
@@ -183,6 +204,26 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'newCurrencyId' => '',
             'dispatchId' => 9,
             'taxFree' => 'false',
+            'previousDisplayNet' => 'false',
+            'previousTaxFree' => 'false',
+            'previousDispatchTaxRate' => '19'
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getDemoWithChangedTaxfreeFlag()
+    {
+        return [
+            'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":-7,"price":"59.99","total":"59.99"}]',
+            'shippingCosts' => 3.90,
+            'shippingCostsNet' => 3.28,
+            'displayNet' => 'true',
+            'oldCurrencyId' => '',
+            'newCurrencyId' => '',
+            'dispatchId' => 9,
+            'taxFree' => 'true',
             'previousDisplayNet' => 'false',
             'previousTaxFree' => 'false',
             'previousDispatchTaxRate' => '19'
