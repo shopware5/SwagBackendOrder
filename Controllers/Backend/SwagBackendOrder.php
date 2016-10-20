@@ -182,7 +182,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $currencyFactor = $currency->getFactor();
         }
 
-        $priceContext = new PriceContext((float) $result['price'], (float) $result['tax'], true, $currencyFactor);
+        $priceContext = new PriceContext((float) $result['price'], (float) $result['tax'], true, $requestStruct->isTaxFree(), $currencyFactor);
 
         $price = $this->getProductCalculator()->calculate($priceContext);
         $result['price'] = $price->getRoundedGrossPrice();
@@ -860,6 +860,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $position->price,
             $position->taxRate,
             $requestStruct->isPreviousDisplayNet(),
+            $requestStruct->isPreviousTaxFree(),
             $requestStruct->getPreviousCurrencyId()
         );
         $basePrice = $this->getProductCalculator()->calculateBasePrice($previousPriceContext);
@@ -868,6 +869,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $basePrice,
             $position->taxRate,
             true,
+            $requestStruct->isTaxFree(),
             $requestStruct->getCurrencyId()
         );
 
@@ -926,6 +928,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $requestStruct->getShippingCosts(),
             $requestStruct->getPreviousShippingTaxRate(),
             $requestStruct->isPreviousDisplayNet(),
+            $requestStruct->isPreviousTaxFree(),
             $requestStruct->getPreviousCurrencyId()
         );
         $baseShippingPrice = $this->getShippingCalculator()->calculateBasePrice($previousPriceContext);
@@ -934,6 +937,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $baseShippingPrice,
             $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates()),
             $requestStruct->isDisplayNet(),
+            $requestStruct->isTaxFree(),
             $requestStruct->getCurrencyId()
         );
 

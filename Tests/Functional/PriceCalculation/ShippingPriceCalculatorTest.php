@@ -31,7 +31,7 @@ class ShippingPriceCalculatorTest extends TestCase
      */
     public function testCalculate()
     {
-        $context = new PriceContext(3.90, 19.00, false, 1.3625);
+        $context = new PriceContext(3.90, 19.00, false, false, 1.3625);
 
         $price = $this->SUT->calculate($context);
         $this->assertEquals(5.31375, $price->getGross());
@@ -43,7 +43,7 @@ class ShippingPriceCalculatorTest extends TestCase
      */
     public function testCalculateBasePrice()
     {
-        $context = new PriceContext(4.47, 19.00, true, 1.3625);
+        $context = new PriceContext(5.31, 19.00, true, false, 1.3625);
 
         $price = $this->SUT->calculateBasePrice($context);
         $this->assertEquals(3.9040733944954122, $price);
