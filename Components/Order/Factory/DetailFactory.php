@@ -56,11 +56,12 @@ class DetailFactory
 
 
         $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());
-        $detail->setTax($tax);
-        $detail->setTaxRate($tax->getTax());
-        if ($isTaxFree) {
-            $detail->setTaxRate(0);
+        // Actually sOrder::sSaveOrder() sets this to the illegal value of '0' when the order is taxfree,
+        // but this is not possible via Doctrine, so by not setting the value it falls back to NULL
+        if (!$isTaxFree) {
+            $detail->setTax($tax);
         }
+        $detail->setTaxRate($tax->getTax());
 
         $detail->setEsdArticle(0);
 
