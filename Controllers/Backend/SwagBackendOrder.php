@@ -815,7 +815,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $total = $totalPriceResult->getTotal()->getRoundedGrossPrice();
         $taxSum = $totalPriceResult->getTaxAmount();
 
-        if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
+        if ($requestStruct->isDisplayNet()) {
             $productSum = $totalPriceResult->getSum()->getRoundedNetPrice();
         }
 
