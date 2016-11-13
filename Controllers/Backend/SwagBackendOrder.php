@@ -168,17 +168,14 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     public function getProductAction()
     {
         $number = $this->Request()->getParam('ordernumber');
-
-        //New Kevin Schmid
         $customerId = $this->Request()->getParam('customerId');
-        //Default Group key
+        //Default Group key of shopware
         $groupKey = 'EK';
 
         /** @var RequestHydrator $requestHydrator */
         $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
         $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
-        //Get Customer if not 0
         if($customerId != 0)
         {
             $customer = $this->getCustomerRepository()->get($customerId);

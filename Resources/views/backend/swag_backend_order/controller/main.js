@@ -350,7 +350,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
         updateButton.setDisabled(true);
 
-        //Add new param for the customerid, default is 0
         Ext.Ajax.request({
             url: '{url action="getProduct"}',
             params: {
