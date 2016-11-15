@@ -8,12 +8,14 @@
 
 namespace SwagBackendOrder\Tests\Functional\Order;
 
-use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
+use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class ProductValidatorTest extends TestCase
+class ProductValidatorTest extends \PHPUnit_Framework_TestCase
 {
+    use DatabaseTestCaseTrait;
+
     /**
      * @covers ProductValidator::validate()
      */

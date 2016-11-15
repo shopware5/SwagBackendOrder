@@ -6,9 +6,12 @@ namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Shop\Currency;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory;
+use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class PriceContextFactoryTest extends \Enlight_Components_Test_TestCase
+class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    use DatabaseTestCaseTrait;
+
     /**
      * @var PriceContextFactory
      */
@@ -40,7 +43,6 @@ class PriceContextFactoryTest extends \Enlight_Components_Test_TestCase
 
     /**
      * @covers PriceContextFactory::create()
-     * @expectedException \Exception
      */
     public function testCreateWithInvalidNumbers()
     {
@@ -49,6 +51,7 @@ class PriceContextFactoryTest extends \Enlight_Components_Test_TestCase
         $isNet = false;
         $currencyId = 2;
 
+        $this->expectException(\Exception::class);
         $this->SUT->create($price, $taxRate, $isNet, $currencyId);
     }
 

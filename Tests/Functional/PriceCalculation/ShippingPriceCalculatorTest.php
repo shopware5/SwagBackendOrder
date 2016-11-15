@@ -8,14 +8,16 @@
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
-use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
+use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class ShippingPriceCalculatorTest extends TestCase
+class ShippingPriceCalculatorTest extends \PHPUnit_Framework_TestCase
 {
+    use DatabaseTestCaseTrait;
+
     /**
      * @var ShippingPriceCalculator
      */

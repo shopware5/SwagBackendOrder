@@ -8,13 +8,12 @@
 
 namespace SwagBackendOrder\Tests\Unit;
 
-use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 
-class CurrencyConverterTest extends TestCase
+class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers CurrencyCalculation::getBaseCurrencyPrice()
+     * @covers CurrencyConverter::getBaseCurrencyPrice()
      */
     public function testGetBaseCurrencyPrice()
     {
@@ -28,7 +27,7 @@ class CurrencyConverterTest extends TestCase
     }
 
     /**
-     * @covers CurrencyCalculation::getCurrencyPrice()
+     * @covers CurrencyConverter::getCurrencyPrice()
      */
     public function testGetCurrencyPrice()
     {

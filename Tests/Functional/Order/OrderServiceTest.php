@@ -8,14 +8,16 @@
 
 namespace SwagBackendOrder\Tests\Functional\Order;
 
-use Shopware\Components\Test\Plugin\TestCase;
 use Shopware\Models\Order\Order;
 use SwagBackendOrder\Components\Order\OrderService;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
+use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class OrderServiceTest extends TestCase
+class OrderServiceTest extends \PHPUnit_Framework_TestCase
 {
+    use DatabaseTestCaseTrait;
+
     /**
      * @covers OrderService::create()
      */
