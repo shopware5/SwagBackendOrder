@@ -20,7 +20,6 @@ class SwagBackendOrder extends Plugin
     public function build(ContainerBuilder $container)
     {
         $container->setParameter('swag_backend_orders.plugin_dir', $this->getPath());
-
         parent::build($container);
     }
 }

@@ -9,9 +9,12 @@
 namespace SwagBackendOrder\Tests\Functional\Controller;
 
 use Enlight_Components_Test_Controller_TestCase;
+use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
 class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
 {
+    use DatabaseTestCaseTrait;
+
     /**
      * @inheritdoc
      */
