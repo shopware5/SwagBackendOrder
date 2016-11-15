@@ -153,12 +153,21 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             '{literal}<tpl for=".">',
             '<div style="padding-left: 10px; font-size: 13px; text-align: right;">',
             '<p>{sum} ' + me.currencySymbol + '</p>',
-            '<p>{shippingCosts} ' + me.currencySymbol + '</p>',
+            '<p>{shippingCosts:this.shippingCosts} ' + me.currencySymbol + '</p>',
             '<p><b>{total} ' + me.currencySymbol + '</b></p>',
             '<p>{totalWithoutTax} ' + me.currencySymbol + '</p>',
             '<p>{taxSum} ' + me.currencySymbol + '</p>',
             '</div>',
-            '</tpl>{/literal}'
+            '</tpl>{/literal}',
+            {
+                shippingCosts: function (shippingCosts) {
+                    if (me.displayNetCheckbox.getValue())
+                        // Show net shipping costs if net order
+                        return me.totalCostsModel.get('shippingCostsNet');
+
+                    return shippingCosts;
+                }
+            }
         );
 
         return me.totalCostsTempalte;

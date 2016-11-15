@@ -182,7 +182,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $currencyFactor = $currency->getFactor();
         }
 
-        $priceContext = new PriceContext((float) $result['price'], (float) $result['tax'], true, $currencyFactor);
+        $priceContext = new PriceContext((float) $result['price'], (float) $result['tax'], true, $requestStruct->isTaxFree(), $currencyFactor);
 
         $price = $this->getProductCalculator()->calculate($priceContext);
         $result['price'] = $price->getRoundedGrossPrice();
@@ -815,8 +815,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $total = $totalPriceResult->getTotal()->getRoundedGrossPrice();
         $taxSum = $totalPriceResult->getTaxAmount();
 
-        if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
-            $shippingCosts = $totalPriceResult->getShipping()->getRoundedNetPrice();
+        if ($requestStruct->isDisplayNet()) {
             $productSum = $totalPriceResult->getSum()->getRoundedNetPrice();
         }
 
@@ -860,6 +859,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $position->price,
             $position->taxRate,
             $requestStruct->isPreviousDisplayNet(),
+            $requestStruct->isPreviousTaxFree(),
             $requestStruct->getPreviousCurrencyId()
         );
         $basePrice = $this->getProductCalculator()->calculateBasePrice($previousPriceContext);
@@ -868,6 +868,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $basePrice,
             $position->taxRate,
             true,
+            $requestStruct->isTaxFree(),
             $requestStruct->getCurrencyId()
         );
 
@@ -922,18 +923,24 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function getShippingPrice($requestStruct)
     {
+        $dispatchTaxRate = $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates());
+
+        // Get base/gross shipping costs (even if taxfree)
         $previousPriceContext = $this->getPriceContextFactory()->create(
             $requestStruct->getShippingCosts(),
-            $requestStruct->getPreviousShippingTaxRate(),
+            $dispatchTaxRate,
             $requestStruct->isPreviousDisplayNet(),
+            $requestStruct->isPreviousTaxFree(),
             $requestStruct->getPreviousCurrencyId()
         );
         $baseShippingPrice = $this->getShippingCalculator()->calculateBasePrice($previousPriceContext);
 
+        // Calculate actual gross & net shipping costs for order
         $currentPriceContext = $this->getPriceContextFactory()->create(
             $baseShippingPrice,
-            $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates()),
+            $dispatchTaxRate,
             $requestStruct->isDisplayNet(),
+            $requestStruct->isTaxFree(),
             $requestStruct->getCurrencyId()
         );
 
