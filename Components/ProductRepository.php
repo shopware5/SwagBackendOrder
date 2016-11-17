@@ -29,7 +29,6 @@ class ProductRepository
     /**
      * @param string $search
      * @param string $groupKey
-     *
      * @return \Doctrine\ORM\QueryBuilder|\Shopware\Components\Model\QueryBuilder
      */
     public function getProductQueryBuilder($search, $groupKey = 'EK')
