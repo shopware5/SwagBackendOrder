@@ -51,16 +51,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         me.updateTotalCostsEvents();
 
         me.displayNetCheckbox.on('change', function (checkbox, newValue, oldValue) {
-            if (newValue == false) {
-                me.taxFreeCheckbox.setValue(false);
-            }
+            me.taxFreeCheckbox.setDisabled(!!newValue);
             me.fireEvent('changeDisplayNet', newValue, oldValue);
         });
 
         me.taxFreeCheckbox.on('change', function (checkbox, newValue, oldValue) {
-            if (newValue == true) {
-                me.displayNetCheckbox.setValue(true);
-            }
+            me.displayNetCheckbox.setDisabled(newValue);
             me.fireEvent('changeTaxFreeCheckbox', newValue, oldValue);
         });
 

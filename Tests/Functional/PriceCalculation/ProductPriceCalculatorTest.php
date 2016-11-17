@@ -21,11 +21,11 @@ class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var ProductPriceCalculator
      */
-    private $SUT;
+    private $productPriceCalculator;
 
     protected function setUp()
     {
-        $this->SUT = new ProductPriceCalculator(
+        $this->productPriceCalculator = new ProductPriceCalculator(
             new TaxCalculation(),
             new CurrencyConverter()
         );
@@ -38,7 +38,7 @@ class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
     {
         $context = new PriceContext(50.41, 19.00, true, false, 1.3625);
 
-        $price = $this->SUT->calculate($context);
+        $price = $this->productPriceCalculator->calculate($context);
         $this->assertEquals(68.683624999999992, $price->getNet());
         $this->assertEquals(81.733513749999986, $price->getGross());
     }
@@ -46,11 +46,44 @@ class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers ProductPriceCalculator::calculateBasePrice()
      */
-    public function testCalculateBasePrice()
+    public function testCalculateBasePriceFromGrossPriceWithCurrencyFactor()
     {
-        $context = new PriceContext(81.74, 19.00, false, false, 1.3625);
+        $currencyFactor = 1.3625;
+        $isNetPrice = false;
+        $isTaxFree = false;
+        $context = new PriceContext(81.74, 19.00, $isNetPrice, $isTaxFree, $currencyFactor);
 
-        $basePrice =  $this->SUT->calculateBasePrice($context);
+        $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
         $this->assertEquals(50.414000462570343, $basePrice);
+    }
+
+    public function testCalculateBasePriceFromNetPrice()
+    {
+        $isNetPrice = true;
+        $context = new PriceContext(50.00, 19.00, $isNetPrice);
+
+        $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
+        $this->assertEquals(50.00, $basePrice);
+    }
+
+    public function testCalculateBasePriceFromTaxFreePrice()
+    {
+        $isTaxFree = true;
+        $isNetPrice = false;
+        $context = new PriceContext(50.00, 19.00, $isNetPrice, $isTaxFree);
+
+        $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
+        $this->assertEquals(50.00, $basePrice);
+    }
+
+    public function testCalculateBasePriceFromTaxFreePriceWithCurrencyFactor()
+    {
+        $isTaxFree = true;
+        $isNetPrice = false;
+        $currencyFactor = 2.0;
+        $context = new PriceContext(50.00, 19.00, $isNetPrice, $isTaxFree, $currencyFactor);
+
+        $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
+        $this->assertEquals(25, $basePrice);
     }
 }

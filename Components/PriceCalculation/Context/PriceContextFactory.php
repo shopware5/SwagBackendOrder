@@ -37,7 +37,7 @@ class PriceContextFactory
     public function create($price, $taxRate, $taxFree, $isNetPrice, $currencyId)
     {
         $currency = $this->modelManager->find(Currency::class, $currencyId);
-        if (is_null($currency)) {
+        if (null === $currency) {
             $currency = $this->getBaseCurrency();
         }
 

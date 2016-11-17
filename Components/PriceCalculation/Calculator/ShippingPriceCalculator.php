@@ -50,7 +50,7 @@ class ShippingPriceCalculator
 
         $priceStruct->setTaxRate($context->getTaxRate());
 
-        if ($context->isTaxfree()) {
+        if ($context->isTaxFree()) {
             $priceStruct->setGross($netPrice);
             $priceStruct->setTaxRate(0);
         }
@@ -68,7 +68,7 @@ class ShippingPriceCalculator
             $context->getPrice(), $context->getCurrencyFactor()
         );
 
-        if ($context->isTaxfree()) {
+        if ($context->isTaxFree()) {
             $basePrice = $this->taxCalculation->getGrossPrice($basePrice, $context->getTaxRate());
         }
 

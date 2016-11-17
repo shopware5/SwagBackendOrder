@@ -54,7 +54,7 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $currencyId = 2;
 
         $this->expectException(\Exception::class);
-        $this->SUT->create($price, $taxRate, $isNet, $currencyId);
+        $this->SUT->create($price, $taxRate, $isNet, $taxFree, $currencyId);
     }
 
     /**

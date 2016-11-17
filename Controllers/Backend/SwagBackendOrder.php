@@ -182,11 +182,18 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $currencyFactor = $currency->getFactor();
         }
 
-        $priceContext = new PriceContext((float) $result['price'], (float) $result['tax'], true, $requestStruct->isTaxFree(), $currencyFactor);
+        $isNetPrice = true;
+        $priceContext = new PriceContext(
+            (float) $result['price'],
+            (float) $result['tax'],
+            $isNetPrice,
+            $requestStruct->isTaxFree(),
+            $currencyFactor
+        );
 
         $price = $this->getProductCalculator()->calculate($priceContext);
         $result['price'] = $price->getRoundedGrossPrice();
-        if ($requestStruct->isDisplayNet()) {
+        if ($requestStruct->isDisplayNet() || $requestStruct->isTaxFree()) {
             $result['price'] = $price->getRoundedNetPrice();
         }
 
@@ -820,6 +827,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         if ($requestStruct->isTaxFree()) {
+            $productSum = $totalPriceResult->getSum()->getRoundedNetPrice();
             $total = $totalPriceResult->getTotal()->getRoundedNetPrice();
             $taxSum = 0.00;
         }

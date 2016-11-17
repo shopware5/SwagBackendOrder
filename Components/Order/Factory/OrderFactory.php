@@ -134,7 +134,6 @@ class OrderFactory
         $order->setAttribute($attributes);
 
         $order->setPaymentInstances([ $this->createPaymentInstance($order) ]);
-
         return $order;
     }
 
