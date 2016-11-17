@@ -176,8 +176,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
         $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
-        if($customerId != 0)
-        {
+        if ($customerId != 0) {
+
             $customer = $this->getCustomerRepository()->get($customerId);
             $groupKey = $customer['groupKey'];
         }
@@ -185,10 +185,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = $this->getProductRepository()->getProductQueryBuilder($number, $groupKey);
 
         //check query result if customer id is not 0 and fire query another time with default group
-        if($customerId != 0)
-        {
-            if(count($builder->getQuery()->getArrayResult()) == 0)
-            {
+        if($customerId != 0) {
+
+            if(count($builder->getQuery()->getArrayResult()) == 0) {
+
                 //Another Query with shopware default user grup
                 $builder = $this->getProductRepository()->getProductQueryBuilder($number);
             }

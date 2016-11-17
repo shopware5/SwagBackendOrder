@@ -28,10 +28,10 @@ class ProductRepository
 
     /**
      * @param string $search
-     * @param string $groupkey
+     * @param string $groupKey
      * @return \Doctrine\ORM\QueryBuilder|\Shopware\Components\Model\QueryBuilder
      */
-    public function getProductQueryBuilder($search, $groupkey = 'EK')
+    public function getProductQueryBuilder($search, $groupKey = 'EK')
     {
         $builder = $this->modelManager->createQueryBuilder();
 
@@ -71,7 +71,7 @@ class ProductRepository
             ->andWhere('articles.active = 1')
             ->andWhere('prices.customerGroupKey = :groupkey')
             ->setParameter('number', $search)
-            ->setParameter('groupkey', $groupkey)
+            ->setParameter('groupkey', $groupKey)
             ->orderBy('details.number')
             ->groupBy('details.number')
             ->setMaxResults(8);
