@@ -177,7 +177,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
         if ($customerId != 0) {
-
             $customer = $this->getCustomerRepository()->get($customerId);
             $groupKey = $customer['groupKey'];
         }
@@ -185,10 +184,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = $this->getProductRepository()->getProductQueryBuilder($number, $groupKey);
 
         //check query result if customer id is not 0 and fire query another time with default group
-        if($customerId != 0) {
-
-            if(count($builder->getQuery()->getArrayResult()) == 0) {
-
+        if ($customerId != 0) {
+            if (count($builder->getQuery()->getArrayResult()) == 0) {
                 //Another Query with shopware default user grup
                 $builder = $this->getProductRepository()->getProductQueryBuilder($number);
             }
@@ -734,8 +731,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $positionPrice = $this->getPositionPrice($position, $requestStruct);
 
             $totalPositionPrice = new PriceResult();
-            $totalPositionPrice->setNet($this->getTotalPrice($positionPrice->getRoundedNetPrice(), $position->quantity));
-            $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getRoundedGrossPrice(), $position->quantity));
+            $totalPositionPrice->
+                setNet($this->getTotalPrice($positionPrice->getRoundedNetPrice(), $position->quantity));
+            $totalPositionPrice->
+                setGross($this->getTotalPrice($positionPrice->getRoundedGrossPrice(), $position->quantity));
             $positionPrices[] = $totalPositionPrice;
 
             $position->price = $positionPrice->getRoundedGrossPrice();
@@ -975,6 +974,4 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         return $this->get('swag_backend_order.customer_repository');
     }
-
-
 }
