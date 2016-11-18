@@ -29,18 +29,19 @@ class PriceContextFactory
     /**
      * @param float $price
      * @param float $taxRate
+     * @param boolean $taxFree
      * @param boolean $isNetPrice
      * @param int $currencyId
      * @return PriceContext
      */
-    public function create($price, $taxRate, $isNetPrice, $currencyId)
+    public function create($price, $taxRate, $taxFree, $isNetPrice, $currencyId)
     {
         $currency = $this->modelManager->find(Currency::class, $currencyId);
-        if (is_null($currency)) {
+        if (null === $currency) {
             $currency = $this->getBaseCurrency();
         }
 
-        return new PriceContext($price, $taxRate, $isNetPrice, $currency->getFactor());
+        return new PriceContext($price, $taxRate, $taxFree, $isNetPrice, $currency->getFactor());
     }
 
     /**

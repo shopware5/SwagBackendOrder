@@ -69,9 +69,9 @@ class ProductPriceCalculator
         );
 
         $basePrice = $baseCurrencyPrice;
-        if (!$priceContext->isNetPrice()) {
-            $basePrice = $this->taxCalculation->getNetPrice($baseCurrencyPrice, $priceContext->getTaxRate());
+        if ($priceContext->isNetPrice() || $priceContext->isTaxFree()) {
+            return $basePrice;
         }
-        return $basePrice;
+        return $this->taxCalculation->getNetPrice($baseCurrencyPrice, $priceContext->getTaxRate());
     }
 }

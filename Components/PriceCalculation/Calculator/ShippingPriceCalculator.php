@@ -50,23 +50,28 @@ class ShippingPriceCalculator
 
         $priceStruct->setTaxRate($context->getTaxRate());
 
+        if ($context->isTaxFree()) {
+            $priceStruct->setGross($netPrice);
+            $priceStruct->setTaxRate(0);
+        }
+
         return $priceStruct;
     }
 
     /**
      * @param PriceContext $context
-     * @return float
+     * @return float the base/gross shipping price in the standard currency
      */
     public function calculateBasePrice(PriceContext $context)
     {
-        $baseCurrencyPrice = $this->currencyConverter->getBaseCurrencyPrice(
+        $basePrice = $this->currencyConverter->getBaseCurrencyPrice(
             $context->getPrice(), $context->getCurrencyFactor()
         );
 
-        $basePrice = $baseCurrencyPrice;
-        if ($context->isNetPrice() && $context->getTaxRate() > 0) {
+        if ($context->isTaxFree()) {
             $basePrice = $this->taxCalculation->getGrossPrice($basePrice, $context->getTaxRate());
         }
+
         return $basePrice;
     }
 }
