@@ -71,7 +71,6 @@ class Customer implements SubscriberInterface
 
         if ($args->getRequest()->getActionName() === 'load') {
             $view->extendsTemplate('backend/customer/controller/create_backend_order/detail.js');
-            $view->extendsTemplate('backend/customer/controller/create_backend_order/main.js');
             $view->extendsTemplate('backend/customer/view/create_backend_order/detail/base.js');
             $view->extendsTemplate('backend/customer/view/create_backend_order/detail/additional.js');
             $view->extendsTemplate('backend/customer/view/create_backend_order/detail/window.js');
