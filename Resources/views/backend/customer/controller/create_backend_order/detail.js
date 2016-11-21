@@ -4,36 +4,15 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     override: 'Shopware.apps.Customer.controller.Detail',
 
     /**
-     * Component event method which is fired when the component is initials.
-     * Register the different events to handle all around the customer editing and creation
-     * @return void
+     * Override init to add additional event for button to perform a backend order
      */
     init: function () {
         var me = this;
 
+        me.callParent(arguments);
+
         me.control({
-            'customer-list': {
-                editColumn: me.onEditCustomer,
-                itemdblclick: me.onGridDblClick
-            },
-            'customer-list button[action=addCustomer]': {
-                click: me.onCreateCustomer
-            },
-            'customer-detail-window button[action=save-customer]': {
-                click: me.onSaveCustomer
-            },
-            'customer-billing-field-set': {
-                countryChanged: me.onCountryChanged
-            },
-            'customer-base-field-set': {
-                generatePassword: me.onGeneratePassword
-            },
-            'customer-debit-field-set':{
-                changePayment:me.onChangePayment
-            },
             'customer-additional-panel': {
-                performOrder: me.onPerformOrder,
-                createAccount: me.onCreateAccount,
                 performBackendOrder: me.onPerformBackendOrder
             }
         });
