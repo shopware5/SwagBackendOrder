@@ -39,25 +39,6 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
         });
     },
 
-    onCreateCustomer: function () {
-        var me = this,
-            record = me.getModel('Customer').create({ active: true });
-
-        var detailWindow = me.subApplication.getView('detail.Window').create().show();
-        detailWindow.setLoading(true);
-
-        var store = Ext.create('Shopware.apps.Customer.store.Batch');
-        store.load({
-            callback: function (records) {
-                var storeData = records[0];
-                detailWindow.record = record;
-                detailWindow.createTabPanel();
-                detailWindow.setLoading(false);
-                detailWindow.setStores(storeData);
-            }
-        });
-    },
-
     /**
      * opens the backend order subApplication and passes the user id
      *
