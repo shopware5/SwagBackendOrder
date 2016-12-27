@@ -110,8 +110,15 @@
         </service>
 
         <service id="swag_backend_order.product_repository" class="SwagBackendOrder\Components\ProductRepository">
-            <argument type="service" id="models"></argument>
+            <argument type="service" id="models" />
         </service>
 
+        <service id="swag_backend_order.payment_translator" class="SwagBackendOrder\Components\Translation\PaymentTranslator">
+            <factory class="SwagBackendOrder\Components\Translation\PaymentTranslator" method="create" />
+        </service>
+
+        <service id="swag_backend_order.shipping_translator" class="SwagBackendOrder\Components\Translation\ShippingTranslator">
+            <factory class="SwagBackendOrder\Components\Translation\ShippingTranslator" method="create" />
+        </service>
     </services>
 </container>
