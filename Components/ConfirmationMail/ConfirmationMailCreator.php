@@ -10,15 +10,14 @@ namespace SwagBackendOrder\Components\ConfirmationMail;
 
 use DateTime;
 use sArticles;
-use Shopware\Models\Article\Article;
 use Shopware\Models\Article\Detail;
 use Shopware\Models\Article\Repository;
-use Shopware\Models\Article\Unit;
 use Shopware\Models\Attribute\Payment;
 use Shopware\Models\Country\State;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Dispatch\Dispatch;
 use Shopware\Models\Order\Order;
+use Shopware\Models\Shop\Locale;
 use Shopware\Models\Shop\Shop;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 use SwagBackendOrder\Components\Translation\ShippingTranslator;
@@ -62,6 +61,11 @@ class ConfirmationMailCreator
     private $config;
 
     /**
+     * @var NumberFormatterWrapper
+     */
+    private $numberFormatterWrapper;
+
+    /**
      * @return ConfirmationMailCreator
      */
     public static function create()
@@ -72,7 +76,8 @@ class ConfirmationMailCreator
             Shopware()->Container()->get('swag_backend_order.shipping_translator'),
             new ConfirmationMailRepository(Shopware()->Db(), Shopware()->Container()->get('dbal_connection')),
             Shopware()->Models()->getRepository(Detail::class),
-            Shopware()->Config()
+            Shopware()->Config(),
+            new NumberFormatterWrapper()
         );
     }
 
@@ -83,6 +88,7 @@ class ConfirmationMailCreator
      * @param ConfirmationMailRepository $confirmationMailRepository
      * @param Repository $articleDetailRepository
      * @param \Shopware_Components_Config $config
+     * @param NumberFormatterWrapper $numberFormatterWrapper
      */
     public function __construct(
         TaxCalculation $taxCalculation,
@@ -90,7 +96,8 @@ class ConfirmationMailCreator
         ShippingTranslator $shippingTranslator,
         ConfirmationMailRepository $confirmationMailRepository,
         Repository $articleDetailRepository,
-        \Shopware_Components_Config $config
+        \Shopware_Components_Config $config,
+        NumberFormatterWrapper $numberFormatterWrapper
     ) {
         $this->taxCalculation = $taxCalculation;
         $this->paymentTranslator = $paymentTranslator;
@@ -98,6 +105,7 @@ class ConfirmationMailCreator
         $this->confirmationMailRepository = $confirmationMailRepository;
         $this->articleDetailRepository = $articleDetailRepository;
         $this->config = $config;
+        $this->numberFormatterWrapper = $numberFormatterWrapper;
 
         $this->sArticles = Shopware()->Modules()->Articles();
     }
@@ -105,52 +113,74 @@ class ConfirmationMailCreator
     /**
      * @inheritdoc
      */
-    public function prepareOrderDetailsConfirmationMailData(Order $orderModel)
+    public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel)
     {
+
         /** @var Customer $customerModel */
         $customerModel = $orderModel->getCustomer();
 
         /** @var DateTime $orderDateTime */
         $orderDateTime = $orderModel->getOrderTime();
 
+        $this->numberFormatterWrapper->setLocale($localeModel->getLocale());
+
         $details = $this->confirmationMailRepository->getOrderDetailsByOrderId($orderModel->getId());
 
-        foreach ($details as &$mailOrderPositions) {
+        foreach ($details as &$result) {
             /** @var Detail $articleDetailModel */
-            $articleDetailModel = $this->articleDetailRepository->findOneBy(['number' => $mailOrderPositions['articleordernumber']]);
-            $mailOrderPositions['articlename'] = $mailOrderPositions['name'];
+            $articleDetailModel = $this->articleDetailRepository->findOneBy(['number' => $result['articleordernumber']]);
+            $result['articlename'] = $result['name'];
 
-            $articleDetail = $this->confirmationMailRepository->getArticleDetailsByOrderNumber($mailOrderPositions['articleordernumber']);
+            $articleDetail = $this->confirmationMailRepository->getArticleDetailsByOrderNumber($result['articleordernumber']);
 
-            $mailOrderPositions = array_merge($mailOrderPositions, $articleDetail);
+            $result = array_merge($result, $articleDetail);
 
-            $mailOrderPositions['additional_details'] = $this->sArticles->sGetProductByOrdernumber($articleDetailModel->getNumber());
+            $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber($articleDetailModel->getNumber());
 
-            $mailOrderPositions['netprice'] = $this->taxCalculation->getNetPrice($mailOrderPositions['price'], $mailOrderPositions['tax_rate']);
-            $mailOrderPositions['amount'] = $mailOrderPositions['price'] * $mailOrderPositions['quantity'];
-            $mailOrderPositions['amountnet'] = $mailOrderPositions['netprice'] * $mailOrderPositions['quantity'];
-            $mailOrderPositions['priceNumeric'] = $mailOrderPositions['price'];
+            $result = $this->setPositionPrices($result, $orderModel->getLanguageSubShop()->getLocale());
 
-            $mailOrderPositions['image'] = $this->sArticles->sGetArticlePictures(
-                $mailOrderPositions['articleID'],
+            $result['image'] = $this->sArticles->sGetArticlePictures(
+                $result['articleID'],
                 true,
                 $this->config->get('sTHUMBBASKET'),
                 $articleDetailModel->getNumber()
             );
 
-            $mailOrderPositions = $this->getOrderDetailAttributes($mailOrderPositions);
+            $result = $this->getOrderDetailAttributes($result);
 
-            $mailOrderPositions['partnerID'] = '';
-            $mailOrderPositions['shippinginfo'] = 1;
-            $mailOrderPositions['esdarticle'] = null;
-            $mailOrderPositions['userID'] = $customerModel->getId();
-            $mailOrderPositions['currencyFactor'] = $orderModel->getCurrencyFactor();
-            $mailOrderPositions['datum'] = $orderDateTime->format('Y-m-d H:i:s');
+            $result['partnerID'] = '';
+            $result['shippinginfo'] = 1;
+            $result['esdarticle'] = null;
+            $result['userID'] = $customerModel->getId();
+            $result['currencyFactor'] = $orderModel->getCurrencyFactor();
+            $result['datum'] = $orderDateTime->format('Y-m-d H:i:s');
 
-            unset($mailOrderPositions['name'], $mailOrderPositions['articleordernumber']);
+            unset($result['name'], $result['articleordernumber']);
         }
 
         return $details;
+    }
+
+    /**
+     * @param array $mailOrderPositions
+     * @param Locale $localeModel
+     * @return array
+     */
+    private function setPositionPrices(array $mailOrderPositions, Locale $localeModel)
+    {
+        $netPrice = $this->taxCalculation->getNetPrice($mailOrderPositions['price'], $mailOrderPositions['tax_rate']);
+        $mailOrderPositions['netprice'] = $this->numberFormatterWrapper->format($netPrice);
+
+        $amount = $mailOrderPositions['price'] * $mailOrderPositions['quantity'];
+        $mailOrderPositions['amount'] = $this->numberFormatterWrapper->format($amount);
+
+        $amountNet = $mailOrderPositions['netprice'] * $mailOrderPositions['quantity'];
+        $mailOrderPositions['amountnet'] = $this->numberFormatterWrapper->format($amountNet);
+
+        $mailOrderPositions['priceNumeric'] = $this->numberFormatterWrapper->format($mailOrderPositions['price']);
+
+        $mailOrderPositions['price'] = $this->numberFormatterWrapper->format($mailOrderPositions['price']);
+        return $mailOrderPositions;
     }
 
     /**
@@ -173,12 +203,15 @@ class ConfirmationMailCreator
      */
     public function prepareOrderConfirmationMailData(Order $orderModel)
     {
-        $orderMail = [];
+        $result = [];
         /** @var DateTime $orderTime */
         $orderTime = $orderModel->getOrderTime();
 
         /** @var Shop $languageShopModel */
         $languageShopModel = $orderModel->getLanguageSubShop();
+
+        /** @var Locale $languageLocaleModel */
+        $languageLocaleModel = $languageShopModel->getLocale();
 
         /** @var Shop $languageShop */
         $shopModel = $orderModel->getShop();
@@ -189,32 +222,34 @@ class ConfirmationMailCreator
         $billingStateModel = $billingModel->getState();
         $customerModel = $orderModel->getCustomer();
 
+        $this->numberFormatterWrapper->setLocale($languageLocaleModel->getLocale());
+
         $orderAttributes = $this->confirmationMailRepository->getOrderAttributesByOrderId($orderModel->getId());
         $customer = $this->confirmationMailRepository->getCustomerByUserId($customerModel->getId());
 
-        $orderMail['sOrderNumber'] = $orderModel->getNumber();
+        $result['sOrderNumber'] = $orderModel->getNumber();
 
-        $orderMail['sOrderDay'] = $orderTime->format('d.m.Y');
-        $orderMail['sOrderTime'] = $orderTime->format('H:i');
+        $result['sOrderDay'] = $orderTime->format('d.m.Y');
+        $result['sOrderTime'] = $orderTime->format('H:i');
 
-        $orderMail['sLanguage'] = $languageShopModel->getId();
-        $orderMail['sSubShop'] = $shopModel->getId();
-        $orderMail['attributes'] = $orderAttributes;
-        $orderMail['additional']['user'] = $customer;
+        $result['sLanguage'] = $languageShopModel->getId();
+        $result['sSubShop'] = $shopModel->getId();
+        $result['attributes'] = $orderAttributes;
+        $result['additional']['user'] = $customer;
 
-        $orderMail = $this->setOrderCosts($orderModel, $orderMail);
-        $orderMail = $this->setBillingAddress($orderModel, $orderMail, $billingStateModel);
-        $orderMail = $this->setShippingAddress($orderModel, $orderMail, $shippingStateModel);
+        $result = $this->setOrderCosts($orderModel, $result);
+        $result = $this->setBillingAddress($orderModel, $result, $billingStateModel);
+        $result = $this->setShippingAddress($orderModel, $result, $shippingStateModel);
 
-        $orderMail['sDispatch'] = $this->getTranslatedShipping($orderModel, $languageShopModel);
-        $orderMail['additional']['payment'] = $this->getTranslatedPayment($orderModel, $languageShopModel);
+        $result['sDispatch'] = $this->getTranslatedShipping($orderModel, $languageShopModel);
+        $result['additional']['payment'] = $this->getTranslatedPayment($orderModel, $languageShopModel);
 
-        $orderMail['sPaymentTable'] = [];
-        $orderMail['sComment'] = '';
-        $orderMail['additional']['show_net'] = $orderModel->getNet();
-        $orderMail['additional']['charge_var'] = 1;
+        $result['sPaymentTable'] = [];
+        $result['sComment'] = '';
+        $result['additional']['show_net'] = $orderModel->getNet();
+        $result['additional']['charge_var'] = 1;
 
-        return $orderMail;
+        return $result;
     }
 
     /**
@@ -225,11 +260,18 @@ class ConfirmationMailCreator
     private function setOrderCosts(Order $orderModel, array $orderMail)
     {
         $orderMail['sCurrency'] = $orderModel->getCurrency();
-        $orderMail['sAmount'] = $orderModel->getInvoiceAmount() . ' ' . $orderModel->getCurrency();
-        $orderMail['sAmountNet'] = $orderModel->getInvoiceAmountNet() . ' ' . $orderModel->getCurrency();
-        $orderMail['sShippingCosts'] = $orderModel->getInvoiceShipping() . ' ' . $orderModel->getCurrency();
+
+        $formattedAmount = $this->numberFormatterWrapper->format($orderModel->getInvoiceAmount());
+        $orderMail['sAmount'] = $formattedAmount . ' ' . $orderModel->getCurrency();
+
+        $formattedAmountNet = $this->numberFormatterWrapper->format($orderModel->getInvoiceAmountNet());
+        $orderMail['sAmountNet'] = $formattedAmountNet . ' ' . $orderModel->getCurrency();
+
+        $formattedShippingCosts = $this->numberFormatterWrapper->format($orderModel->getInvoiceShipping());
+        $orderMail['sShippingCosts'] = $formattedShippingCosts . ' ' . $orderModel->getCurrency();
         if ($orderModel->getNet()) {
-            $orderMail['sShippingCosts'] = $orderModel->getInvoiceShippingNet() . ' ' . $orderModel->getCurrency();
+            $formattedShippingCostsNet = $this->numberFormatterWrapper->format($orderModel->getInvoiceShippingNet());
+            $orderMail['sShippingCosts'] = $formattedShippingCostsNet . ' ' . $orderModel->getCurrency();
         }
         return $orderMail;
     }

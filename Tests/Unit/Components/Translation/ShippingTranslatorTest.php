@@ -10,7 +10,7 @@ namespace SwagBackendOrder\Tests\Unit\Components\Translation;
 
 use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
-class DispatchTranslatorTest extends \PHPUnit_Framework_TestCase
+class ShippingTranslatorTest extends \PHPUnit_Framework_TestCase
 {
     const LANGUAGE_ID_ENGLISH = 2;
     const DISPATCH_ID = 1;
@@ -21,11 +21,11 @@ class DispatchTranslatorTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_can_be_created()
     {
-        $dispatchTranslator = new ShippingTranslator(
+        $shippingTranslator = new ShippingTranslator(
             $this->createMock(\Shopware_Components_Translation::class)
         );
 
-        $this->assertInstanceOf(ShippingTranslator::class, $dispatchTranslator);
+        $this->assertInstanceOf(ShippingTranslator::class, $shippingTranslator);
     }
 
     public function test_it_should_translate_dispatch()
@@ -48,8 +48,8 @@ class DispatchTranslatorTest extends \PHPUnit_Framework_TestCase
             'dispatch_name' => self::DISPATCH_NAME_GERMAN
         ];
 
-        $dispatchTranslator = new ShippingTranslator($translationComponentMock);
-        $translatedDispatch = $dispatchTranslator->translate($dispatch, self::LANGUAGE_ID_ENGLISH);
+        $shippingTranslator = new ShippingTranslator($translationComponentMock);
+        $translatedDispatch = $shippingTranslator->translate($dispatch, self::LANGUAGE_ID_ENGLISH);
 
         $this->assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['name']);
         $this->assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['dispatch_name']);

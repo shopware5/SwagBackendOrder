@@ -441,7 +441,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         try {
             $context = $confirmationMailCreator->prepareOrderConfirmationMailData($orderModel);
-            $context['sOrderDetails'] = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData($orderModel);
+            $context['sOrderDetails'] = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData(
+                $orderModel, $orderModel->getLanguageSubShop()->getLocale()
+            );
 
             $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
             $mail->addTo($context["additional"]["user"]["email"]);
