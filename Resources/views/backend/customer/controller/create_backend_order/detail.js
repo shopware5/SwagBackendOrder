@@ -4,56 +4,16 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     override: 'Shopware.apps.Customer.controller.Detail',
 
     /**
-     * Component event method which is fired when the component is initials.
-     * Register the different events to handle all around the customer editing and creation
-     * @return void
+     * Override init to add additional event for button to perform a backend order
      */
     init: function () {
         var me = this;
 
+        me.callParent(arguments);
+
         me.control({
-            'customer-list': {
-                editColumn: me.onEditCustomer,
-                itemdblclick: me.onGridDblClick
-            },
-            'customer-list button[action=addCustomer]': {
-                click: me.onCreateCustomer
-            },
-            'customer-detail-window button[action=save-customer]': {
-                click: me.onSaveCustomer
-            },
-            'customer-billing-field-set': {
-                countryChanged: me.onCountryChanged
-            },
-            'customer-base-field-set': {
-                generatePassword: me.onGeneratePassword
-            },
-            'customer-debit-field-set':{
-                changePayment:me.onChangePayment
-            },
             'customer-additional-panel': {
-                performOrder: me.onPerformOrder,
-                createAccount: me.onCreateAccount,
                 performBackendOrder: me.onPerformBackendOrder
-            }
-        });
-    },
-
-    onCreateCustomer: function () {
-        var me = this,
-            record = me.getModel('Customer').create({ active: true });
-
-        var detailWindow = me.subApplication.getView('detail.Window').create().show();
-        detailWindow.setLoading(true);
-
-        var store = Ext.create('Shopware.apps.Customer.store.Batch');
-        store.load({
-            callback: function (records) {
-                var storeData = records[0];
-                detailWindow.record = record;
-                detailWindow.createTabPanel();
-                detailWindow.setLoading(false);
-                detailWindow.setStores(storeData);
             }
         });
     },
@@ -74,60 +34,13 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     },
 
     /**
-     * Event listener method which is fired when the user try to save
-     * the inserted customer detail data. Merges the form record with
-     * the form values to get a model with all data.
-     *
-     * Overriding to set a password
-     *
-     * @param btn Ext.button.Button contains the save button
-     * @return void
+     * Overriding to set random password for new guest accounts
      */
     onSaveCustomer: function (btn) {
         var me = this, number,
             win = btn.up('window'),
             form = win.down('form'),
-            model = form.getRecord(),
-            missingField = "Unknown field",
-            listStore = me.subApplication.getStore('List');
-
-        if (!form.getForm().isValid()) {
-            // check which field is not valid in order to tell the user, why the customer cannot be saved
-            // SW-4322
-            form.getForm().getFields().each(function (f) {
-                if (!f.validate()) {
-                    if (f.fieldLabel) {
-                        missingField = f.fieldLabel;
-                    } else if (f.name) {
-                        missingField = f.name;
-                    }
-                    Shopware.Notification.createGrowlMessage(me.snippets.form.errorTitle, Ext.String.format(me.snippets.form.errorMessage, missingField), me.snippets.growlMessage);
-                    return false;
-                }
-
-            });
-            return;
-        }
-
-        if (!model.get('id')) {
-            var addressData = {};
-            Ext.each(me.getDetailWindow().addressForm.query('field'), function(field) {
-                field.submitValue = false;
-                addressData[field.getName()] = field.getValue();
-            });
-
-            var addressModel = Ext.create('Shopware.apps.Customer.model.Address', addressData),
-                billingModel = Ext.create('Shopware.apps.Customer.model.Billing'),
-                shippingModel = Ext.create('Shopware.apps.Customer.model.Shipping');
-
-            billingModel.fromAddress(addressModel);
-            shippingModel.fromAddress(addressModel);
-
-            model.getBilling().add(billingModel);
-            model.getShipping().add(shippingModel);
-        }
-
-        form.getForm().updateRecord(model);
+            model = form.getRecord();
 
         if (typeof me.subApplication.params != 'undefined') {
             if (me.subApplication.params.guest == true) {
@@ -136,36 +49,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
             }
         }
 
-        //save the model and check in the callback function if the operation was successfully
-        model.save({
-            callback: function (data, operation) {
-                var records = operation.getRecords(),
-                    record = records[0],
-                    rawData = record.getProxy().getReader().rawData;
-
-                if (operation.success === true) {
-                    if (typeof addressModel !== 'undefined') {
-                        addressModel.set('user_id', record.get('id'));
-                        addressModel.save();
-                    }
-
-                    number = model.get('number');
-
-                    Shopware.Notification.createGrowlMessage(
-                        me.snippets.password.successTitle,
-                        Ext.String.format(me.snippets.password.successText, number),
-                        me.snippets.growlMessage
-                    );
-
-                    win.attributeForm.saveAttribute(record.get('id'));
-
-                    win.destroy();
-                    listStore.load();
-                } else {
-                    Shopware.Notification.createGrowlMessage(me.snippets.password.errorTitle, me.snippets.password.errorText + '<br> ' + rawData.message, me.snippets.growlMessage)
-                }
-            }
-        });
+        me.callParent(arguments);
     },
 
     /**
