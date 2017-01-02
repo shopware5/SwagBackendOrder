@@ -99,7 +99,6 @@ class ConfirmationMailCreator
      */
     public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel)
     {
-
         /** @var Customer $customerModel */
         $customerModel = $orderModel->getCustomer();
 
