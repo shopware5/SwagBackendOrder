@@ -19,7 +19,7 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function test_it_can_be_created()
     {
-        $numberFormatterWrapper = new NumberFormatterWrapper(self::LOCALE_GERMANY);
+        $numberFormatterWrapper = new NumberFormatterWrapper();
 
         $this->assertInstanceOf(NumberFormatterWrapper::class, $numberFormatterWrapper);
     }
@@ -28,9 +28,9 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $number = 1.988888;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper(self::LOCALE_GERMANY);
+        $numberFormatterWrapper = new NumberFormatterWrapper();
 
-        $formattedNumber = $numberFormatterWrapper->format($number);
+        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GERMANY);
 
         $this->assertEquals('1,99', $formattedNumber);
     }
@@ -39,9 +39,9 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $number = 2;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper(self::LOCALE_GERMANY);
+        $numberFormatterWrapper = new NumberFormatterWrapper();
 
-        $formattedNumber = $numberFormatterWrapper->format($number);
+        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GERMANY);
 
         $this->assertEquals('2,00', $formattedNumber);
     }
@@ -50,9 +50,9 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $number = 2;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper(self::LOCALE_GREAT_BRITAIN);
+        $numberFormatterWrapper = new NumberFormatterWrapper();
 
-        $formattedNumber = $numberFormatterWrapper->format($number);
+        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GREAT_BRITAIN);
 
         $this->assertEquals('2.00', $formattedNumber);
     }
@@ -61,9 +61,9 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $number = 1;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper(self::EMPTY_LOCALE);
+        $numberFormatterWrapper = new NumberFormatterWrapper();
 
         $this->expectException(RuntimeException::class);
-        $numberFormatterWrapper->format($number);
+        $numberFormatterWrapper->format($number, self::EMPTY_LOCALE);
     }
 }

@@ -16,38 +16,17 @@ class NumberFormatterWrapper
     const LOCALE_GREAT_BRITAIN = 'en_EN';
 
     /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @param string $locale
-     */
-    public function __construct($locale = self::LOCALE_GREAT_BRITAIN)
-    {
-        $this->locale = $locale;
-    }
-
-    /**
-     * @param string $locale
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
-    /**
      * @param float $number
+     * @param $locale
      * @return bool|string
-     * @throws RuntimeException
      */
-    public function format($number)
+    public function format($number, $locale = self::LOCALE_GREAT_BRITAIN)
     {
-        if (!$this->locale) {
-            throw new RuntimeException('Property $locale is empty.');
+        if (!$locale) {
+            throw new RuntimeException('$locale is empty.');
         }
 
-        $numberFormatter = new NumberFormatter($this->locale, NumberFormatter::DECIMAL);
+        $numberFormatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
         $numberFormatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
         $numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 2);
         $numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);

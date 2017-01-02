@@ -107,8 +107,6 @@ class ConfirmationMailCreator
         /** @var DateTime $orderDateTime */
         $orderDateTime = $orderModel->getOrderTime();
 
-        $this->numberFormatterWrapper->setLocale($localeModel->getLocale());
-
         $details = $this->confirmationMailRepository->getOrderDetailsByOrderId($orderModel->getId());
 
         foreach ($details as &$result) {
@@ -122,7 +120,7 @@ class ConfirmationMailCreator
 
             $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber($articleDetailModel->getNumber());
 
-            $result = $this->setPositionPrices($result, $orderModel->getLanguageSubShop()->getLocale());
+            $result = $this->setPositionPrices($result, $localeModel);
 
             $result['image'] = $this->sArticles->sGetArticlePictures(
                 $result['articleID'],
@@ -154,17 +152,24 @@ class ConfirmationMailCreator
     private function setPositionPrices(array $mailOrderPositions, Locale $localeModel)
     {
         $netPrice = $this->taxCalculation->getNetPrice($mailOrderPositions['price'], $mailOrderPositions['tax_rate']);
-        $mailOrderPositions['netprice'] = $this->numberFormatterWrapper->format($netPrice);
+        $mailOrderPositions['netprice'] = $this->numberFormatterWrapper->format($netPrice, $localeModel->getLocale());
 
         $amount = $mailOrderPositions['price'] * $mailOrderPositions['quantity'];
-        $mailOrderPositions['amount'] = $this->numberFormatterWrapper->format($amount);
+        $mailOrderPositions['amount'] = $this->numberFormatterWrapper->format($amount, $localeModel->getLocale());
 
         $amountNet = $mailOrderPositions['netprice'] * $mailOrderPositions['quantity'];
-        $mailOrderPositions['amountnet'] = $this->numberFormatterWrapper->format($amountNet);
+        $mailOrderPositions['amountnet'] = $this->numberFormatterWrapper->format($amountNet, $localeModel->getLocale());
 
-        $mailOrderPositions['priceNumeric'] = $this->numberFormatterWrapper->format($mailOrderPositions['price']);
+        $mailOrderPositions['priceNumeric'] = $this->numberFormatterWrapper->format(
+            $mailOrderPositions['price'],
+            $localeModel->getLocale()
+        );
 
-        $mailOrderPositions['price'] = $this->numberFormatterWrapper->format($mailOrderPositions['price']);
+        $mailOrderPositions['price'] = $this->numberFormatterWrapper->format(
+            $mailOrderPositions['price'],
+            $localeModel->getLocale()
+        );
+
         return $mailOrderPositions;
     }
 
@@ -207,8 +212,6 @@ class ConfirmationMailCreator
         $billingStateModel = $billingModel->getState();
         $customerModel = $orderModel->getCustomer();
 
-        $this->numberFormatterWrapper->setLocale($languageLocaleModel->getLocale());
-
         $orderAttributes = $this->confirmationMailRepository->getOrderAttributesByOrderId($orderModel->getId());
         $customer = $this->confirmationMailRepository->getCustomerByUserId($customerModel->getId());
 
@@ -222,7 +225,7 @@ class ConfirmationMailCreator
         $result['attributes'] = $orderAttributes;
         $result['additional']['user'] = $customer;
 
-        $result = $this->setOrderCosts($orderModel, $result);
+        $result = $this->setOrderCosts($orderModel, $result, $languageLocaleModel);
         $result = $this->setBillingAddress($orderModel, $result, $billingStateModel);
         $result = $this->setShippingAddress($orderModel, $result, $shippingStateModel);
 
@@ -240,22 +243,33 @@ class ConfirmationMailCreator
     /**
      * @param Order $orderModel
      * @param array $orderMail
+     * @param Locale $localeModel
      * @return array
      */
-    private function setOrderCosts(Order $orderModel, array $orderMail)
+    private function setOrderCosts(Order $orderModel, array $orderMail, Locale $localeModel)
     {
         $orderMail['sCurrency'] = $orderModel->getCurrency();
 
-        $formattedAmount = $this->numberFormatterWrapper->format($orderModel->getInvoiceAmount());
+        $formattedAmount = $this->numberFormatterWrapper->format($orderModel->getInvoiceAmount(), $localeModel->getLocale());
         $orderMail['sAmount'] = $formattedAmount . ' ' . $orderModel->getCurrency();
 
-        $formattedAmountNet = $this->numberFormatterWrapper->format($orderModel->getInvoiceAmountNet());
+        $formattedAmountNet = $this->numberFormatterWrapper->format(
+            $orderModel->getInvoiceAmountNet(),
+            $localeModel->getLocale()
+        );
         $orderMail['sAmountNet'] = $formattedAmountNet . ' ' . $orderModel->getCurrency();
 
-        $formattedShippingCosts = $this->numberFormatterWrapper->format($orderModel->getInvoiceShipping());
+        $formattedShippingCosts = $this->numberFormatterWrapper->format(
+            $orderModel->getInvoiceShipping(),
+            $localeModel->getLocale()
+        );
         $orderMail['sShippingCosts'] = $formattedShippingCosts . ' ' . $orderModel->getCurrency();
+
         if ($orderModel->getNet()) {
-            $formattedShippingCostsNet = $this->numberFormatterWrapper->format($orderModel->getInvoiceShippingNet());
+            $formattedShippingCostsNet = $this->numberFormatterWrapper->format(
+                $orderModel->getInvoiceShippingNet(),
+                $localeModel->getLocale()
+            );
             $orderMail['sShippingCosts'] = $formattedShippingCostsNet . ' ' . $orderModel->getCurrency();
         }
         return $orderMail;
