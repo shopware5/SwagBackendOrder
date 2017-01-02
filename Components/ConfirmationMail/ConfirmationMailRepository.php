@@ -13,24 +13,16 @@ use Doctrine\DBAL\Connection;
 class ConfirmationMailRepository
 {
     /**
-     * @var \Enlight_Components_Db_Adapter_Pdo_Mysql
-     */
-    private $db;
-
-    /**
      * @var Connection
      */
     private $connection;
 
     /**
-     * @param \Enlight_Components_Db_Adapter_Pdo_Mysql $db
      * @param Connection $connection
      */
     public function __construct(
-        \Enlight_Components_Db_Adapter_Pdo_Mysql $db,
         Connection $connection
     ) {
-        $this->db = $db;
         $this->connection = $connection;
     }
 
@@ -40,7 +32,7 @@ class ConfirmationMailRepository
      */
     public function getOrderDetailsByOrderId($orderId)
     {
-        return $this->db->fetchAll(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_order_details WHERE orderID = ?',
             [ $orderId ]
         );
@@ -82,15 +74,15 @@ class ConfirmationMailRepository
      */
     public function getBillingAddressByOrderId($orderId)
     {
-        $billingAddress = $this->db->fetchRow(
+        $billingAddress = $this->connection->fetchAll(
             'SELECT *, userID AS customerBillingId FROM s_order_billingaddress WHERE orderID = ?',
             [ $orderId ]
-        );
+        )[0];
 
-        $billingAddressAttributes = $this->db->fetchRow(
+        $billingAddressAttributes = $this->connection->fetchAll(
             'SELECT * FROM s_order_billingaddress_attributes WHERE billingID = ?',
             [ $billingAddress['id'] ]
-        );
+        )[0];
 
         if (!empty($billingAddressAttributes)) {
             $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
@@ -104,15 +96,15 @@ class ConfirmationMailRepository
      */
     public function getShippingAddressByOrderId($orderId)
     {
-        $shippingAddress = $this->db->fetchRow(
+        $shippingAddress = $this->connection->fetchAll(
             'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
             [ $orderId ]
-        );
+        )[0];
 
-        $shippingAddressAttributes = $this->db->fetchRow(
+        $shippingAddressAttributes = $this->connection->fetchAll(
             'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
             [ $shippingAddress['id'] ]
-        );
+        )[0];
 
         if (!empty($shippingAddressAttributes)) {
             $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
@@ -126,10 +118,10 @@ class ConfirmationMailRepository
      */
     public function getOrderAttributesByOrderId($orderId)
     {
-        return $this->db->fetchRow(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_order_attributes WHERE orderID = ?',
             [ $orderId ]
-        );
+        )[0];
     }
 
     /**
@@ -138,10 +130,10 @@ class ConfirmationMailRepository
      */
     public function getDispatchByDispatchId($dispatchId)
     {
-        return $this->db->fetchRow(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_premium_dispatch WHERE id = ?',
             [ $dispatchId ]
-        );
+        )[0];
     }
 
     /**
@@ -150,10 +142,10 @@ class ConfirmationMailRepository
      */
     public function getCustomerByUserId($userId)
     {
-        return $this->db->fetchRow(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_user WHERE id = ?',
             [ $userId ]
-        );
+        )[0];
     }
 
     /**
@@ -162,10 +154,10 @@ class ConfirmationMailRepository
      */
     public function getCountryByCountryId($countryId)
     {
-        return $this->db->fetchRow(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_core_countries WHERE id = ?',
             [ $countryId ]
-        );
+        )[0];
     }
 
     /**
@@ -174,10 +166,10 @@ class ConfirmationMailRepository
      */
     public function getStateByStateId($stateId)
     {
-        return $this->db->fetchRow(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_core_countries_states WHERE id = ?',
             [ $stateId ]
-        );
+        )[0];
     }
 
     /**
@@ -186,9 +178,9 @@ class ConfirmationMailRepository
      */
     public function getPaymentmeanByPaymentmeanId($paymentmeanId)
     {
-        return $this->db->fetchRow(
+        return $this->connection->fetchAll(
             'SELECT * FROM s_core_paymentmeans WHERE id = ?',
             [ $paymentmeanId ]
-        );
+        )[0];
     }
 }

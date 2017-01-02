@@ -441,11 +441,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $confirmationMailCreator = new ConfirmationMailCreator(
             new TaxCalculation(),
-            Shopware()->Container()->get('swag_backend_order.payment_translator'),
-            Shopware()->Container()->get('swag_backend_order.shipping_translator'),
-            new ConfirmationMailRepository(Shopware()->Db(), Shopware()->Container()->get('dbal_connection')),
-            Shopware()->Models()->getRepository(Detail::class),
-            Shopware()->Config(),
+            $this->get('swag_backend_order.payment_translator'),
+            $this->get('swag_backend_order.shipping_translator'),
+            new ConfirmationMailRepository($this->get('dbal_connection')),
+            $this->get('models')->getRepository(Detail::class),
+            $this->get('config'),
             new NumberFormatterWrapper()
         );
 
