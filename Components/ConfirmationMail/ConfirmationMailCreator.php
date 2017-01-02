@@ -66,22 +66,6 @@ class ConfirmationMailCreator
     private $numberFormatterWrapper;
 
     /**
-     * @return ConfirmationMailCreator
-     */
-    public static function create()
-    {
-        return new self(
-            new TaxCalculation(),
-            Shopware()->Container()->get('swag_backend_order.payment_translator'),
-            Shopware()->Container()->get('swag_backend_order.shipping_translator'),
-            new ConfirmationMailRepository(Shopware()->Db(), Shopware()->Container()->get('dbal_connection')),
-            Shopware()->Models()->getRepository(Detail::class),
-            Shopware()->Config(),
-            new NumberFormatterWrapper()
-        );
-    }
-
-    /**
      * @param TaxCalculation $taxCalculation
      * @param PaymentTranslator $paymentTranslator
      * @param ShippingTranslator $shippingTranslator

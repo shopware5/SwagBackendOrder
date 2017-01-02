@@ -18,6 +18,8 @@ use Shopware\Models\Shop\Currency;
 use Shopware\Models\Shop\Shop;
 use Shopware\Models\Tax\Tax;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
+use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
+use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
 use SwagBackendOrder\Components\CustomerRepository;
 use SwagBackendOrder\Components\Order\Hydrator\OrderHydrator;
 use SwagBackendOrder\Components\Order\OrderService;
@@ -437,7 +439,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function sendOrderConfirmationMail($orderModel)
     {
-        $confirmationMailCreator = ConfirmationMailCreator::create();
+        $confirmationMailCreator = new ConfirmationMailCreator(
+            new TaxCalculation(),
+            Shopware()->Container()->get('swag_backend_order.payment_translator'),
+            Shopware()->Container()->get('swag_backend_order.shipping_translator'),
+            new ConfirmationMailRepository(Shopware()->Db(), Shopware()->Container()->get('dbal_connection')),
+            Shopware()->Models()->getRepository(Detail::class),
+            Shopware()->Config(),
+            new NumberFormatterWrapper()
+        );
 
         try {
             $context = $confirmationMailCreator->prepareOrderConfirmationMailData($orderModel);
