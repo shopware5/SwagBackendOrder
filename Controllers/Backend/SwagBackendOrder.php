@@ -446,7 +446,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             new ConfirmationMailRepository($this->get('dbal_connection')),
             $this->get('models')->getRepository(Detail::class),
             $this->get('config'),
-            new NumberFormatterWrapper()
+            new NumberFormatterWrapper(),
+            $this->get('modules')->Articles()
         );
 
         try {

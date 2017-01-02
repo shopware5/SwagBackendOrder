@@ -19,6 +19,7 @@ use Shopware\Models\Dispatch\Dispatch;
 use Shopware\Models\Order\Order;
 use Shopware\Models\Shop\Locale;
 use Shopware\Models\Shop\Shop;
+use Shopware_Components_Config;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 use SwagBackendOrder\Components\Translation\ShippingTranslator;
 use SwagBackendOrder\Components\Translation\PaymentTranslator;
@@ -56,7 +57,7 @@ class ConfirmationMailCreator
     private $sArticles;
 
     /**
-     * @var \Shopware_Components_Config
+     * @var Shopware_Components_Config
      */
     private $config;
 
@@ -71,8 +72,9 @@ class ConfirmationMailCreator
      * @param ShippingTranslator $shippingTranslator
      * @param ConfirmationMailRepository $confirmationMailRepository
      * @param Repository $articleDetailRepository
-     * @param \Shopware_Components_Config $config
+     * @param Shopware_Components_Config $config
      * @param NumberFormatterWrapper $numberFormatterWrapper
+     * @param sArticles $sArticles
      */
     public function __construct(
         TaxCalculation $taxCalculation,
@@ -80,8 +82,9 @@ class ConfirmationMailCreator
         ShippingTranslator $shippingTranslator,
         ConfirmationMailRepository $confirmationMailRepository,
         Repository $articleDetailRepository,
-        \Shopware_Components_Config $config,
-        NumberFormatterWrapper $numberFormatterWrapper
+        Shopware_Components_Config $config,
+        NumberFormatterWrapper $numberFormatterWrapper,
+        sArticles $sArticles
     ) {
         $this->taxCalculation = $taxCalculation;
         $this->paymentTranslator = $paymentTranslator;
@@ -90,8 +93,7 @@ class ConfirmationMailCreator
         $this->articleDetailRepository = $articleDetailRepository;
         $this->config = $config;
         $this->numberFormatterWrapper = $numberFormatterWrapper;
-
-        $this->sArticles = Shopware()->Modules()->Articles();
+        $this->sArticles = $sArticles;
     }
 
     /**

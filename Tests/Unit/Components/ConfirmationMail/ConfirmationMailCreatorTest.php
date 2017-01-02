@@ -27,7 +27,8 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
             $this->createMock(ConfirmationMailRepository::class),
             $this->createMock(Repository::class),
             $this->createMock(\Shopware_Components_Config::class),
-            $this->createMock(NumberFormatterWrapper::class)
+            $this->createMock(NumberFormatterWrapper::class),
+            $this->createMock(\sArticles::class)
         );
 
         $this->assertInstanceOf(ConfirmationMailCreator::class, $confirmationMailCreator);
