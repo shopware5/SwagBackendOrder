@@ -8,28 +8,29 @@
 
 namespace SwagBackendOrder\Components\ConfirmationMail;
 
-use NumberFormatter;
 use RuntimeException;
 
 class NumberFormatterWrapper
 {
     const LOCALE_GREAT_BRITAIN = 'en_EN';
+    const LOCALE_GERMANY = 'de_DE';
 
     /**
      * @param float $number
-     * @param $locale
+     * @param string $locale
      * @return bool|string
      */
     public function format($number, $locale = self::LOCALE_GREAT_BRITAIN)
     {
+        $decimalPoint = '.';
         if (!$locale) {
             throw new RuntimeException('$locale is empty.');
         }
 
-        $numberFormatter = new NumberFormatter($locale, NumberFormatter::DECIMAL);
-        $numberFormatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
-        $numberFormatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 2);
-        $numberFormatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 2);
-        return $numberFormatter->format($number);
+        if ($locale === self::LOCALE_GERMANY) {
+            $decimalPoint = ',';
+        }
+
+        return number_format($number, 2, $decimalPoint, '');
     }
 }

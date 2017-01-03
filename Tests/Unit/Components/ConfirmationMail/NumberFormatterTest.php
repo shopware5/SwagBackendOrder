@@ -15,6 +15,7 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
 {
     const LOCALE_GERMANY = 'de_DE';
     const LOCALE_GREAT_BRITAIN = 'en_EN';
+    const LOCALE_ITALIA = 'it_IT';
     const EMPTY_LOCALE = '';
 
     public function test_it_can_be_created()
@@ -65,5 +66,16 @@ class NumberFormatterTest extends \PHPUnit_Framework_TestCase
 
         $this->expectException(RuntimeException::class);
         $numberFormatterWrapper->format($number, self::EMPTY_LOCALE);
+    }
+
+    public function test_it_should_use_english_notation_as_default()
+    {
+        $number = 2;
+
+        $numberFormatterWrapper = new NumberFormatterWrapper();
+
+        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_ITALIA);
+
+        $this->assertEquals('2.00', $formattedNumber);
     }
 }
