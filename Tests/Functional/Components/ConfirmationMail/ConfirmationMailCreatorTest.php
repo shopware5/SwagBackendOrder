@@ -25,7 +25,7 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
     use DatabaseTestCaseTrait;
     use FixtureImportTestCaseTrait;
 
-    const ORDER_ID = 58;
+    const ORDER_ID = 10000;
 
     /**
      * @return ConfirmationMailCreator
