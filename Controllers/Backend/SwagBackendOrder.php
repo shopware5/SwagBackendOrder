@@ -17,6 +17,9 @@ use Shopware\Models\Payment\Payment;
 use Shopware\Models\Shop\Currency;
 use Shopware\Models\Shop\Shop;
 use Shopware\Models\Tax\Tax;
+use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
+use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
+use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
 use SwagBackendOrder\Components\CustomerRepository;
 use SwagBackendOrder\Components\Order\Hydrator\OrderHydrator;
 use SwagBackendOrder\Components\Order\OrderService;
@@ -24,6 +27,7 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Components\Order\Validator\OrderValidator;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
+use SwagBackendOrder\Components\PaymentTranslator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
@@ -103,9 +107,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $modelManager->getConnection()->beginTransaction();
         try {
             //we need to fake a shop instance if we want to use the Articles Module
-            /** @var \Shopware\Models\Shop\Repository $shopRepo */
-            $shopRepo = $this->get('models')->getRepository(Shop::class);
-            $shop = $shopRepo->getActiveById($orderStruct->getLanguageShopId());
+            /** @var \Shopware\Models\Shop\Repository $shopRepository */
+            $shopRepository = $this->get('models')->getRepository(Shop::class);
+            $shop = $shopRepository->getActiveById($orderStruct->getLanguageShopId());
             $shop->registerResources();
 
             /** @var OrderService $orderService */
@@ -208,6 +212,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPaymentAction()
     {
+        $paymentTranslator = $this->get('swag_backend_order.payment_translator');
+
         $builder = Shopware()->Models()->createQueryBuilder();
         $builder->select(['payment'])
             ->from(Payment::class, 'payment')
@@ -218,7 +224,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $languageId = $this->getBackendLanguage();
 
         foreach ($paymentMethods as &$paymentMethod) {
-            $paymentMethod = $this->translatePayment($paymentMethod, $languageId);
+            $paymentMethod = $paymentTranslator->translate($paymentMethod, $languageId);
         }
 
         $total = count($paymentMethods);
@@ -233,33 +239,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param array $paymentMethod
-     * @param int $languageId
-     * @return array
-     */
-    private function translatePayment(array $paymentMethod, $languageId)
-    {
-        $translation = new Shopware_Components_Translation();
-        $paymentTranslations = $translation->read($languageId, 'config_payment');
-
-        $paymentId = $paymentMethod['id'];
-
-        if (!is_null($paymentTranslations[$paymentId]['description'])) {
-            $paymentMethod['description'] = $paymentTranslations[$paymentId]['description'];
-        }
-
-        //for the confirmation mail template
-        $paymentMethod['additionaldescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
-        $paymentMethod['additionalDescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
-
-        return $paymentMethod;
-    }
-
-    /**
      * method which selects all shipping costs
      */
     public function getShippingCostsAction()
     {
+        $dispatchTranslator = $this->get('swag_backend_order.shipping_translator');
+
         $builder = Shopware()->Models()->createQueryBuilder();
 
         $builder->select(['dispatch', 'shipping'])
@@ -271,7 +256,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $languageId = $this->getBackendLanguage();
 
         foreach ($shippingCosts as &$shippingCost) {
-            $shippingCost['dispatch'] = $this->translateDispatch($shippingCost['dispatch'], $languageId);
+            $shippingCost['dispatch'] = $dispatchTranslator->translate($shippingCost['dispatch'], $languageId);
         }
 
         $total = count($shippingCosts);
@@ -283,28 +268,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 'success' => true
             ]
         );
-    }
-
-    /**
-     * @param array $dispatch
-     * @param int $languageId
-     * @return array
-     */
-    private function translateDispatch(array $dispatch, $languageId)
-    {
-        $translation = new Shopware_Components_Translation();
-        $dispatchTranslations = $translation->read($languageId, 'config_dispatch');
-
-        $dispatchId = $dispatch['id'];
-
-        if (!is_null($dispatchTranslations[$dispatchId]['dispatch_name'])) {
-            $dispatch['name'] = $dispatchTranslations[$dispatchId]['dispatch_name'];
-            $dispatch['dispatch_name'] = $dispatchTranslations[$dispatchId]['dispatch_name'];
-        }
-
-        $dispatch['description'] = $dispatchTranslations[$dispatchId]['description'];
-
-        return $dispatch;
     }
 
     public function getCurrenciesAction()
@@ -476,9 +439,22 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function sendOrderConfirmationMail($orderModel)
     {
+        $confirmationMailCreator = new ConfirmationMailCreator(
+            new TaxCalculation(),
+            $this->get('swag_backend_order.payment_translator'),
+            $this->get('swag_backend_order.shipping_translator'),
+            new ConfirmationMailRepository($this->get('dbal_connection')),
+            $this->get('models')->getRepository(Detail::class),
+            $this->get('config'),
+            new NumberFormatterWrapper(),
+            $this->get('modules')->Articles()
+        );
+
         try {
-            $context = $this->prepareOrderConfirmationMailData($orderModel);
-            $context['sOrderDetails'] = $this->prepareOrderDetailsConfirmationMailData($orderModel);
+            $context = $confirmationMailCreator->prepareOrderConfirmationMailData($orderModel);
+            $context['sOrderDetails'] = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData(
+                $orderModel, $orderModel->getLanguageSubShop()->getLocale()
+            );
 
             $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
             $mail->addTo($context["additional"]["user"]["email"]);
@@ -493,205 +469,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         } catch (\Exception $e) {
             $this->view->assign('mail', $e->getMessage());
         }
-    }
-
-    /**
-     * prepares the correct array structure for the mail template
-     *
-     * @param Order $orderModel
-     * @return array
-     */
-    private function prepareOrderDetailsConfirmationMailData($orderModel)
-    {
-        $details = Shopware()->Db()->fetchAll(
-            'SELECT * FROM s_order_details WHERE orderID = ?',
-            [$orderModel->getId()]
-        );
-
-        $articleModule = Shopware()->Modules()->Articles();
-
-        foreach ($details as &$detail) {
-            /** @var Shopware\Models\Article\Repository $articleDetailRepository */
-            $articleDetailRepository = Shopware()->Models()->getRepository(Detail::class);
-
-            $articleOrderNumber = $detail['articleordernumber'];
-            unset($detail['articleordernumber']);
-
-            /** @var Detail $articleDetailModel */
-            $articleDetailModel = $articleDetailRepository->findOneBy(['number' => $articleOrderNumber]);
-
-            $detail['articlename'] = $detail['name'];
-            unset($detail['name']);
-
-            $detail['userID'] = $orderModel->getCustomer()->getId();
-            $detail['ordernumber'] = $articleOrderNumber;
-            $detail['currencyFactor'] = $orderModel->getCurrencyFactor();
-            $detail['mainDetailId'] = $articleDetailModel->getArticle()->getMainDetail()->getId();
-            $detail['articleDetailId'] = $articleDetailModel->getId();
-            $detail['instock'] = $articleDetailModel->getInStock();
-
-            $detail['taxID'] = $articleDetailModel->getArticle()->getTax()->getId();
-            if ($orderModel->getNet()) {
-                $detail['taxID'] = 0;
-            }
-
-            $detail['maxpurchase'] = $articleDetailModel->getMaxPurchase();
-            $detail['minpurchase'] = $articleDetailModel->getMinPurchase();
-            $detail['purchasesteps'] = $articleDetailModel->getPurchaseSteps();
-            $detail['stockmin'] = $articleDetailModel->getStockMin();
-            $detail['suppliernumber'] = $articleDetailModel->getSupplierNumber();
-            $detail['laststock'] = $articleDetailModel->getArticle()->getLastStock();
-            $detail['purchaseunit'] = $articleDetailModel->getPurchaseUnit();
-            $detail['releasedate'] = $articleDetailModel->getReleaseDate();
-            $detail['modus'] = $articleDetailModel->getArticle()->getMode();
-            $detail['datum'] = $orderModel->getOrderTime()->format('Y-m-d H:i:s');
-            $detail['esdarticle'] = $articleDetailModel->getEsd();
-            $detail['netprice'] = $this->getTaxCalculation()->getNetPrice($detail['price'], $detail['tax_rate']);
-            $detail['amount'] = $detail['price'] * $detail['quantity'];
-            $detail['amountnet'] = $detail['netprice'] * $detail['quantity'];
-            $detail['priceNumeric'] = $detail['price'];
-            $detail['image'] = $articleModule->sGetArticlePictures(
-                $detail['articleID'],
-                true,
-                Shopware()->Config()->get('sTHUMBBASKET'),
-                $articleOrderNumber
-            );
-
-            /**
-             * order basket attributes fake
-             */
-            $detail['ob_attr1'] = '';
-            $detail['ob_attr2'] = '';
-            $detail['ob_attr3'] = '';
-            $detail['ob_attr4'] = '';
-            $detail['ob_attr5'] = '';
-            $detail['ob_attr6'] = '';
-
-            $detail['partnerID'] = '';
-            $detail['shippinginfo'] = 1;
-
-            if ($articleDetailModel->getUnit()) {
-                $detail['unitID'] = $articleDetailModel->getUnit()->getId();
-            }
-
-            $detail['additional_details'] = $articleModule->sGetProductByOrdernumber($articleOrderNumber);
-        }
-
-        return $details;
-    }
-
-    /**
-     * @param Order $orderModel
-     * @return array
-     */
-    private function prepareOrderConfirmationMailData($orderModel)
-    {
-        $billingAddress = Shopware()->Db()->fetchRow(
-            'SELECT *, userID AS customerBillingId FROM s_order_billingaddress WHERE orderID = ?',
-            [$orderModel->getId()]
-        );
-        $billingAddressAttributes = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_order_billingaddress_attributes WHERE billingID = ?',
-            [$billingAddress['id']]
-        );
-        if (!empty($billingAddressAttributes)) {
-            $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
-        }
-
-        $shippingAddress = Shopware()->Db()->fetchRow(
-            'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
-            [$orderModel->getId()]
-        );
-        $shippingAddressAttributes = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
-            [$shippingAddress['id']]
-        );
-        if (!empty($shippingAddressAttributes)) {
-            $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
-        }
-
-        $context['billingaddress'] = $billingAddress;
-        $context['shippingaddress'] = $shippingAddress;
-
-        $context['sOrderNumber'] = $orderModel->getNumber();
-
-        $currency = $orderModel->getCurrency();
-        $context['sCurrency'] = $currency;
-        $context['sAmount'] = $orderModel->getInvoiceAmount() . ' ' . $currency;
-        $context['sAmountNet'] = $orderModel->getInvoiceAmountNet() . ' ' . $currency;
-        $context['sShippingCosts'] = $orderModel->getInvoiceShipping() . ' ' . $currency;
-
-        $orderTime = $orderModel->getOrderTime();
-        $context['sOrderDay'] = $orderTime->format('d.m.Y');
-        $context['sOrderTime'] = $orderTime->format('H:i');
-
-        $context['sComment'] = '';
-        $context['sLanguage'] = $orderModel->getLanguageSubShop()->getId();
-        $context['sSubShop'] = $orderModel->getShop()->getId();
-
-        $orderAttributes = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_order_attributes WHERE orderID = ?',
-            [$orderModel->getId()]
-        );
-        $context['attributes'] = $orderAttributes;
-
-        $dispatch = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_premium_dispatch WHERE id = ?',
-            [$orderModel->getDispatch()->getId()]
-        );
-        $dispatch = $this->translateDispatch($dispatch, $orderModel->getLanguageSubShop()->getId());
-        $context['sDispatch'] = $dispatch;
-
-        $user = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_user WHERE id = ?',
-            [$orderModel->getCustomer()->getId()]
-        );
-        $context['additional']['user'] = $user;
-
-        $country = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_core_countries WHERE id = ?',
-            [$orderModel->getBilling()->getCountry()->getId()]
-        );
-        $context['additional']['country'] = $country;
-
-        $context['additional']['state'] = [];
-        if ($orderModel->getBilling()->getState()) {
-            $state = Shopware()->Db()->fetchRow(
-                'SELECT * FROM s_core_countries_states WHERE id = ?',
-                [$orderModel->getBilling()->getState()->getId()]
-            );
-            $context['additional']['state'] = $state;
-        }
-
-        $country = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_core_countries WHERE id = ?',
-            [$orderModel->getShipping()->getCountry()->getId()]
-        );
-        $context['additional']['countryShipping'] = $country;
-
-        $context['additional']['stateShipping'] = [];
-        if ($orderModel->getShipping()->getState()) {
-            $state = Shopware()->Db()->fetchRow(
-                'SELECT * FROM s_core_countries_states WHERE id = ?',
-                [$orderModel->getShipping()->getState()->getId()]
-            );
-            $context['additional']['stateShipping'] = $state;
-        }
-
-        $payment = Shopware()->Db()->fetchRow(
-            'SELECT * FROM s_core_paymentmeans WHERE id = ?',
-            [$orderModel->getPayment()->getId()]
-        );
-        $payment = $this->translatePayment($payment, $orderModel->getLanguageSubShop()->getId());
-
-        $context['additional']['payment'] = $payment;
-
-        $context['sPaymentTable'] = [];
-
-        $context['additional']['show_net'] = $orderModel->getNet();
-        $context['additional']['charge_var'] = 1;
-
-        return $context;
     }
 
     /**

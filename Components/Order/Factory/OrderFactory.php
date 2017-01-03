@@ -42,6 +42,7 @@ class OrderFactory
      * @var AddressServiceInterface
      */
     private $addressService;
+
     /**
      * @var DetailFactory
      */
