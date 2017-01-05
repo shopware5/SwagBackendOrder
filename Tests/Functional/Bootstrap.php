@@ -29,7 +29,7 @@ class SwagBackendOrderTestKernel extends TestKernel
         $shop->registerResources();
 
         if (!self::assertPlugin('SwagBackendOrder')) {
-            throw new \Exception('Plugin SwagBackendOrder must be installed.');
+            throw new \Exception('Plugin SwagBackendOrder must be installed and activated.');
         }
     }
 
