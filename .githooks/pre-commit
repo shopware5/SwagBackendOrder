@@ -1,14 +1,12 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * .git/hooks/pre-commit
  *
  * This pre-commit hooks will check for PHP errors (lint), and make sure the
  * code is PSR-2 compliant.
- *
- * Dependecy: PHP-CS-Fixer (http://cs.sensiolabs.org/)
  */
-
 class PreCommitChecks
 {
     /**
@@ -48,7 +46,7 @@ class PreCommitChecks
                 echo "ERROR: Your commit does not comply with Shopware's coding standards." . PHP_EOL;
             }
         } else {
-            echo "ERROR: PHP-CS-Fixer is NOT installed. Please install globally (http://cs.sensiolabs.org/)." . PHP_EOL;
+            echo 'ERROR: PHP-CS-Fixer is NOT installed. Please install globally (http://cs.sensiolabs.org/).' . PHP_EOL;
             $this->error = true;
         }
 
@@ -102,17 +100,17 @@ class PreCommitChecks
         foreach ($files as $file) {
             $output = [];
             $return = null;
-            exec("php-cs-fixer fix -v --dry-run --level=psr2 " . escapeshellarg($file), $output, $return);
+            exec('php-cs-fixer fix -v --no-ansi --dry-run ' . escapeshellarg($file) . ' 2>&1', $output, $return);
             if ($return != 0) {
-                $misses[$file] = "php-cs-fixer fix -v --level=psr2 " . escapeshellarg($file);
+                $misses[$file] = 'php-cs-fixer fix -v ' . escapeshellarg($file);
                 $this->error = true;
                 $succeed = false;
             }
         }
 
         if ($succeed === false) {
-            echo "Code style error in folling files:" . PHP_EOL . implode(PHP_EOL, array_keys($misses)) . PHP_EOL . PHP_EOL;
-            echo "To fix, run: " . PHP_EOL . implode(PHP_EOL, $misses). PHP_EOL;
+            echo 'Code style error in following files:' . PHP_EOL . implode(PHP_EOL, array_keys($misses)) . PHP_EOL . PHP_EOL;
+            echo 'To fix, run: ' . PHP_EOL . implode(PHP_EOL, $misses) . PHP_EOL;
             echo PHP_EOL;
         }
 
@@ -130,9 +128,9 @@ class PreCommitChecks
         foreach ($files as $file) {
             $output = [];
             $return = 0;
-            exec("php -l " . escapeshellarg($file), $output, $return);
+            exec('php -l ' . escapeshellarg($file), $output, $return);
             if ($return != 0) {
-                echo "PHP syntax error at " . $file . ":" . PHP_EOL;
+                echo 'PHP syntax error at ' . $file . ':' . PHP_EOL;
                 echo implode(PHP_EOL, $output) . PHP_EOL;
                 $this->error = true;
                 $succeed = false;
@@ -148,7 +146,7 @@ class PreCommitChecks
     private function getRef()
     {
         $output = [];
-        exec("git rev-parse --verify -q refs/stash", $output);
+        exec('git rev-parse --verify -q refs/stash', $output);
         $output = implode(PHP_EOL, $output) . PHP_EOL;
         return trim($output);
     }
@@ -159,8 +157,8 @@ class PreCommitChecks
     private function isRebase()
     {
         $output = [];
-        exec("git symbolic-ref --short -q HEAD", $output);
-        return (empty($output));
+        exec('git symbolic-ref --short -q HEAD', $output);
+        return empty($output);
     }
 
     /**
@@ -168,7 +166,7 @@ class PreCommitChecks
      */
     private function stashTree()
     {
-        exec("git stash save --keep-index --include-untracked -q");
+        exec('git stash save --keep-index --include-untracked -q');
     }
 
     /**
@@ -176,7 +174,7 @@ class PreCommitChecks
      */
     private function unstashTree()
     {
-        exec("git stash pop -q --index");
+        exec('git stash pop -q --index');
     }
 }
 
