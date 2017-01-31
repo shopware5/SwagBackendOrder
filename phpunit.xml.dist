@@ -9,9 +9,13 @@
     </testsuite>
 
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist>
+            <directory suffix=".php">./</directory>
             <exclude>
                 <directory suffix=".php">./Tests</directory>
+
+                <!-- Bootstrap -->
+                <file>SwagBackendOrder.php</file>
             </exclude>
         </whitelist>
     </filter>
