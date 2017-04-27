@@ -30,7 +30,7 @@ class TotalPriceCalculatorTest extends \PHPUnit_Framework_TestCase
     {
         $positionPrices = $this->getPositionPrices();
         $shippingPrice = $this->getShippingPrice();
-        $expectedTaxRates = [ '19' => 12.1 ];
+        $expectedTaxRates = ['19' => 12.1];
 
         $result = $this->SUT->calculate($positionPrices, $shippingPrice);
 
@@ -39,7 +39,6 @@ class TotalPriceCalculatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(60.41, $result->getSum()->getNet());
         $this->assertEquals(71.89, $result->getSum()->getGross());
-
 
         $this->assertEquals(3.28, $result->getShipping()->getNet());
         $this->assertEquals(3.90, $result->getShipping()->getGross());
@@ -62,7 +61,7 @@ class TotalPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $price2->setGross(11.90);
         $price2->setTaxRate(19.00);
 
-        return [ $price1, $price2 ];
+        return [$price1, $price2];
     }
 
     /**

@@ -37,15 +37,15 @@ class ShippingTranslatorTest extends \PHPUnit_Framework_TestCase
             ->willReturn([
                 self::DISPATCH_ID => [
                     'dispatch_name' => self::DISPATCH_NAME_ENGLISH,
-                    'description' => self::DISPATCH_DESCRIPTION_ENGLISH
-                ]
+                    'description' => self::DISPATCH_DESCRIPTION_ENGLISH,
+                ],
             ]);
 
         $dispatch = [
             'id' => 1,
             'name' => self::DISPATCH_NAME_GERMAN,
             'description' => self::DISPATCH_DESCRIPTION_GERMAN,
-            'dispatch_name' => self::DISPATCH_NAME_GERMAN
+            'dispatch_name' => self::DISPATCH_NAME_GERMAN,
         ];
 
         $shippingTranslator = new ShippingTranslator($translationComponentMock);
