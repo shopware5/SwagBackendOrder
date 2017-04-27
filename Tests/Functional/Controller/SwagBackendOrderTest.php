@@ -277,6 +277,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param $request
      * @param $view
+     *
      * @return SwagBackendOrderMock
      */
     private function getControllerMock($request, $view)
@@ -292,9 +293,9 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
 class SwagBackendOrderMock extends \Shopware_Controllers_Backend_SwagBackendOrder
 {
     /**
-     * @param \Enlight_Controller_Request_RequestTestCase   $request
-     * @param Container                                     $container
-     * @param \Enlight_View_Default                         $view
+     * @param \Enlight_Controller_Request_RequestTestCase $request
+     * @param Container                                   $container
+     * @param \Enlight_View_Default                       $view
      */
     public function __construct(
         \Enlight_Controller_Request_RequestTestCase $request,

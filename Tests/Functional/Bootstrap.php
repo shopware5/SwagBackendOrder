@@ -34,13 +34,14 @@ class SwagBackendOrderTestKernel extends Kernel
 
     /**
      * @param string $name
-     * @return boolean
+     *
+     * @return bool
      */
     private static function assertPlugin($name)
     {
         $sql = 'SELECT 1 FROM s_core_plugins WHERE name = ? AND active = 1';
 
-        return (boolean) Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$name]);
+        return (bool) Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$name]);
     }
 }
 

@@ -13,7 +13,7 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 class TaxCalculationTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers TaxCalculation::getNetPrice()
+     * @covers \TaxCalculation::getNetPrice()
      */
     public function testGetNetPrice()
     {
@@ -27,7 +27,7 @@ class TaxCalculationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers TaxCalculation::getGrossPrice()
+     * @covers \TaxCalculation::getGrossPrice()
      */
     public function testGetGrossPrice()
     {
