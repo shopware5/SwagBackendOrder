@@ -26,9 +26,6 @@ class TotalPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->SUT = new TotalPriceCalculator();
     }
 
-    /**
-     * @covers TotalPriceCalculator::calculate()
-     */
     public function testCalculate()
     {
         $positionPrices = $this->getPositionPrices();

@@ -18,9 +18,6 @@ class OrderServiceTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseTestCaseTrait;
 
-    /**
-     * @covers OrderService::create()
-     */
     public function testCreateOrder()
     {
         /** @var OrderService $orderService */

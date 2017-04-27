@@ -28,9 +28,6 @@ class ShippingPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->SUT = $this->getShippingPriceCalculator();
     }
 
-    /**
-     * @covers ShippingPriceCalculator::calculate()
-     */
     public function testCalculate()
     {
         $context = new PriceContext(3.90, 19.00, false, false, 1.3625);
@@ -40,9 +37,6 @@ class ShippingPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4.4653361344537812, $price->getNet());
     }
 
-    /**
-     * @covers ShippingPriceCalculator::calculateBasePrice()
-     */
     public function testCalculateBasePriceNet()
     {
         $context = new PriceContext(5.31, 19.00, false, false, 1.3625);
@@ -51,9 +45,6 @@ class ShippingPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3.8972477064220179, $price);
     }
 
-    /**
-     * @covers ShippingPriceCalculator::calculateBasePrice()
-     */
     public function testCalculateBasePrice()
     {
         $context = new PriceContext(5.31, 19.00, true, false, 1.3625);
@@ -62,9 +53,6 @@ class ShippingPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3.8972477064220179, $price);
     }
 
-    /**
-     * @covers ShippingPriceCalculator::calculateBasePrice()
-     */
     public function testCalculateBasePriceTaxfree()
     {
         $context = new PriceContext(4.47, 19.00, true, true, 1.3625);

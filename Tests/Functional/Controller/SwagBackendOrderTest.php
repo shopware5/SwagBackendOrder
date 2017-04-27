@@ -92,9 +92,6 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(50.41, $result['positions'][0]->price);
     }
 
-    /**
-     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::calculateBasketAction()
-     */
     public function testBasketCalculationWithChangedCurrency()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();

@@ -12,9 +12,6 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
 class TaxCalculationTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers \TaxCalculation::getNetPrice()
-     */
     public function testGetNetPrice()
     {
         $grossPrice = 59.99;
@@ -26,9 +23,6 @@ class TaxCalculationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(50.411764705882355, $netPrice);
     }
 
-    /**
-     * @covers \TaxCalculation::getGrossPrice()
-     */
     public function testGetGrossPrice()
     {
         $netPrice = 50.41;
