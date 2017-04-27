@@ -8,53 +8,50 @@
 
 namespace SwagBackendOrder\Tests\Functional\Controller;
 
-use Enlight_Components_Test_Controller_TestCase;
+require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
+
+use Shopware\Components\DependencyInjection\Container;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
+class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseTestCaseTrait;
 
-    /**
-     * @inheritdoc
-     */
-    public function setUp()
-    {
-        parent::setUp();
-        Shopware()->Plugins()->Backend()->Auth()->setNoAuth();
-        Shopware()->Plugins()->Backend()->Auth()->setNoAcl();
-    }
-
-    /**
-     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::calculateBasketAction()
-     */
     public function testCalculateBasket()
     {
-        $this->Request()->setParams($this->getDemoData());
-        $this->dispatch('backend/SwagBackendOrder/calculateBasket');
-        $result = $this->View()->getAssign('data');
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoData());
 
-        $this->assertTrue($this->View()->success);
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->calculateBasketAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
         $this->assertEquals(142.44, $result['totalWithoutTax']);
         $this->assertEquals(154.94, $result['sum']);
         $this->assertEquals(16.4, $result['taxSum']);
         $this->assertEquals(59.99, $result['positions'][0]->price);
         $this->assertEquals(59.99, $result['positions'][0]->total);
-
-        $this->resetRequest();
-        $this->resetResponse();
     }
 
-    /**
-     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::calculateBasketAction()
-     */
     public function testBasketCalculationWithChangedDisplayNetFlag()
     {
-        $this->Request()->setParams($this->getDemoWithChangedDisplayNetFlag());
-        $this->dispatch('/backend/SwagBackendOrder/calculateBasket');
-        $result = $this->View()->getAssign('data');
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoWithChangedDisplayNetFlag());
 
-        $this->assertTrue($this->View()->success);
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->calculateBasketAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
         $this->assertEquals(50.41, $result['sum']);
 
         $this->assertEquals(3.90, $result['shippingCosts']);
@@ -66,21 +63,22 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
         $this->assertEquals(50.41, $result['positions'][0]->price);
-
-        $this->resetRequest();
-        $this->resetResponse();
     }
 
-    /**
-     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::calculateBasketAction()
-     */
     public function testBasketCalculationWithChangedTaxfreeFlag()
     {
-        $this->Request()->setParams($this->getDemoWithChangedTaxfreeFlag());
-        $this->dispatch('/backend/SwagBackendOrder/calculateBasket');
-        $result = $this->View()->getAssign('data');
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoWithChangedTaxfreeFlag());
 
-        $this->assertTrue($this->View()->success);
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->calculateBasketAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
         $this->assertEquals(50.41, $result['sum']);
 
         $this->assertEquals(3.28, $result['shippingCosts']);
@@ -92,9 +90,6 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
         $this->assertEquals(50.41, $result['positions'][0]->price);
-
-        $this->resetRequest();
-        $this->resetResponse();
     }
 
     /**
@@ -102,11 +97,18 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
      */
     public function testBasketCalculationWithChangedCurrency()
     {
-        $this->Request()->setParams($this->getDemoDataWithChangedCurrency());
-        $this->dispatch('/backend/SwagBackendOrder/calculateBasket');
-        $result = $this->View()->getAssign('data');
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoDataWithChangedCurrency());
 
-        $this->assertTrue($this->View()->success);
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->calculateBasketAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
         $this->assertEquals(271.09, $result['sum']);
 
         $this->assertEquals(5.31, $result['shippingCosts']);
@@ -119,43 +121,42 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
 
         $this->assertEquals(81.74, $result['positions'][0]->price);
         $this->assertEquals(245.22, $result['positions'][0]->total);
-
-        $this->resetRequest();
-        $this->resetResponse();
     }
 
-    /**
-     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::getProductAction()
-     */
     public function testGetProduct()
     {
-        $this->Request()->setParams($this->getProductDemoData());
-        $this->dispatch('/backend/SwagBackendOrder/getProduct');
-        $result = $this->View()->getAssign('data');
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getProductDemoData());
 
-        $this->assertTrue($this->View()->success);
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getProductAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
         $this->assertEquals('SW10002.1', $result['number']);
         $this->assertEquals(59.99, $result['price']);
-
-        $this->resetRequest();
-        $this->resetResponse();
     }
 
-    /**
-     * @covers \Shopware_Controllers_Backend_SwagBackendOrder::getProductAction()
-     */
     public function testGetProductWithDisplayNet()
     {
-        $this->Request()->setParams($this->getProductDemoDataWithDisplayNetFlag());
-        $this->dispatch('/backend/SwagBackendOrder/getProduct');
-        $result = $this->View()->getAssign('data');
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getProductDemoDataWithDisplayNetFlag());
 
-        $this->assertTrue($this->View()->success);
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getProductAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
         $this->assertEquals('SW10002.1', $result['number']);
         $this->assertEquals(50.41, $result['price']);
-
-        $this->resetRequest();
-        $this->resetResponse();
     }
 
     /**
@@ -174,7 +175,7 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'taxFree' => 'false',
             'previousDisplayNet' => 'false',
             'previousTaxFree' => 'false',
-            'previousDispatchTaxRate' => '19'
+            'previousDispatchTaxRate' => '19',
         ];
     }
 
@@ -189,7 +190,7 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'shippingCostsNet' => 3.28,
             'displayNet' => 'false',
             'oldCurrencyId' => '1',
-            'newCurrencyId' => '2'
+            'newCurrencyId' => '2',
         ] + $this->getDemoData();
     }
 
@@ -209,7 +210,7 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'taxFree' => 'false',
             'previousDisplayNet' => 'false',
             'previousTaxFree' => 'false',
-            'previousDispatchTaxRate' => '19'
+            'previousDispatchTaxRate' => '19',
         ];
     }
 
@@ -229,7 +230,7 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'taxFree' => 'true',
             'previousDisplayNet' => 'false',
             'previousTaxFree' => 'false',
-            'previousDispatchTaxRate' => '19'
+            'previousDispatchTaxRate' => '19',
         ];
     }
 
@@ -244,7 +245,7 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'newCurrencyId' => '1',
             'taxFree' => 'false',
             'previousDisplayNet' => 'false',
-            'previousTaxRate' => 'false'
+            'previousTaxRate' => 'false',
         ];
     }
 
@@ -259,7 +260,50 @@ class SwagBackendOrderTest extends Enlight_Components_Test_Controller_TestCase
             'newCurrencyId' => '1',
             'taxFree' => 'true',
             'previousDisplayNet' => 'false',
-            'previousTaxRate' => 'false'
+            'previousTaxRate' => 'false',
         ];
+    }
+
+    /**
+     * @return \Enlight_View_Default
+     */
+    private function getView()
+    {
+        return new \Enlight_View_Default(
+            new \Enlight_Template_Manager()
+        );
+    }
+
+    /**
+     * @param $request
+     * @param $view
+     * @return SwagBackendOrderMock
+     */
+    private function getControllerMock($request, $view)
+    {
+        return new SwagBackendOrderMock(
+            $request,
+            Shopware()->Container(),
+            $view
+        );
+    }
+}
+
+class SwagBackendOrderMock extends \Shopware_Controllers_Backend_SwagBackendOrder
+{
+    /**
+     * @param \Enlight_Controller_Request_RequestTestCase   $request
+     * @param Container                                     $container
+     * @param \Enlight_View_Default                         $view
+     */
+    public function __construct(
+        \Enlight_Controller_Request_RequestTestCase $request,
+        Container $container,
+        \Enlight_View_Default $view
+    ) {
+        $this->request = $request;
+        $this->response = new \Enlight_Controller_Response_ResponseTestCase();
+        $this->container = $container;
+        $this->view = $view;
     }
 }

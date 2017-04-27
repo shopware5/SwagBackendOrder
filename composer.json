@@ -1,0 +1,12 @@
+{
+    "name": "shopware/SwagPaymentPayPalUnified",
+    "require-dev": {
+        "shopware/plugin-dev-tools": "master-dev"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/shopwareLabs/plugin-dev-tools"
+        }
+    ]
+}

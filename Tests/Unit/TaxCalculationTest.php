@@ -8,10 +8,9 @@
 
 namespace SwagBackendOrder\Tests\Unit;
 
-use Shopware\Components\Test\Plugin\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
-class TaxCalculationTest extends TestCase
+class TaxCalculationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers TaxCalculation::getNetPrice()

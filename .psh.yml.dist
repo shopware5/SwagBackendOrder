@@ -1,0 +1,43 @@
+templates:
+    - source: vendor/shopware/plugin-dev-tools/templates/config_testing.php.tpl
+      destination: vendor/shopware/plugin-dev-tools/output/config_tmp.php
+
+dynamic:
+    PLUGIN: pwd | awk -F '/' '{print $NF}'
+    PLUGIN_LOWERCASE: pwd | awk -F '/' '{print tolower($NF)}'
+    DB_DATABASE: echo "test_$(pwd | awk -F '/' '{print tolower($NF)}')"
+    APP_ID: "docker-compose ps -q $(pwd | awk -F '/' '{print tolower($NF)}')"
+    SHOPWARE_ROOT: "./vendor/shopware/plugin-dev-tools/bin/shopware-root.sh"
+    ENV: pwd | awk -F '/' '{print tolower($NF)"test"}'
+    USER_ID: id -u
+
+const:
+    PHP_VERSION: "7.0"
+
+environments:
+    docker:
+        templates:
+        - source: vendor/shopware/plugin-dev-tools/docker/templates/docker-compose.yml.tpl
+          destination: ./docker-compose.yml
+        - source: vendor/shopware/plugin-dev-tools/docker/templates/Dockerfile.tpl
+          destination: ./Dockerfile
+        dynamic:
+            PLUGIN_WORKDIR: ./vendor/shopware/plugin-dev-tools/bin/plugin-workdir.sh
+        paths:
+         - vendor/shopware/plugin-dev-tools/docker
+        const:
+            DB_ROOT_PASSWORD: "root"
+            DB_USER: "shopware"
+            DB_PASSWORD: "shopware"
+            DB_HOST: "mysql"
+            DB_PORT: "3306"
+    local:
+        dynamic:
+            PLUGIN_WORKDIR: pwd
+        paths:
+            - vendor/shopware/plugin-dev-tools/local
+        const:
+            DB_USER: "root"
+            DB_PASSWORD: "root"
+            DB_HOST: "localhost"
+            DB_PORT: "3306"
