@@ -27,23 +27,6 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
 
     const ORDER_ID = 10000;
 
-    /**
-     * @return ConfirmationMailCreator
-     */
-    private function createConfirmationMailCreator()
-    {
-        return new ConfirmationMailCreator(
-            new TaxCalculation(),
-            new PaymentTranslator(new Shopware_Components_Translation()),
-            new ShippingTranslator(new Shopware_Components_Translation()),
-            new ConfirmationMailRepository(Shopware()->Container()->get('dbal_connection')),
-            Shopware()->Models()->getRepository(Detail::class),
-            Shopware()->Container()->get('config'),
-            new NumberFormatterWrapper(),
-            Shopware()->Modules()->Articles()
-        );
-    }
-
     public function test_prepareOrderConfirmationMailData_should_return_localized_billing_sums()
     {
         $this->importFixtures(__DIR__ . '/test-fixtures.sql');
@@ -72,5 +55,22 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('50,00', $orderDetails[0]['amountnet']);
         $this->assertEquals('59,99', $orderDetails[0]['priceNumeric']);
         $this->assertEquals('59,99', $orderDetails[0]['price']);
+    }
+
+    /**
+     * @return ConfirmationMailCreator
+     */
+    private function createConfirmationMailCreator()
+    {
+        return new ConfirmationMailCreator(
+            new TaxCalculation(),
+            new PaymentTranslator(new Shopware_Components_Translation()),
+            new ShippingTranslator(new Shopware_Components_Translation()),
+            new ConfirmationMailRepository(Shopware()->Container()->get('dbal_connection')),
+            Shopware()->Models()->getRepository(Detail::class),
+            Shopware()->Container()->get('config'),
+            new NumberFormatterWrapper(),
+            Shopware()->Modules()->Articles()
+        );
     }
 }

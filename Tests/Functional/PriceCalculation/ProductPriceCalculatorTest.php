@@ -31,9 +31,6 @@ class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @covers ProductPriceCalculator::calculate()
-     */
     public function testCalculate()
     {
         $context = new PriceContext(50.41, 19.00, true, false, 1.3625);
@@ -43,9 +40,6 @@ class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(81.733513749999986, $price->getGross());
     }
 
-    /**
-     * @covers ProductPriceCalculator::calculateBasePrice()
-     */
     public function testCalculateBasePriceFromGrossPriceWithCurrencyFactor()
     {
         $currencyFactor = 1.3625;

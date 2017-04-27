@@ -18,9 +18,6 @@ class OrderServiceTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseTestCaseTrait;
 
-    /**
-     * @covers OrderService::create()
-     */
     public function testCreateOrder()
     {
         /** @var OrderService $orderService */
@@ -82,7 +79,7 @@ class OrderServiceTest extends \PHPUnit_Framework_TestCase
         $positionStruct->setTotal(59.99);
 
         return [
-            $positionStruct
+            $positionStruct,
         ];
     }
 
@@ -97,8 +94,7 @@ class OrderServiceTest extends \PHPUnit_Framework_TestCase
             'attribute3' => 'Freitext 3',
             'attribute4' => 'Freitext 4',
             'attribute5' => 'Freitext 5',
-            'attribute6' => 'Freitext 6'
+            'attribute6' => 'Freitext 6',
         ];
     }
 }
-

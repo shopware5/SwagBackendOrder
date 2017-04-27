@@ -12,9 +12,6 @@ use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 
 class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers CurrencyConverter::getBaseCurrencyPrice()
-     */
     public function testGetBaseCurrencyPrice()
     {
         $price = 81.74;
@@ -26,9 +23,6 @@ class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(59.992660550458709, $actualPrice);
     }
 
-    /**
-     * @covers CurrencyConverter::getCurrencyPrice()
-     */
     public function testGetCurrencyPrice()
     {
         $price = 59.99;

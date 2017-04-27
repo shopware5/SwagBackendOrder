@@ -35,12 +35,12 @@ class PaymentTranslatorTest extends \PHPUnit_Framework_TestCase
             ->method('read')
             ->with(self::LANGUAGE_ID_ENGLISH, 'config_payment')
             ->willReturn([
-                self::PAYMENT_ID => [  'description' => self::PAYMENT_DESCRIPTION_ENGLISH ]
+                self::PAYMENT_ID => ['description' => self::PAYMENT_DESCRIPTION_ENGLISH],
             ]);
 
         $paymentMethod = [
             'id' => 1,
-            'description' => self::PAYMENT_DESCRIPTION_GERMAN
+            'description' => self::PAYMENT_DESCRIPTION_GERMAN,
         ];
 
         $paymentTranslator = new PaymentTranslator($translationComponentMock);
@@ -58,12 +58,12 @@ class PaymentTranslatorTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('read')
             ->willReturn([
-                self::PAYMENT_ID => [ 'additionalDescription' => self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH ]
+                self::PAYMENT_ID => ['additionalDescription' => self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH],
             ]);
 
         $paymentMethod = [
             'id' => 1,
-            'additionalDescription' => self::PAYMENT_DESCRIPTION_GERMAN
+            'additionalDescription' => self::PAYMENT_DESCRIPTION_GERMAN,
         ];
 
         $paymentTranslator = new PaymentTranslator($translationComponentMock);
@@ -81,12 +81,12 @@ class PaymentTranslatorTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('read')
             ->willReturn([
-                self::PAYMENT_ID => [ 'description' => null ]
+                self::PAYMENT_ID => ['description' => null],
             ]);
 
         $paymentMethod = [
             'id' => 1,
-            'description' => self::PAYMENT_DESCRIPTION_GERMAN
+            'description' => self::PAYMENT_DESCRIPTION_GERMAN,
         ];
 
         $paymentTranslator = new PaymentTranslator($translationComponentMock);

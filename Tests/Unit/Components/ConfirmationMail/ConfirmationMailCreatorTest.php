@@ -12,9 +12,9 @@ use Shopware\Models\Article\Repository;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
-use SwagBackendOrder\Components\Translation\ShippingTranslator;
-use SwagBackendOrder\Components\Translation\PaymentTranslator;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
+use SwagBackendOrder\Components\Translation\PaymentTranslator;
+use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
 class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
 {

@@ -16,9 +16,6 @@ class ProductValidatorTest extends \PHPUnit_Framework_TestCase
 {
     use DatabaseTestCaseTrait;
 
-    /**
-     * @covers ProductValidator::validate()
-     */
     public function testValidate()
     {
         $validator = $this->getProductValidator();

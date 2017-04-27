@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * (c) shopware AG <info@shopware.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
@@ -22,9 +27,6 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $this->SUT = new PriceContextFactory($this->getModelManager());
     }
 
-    /**
-     * @covers PriceContextFactory::create()
-     */
     public function testCreate()
     {
         $price = 59.99;
@@ -42,9 +44,6 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($currency->getFactor(), $priceContext->getCurrencyFactor());
     }
 
-    /**
-     * @covers PriceContextFactory::create()
-     */
     public function testCreateWithInvalidNumbers()
     {
         $price = 'invalid price';
@@ -57,9 +56,6 @@ class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
         $this->SUT->create($price, $taxRate, $isNet, $taxFree, $currencyId);
     }
 
-    /**
-     * @covers PriceContextFactory::create()
-     */
     public function testCreateWithInvalidCurrencyId()
     {
         $price = 59.99;
