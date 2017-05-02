@@ -19,136 +19,46 @@ class PreCommitChecks
      */
     public function run()
     {
-        $fileList = $this->getCommittedFileList();
+        $this->writeln();
+        $this->writeln('Checking commit requirements', 0);
+        $this->writeln();
 
         if ($this->isRebase()) {
             echo 'Not on branch' . PHP_EOL;
+
             return (int) 0;
         }
 
-        $beforeRef = $this->getRef();
-        $this->stashTree();
-        $afterRef = $this->getRef();
-
-        if ($beforeRef == $afterRef) {
-            echo 'No Changes' . PHP_EOL;
-            return (int) 0;
-        }
-
-        echo 'Running PHP lint' . PHP_EOL;
-        if (!$this->phpLint($fileList)) {
-            echo 'ERROR: There are some PHP syntax errors!' . PHP_EOL;
-        }
-
-        if ($this->isPHPCSFixerAvailable()) {
-            echo 'Checking code style' . PHP_EOL;
-            if (!$this->checkCodeStyle($fileList)) {
-                echo "ERROR: Your commit does not comply with Shopware's coding standards." . PHP_EOL;
-            }
-        } else {
-            echo 'ERROR: PHP-CS-Fixer is NOT installed. Please install globally (http://cs.sensiolabs.org/).' . PHP_EOL;
-            $this->error = true;
-        }
+        $this->runPhpLint($this->getCommittedFileList('php'));
+        $this->runPhpCsFixer($this->getCommittedFileList('php'));
+        $this->runEsLint($this->getCommittedFileList('js'));
 
         if ($this->error) {
-            echo "If you are ABSOLUTELY sure your code is correct, you can use 'git commit --no-verify' to bypass this validation" . PHP_EOL;
+            $this->writeln("If you are ABSOLUTELY sure your code is correct, you can use 'git commit --no-verify' to bypass this validation", 0);
         }
-
-        $this->unstashTree();
 
         exit((int) $this->error);
     }
 
     /**
-     * @return bool
+     * @param string $output
+     * @param int    $level
      */
-    public function isPHPCSFixerAvailable()
+    private function writeln($output = '', $level = 1)
     {
-        $output = [];
-        $return = 0;
-        exec('command -v php-cs-fixer >/dev/null 2>&1', $output, $return);
-
-        return !(bool) $return;
+        $this->write($output, $level);
+        echo PHP_EOL;
     }
 
     /**
-     * @return string[]
+     * @param string $output
+     * @param int    $level
      */
-    private function getCommittedFileList()
+    private function write($output = '', $level = 1)
     {
-        $output = [];
-        $return = 0;
-        exec('git rev-parse --verify HEAD 2> /dev/null', $output, $return);
-        // diff against HEAD or an empty tree object
-        $against = $return == 0 ? 'HEAD' : '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
+        $spaces = $level * 3;
 
-        $fileList = [];
-        exec("git diff --cached --name-only --diff-filter=ACM {$against} | grep -e '\.php$'", $fileList);
-
-        return $fileList;
-    }
-
-    /**
-     * @param string[] $files
-     * @return bool
-     */
-    private function checkCodeStyle(array $files)
-    {
-        $succeed = true;
-        $misses = [];
-
-        foreach ($files as $file) {
-            $output = [];
-            $return = null;
-            exec('php-cs-fixer fix -v --no-ansi --dry-run ' . escapeshellarg($file) . ' 2>&1', $output, $return);
-            if ($return != 0) {
-                $misses[$file] = 'php-cs-fixer fix -v ' . escapeshellarg($file);
-                $this->error = true;
-                $succeed = false;
-            }
-        }
-
-        if ($succeed === false) {
-            echo 'Code style error in following files:' . PHP_EOL . implode(PHP_EOL, array_keys($misses)) . PHP_EOL . PHP_EOL;
-            echo 'To fix, run: ' . PHP_EOL . implode(PHP_EOL, $misses) . PHP_EOL;
-            echo PHP_EOL;
-        }
-
-        return $succeed;
-    }
-
-    /**
-     * @param string[] $files
-     * @return bool
-     */
-    private function phpLint(array $files)
-    {
-        $succeed = true;
-
-        foreach ($files as $file) {
-            $output = [];
-            $return = 0;
-            exec('php -l ' . escapeshellarg($file), $output, $return);
-            if ($return != 0) {
-                echo 'PHP syntax error at ' . $file . ':' . PHP_EOL;
-                echo implode(PHP_EOL, $output) . PHP_EOL;
-                $this->error = true;
-                $succeed = false;
-            }
-        }
-
-        return $succeed;
-    }
-
-    /**
-     * @return string
-     */
-    private function getRef()
-    {
-        $output = [];
-        exec('git rev-parse --verify -q refs/stash', $output);
-        $output = implode(PHP_EOL, $output) . PHP_EOL;
-        return trim($output);
+        echo str_pad($output, strlen($output) + $spaces, ' ', STR_PAD_LEFT);
     }
 
     /**
@@ -158,23 +68,156 @@ class PreCommitChecks
     {
         $output = [];
         exec('git symbolic-ref --short -q HEAD', $output);
+
         return empty($output);
     }
 
     /**
-     * Stash any changes to the working tree that are not going to be committed
+     * @param string $extension
+     * @return string[]
      */
-    private function stashTree()
+    private function getCommittedFileList($extension = 'php')
     {
-        exec('git stash save --keep-index --include-untracked -q');
+        exec("git diff --name-only --diff-filter=ACMRTUXB \"HEAD\" | grep -e '\." . $extension . "$'", $fileList);
+
+        return $fileList;
     }
 
     /**
-     * Unstash changes to the working tree that we had stashed
+     * @param array $fileList
      */
-    private function unstashTree()
+    private function runPhpLint(array $fileList)
     {
-        exec('git stash pop -q --index');
+        $this->writeln('# Checking php syntax');
+        $this->writeln('> php -l');
+
+        foreach ($fileList as $file) {
+            exec('php -l ' . escapeshellarg($file) . ' 2> /dev/null', $output, $return);
+            if ($return !== 0) {
+                $this->writeln('- ' . $output[1], 2);
+                $this->error = true;
+            }
+        }
+
+        $this->writeln();
+    }
+
+    /**
+     * @param array $fileList
+     */
+    private function runPhpCsFixer(array $fileList)
+    {
+        $this->writeln('# Checking php code style');
+        $this->writeln('> php-cs-fixer fix -v --no-ansi --dry-run');
+
+        if (!$this->isPHPCSFixerAvailable()) {
+            $this->error = true;
+            $this->writeln('- php-cs-fixer is NOT installed. Please install composer with dev dependencies.', 2);
+            $this->writeln();
+
+            return;
+        }
+
+        foreach ($fileList as $file) {
+            exec('./../../../vendor/bin/php-cs-fixer fix -v --no-ansi --dry-run ' . escapeshellarg($file) . ' 2>&1', $output, $return);
+
+            if ($return !== 0) {
+                $this->writeln('- ' . preg_replace('#^(\s+)?\d\)\s#', '', $output[3]), 2);
+                $fixes[] = './../../../vendor/bin/php-cs-fixer fix -v ' . escapeshellarg($file);
+                $this->error = true;
+            }
+        }
+
+        if (!empty($fixes)) {
+            $this->writeln();
+            $this->writeln('Help:', 2);
+            foreach ($fixes as $fix) {
+                $this->writeln($fix, 3);
+            }
+        }
+
+        $this->writeln();
+    }
+
+    /**
+     * @param array $fileList
+     */
+    private function runEsLint(array $fileList)
+    {
+        $this->writeln('# Checking javascript code style');
+        $this->writeln('> eslint.js --ignore-path .eslintignore');
+
+        if (!$this->isESLintAvailable()) {
+            $this->writeln('- eslint.js not found. Skipping javascript code style check.', 2);
+            $this->writeln();
+
+            return;
+        }
+
+        $this->checkESLint($fileList);
+
+        $this->writeln();
+    }
+
+    /**
+     * @return bool
+     */
+    private function isPHPCSFixerAvailable()
+    {
+        $output = [];
+        $return = 0;
+        exec('command -v ./../../../vendor/bin/php-cs-fixer >/dev/null 2>&1', $output, $return);
+
+        return !(bool) $return;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isESLintAvailable()
+    {
+        $output = [];
+        $return = 0;
+        exec('command -v ./../../../themes/node_modules/eslint/bin/eslint.js >/dev/null 2>&1', $output, $return);
+
+        return !(bool) $return;
+    }
+
+    /**
+     * @param array $fileList
+     */
+    private function checkESLint(array $fileList = [])
+    {
+        $output = [];
+        $return = 0;
+        exec(
+            './../../../themes/node_modules/eslint/bin/eslint.js ' .
+            '--ignore-path .eslintignore ' .
+            '-c ./../../../themes/.eslintrc.js ' .
+            '--global "Ext" ' .
+            implode(' ', $fileList),
+            $output,
+            $return
+        );
+        $return = !(bool) $return;
+
+        if (!$return) {
+            $this->error = true;
+
+            foreach ($output as $line) {
+                $this->writeln($line, 2);
+            }
+
+            $this->writeln('Help:', 2);
+            $this->writeln(
+                './../../../themes/node_modules/eslint/bin/eslint.js ' .
+                '--fix --ignore-path .eslintignore ' .
+                '-c ./../../../themes/.eslintrc.js ' .
+                '--global "Ext" ' .
+                implode(' ', $fileList),
+                3
+            );
+        }
     }
 }
 
