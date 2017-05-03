@@ -156,6 +156,63 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(50.41, $result['price']);
     }
 
+    public function test_getCustomer_list()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $filter = [
+            ['value' => 'test'],
+        ];
+        $request->setParam('filter', $filter);
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getCustomerAction();
+
+        $expectedUser = [
+            [
+                'email' => 'test@example.com',
+                'firstname' => 'Max',
+                'lastname' => 'Mustermann',
+                'number' => '20001',
+                'company' => 'Muster GmbH',
+                'zipCode' => '55555',
+                'city' => 'Musterhausen',
+            ],
+        ];
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertSame(1, $view->getAssign('total'));
+        $this->assertArraySubset($expectedUser, $result);
+    }
+
+    public function test_getCustomer_single()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParam('searchParam', 1);
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getCustomerAction();
+
+        $expectedUser = [
+            'email' => 'test@example.com',
+            'firstname' => 'Max',
+            'lastname' => 'Mustermann',
+            'number' => '20001',
+        ];
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertArraySubset($expectedUser, $result);
+    }
+
     /**
      * @return array
      */
