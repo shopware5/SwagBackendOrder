@@ -1,5 +1,5 @@
-//{block name="backend/customer/view/detail/base" append}
-//
+// {block name="backend/customer/view/detail/base"}
+// {$smarty.block.parent}
 Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
     override: 'Shopware.apps.Customer.view.detail.Base',
 
@@ -34,13 +34,12 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
                 listeners: {
                     scope: me,
                     afterrender: function (field) {
-                        //only validates the email field if the mail is not the guest account email which can be configured in the plugin config
+                        // only validates the email field if the mail is not the guest account email which can be configured in the plugin config
                         if (field.getValue() != me.record.get('email')) {
                             window.setTimeout(function () {
                                 field.validationUrl = '{url action="validateEmail"}';
                             }, 500);
                         }
-
                     }
                 }
             });
@@ -49,9 +48,9 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
         }
 
         baseFormLeft.push = {
-            /*{if {config name=shopwareManagedCustomerNumbers}==1}*/
+            /* {if {config name=shopwareManagedCustomerNumbers}==1} */
             xtype: 'displayfield',
-            /*{/if}*/
+            /* {/if} */
             name: 'number',
             anchor: '95%',
             labelWidth: 155,
@@ -75,5 +74,4 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
         return baseFormRight;
     }
 });
-
-//{/block}
+// {/block}

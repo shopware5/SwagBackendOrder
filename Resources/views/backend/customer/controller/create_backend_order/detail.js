@@ -1,5 +1,5 @@
-//{block name="backend/customer/controller/detail" append}
-//
+// {block name="backend/customer/controller/detail"}
+// {$smarty.block.parent}
 Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     override: 'Shopware.apps.Customer.controller.Detail',
 
@@ -37,13 +37,13 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
      * Overriding to set random password for new guest accounts
      */
     onSaveCustomer: function (btn) {
-        var me = this, number,
+        var me = this,
             win = btn.up('window'),
             form = win.down('form'),
             model = form.getRecord();
 
-        if (typeof me.subApplication.params != 'undefined') {
-            if (me.subApplication.params.guest == true) {
+        if (Ext.isDefined(me.subApplication.params)) {
+            if (me.subApplication.params.guest === true) {
                 var password = me.generateRandomPassword();
                 model.set('newPassword', password);
             }
@@ -66,5 +66,4 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
         return password;
     }
 });
-
-//{/block}
+// {/block}

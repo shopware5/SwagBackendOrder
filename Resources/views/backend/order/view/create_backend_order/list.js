@@ -1,5 +1,5 @@
-//{block name="backend/order/view/list/list" append}
-//
+// {block name="backend/order/view/list/list"}
+// {$smarty.block.parent}
 Ext.define('Shopware.apps.CreateBackendOrder.view.List', {
     override: 'Shopware.apps.Order.view.list.List',
 
@@ -8,7 +8,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.List', {
             toolbar = me.callParent(arguments),
             btn;
 
-        /*{if {acl_is_allowed privilege=perform_order}}*/
+        /* {if {acl_is_allowed privilege=perform_order}} */
         btn = Ext.create('Ext.button.Button', {
             text: '{s namespace="backend/order/view/main" name="list/create_button"}Create Order{/s}',
             iconCls: 'sprite-plus-circle-frame',
@@ -20,10 +20,9 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.List', {
         });
 
         toolbar.insert(1, btn);
-        /*{/if}*/
+        /* {/if} */
 
         return toolbar;
     }
 });
-
-//{/block}
+// {/block}

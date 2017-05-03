@@ -1,19 +1,18 @@
-
 /**
  * Shopware Controller - Customer list backend module
  *
  * Override to set window title and preset guest mode
  */
 //
-//{block name="backend/customer/view/detail/window" append}
-//
+// {block name="backend/customer/view/detail/window"}
+// {$smarty.block.parent}
 Ext.define('Shopware.apps.CreateBackendOrder.view.Window', {
     override: 'Shopware.apps.Customer.view.detail.Window',
 
     setWindowTitle: function () {
         var me = this;
 
-        //set different titles for create and edit customers
+        // set different titles for create and edit customers
         if (me.record.get('id')) {
             me.setTitle(me.snippets.titleEdit + ' ' + me.record.get('number'));
         } else if (me.record.get('guest')) {
@@ -45,6 +44,4 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Window', {
         me.callParent(arguments);
     }
 });
-//
-//{/block}
-//
+// {/block}
