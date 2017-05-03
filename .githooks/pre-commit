@@ -194,7 +194,7 @@ class PreCommitChecks
             './../../../themes/node_modules/eslint/bin/eslint.js ' .
             '--ignore-path .eslintignore ' .
             '-c ./../../../themes/.eslintrc.js ' .
-            '--global "Ext" ' .
+            '--global "Ext,Shopware" ' .
             implode(' ', $fileList),
             $output,
             $return
@@ -213,7 +213,7 @@ class PreCommitChecks
                 './../../../themes/node_modules/eslint/bin/eslint.js ' .
                 '--fix --ignore-path .eslintignore ' .
                 '-c ./../../../themes/.eslintrc.js ' .
-                '--global "Ext" ' .
+                '--global "Ext,Shopware" ' .
                 implode(' ', $fileList),
                 3
             );

@@ -1,5 +1,6 @@
 
-//{block name="backend/customer/view/detail/additional" append}
+// {block name="backend/customer/view/detail/additional"}
+// {$smarty.block.parent}
 Ext.define('Shopware.apps.CreateBackendOrder..view.detail.Additional', {
     override: 'Shopware.apps.Customer.view.detail.Additional',
 
@@ -27,4 +28,4 @@ Ext.define('Shopware.apps.CreateBackendOrder..view.detail.Additional', {
         return container;
     }
 });
-//{/block}
+// {/block}

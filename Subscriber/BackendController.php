@@ -27,12 +27,12 @@ class BackendController implements SubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
-            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagBackendOrder' => 'onGetBackendController'
+            'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagBackendOrder' => 'onGetBackendController',
         ];
     }
 
@@ -44,7 +44,7 @@ class BackendController implements SubscriberInterface
     public function onGetBackendController()
     {
         $this->container->get('template')->addTemplateDir($this->getPluginPath() . '/Resources/views/');
-        $this->container->get('snippets')->addConfigDir($this->getPluginPath() . '/Snippets/');
+        $this->container->get('snippets')->addConfigDir($this->getPluginPath() . '/Resources/snippets/');
 
         return $this->getPluginPath() . '/Controllers/Backend/SwagBackendOrder.php';
     }
