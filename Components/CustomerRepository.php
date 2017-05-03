@@ -13,7 +13,6 @@ use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Customer\Group;
-use Shopware\Models\Customer\Repository;
 
 class CustomerRepository
 {
@@ -32,20 +31,19 @@ class CustomerRepository
 
     /**
      * @param string $filter
+     *
      * @return array
      */
     public function getList($filter)
     {
-        /** @var Repository $repository */
-        $repository = $this->modelManager->getRepository(Customer::class);
-        $builder = $repository->getListQueryBuilder($filter);
-        $builder->addSelect('customer.email');
+        $builder = $this->getListQueryBuilder($filter);
 
         return $builder->getQuery()->getArrayResult();
     }
 
     /**
      * @param int $customerId
+     *
      * @return array
      */
     public function get($customerId)
@@ -64,6 +62,7 @@ class CustomerRepository
 
     /**
      * @param int $customerId
+     *
      * @return QueryBuilder
      */
     protected function getDetailBuilder($customerId)
@@ -73,7 +72,7 @@ class CustomerRepository
             'customer',
             'paymentData',
             'shop',
-            'languageSubShop'
+            'languageSubShop',
         ]);
 
         $builder->from(Customer::class, 'customer');
@@ -87,13 +86,59 @@ class CustomerRepository
     }
 
     /**
+     * @param string|null $filter
+     *
+     * @return QueryBuilder
+     */
+    protected function getListQueryBuilder($filter = null)
+    {
+        $builder = $this->modelManager->createQueryBuilder();
+
+        //add the displayed columns
+        $builder->select([
+            'customer.id',
+            'customer.email',
+            'customer.firstname as firstname',
+            'customer.lastname as lastname',
+            'customer.number as number',
+            'billing.company as company',
+            'billing.zipCode as zipCode',
+            'billing.city as city',
+        ]);
+
+        $builder->from(Customer::class, 'customer')
+            ->join('customer.billing', 'billing');
+
+        //filter the displayed columns with the passed filter string
+        if ($filter !== null) {
+            $fullNameExp = $builder->expr()->concat('customer.firstname', $builder->expr()->concat($builder->expr()->literal(' '), 'customer.lastname'));
+            $fullNameReversedExp = $builder->expr()->concat('customer.lastname', $builder->expr()->concat($builder->expr()->literal(' '), 'customer.firstname'));
+
+            $builder->where('customer.number LIKE ?1') //Search only the beginning of the customer number.
+                ->orWhere('customer.firstname LIKE ?2') //Full text search for the first name of the customer
+                ->orWhere('customer.lastname LIKE ?2') //Full text search for the last name of the customer
+                ->orWhere($fullNameExp . ' LIKE ?2') //Full text search for the full name of the customer
+                ->orWhere($fullNameReversedExp . ' LIKE ?2') //Full text search for the full name in reversed order of the customer
+                ->orWhere('customer.email LIKE ?2') //Full text search for the customer email
+                ->orWhere('billing.company LIKE ?2') //Full text search for the company of the customer
+                ->orWhere('billing.city LIKE ?2') //Full text search for the city of the customer
+                ->orWhere('billing.zipCode LIKE ?1') //Search only the beginning of the customer number.
+                ->setParameter(1, $filter . '%')
+                ->setParameter(2, '%' . $filter . '%');
+        }
+
+        return $builder;
+    }
+
+    /**
      * @param string $key
+     *
      * @return array
      */
     private function getGroup($key)
     {
         $repository = $this->modelManager->getRepository(Group::class);
-        $group = $repository->findOneBy([ 'key' => $key ]);
+        $group = $repository->findOneBy(['key' => $key]);
 
         return $this->modelManager->toArray($group);
     }
