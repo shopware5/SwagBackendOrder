@@ -5,7 +5,7 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
@@ -18,8 +18,8 @@
     </changelog>
 
     <changelog version="1.0.1">
-        <changes lang="en">PT-3663 - Bugfix: Selection of language and shop; PT-3675 - Bugfix: Compatibility to other plugins; PT-3709 - Bugfix: Problem with password reset; PT-3789 - Bugfix: Send order confirmation to shop owner; PT-3790 - Bugfix: Prices of customer group;</changes>
         <changes lang="de">PT-3663 - Bugfix: Sprach- und Shopauswahl; PT-3675 - Bugfix: Kompatibilität zu anderen Plugins; PT-3709 - Bugfix: Problem mit Passwort zurücksetzen; PT-3789 - Bugfix: Versand Bestellbestätigung an Shopbetreiber; PT-3790 - Bugfix: Preise der Kundengruppe;</changes>
+        <changes lang="en">PT-3663 - Bugfix: Selection of language and shop; PT-3675 - Bugfix: Compatibility to other plugins; PT-3709 - Bugfix: Problem with password reset; PT-3789 - Bugfix: Send order confirmation to shop owner; PT-3790 - Bugfix: Prices of customer group;</changes>
     </changelog>
 
     <changelog version="1.0.2">
@@ -35,5 +35,10 @@
     <changelog version="1.1.1">
         <changes lang="de">PT-6925 - Bugfix: Versandkosten verhalten sich bei "Nettopreise anzeigen" wie im Frontend. Kostenaufstellungen werden nun in der Bestellbestätigungsemail lokalisiert formatiert; PT-6926 - Bugfix: Steuerfreie Bestellungen verhalten sich wie Frontend Bestellungen in der Datenbank; PT-6927, PT-7057 - Bugfix: Refaktorierung der Kundenmodul Erweiterung;</changes>
         <changes lang="en">PT-6925 - Bugfix: Shipping costs will behave like the frontend calculation, if "Display net prices" is enabled. Costs will be formatted by locale in the order confirmation mail; PT-6926 - Bugfix: Tax free order behave like frontend orders in the database; PT-6927, PT-7057 - Bugfix: Refactoring of the customer module extension;</changes>
+    </changelog>
+
+    <changelog version="1.1.2">
+        <changes lang="de">PT-7651 - Shopware 5.3 Kompatibilität</changes>
+        <changes lang="en">PT-7651 - Shopware 5.3 compatibility</changes>
     </changelog>
 </plugin>
