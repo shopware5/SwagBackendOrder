@@ -267,7 +267,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             boxLabel: '{s name="send_mail"}{/s}',
             inputValue: true,
             uncheckedValue: false,
-            padding: '0 5 0 0'
+            padding: '0 5 0 0',
+            id: 'sendMailChk'
         });
 
         return me.sendMailCheckbox;
