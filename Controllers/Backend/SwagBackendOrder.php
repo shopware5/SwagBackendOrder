@@ -27,7 +27,6 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Components\Order\Validator\OrderValidator;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
-use SwagBackendOrder\Components\PaymentTranslator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
@@ -44,8 +43,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 {
     /**
      * Disable template engine for all actions
-     *
-     * @return void
      */
     public function preDispatch()
     {
@@ -68,8 +65,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $this->view->assign([
                 'data' => $result,
                 'total' => count($result),
-                'success' => true
+                'success' => true,
             ]);
+
             return;
         }
 
@@ -79,7 +77,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $this->view->assign([
             'data' => $result,
             'total' => count($result),
-            'success' => true
+            'success' => true,
         ]);
     }
 
@@ -99,8 +97,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         if ($violations->getMessages()) {
             $this->view->assign([
                 'success' => false,
-                'violations' => $violations->getMessages()
+                'violations' => $violations->getMessages(),
             ]);
+
             return;
         }
 
@@ -124,23 +123,25 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             $this->view->assign([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
+
             return;
         } catch (\Exception $e) {
             $modelManager->getConnection()->rollBack();
 
             $this->view->assign([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
+
             return;
         }
 
         $this->view->assign([
             'success' => true,
             'orderId' => $order->getId(),
-            'ordernumber' => $order->getNumber()
+            'ordernumber' => $order->getNumber(),
         ]);
     }
 
@@ -164,7 +165,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [
                 'success' => true,
                 'data' => $result,
-                'total' => $total
+                'total' => $total,
             ]
         );
     }
@@ -203,7 +204,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $this->view->assign([
             'data' => $result,
-            'success' => true
+            'success' => true,
         ]);
     }
 
@@ -233,7 +234,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [
                 'data' => $paymentMethods,
                 'total' => $total,
-                'success' => true
+                'success' => true,
             ]
         );
     }
@@ -265,7 +266,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [
                 'data' => $shippingCosts,
                 'total' => $total,
-                'success' => true
+                'success' => true,
             ]
         );
     }
@@ -282,7 +283,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 'c.currency as currency',
                 'c.symbol as symbol',
                 'c.factor as factor',
-                'c.default as default'
+                'c.default as default',
             ]
         );
 
@@ -296,7 +297,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [
                 'success' => true,
                 'data' => $data,
-                'total' => $total
+                'total' => $total,
             ]
         );
     }
@@ -320,7 +321,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         foreach ($desktopTypes as $desktopType) {
             $config['desktopTypes'][$count]['id'] = $count;
             $config['desktopTypes'][$count]['name'] = $desktopType;
-            $count++;
+            ++$count;
         }
 
         $config['validationMail'] = $validationMail;
@@ -331,7 +332,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [
                 'success' => true,
                 'data' => $config,
-                'total' => $total
+                'total' => $total,
             ]
         );
     }
@@ -368,7 +369,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $this->view->assign([
             'success' => true,
-            'data' => $payment
+            'data' => $payment,
         ]);
     }
 
@@ -401,7 +402,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             [
                 'data' => $result,
                 'success' => true,
-                'total' => $total
+                'total' => $total,
             ]
         );
     }
@@ -426,61 +427,13 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         if ($violations->getMessages()) {
             $this->view->assign([
                 'success' => false,
-                'violations' => $violations->getMessages()
+                'violations' => $violations->getMessages(),
             ]);
+
             return;
         }
 
         $this->view->assign('success', true);
-    }
-
-    /**
-     * @param Order $orderModel
-     */
-    private function sendOrderConfirmationMail($orderModel)
-    {
-        $confirmationMailCreator = new ConfirmationMailCreator(
-            new TaxCalculation(),
-            $this->get('swag_backend_order.payment_translator'),
-            $this->get('swag_backend_order.shipping_translator'),
-            new ConfirmationMailRepository($this->get('dbal_connection')),
-            $this->get('models')->getRepository(Detail::class),
-            $this->get('config'),
-            new NumberFormatterWrapper(),
-            $this->get('modules')->Articles()
-        );
-
-        try {
-            $context = $confirmationMailCreator->prepareOrderConfirmationMailData($orderModel);
-            $context['sOrderDetails'] = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData(
-                $orderModel, $orderModel->getLanguageSubShop()->getLocale()
-            );
-
-            $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
-            $mail->addTo($context["additional"]["user"]["email"]);
-            $mail->send();
-
-            //If configured send an email to the shop owner
-            $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
-            if (!$mailNotToShopOwner) {
-                $mail->addTo(Shopware()->Config()->get('mail'));
-                $mail->send();
-            }
-        } catch (\Exception $e) {
-            $this->view->assign('mail', $e->getMessage());
-        }
-    }
-
-    /**
-     * @return int
-     */
-    private function getBackendLanguage()
-    {
-        /** @var Shopware_Components_Auth $auth */
-        $auth = Shopware()->Plugins()->Backend()->Auth()->checkAuth();
-        $identity = $auth->getIdentity();
-
-        return $identity->locale->getId();
     }
 
     /**
@@ -516,8 +469,58 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $this->view->assign([
             'data' => $result,
-            'success' => true
+            'success' => true,
         ]);
+    }
+
+    /**
+     * @param Order $orderModel
+     */
+    private function sendOrderConfirmationMail($orderModel)
+    {
+        $confirmationMailCreator = new ConfirmationMailCreator(
+            new TaxCalculation(),
+            $this->get('swag_backend_order.payment_translator'),
+            $this->get('swag_backend_order.shipping_translator'),
+            new ConfirmationMailRepository($this->get('dbal_connection')),
+            $this->get('models')->getRepository(Detail::class),
+            $this->get('config'),
+            new NumberFormatterWrapper(),
+            $this->get('modules')->Articles()
+        );
+
+        try {
+            $context = $confirmationMailCreator->prepareOrderConfirmationMailData($orderModel);
+            $context['sOrderDetails'] = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData(
+                $orderModel, $orderModel->getLanguageSubShop()->getLocale()
+            );
+
+            $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
+            $mail->addTo($context['additional']['user']['email']);
+            $mail->send();
+
+            //If configured send an email to the shop owner
+            $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
+            if (!$mailNotToShopOwner) {
+                $mail->clearRecipients();
+                $mail->addTo(Shopware()->Config()->get('mail'));
+                $mail->send();
+            }
+        } catch (\Exception $e) {
+            $this->view->assign('mail', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return int
+     */
+    private function getBackendLanguage()
+    {
+        /** @var Shopware_Components_Auth $auth */
+        $auth = Shopware()->Plugins()->Backend()->Auth()->checkAuth();
+        $identity = $auth->getIdentity();
+
+        return $identity->locale->getId();
     }
 
     /**
@@ -532,7 +535,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * @param float $price
-     * @param int $quantity
+     * @param int   $quantity
+     *
      * @return float
      */
     private function getTotalPrice($price, $quantity)
@@ -550,6 +554,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * @param int $customerId
+     *
      * @return string
      */
     private function getAccountHolder($customerId)
@@ -587,7 +592,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * @param TotalPricesResult $totalPriceResult
-     * @param RequestStruct $requestStruct
+     * @param RequestStruct     $requestStruct
+     *
      * @return array
      */
     private function createBasketCalculationResult(
@@ -621,7 +627,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'shippingCostsNet' => $shippingCostsNet,
             'taxSum' => $taxSum,
             'positions' => $requestStruct->getPositions(),
-            'dispatchTaxRate' => $totalPriceResult->getShipping()->getTaxRate()
+            'dispatchTaxRate' => $totalPriceResult->getShipping()->getTaxRate(),
         ];
     }
 
@@ -634,8 +640,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param Object $position
+     * @param object        $position
      * @param RequestStruct $requestStruct
+     *
      * @return PriceResult
      */
     private function getPositionPrice($position, $requestStruct)
@@ -661,10 +668,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param int $dispatchId
+     * @param int     $dispatchId
      * @param float[] $basketTaxRates
-     * @return float
+     *
      * @throws \Exception
+     *
+     * @return float
      */
     private function getDispatchTaxRate($dispatchId, $basketTaxRates = [])
     {
@@ -676,7 +685,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $dispatch = $this->getModelManager()->find(Dispatch::class, $dispatchId);
 
         if (is_null($dispatch)) {
-            throw new \Exception("Can not find given dispatch with id " . $dispatchId);
+            throw new \Exception('Can not find given dispatch with id ' . $dispatchId);
         }
 
         $taxId = $dispatch->getTaxCalculation();
@@ -695,6 +704,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * @param float[] $basketTaxRates
+     *
      * @return float
      */
     private function getHighestDispatchTaxRate(array $basketTaxRates)
@@ -704,6 +714,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     /**
      * @param RequestStruct $requestStruct
+     *
      * @return PriceResult
      */
     private function getShippingPrice($requestStruct)
