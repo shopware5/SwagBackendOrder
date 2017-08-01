@@ -41,3 +41,13 @@ environments:
             DB_PASSWORD: "root"
             DB_HOST: "localhost"
             DB_PORT: "3306"
+    travis:
+        dynamic:
+            PLUGIN_WORKDIR: pwd
+        paths:
+            - vendor/shopware/plugin-dev-tools/travis
+        const:
+            DB_PASSWORD: ""
+            DB_USER: "travis"
+            DB_HOST: "127.0.0.1"
+            DB_PORT: "3306"

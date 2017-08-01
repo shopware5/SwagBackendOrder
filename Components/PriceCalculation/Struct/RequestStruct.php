@@ -11,7 +11,7 @@ namespace SwagBackendOrder\Components\PriceCalculation\Struct;
 class RequestStruct
 {
     /**
-     * @var array
+     * @var PositionStruct[]
      */
     private $positions;
 
@@ -61,17 +61,17 @@ class RequestStruct
     private $basketTaxRates;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $displayNet;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $previousDisplayNet;
 
     /**
-     * @return array
+     * @return PositionStruct[]
      */
     public function getPositions()
     {
@@ -79,7 +79,20 @@ class RequestStruct
     }
 
     /**
-     * @param array $positions
+     * @return array[]
+     */
+    public function getPositionsArray()
+    {
+        $positions = [];
+        foreach ($this->getPositions() as $position) {
+            $positions[] = $position->toArray();
+        }
+
+        return $positions;
+    }
+
+    /**
+     * @param PositionStruct[] $positions
      */
     public function setPositions(array $positions)
     {
@@ -87,7 +100,7 @@ class RequestStruct
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTaxFree()
     {
@@ -95,7 +108,7 @@ class RequestStruct
     }
 
     /**
-     * @param boolean $taxFree
+     * @param bool $taxFree
      */
     public function setTaxFree($taxFree)
     {
@@ -103,7 +116,7 @@ class RequestStruct
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPreviousTaxFree()
     {
@@ -111,7 +124,7 @@ class RequestStruct
     }
 
     /**
-     * @param boolean $taxFreeChanged
+     * @param bool $taxFreeChanged
      */
     public function setPreviousTaxFree($taxFreeChanged)
     {
@@ -218,7 +231,7 @@ class RequestStruct
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPreviousDisplayNet()
     {
@@ -226,7 +239,7 @@ class RequestStruct
     }
 
     /**
-     * @param boolean $previousNetChanged
+     * @param bool $previousNetChanged
      */
     public function setPreviousDisplayNet($previousNetChanged)
     {
@@ -234,7 +247,7 @@ class RequestStruct
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDisplayNet()
     {
@@ -242,7 +255,7 @@ class RequestStruct
     }
 
     /**
-     * @param boolean $displayNet
+     * @param bool $displayNet
      */
     public function setDisplayNet($displayNet)
     {

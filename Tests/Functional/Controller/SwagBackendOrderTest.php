@@ -34,8 +34,8 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(142.44, $result['totalWithoutTax']);
         $this->assertEquals(154.94, $result['sum']);
         $this->assertEquals(16.4, $result['taxSum']);
-        $this->assertEquals(59.99, $result['positions'][0]->price);
-        $this->assertEquals(59.99, $result['positions'][0]->total);
+        $this->assertEquals(59.99, $result['positions'][0]['price']);
+        $this->assertEquals(59.99, $result['positions'][0]['total']);
     }
 
     public function testBasketCalculationWithChangedDisplayNetFlag()
@@ -62,7 +62,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(63.89, $result['total']);
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
-        $this->assertEquals(50.41, $result['positions'][0]->price);
+        $this->assertEquals(50.41, $result['positions'][0]['price']);
     }
 
     public function testBasketCalculationWithChangedTaxfreeFlag()
@@ -89,7 +89,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(53.69, $result['total']);
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
-        $this->assertEquals(50.41, $result['positions'][0]->price);
+        $this->assertEquals(50.41, $result['positions'][0]['price']);
     }
 
     public function testBasketCalculationWithChangedCurrency()
@@ -116,8 +116,8 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(276.4, $result['total']);
         $this->assertEquals(234.72, $result['totalWithoutTax']);
 
-        $this->assertEquals(81.74, $result['positions'][0]->price);
-        $this->assertEquals(245.22, $result['positions'][0]->total);
+        $this->assertEquals(81.74, $result['positions'][0]['price']);
+        $this->assertEquals(245.22, $result['positions'][0]['total']);
     }
 
     public function testGetProduct()
