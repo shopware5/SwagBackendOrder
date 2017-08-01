@@ -623,8 +623,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 me.sendMail = pluginConfigObj.data.sendMail;
                 if (me.sendMail == 1) {
                     me.orderModel.set('sendMail', 1);
-                    //Set checked class for table
-                    document.getElementById('sendMailChk').classList.add('x-form-cb-checked');
+                    //Check sendMail Checkbox
+                    me.getTotalCostsOverview().sendMailCheckbox.setValue(true);
                 }
 
                 me.subApplication.getStore('DesktopTypes').loadData(me.desktopTypes, false);
