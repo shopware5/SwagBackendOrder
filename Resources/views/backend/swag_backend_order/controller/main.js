@@ -358,7 +358,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 newCurrencyId: me.orderModel.get('currencyId'),
                 taxFree: me.orderModel.get('taxFree'),
                 previousDisplayNet: me.previousOrderModel.get('displayNet'),
-                previousTaxFree: me.previousOrderModel.get('taxFree')
+                previousTaxFree: me.previousOrderModel.get('taxFree'),
+                customerId: me.orderModel.get('customerId')
             },
             success: function (response) {
                 var responseObj = Ext.JSON.decode(response.responseText),
