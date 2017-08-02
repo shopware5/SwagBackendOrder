@@ -8,7 +8,9 @@
 
 namespace SwagBackendOrder\Components;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Shopware\Components\Model\ModelManager;
+use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Article\Article;
 
 class ProductRepository
@@ -28,16 +30,17 @@ class ProductRepository
 
     /**
      * @param string $search
-     * @param string $groupKey
-     * @return \Doctrine\ORM\QueryBuilder|\Shopware\Components\Model\QueryBuilder
+     * @param string $customerGroupKey
+     *
+     * @return QueryBuilder
      */
-    public function getProductQueryBuilder($search, $groupKey = 'EK')
+    public function getProductQueryBuilder($search, $customerGroupKey = 'EK')
     {
         $builder = $this->modelManager->createQueryBuilder();
 
         /*
-         * query to search for article variants or the article ordernumber
-         * the query concats the article name and the additional text field for the search
+         * query to search for product variants or the product number
+         * the query concatenate the product name and the additional text field for the search
          */
         $builder->select(
             'articles.id AS articleId,
@@ -53,8 +56,14 @@ class ProductRepository
 
         $builder->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
-            ->leftJoin('details.prices', 'prices')
-            ->leftJoin('articles.tax', 'tax')
+            ->leftJoin('details.prices', 'prices', Join::WITH, 'prices.customerGroupKey = :groupKey');
+
+        if ($customerGroupKey !== 'EK') {
+            $builder->leftJoin('details.prices', 'fallbackPrices', Join::WITH, "fallbackPrices.customerGroupKey = 'EK'");
+            $builder->addSelect('fallbackPrices.price AS fallbackPrice');
+        }
+
+        $builder->leftJoin('articles.tax', 'tax')
             ->where(
                 $builder->expr()->like(
                     $builder->expr()->concat(
@@ -69,9 +78,8 @@ class ProductRepository
             )
             ->orWhere('details.number LIKE :number')
             ->andWhere('articles.active = 1')
-            ->andWhere('prices.customerGroupKey = :groupkey')
             ->setParameter('number', $search)
-            ->setParameter('groupkey', $groupKey)
+            ->setParameter('groupKey', $customerGroupKey)
             ->orderBy('details.number')
             ->groupBy('details.number')
             ->setMaxResults(3);

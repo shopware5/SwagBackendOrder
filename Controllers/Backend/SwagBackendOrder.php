@@ -160,30 +160,25 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     public function getProductAction()
     {
         $number = $this->Request()->getParam('ordernumber');
-        $customerId = $this->Request()->getParam('customerId');
-        //Default Group key of shopware
-        $groupKey = 'EK';
+        $customerId = (int) $this->Request()->getParam('customerId');
+        // default customer group key of shopware
+        $customerGroupKey = 'EK';
 
         /** @var RequestHydrator $requestHydrator */
         $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
         $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
-        if ($customerId != 0) {
+        if ($customerId !== 0) {
             $customer = $this->get('swag_backend_order.customer_repository')->get($customerId);
-            $groupKey = $customer['groupKey'];
+            $customerGroupKey = $customer['groupKey'];
         }
 
-        $builder = $this->get('swag_backend_order.product_repository')->getProductQueryBuilder($number, $groupKey);
-
-        //check query result if customer id is not 0 and fire query another time with default group
-        if ($customerId != 0) {
-            if (count($builder->getQuery()->getArrayResult()) == 0) {
-                //Another Query with shopware default user group
-                $builder = $this->get('swag_backend_order.product_repository')->getProductQueryBuilder($number);
-            }
-        }
-
+        $builder = $this->get('swag_backend_order.product_repository')->getProductQueryBuilder($number, $customerGroupKey);
         $result = $builder->getQuery()->getArrayResult()[0];
+
+        if (!$result['price']) {
+            $result['price'] = $result['fallbackPrice'];
+        }
 
         $currencyFactor = 1;
         $currency = $this->getModelManager()->find(Currency::class, $requestStruct->getCurrencyId());
