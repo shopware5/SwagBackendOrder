@@ -73,6 +73,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
     }),
 
     /**
+     * Adjust the offset of the customer search drop down.
+     * @array
+     */
+    dropDownOffset: [ -75, 10 ],
+
+    /**
      * Initializes the Live Article Search component
      *
      * @public
@@ -227,7 +233,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerSearch', {
         return new Ext.XTemplate(
             '<div class="header">',
             '<div class="header-inner">',
-            '<div class="arrow">&nbsp;</div>',
+            '<div class="arrow" style="left: 85px;">&nbsp;</div>',
             '<span class="title">',
             'Kunden',
             '</span>',

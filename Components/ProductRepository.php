@@ -28,13 +28,14 @@ class ProductRepository
 
     /**
      * @param string $search
+     *
      * @return \Doctrine\ORM\QueryBuilder|\Shopware\Components\Model\QueryBuilder
      */
     public function getProductQueryBuilder($search)
     {
         $builder = $this->modelManager->createQueryBuilder();
 
-        /**
+        /*
          * query to search for article variants or the article ordernumber
          * the query concats the article name and the additional text field for the search
          */
@@ -71,7 +72,7 @@ class ProductRepository
             ->setParameter('number', $search)
             ->orderBy('details.number')
             ->groupBy('details.number')
-            ->setMaxResults(8);
+            ->setMaxResults(3);
 
         return $builder;
     }
