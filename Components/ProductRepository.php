@@ -8,8 +8,10 @@
 
 namespace SwagBackendOrder\Components;
 
+use Doctrine\ORM\Query\Expr;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Article;
+use Shopware\Models\Article\Supplier;
 
 class ProductRepository
 {
@@ -48,13 +50,21 @@ class ProductRepository
             articles.taxId,
             prices.price,
             details.additionalText,
-            tax.tax'
+            tax.tax,
+            articles.supplierId,
+            sp.id as supplierID'
         );
 
         $builder->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
             ->leftJoin('details.prices', 'prices')
             ->leftJoin('articles.tax', 'tax')
+            ->leftJoin(
+                Supplier::class,
+                'sp',
+                Expr\Join::WITH,
+                'articles.supplierId = sp.id'
+            )
             ->where(
                 $builder->expr()->like(
                     $builder->expr()->concat(
@@ -68,6 +78,7 @@ class ProductRepository
                 )
             )
             ->orWhere('details.number LIKE :number')
+            ->orWhere('sp.name LIKE :number')
             ->andWhere('articles.active = 1')
             ->setParameter('number', $search)
             ->orderBy('details.number')
