@@ -70,7 +70,7 @@ class ProductRepository
                         'articles.name',
                         $builder->expr()->concat(
                             $builder->expr()->literal(' '),
-                            'details.additionalText'
+                            'IFNULL(details.additionalText,\'\')'
                         )
                     ),
                     $builder->expr()->literal($search)
