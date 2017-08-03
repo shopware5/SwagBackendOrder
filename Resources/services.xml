@@ -7,84 +7,84 @@
     <services>
         <!-- Subscriber -->
         <service id="swag_backend_order.subscriber.backend_controller" class="SwagBackendOrder\Subscriber\BackendController">
-            <argument type="service" id="service_container" />
-            <tag name="shopware.event_subscriber" />
+            <argument type="service" id="service_container"/>
+            <tag name="shopware.event_subscriber"/>
         </service>
 
         <service id="swag_backend_order.subscriber.customer" class="SwagBackendOrder\Subscriber\Customer">
-            <argument type="service" id="service_container" />
-            <tag name="shopware.event_subscriber" />
+            <argument type="service" id="service_container"/>
+            <tag name="shopware.event_subscriber"/>
         </service>
 
         <service id="swag_backend_order.subscriber.order" class="SwagBackendOrder\Subscriber\Order">
-            <argument type="service" id="service_container" />
-            <tag name="shopware.event_subscriber" />
+            <argument type="service" id="service_container"/>
+            <tag name="shopware.event_subscriber"/>
         </service>
 
         <!-- Custom services -->
         <service id="swag_backend_order.customer_repository" class="SwagBackendOrder\Components\CustomerRepository">
-            <argument type="service" id="models" />
+            <argument type="service" id="models"/>
         </service>
 
         <service id="swag_backend_order.order.order_hydrator" class="SwagBackendOrder\Components\Order\Hydrator\OrderHydrator">
-            <argument type="service" id="swag_backend_order.order.position_hydrator" />
+            <argument type="service" id="swag_backend_order.order.position_hydrator"/>
         </service>
 
         <service id="swag_backend_order.order.position_hydrator" class="SwagBackendOrder\Components\Order\Hydrator\PositionHydrator"/>
 
         <service id="swag_backend_order.order.order_factory" class="SwagBackendOrder\Components\Order\Factory\OrderFactory">
-            <argument type="service" id="models" />
-            <argument type="service" id="shopware_account.address_service" />
-            <argument type="service" id="swag_backend_order.order.detail_factory" />
+            <argument type="service" id="models"/>
+            <argument type="service" id="shopware_account.address_service"/>
+            <argument type="service" id="swag_backend_order.order.detail_factory"/>
         </service>
 
         <service id="swag_backend_order.order.detail_factory" class="SwagBackendOrder\Components\Order\Factory\DetailFactory">
-            <argument type="service" id="models" />
+            <argument type="service" id="models"/>
             <argument type="service" id="modules"/>
         </service>
 
-        <service id="modules" synthetic="true" />
+        <service id="modules" synthetic="true"/>
 
         <service id="swag_backend_order.order.service" class="SwagBackendOrder\Components\Order\OrderService">
-            <argument type="service" id="swag_backend_order.order.order_factory" />
-            <argument type="service" id="models" />
-            <argument type="service" id="shopware.number_range_incrementer" />
-            <argument type="service" id="swag_backend_order.order.order_validator" />
+            <argument type="service" id="swag_backend_order.order.order_factory"/>
+            <argument type="service" id="models"/>
+            <argument type="service" id="shopware.number_range_incrementer"/>
+            <argument type="service" id="swag_backend_order.order.order_validator"/>
         </service>
 
         <service id="swag_backend_order.order.product_validator" class="SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator">
-            <argument type="service" id="validator" />
+            <argument type="service" id="validator"/>
         </service>
 
 
         <service id="swag_backend_order.order.order_validator" class="SwagBackendOrder\Components\Order\Validator\OrderValidator">
-            <argument type="service" id="swag_backend_order.order.product_validator" />
-            <argument type="service" id="models" />
-            <argument type="service" id="snippets" />
+            <argument type="service" id="swag_backend_order.order.product_validator"/>
+            <argument type="service" id="models"/>
+            <argument type="service" id="snippets"/>
         </service>
 
         <service id="swag_backend_order.validator.constraint.last_stock" class="SwagBackendOrder\Components\Order\Validator\Constraints\LastStockValidator">
-            <argument type="service" id="snippets" />
-            <argument type="service" id="dbal_connection" />
-            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.last_stock" />
+            <argument type="service" id="snippets"/>
+            <argument type="service" id="dbal_connection"/>
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.last_stock"/>
         </service>
 
         <service id="swag_backend_order.validator.constraint.product_exists" class="SwagBackendOrder\Components\Order\Validator\Constraints\ProductExistsValidator">
-            <argument type="service" id="snippets" />
-            <argument type="service" id="dbal_connection" />
-            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.product_exists" />
+            <argument type="service" id="snippets"/>
+            <argument type="service" id="dbal_connection"/>
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.product_exists"/>
         </service>
 
         <service id="swag_backend_order.validator.constraint.custom_product" class="SwagBackendOrder\Components\Order\Validator\Constraints\CustomProductsValidation">
-            <argument type="service" id="snippets" />
-            <argument type="service" id="dbal_connection" />
-            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.custom_product" />
+            <argument type="service" id="snippets"/>
+            <argument type="service" id="dbal_connection"/>
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.custom_product"/>
         </service>
 
         <service id="swag_backend_order.validator.constraint.esd_product" class="SwagBackendOrder\Components\Order\Validator\Constraints\EsdProductValidator">
-            <argument type="service" id="snippets" />
-            <argument type="service" id="dbal_connection" />
-            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.esd_product" />
+            <argument type="service" id="snippets"/>
+            <argument type="service" id="dbal_connection"/>
+            <tag name="validator.constraint_validator" alias="swag_backend_order.validator.constraint.esd_product"/>
         </service>
 
         <service id="swag_backend_order.price_calculation.currency_converter" class="SwagBackendOrder\Components\PriceCalculation\CurrencyConverter"/>
@@ -92,33 +92,37 @@
         <service id="swag_backend_order.price_calculation.tax_calculation" class="SwagBackendOrder\Components\PriceCalculation\TaxCalculation"/>
 
         <service id="swag_backend_order.price_calculation.shipping_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator">
-            <argument type="service" id="swag_backend_order.price_calculation.tax_calculation" />
-            <argument type="service" id="swag_backend_order.price_calculation.currency_converter" />
+            <argument type="service" id="swag_backend_order.price_calculation.tax_calculation"/>
+            <argument type="service" id="swag_backend_order.price_calculation.currency_converter"/>
         </service>
 
         <service id="swag_backend_order.price_calculation.product_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator">
-            <argument type="service" id="swag_backend_order.price_calculation.tax_calculation" />
-            <argument type="service" id="swag_backend_order.price_calculation.currency_converter" />
+            <argument type="service" id="swag_backend_order.price_calculation.tax_calculation"/>
+            <argument type="service" id="swag_backend_order.price_calculation.currency_converter"/>
         </service>
 
-        <service id="swag_backend_order.price_calculation.total_price_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator" />
+        <service id="swag_backend_order.price_calculation.total_price_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator"/>
 
-        <service id="swag_backend_order.price_calculation.request_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator" />
+        <service id="swag_backend_order.price_calculation.request_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator">
+            <argument type="service" id="swag_backend_order.price_calculation.position_hydrator" />
+        </service>
+
+        <service id="swag_backend_order.price_calculation.position_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator"/>
 
         <service id="swag_backend_order.price_calculation.price_context_factory" class="SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory">
-            <argument type="service" id="models" />
+            <argument type="service" id="models"/>
         </service>
 
         <service id="swag_backend_order.product_repository" class="SwagBackendOrder\Components\ProductRepository">
-            <argument type="service" id="models" />
+            <argument type="service" id="models"/>
         </service>
 
         <service id="swag_backend_order.payment_translator" class="SwagBackendOrder\Components\Translation\PaymentTranslator">
-            <factory class="SwagBackendOrder\Components\Translation\PaymentTranslator" method="create" />
+            <factory class="SwagBackendOrder\Components\Translation\PaymentTranslator" method="create"/>
         </service>
 
         <service id="swag_backend_order.shipping_translator" class="SwagBackendOrder\Components\Translation\ShippingTranslator">
-            <factory class="SwagBackendOrder\Components\Translation\ShippingTranslator" method="create" />
+            <factory class="SwagBackendOrder\Components\Translation\ShippingTranslator" method="create"/>
         </service>
     </services>
 </container>

@@ -8,12 +8,27 @@
 
 namespace SwagBackendOrder\Components\PriceCalculation\Hydrator;
 
+use SwagBackendOrder\Components\PriceCalculation\Struct\PositionStruct;
 use SwagBackendOrder\Components\PriceCalculation\Struct\RequestStruct;
 
 class RequestHydrator
 {
     /**
+     * @var PositionHydrator
+     */
+    private $positionHydrator;
+
+    /**
+     * @param PositionHydrator $positionHydrator
+     */
+    public function __construct(PositionHydrator $positionHydrator)
+    {
+        $this->positionHydrator = $positionHydrator;
+    }
+
+    /**
      * @param array $data
+     *
      * @return RequestStruct
      */
     public function hydrateFromRequest(array $data)
@@ -21,7 +36,13 @@ class RequestHydrator
         $requestStruct = new RequestStruct();
 
         if (!empty($data['positions'])) {
-            $requestStruct->setPositions(json_decode($data['positions']));
+            /** @var array $positionsArray */
+            $positionsArray = json_decode($data['positions'], true);
+            $positions = [];
+            foreach ($positionsArray as $position) {
+                $positions[] = $this->positionHydrator->hydrate($position);
+            }
+            $requestStruct->setPositions($positions);
         }
 
         $requestStruct->setTaxFree($this->convertBoolean($data['taxFree']));
@@ -40,6 +61,7 @@ class RequestHydrator
         $requestStruct->setShippingCosts((float) $data['shippingCosts']);
         $requestStruct->setShippingCostsNet((float) $data['shippingCostsNet']);
 
+        $requestStruct->setBasketTaxRates([]);
         if (!empty($requestStruct->getPositions())) {
             $basketTaxRates = $this->getBasketTaxRates($requestStruct->getPositions());
             $requestStruct->setBasketTaxRates($basketTaxRates);
@@ -50,23 +72,26 @@ class RequestHydrator
 
     /**
      * @param string $value
+     *
      * @return bool
      */
     private function convertBoolean($value)
     {
-        return (boolean) ($value == 'true');
+        return $value === 'true';
     }
 
     /**
-     * @param array $positions
+     * @param PositionStruct[] $positions
+     *
      * @return array
      */
     private function getBasketTaxRates(array $positions)
     {
         $taxRates = [];
         foreach ($positions as $position) {
-            $taxRates[] = (float) $position->taxRate;
+            $taxRates[] = (float) $position->getTaxRate();
         }
+
         return array_unique($taxRates);
     }
 }
