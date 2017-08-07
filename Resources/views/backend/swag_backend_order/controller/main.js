@@ -35,8 +35,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             title: '{s name="swagbackendorder/success/title"}{/s}'
         },
         hint: {
-            changeCustomerTitle: '{s name="swagbackenorder/customer_change/title"}{/s}',
-            changeCustomerMsg: '{s name="swagbackenorder/customer_change/message"}{/s}'
+            changeCustomerTitle: '{s name="swagbackendorder/customer_change/title"}{/s}',
+            changeCustomerMsg: '{s name="swagbackendorder/customer_change/message"}{/s}'
         },
         title: '{s name="swagbackendorder/title/selected_user"}{/s}'
     },
@@ -155,7 +155,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         me.positionsGrid = positionsGridContainer.getComponent('positionsGrid');
 
         /**
-         * checks if all required fields was setted
+         * checks if all required fields were set
          */
         var customerStore = me.subApplication.getStore('Customer');
         if (customerStore.count() > 0) {
@@ -342,9 +342,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param { Object } record - Selected record
      */
     onArticleSelect: function(editor, value, record) {
-        var me = this;
-
-        var columns = editor.editor.items.items,
+        var me = this,
+            columns = editor.editor.items.items,
             updateButton = editor.editor.floatingButtons.items.items[0];
 
         updateButton.setDisabled(true);
@@ -358,17 +357,23 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 taxFree: me.orderModel.get('taxFree'),
                 previousDisplayNet: me.previousOrderModel.get('displayNet'),
                 previousTaxFree: me.previousOrderModel.get('taxFree'),
-                customerId: me.orderModel.get('customerId')
+                customerId: me.orderModel.get('customerId'),
+                shopId: me.orderModel.get('languageShopId')
             },
             success: function(response) {
                 var responseObj = Ext.JSON.decode(response.responseText),
                     result = responseObj.data,
                     price = result.price,
+                    productName = result.name,
                     taxComboStore,
                     valueField,
                     displayField,
                     recordNumber,
                     displayValue;
+
+                if (result.additionalText) {
+                    productName += ' ' + result.additionalText;
+                }
 
                 /**
                  * columns[0] -> selected
@@ -380,19 +385,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                  * columns[6] -> tax
                  * columns[7] -> instock
                  */
-                columns[1].setValue(record.get('number'));
-                columns[2].setValue(record.get('name'));
+                columns[1].setValue(result.number);
+                columns[2].setValue(productName);
                 columns[3].setValue(1);
                 columns[4].setValue(price);
-                columns[7].setValue(record.get('inStock'));
+                columns[7].setValue(result.inStock);
 
                 taxComboStore = columns[6].store;
                 valueField = columns[6].valueField;
                 displayField = columns[6].displayField;
 
-                recordNumber = taxComboStore.findExact(valueField, record.get('taxId'), 0);
+                recordNumber = taxComboStore.findExact(valueField, result.taxId, 0);
                 displayValue = taxComboStore.getAt(recordNumber).data[displayField];
-                columns[6].setValue(record.get('taxId'));
+                columns[6].setValue(result.taxId);
                 columns[6].setRawValue(displayValue);
                 columns[6].selectedIndex = recordNumber;
                 updateButton.setDisabled(false);
@@ -427,8 +432,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      */
     onSelectCustomer: function(newValue, customerId) {
         var me = this,
-            customerRecord,
-            orderModelCustomer = me.orderModel.get('customerId');
+            orderModelCustomer = me.orderModel.get('customerId'),
+            customerRecord;
 
         if (orderModelCustomer !== 0 && orderModelCustomer !== customerId) {
             Shopware.Notification.createGrowlMessage(me.snippets.hint.changeCustomerTitle, me.snippets.hint.changeCustomerMsg);
@@ -556,8 +561,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @returns
      */
     calculateCurrency: function(price) {
-        var me = this;
-        var index = me.currencyStore.findExact('selected', 1);
+        var me = this,
+            index = me.currencyStore.findExact('selected', 1);
 
         price = price * me.currencyStore.getAt(index).get('factor');
         return price;
@@ -604,9 +609,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      * @param newValue
      */
     onChangeDesktopType: function(comboBox, newValue) {
-        var me = this;
+        var me = this,
+            desktopType = comboBox.findRecordByValue(newValue);
 
-        var desktopType = comboBox.findRecordByValue(newValue);
         me.orderModel.set('desktopType', desktopType.data.name);
     },
 
@@ -670,8 +675,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 previousDispatchTaxRate: me.previousDispatchTaxRate
             },
             success: function(response) {
-                var totalCostsJson = Ext.JSON.decode(response.responseText);
-                var record = totalCostsJson.data;
+                var totalCostsJson = Ext.JSON.decode(response.responseText),
+                    record = totalCostsJson.data;
 
                 me.previousOrderModel.set('taxFree', me.orderModel.get('taxFree'));
                 me.previousOrderModel.set('displayNet', me.orderModel.get('displayNet'));
@@ -719,7 +724,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     },
 
     /**
-     * resets all setted data which belongs to the customer which was selected by the user
+     * resets all set data which belongs to the customer which was selected by the user
      */
     onChangeCustomer: function() {
         var me = this;

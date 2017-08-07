@@ -45,6 +45,7 @@ class ProductRepository
         $builder->select(
             'articles.id AS articleId,
             details.number,
+            details.id AS variantId,
             articles.name,
             details.id,
             details.inStock,

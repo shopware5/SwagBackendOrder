@@ -6,6 +6,7 @@
  * file that was distributed with this source code.
  */
 
+use Shopware\Bundle\StoreFrontBundle\Struct\ListProduct;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Detail;
 use Shopware\Models\Customer\Customer;
@@ -135,6 +136,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $params = $this->Request()->getParams();
         $search = $params['filter'][0]['value'];
+        $shopId = (int) $params['shopId'];
 
         if (!isset($params['filter'][0]['value'])) {
             $search = '%' . $this->Request()->get('searchParam') . '%';
@@ -143,10 +145,24 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $result = $builder->getQuery()->getArrayResult();
         $total = count($result);
 
-        foreach ($result as &$article) {
-            $article['price'] = $this->get('swag_backend_order.price_calculation.tax_calculation')->getGrossPrice($article['price'], $article['tax']);
+        foreach ($result as &$product) {
+            $product['price'] = $this->get('swag_backend_order.price_calculation.tax_calculation')->getGrossPrice($product['price'], $product['tax']);
+            if (!$product['additionalText']) {
+                if ($shopId === 0) {
+                    /** @var \Shopware\Models\Shop\Repository $shopRepo */
+                    $shopRepo = $this->get('models')->getRepository(Shop::class);
+                    $shopId = $shopRepo->getActiveDefault()->getId();
+                }
+                $listProduct = new ListProduct($product['id'], $product['variantId'], $product['number']);
+                $additionalTextService = $this->get('shopware_storefront.additional_text_service');
+                $shopContext = $this->get('shopware_storefront.context_service')->createShopContext($shopId);
+
+                $listProduct = $additionalTextService->buildAdditionalText($listProduct, $shopContext);
+
+                $product['additionalText'] = $listProduct->getAdditional();
+            }
         }
-        unset($article);
+        unset($product);
 
         $this->view->assign(
             [
@@ -161,6 +177,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $number = $this->Request()->getParam('ordernumber');
         $customerId = (int) $this->Request()->getParam('customerId');
+        $shopId = (int) $this->Request()->getParam('shopId');
+
         // default customer group key of shopware
         $customerGroupKey = 'EK';
 
@@ -178,6 +196,21 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         if (!$result['price']) {
             $result['price'] = $result['fallbackPrice'];
+        }
+
+        if (!$result['additionalText']) {
+            if ($shopId === 0) {
+                /** @var \Shopware\Models\Shop\Repository $shopRepo */
+                $shopRepo = $this->get('models')->getRepository(Shop::class);
+                $shopId = $shopRepo->getActiveDefault()->getId();
+            }
+            $listProduct = new ListProduct($result['id'], $result['variantId'], $result['number']);
+            $additionalTextService = $this->get('shopware_storefront.additional_text_service');
+            $shopContext = $this->get('shopware_storefront.context_service')->createShopContext($shopId);
+
+            $listProduct = $additionalTextService->buildAdditionalText($listProduct, $shopContext);
+
+            $result['additionalText'] = $listProduct->getAdditional();
         }
 
         $currencyFactor = 1;
@@ -688,7 +721,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $priceContextFactory = $this->get('swag_backend_order.price_calculation.price_context_factory');
         $shippingCalculator = $this->get('swag_backend_order.price_calculation.shipping_calculator');
 
-        // Get base/gross shipping costs (even if taxfree)
+        // Get base/gross shipping costs (even if tax free)
         $previousPriceContext = $priceContextFactory->create(
             $requestStruct->getShippingCosts(),
             $dispatchTaxRate,
