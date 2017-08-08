@@ -1,6 +1,4 @@
-//
-//{block name="backend/create_backend_order/view/list/article_search_field"}
-//
+// {block name="backend/create_backend_order/view/list/article_search_field"}
 Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
 
     extend: 'Shopware.form.field.ArticleSearch',
@@ -8,7 +6,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
     /**
      * override the initComponent method to implement the variant article search
      */
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         me.registerEvents();
@@ -21,13 +19,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
         me.dropDownStore = Ext.create('Shopware.apps.SwagBackendOrder.store.Article', {
             listeners: {
                 single: true,
-                load: function () {
+                beforeload: function(store) {
+                    store.getProxy().extraParams.shopId = me.orderModel.get('languageShopId');
+                },
+                load: function() {
                     me.loadArticleStore(me.articleStore);
                 }
             }
         });
 
-        //article store passed to the component?
+        // article store passed to the component?
         if (Ext.isObject(me.articleStore) && me.articleStore.data.items.length > 0) {
             me.loadArticleStore(me.articleStore);
         }
@@ -42,5 +43,4 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
         this.superclass.superclass.initComponent.call(this);
     }
 });
-//
-//{/block}
+// {/block}

@@ -1,8 +1,5 @@
-//
-//{block name="backend/create_backend_order/view/list/positions"}
-//
+// {block name="backend/create_backend_order/view/list/positions"}
 Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Positions', {
-
     /**
      * extends from the standard ExtJs Container
      */
@@ -28,7 +25,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Positions', {
 
     autoScroll: true,
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         me.items = [
@@ -43,20 +40,15 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Positions', {
      *
      * @return { Shopware.apps.SwagBackendOrder.view.main.list.Grid }
      */
-    createOrderPositionGrid: function () {
+    createOrderPositionGrid: function() {
         var me = this;
 
-        me.rowEditor = Ext.create('Ext.grid.plugin.RowEditing', {
-            clicksToMoveEditor: 1,
-            autoCancel: true
-        });
-
-        return me.orderPositionGrid = Ext.create('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
+        me.orderPositionGrid = Ext.create('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             subApplication: me.subApplication,
             orderModel: me.orderModel
         });
-    }
 
+        return me.orderPositionGrid;
+    }
 });
-//
-//{/block}
+// {/block}

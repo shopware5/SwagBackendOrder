@@ -45,6 +45,7 @@ class ProductRepository
         $builder->select(
             'articles.id AS articleId,
             details.number,
+            details.id AS variantId,
             articles.name,
             details.id,
             details.inStock,
@@ -70,7 +71,7 @@ class ProductRepository
                         'articles.name',
                         $builder->expr()->concat(
                             $builder->expr()->literal(' '),
-                            'details.additionalText'
+                            'IFNULL(details.additionalText,\'\')'
                         )
                     ),
                     $builder->expr()->literal($search)
