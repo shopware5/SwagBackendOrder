@@ -103,8 +103,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $order = $orderService->create($orderStruct);
 
             $modelManager->getConnection()->commit();
-
-            $this->sendOrderConfirmationMail($order);
+            if ($orderStruct->getSendMail() == 1) {
+                $this->sendOrderConfirmationMail($order);
+            }
         } catch (InvalidOrderException $e) {
             $modelManager->getConnection()->rollBack();
 
@@ -249,8 +250,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $builder = $this->get('models')->createQueryBuilder();
         $builder->select(['payment'])
-            ->from(Payment::class, 'payment')
-            ->orderBy('payment.active', 'DESC');
+                ->from(Payment::class, 'payment')
+                ->orderBy('payment.active', 'DESC');
 
         $paymentMethods = $builder->getQuery()->getArrayResult();
 
@@ -282,9 +283,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = $this->get('models')->createQueryBuilder();
 
         $builder->select(['dispatch', 'shipping'])
-            ->from(ShippingCost::class, 'shipping')
-            ->innerJoin('shipping.dispatch', 'dispatch')
-            ->groupBy('dispatch.id');
+                ->from(ShippingCost::class, 'shipping')
+                ->innerJoin('shipping.dispatch', 'dispatch')
+                ->groupBy('dispatch.id');
         $shippingCosts = $builder->getQuery()->getArrayResult();
 
         $languageId = $this->getBackendLanguage();
@@ -341,12 +342,19 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPluginConfigAction()
     {
-        $configReader = $this->get('shopware.plugin.config_reader');
+        $configReader = $this->container->get('shopware.plugin.config_reader');
         $pluginConfig = $configReader->getByPluginName('SwagBackendOrder');
 
         $desktopTypes = $pluginConfig['desktopTypes'];
         $desktopTypes = explode(',', $desktopTypes);
         $validationMail = $pluginConfig['validationMail'];
+        $sendMail = $pluginConfig['sendMail'];
+        $sendMailConfigGlobal = $this->get('config')->get('sendOrderMail');
+        Shopware()->PluginLogger()->info($sendMailConfigGlobal);
+        //Check global Shopware Configuration
+        if($sendMailConfigGlobal == 0) {
+            $sendMail = $sendMailConfigGlobal;
+        }
 
         $config = [];
         $config['desktopTypes'] = [];
@@ -359,6 +367,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $config['validationMail'] = $validationMail;
+        $config['sendMail'] = $sendMail;
 
         $total = count($config);
 
@@ -416,11 +425,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $builder = $this->get('models')->createQueryBuilder();
         $builder->select('shops')
-            ->from(Shop::class, 'shops')
-            ->where('shops.mainId = :mainShopId')
-            ->orWhere('shops.id = :mainShopId')
-            ->andWhere('shops.active = 1')
-            ->setParameter('mainShopId', $mainShopId);
+                ->from(Shop::class, 'shops')
+                ->where('shops.mainId = :mainShopId')
+                ->orWhere('shops.id = :mainShopId')
+                ->andWhere('shops.active = 1')
+                ->setParameter('mainShopId', $mainShopId);
 
         $result = $builder->getQuery()->getArrayResult();
 

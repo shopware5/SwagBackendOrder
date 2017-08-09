@@ -71,10 +71,14 @@ class OrderStruct
     private $deviceType;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $netOrder;
 
+    /**
+     * @var bool
+     */
+    private $sendMail;
     /**
      * @var PositionStruct[]
      */
@@ -277,7 +281,7 @@ class OrderStruct
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNetOrder()
     {
@@ -285,11 +289,27 @@ class OrderStruct
     }
 
     /**
-     * @param boolean $netOrder
+     * @param bool $netOrder
      */
     public function setNetOrder($netOrder)
     {
         $this->netOrder = $netOrder;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSendMail()
+    {
+        return $this->sendMail;
+    }
+
+    /**
+     * @param bool $sendMail
+     */
+    public function setSendMail($sendMail)
+    {
+        $this->sendMail = $sendMail;
     }
 
     /**
@@ -365,7 +385,7 @@ class OrderStruct
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTaxFree()
     {
@@ -373,7 +393,7 @@ class OrderStruct
     }
 
     /**
-     * @param boolean $taxFree
+     * @param bool $taxFree
      */
     public function setTaxFree($taxFree)
     {

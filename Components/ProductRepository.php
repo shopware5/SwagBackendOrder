@@ -12,6 +12,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Article\Article;
+use Shopware\Models\Article\Supplier;
 
 class ProductRepository
 {
@@ -52,13 +53,15 @@ class ProductRepository
             articles.taxId,
             prices.price,
             details.additionalText,
-            tax.tax'
+            tax.tax,
+            articles.supplierId,
+            sp.id as supplierID'
         );
 
         $builder->from(Article::class, 'articles')
-            ->leftJoin('articles.details', 'details')
-            ->leftJoin('articles.supplier', 'sp')
-            ->leftJoin('details.prices', 'prices', Join::WITH, 'prices.customerGroupKey = :groupKey');
+                ->leftJoin('articles.details', 'details')
+                ->leftJoin('articles.supplier', 'sp')
+                ->leftJoin('details.prices', 'prices', Join::WITH, 'prices.customerGroupKey = :groupKey');
 
         if ($customerGroupKey !== 'EK') {
             $builder->leftJoin('details.prices', 'fallbackPrices', Join::WITH, "fallbackPrices.customerGroupKey = 'EK'");
@@ -66,26 +69,26 @@ class ProductRepository
         }
 
         $builder->leftJoin('articles.tax', 'tax')
-            ->where(
-                $builder->expr()->like(
-                    $builder->expr()->concat(
-                        'articles.name',
+                ->where(
+                    $builder->expr()->like(
                         $builder->expr()->concat(
-                            $builder->expr()->literal(' '),
-                            'IFNULL(details.additionalText,\'\')'
-                        )
-                    ),
-                    $builder->expr()->literal($search)
+                            'articles.name',
+                            $builder->expr()->concat(
+                                $builder->expr()->literal(' '),
+                                'IFNULL(details.additionalText,\'\')'
+                            )
+                        ),
+                        $builder->expr()->literal($search)
+                    )
                 )
-            )
-            ->orWhere('details.number LIKE :number')
-            ->orWhere('sp.name LIKE :number')
-            ->andWhere('articles.active = 1')
-            ->setParameter('number', $search)
-            ->setParameter('groupKey', $customerGroupKey)
-            ->orderBy('details.number')
-            ->groupBy('details.number')
-            ->setMaxResults(3);
+                ->orWhere('details.number LIKE :number')
+                ->orWhere('sp.name LIKE :number')
+                ->andWhere('articles.active = 1')
+                ->setParameter('number', $search)
+                ->setParameter('groupKey', $customerGroupKey)
+                ->orderBy('details.number')
+                ->groupBy('details.number')
+                ->setMaxResults(3);
 
         return $builder;
     }
