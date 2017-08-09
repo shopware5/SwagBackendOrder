@@ -29,6 +29,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder', {
         { name: 'currencyId', type: 'string' },
         { name: 'desktopType', type: 'string' },
         { name: 'displayNet', type: 'boolean' },
+        { name: 'sendMail', type: 'boolean'},
         { name: 'taxFree', type: 'boolean' }
     ],
 
