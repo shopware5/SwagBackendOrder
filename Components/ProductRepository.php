@@ -57,6 +57,7 @@ class ProductRepository
 
         $builder->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
+            ->leftJoin('articles.supplier', 'sp')
             ->leftJoin('details.prices', 'prices', Join::WITH, 'prices.customerGroupKey = :groupKey');
 
         if ($customerGroupKey !== 'EK') {
@@ -78,6 +79,7 @@ class ProductRepository
                 )
             )
             ->orWhere('details.number LIKE :number')
+            ->orWhere('sp.name LIKE :number')
             ->andWhere('articles.active = 1')
             ->setParameter('number', $search)
             ->setParameter('groupKey', $customerGroupKey)
