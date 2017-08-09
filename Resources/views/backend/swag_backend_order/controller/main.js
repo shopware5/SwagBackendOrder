@@ -366,7 +366,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                     price = result.price,
                     productName = result.name,
                     taxComboStore,
-                    valueField,
                     displayField,
                     recordNumber,
                     displayValue;
@@ -392,10 +391,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 columns[7].setValue(result.inStock);
 
                 taxComboStore = columns[6].store;
-                valueField = columns[6].valueField;
                 displayField = columns[6].displayField;
 
-                recordNumber = taxComboStore.findExact(valueField, result.taxId, 0);
+                recordNumber = taxComboStore.findExact('id', result.taxId, 0);
                 displayValue = taxComboStore.getAt(recordNumber).data[displayField];
                 columns[6].setValue(result.taxId);
                 columns[6].setRawValue(displayValue);

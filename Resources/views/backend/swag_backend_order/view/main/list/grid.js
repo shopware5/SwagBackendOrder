@@ -472,9 +472,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      */
     renderTaxRate: function(value, row) {
         var me = this,
-            taxIndex = me.taxStore.findExact('tax', value);
-        var taxRate = value;
-        var taxId = 0;
+            taxIndex = me.taxStore.findExact('tax', value),
+            taxRate = value,
+            taxId = 0;
+
         if (taxIndex > -1) {
             taxRate = me.taxStore.getAt(taxIndex).get('tax');
             taxId = me.taxStore.getAt(taxIndex).get('id');
