@@ -8,12 +8,10 @@
 
 namespace SwagBackendOrder\Components;
 
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Join;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Article\Article;
-use Shopware\Models\Article\Supplier;
 
 class ProductRepository
 {
@@ -54,13 +52,12 @@ class ProductRepository
             articles.taxId,
             prices.price,
             details.additionalText,
-            tax.tax,
-            articles.supplierId,
-            sp.id as supplierID'
+            tax.tax'
         );
 
         $builder->from(Article::class, 'articles')
             ->leftJoin('articles.details', 'details')
+            ->leftJoin('articles.supplier', 'sp')
             ->leftJoin('details.prices', 'prices', Join::WITH, 'prices.customerGroupKey = :groupKey');
 
         if ($customerGroupKey !== 'EK') {
@@ -69,12 +66,6 @@ class ProductRepository
         }
 
         $builder->leftJoin('articles.tax', 'tax')
-            ->leftJoin(
-                Supplier::class,
-                'sp',
-                Expr\Join::WITH,
-                'articles.supplierId = sp.id'
-            )
             ->where(
                 $builder->expr()->like(
                     $builder->expr()->concat(
