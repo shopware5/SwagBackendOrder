@@ -12,6 +12,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Model\QueryBuilder;
 use Shopware\Models\Article\Article;
+use Shopware\Models\Article\Supplier;
 
 class ProductRepository
 {
@@ -52,7 +53,9 @@ class ProductRepository
             articles.taxId,
             prices.price,
             details.additionalText,
-            tax.tax'
+            tax.tax,
+            articles.supplierId,
+            sp.id as supplierID'
         );
 
         $builder->from(Article::class, 'articles')
