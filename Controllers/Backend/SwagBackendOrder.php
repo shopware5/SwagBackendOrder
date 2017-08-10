@@ -112,7 +112,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             $modelManager->getConnection()->commit();
 
-            $this->sendOrderConfirmationMail($order);
+            if ($orderStruct->getSendMail() == 1) {
+                $this->sendOrderConfirmationMail($order);
+            }
         } catch (InvalidOrderException $e) {
             $modelManager->getConnection()->rollBack();
 
@@ -318,6 +320,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $desktopTypes = $pluginConfig['desktopTypes'];
         $desktopTypes = explode(',', $desktopTypes);
         $validationMail = $pluginConfig['validationMail'];
+        $sendMail = $pluginConfig['sendMail'];
+        $sendMailConfigGlobal = $this->get('config')->get('sendOrderMail');
+        if($sendMailConfigGlobal == 0) {
+            $sendMail = $sendMailConfigGlobal;
+        }
 
         $config = [];
         $config['desktopTypes'] = [];
@@ -330,6 +337,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $config['validationMail'] = $validationMail;
+        $config['sendMail'] = $sendMail;
 
         $total = count($config);
 
