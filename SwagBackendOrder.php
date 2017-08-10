@@ -11,6 +11,7 @@ namespace SwagBackendOrder;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\UpdateContext;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Shopware\Components\Plugin\Context\ActivateContext;
 
 class SwagBackendOrder extends Plugin
 {
@@ -21,5 +22,26 @@ class SwagBackendOrder extends Plugin
     {
         $container->setParameter('swag_backend_orders.plugin_dir', $this->getPath());
         parent::build($container);
+    }
+
+
+    /**
+     * @param ActivateContext $context
+     */
+    public function activate(ActivateContext $context)
+    {
+
+        $shop = Shopware()->Models()->getRepository('Shopware\Models\Shop\Shop')->findOneBy(array('default' => true));
+        $pluginManager = Shopware()->Container()->get('shopware_plugininstaller.plugin_manager');
+        $plugin = $pluginManager->getPluginByName($this->getName());
+        $sendMailConfigGlobal = Shopware()->Config()->get('sendOrderMail');
+        if($sendMailConfigGlobal == 1) {
+            $pluginManager->saveConfigElement($plugin, 'sendMail', '1', $shop);
+        }
+        else {
+            $pluginManager->saveConfigElement($plugin, 'sendMail', '0', $shop);
+        }
+
+        parent::activate($context);
     }
 }

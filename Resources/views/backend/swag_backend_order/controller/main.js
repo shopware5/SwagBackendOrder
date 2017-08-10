@@ -104,7 +104,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             'createbackendorder-totalcostsoverview': {
                 calculateBasket: me.onCalculateBasket,
                 changeDisplayNet: me.onChangeDisplayNet,
-                changeTaxFreeCheckbox: me.onChangeTaxFree
+                changeTaxFreeCheckbox: me.onChangeTaxFree,
+                changeSendMail: me.onChangeSendMail
             }
         });
 
@@ -626,7 +627,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
                 me.validationMail = pluginConfigObj.data.validationMail;
                 me.desktopTypes = pluginConfigObj.data.desktopTypes;
-
+                me.sendMail = pluginConfigObj.data.sendMail;
+                if (me.sendMail == 1) {
+                    me.orderModel.set('sendMail', 1);
+                    //Check sendMail Checkbox
+                    me.getTotalCostsOverview().sendMailCheckbox.setValue(true);
+                }
                 me.subApplication.getStore('DesktopTypes').loadData(me.desktopTypes, false);
             }
         });
@@ -740,6 +746,15 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
         me.orderModel.set('displayNet', newValue);
         me.onCalculateBasket();
+    },
+
+    /**
+     * Is responsible for the mail send confirmation
+     *  @param { boolean } newValue
+     */
+    onChangeSendMail: function (newValue, oldValue) {
+        var me = this;
+        me.orderModel.set('sendMail', newValue);
     },
 
     /**

@@ -55,6 +55,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             me.fireEvent('changeDisplayNet', newValue, oldValue);
         });
 
+        me.sendMailCheckbox.on('change', function (checkbox, newValue, oldValue) {
+            me.fireEvent('changeSendMail', newValue, oldValue);
+        });
+
         me.taxFreeCheckbox.on('change', function (checkbox, newValue, oldValue) {
             me.displayNetCheckbox.setDisabled(newValue);
             me.fireEvent('changeTaxFreeCheckbox', newValue, oldValue);
@@ -253,6 +257,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.displayNetCheckbox;
     },
 
+    createSendMailCheckbox: function () {
+        var me = this;
+
+        me.sendMailCheckbox = Ext.create('Ext.form.field.Checkbox', {
+            boxLabel: '{s name="send_mail"}{/s}',
+            inputValue: true,
+            uncheckedValue: false,
+            padding: '0 5 0 0'
+        });
+
+        return me.sendMailCheckbox;
+    },
+
     /**
      * @returns { Ext.container.Container }
      */
@@ -263,7 +280,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             layout: 'vbox',
             items: [
                 me.createDisplayNetCheckbox(),
-                me.createTaxFreeCheckbox()
+                me.createTaxFreeCheckbox(),
+                me.createSendMailCheckbox()
             ]
         });
     },

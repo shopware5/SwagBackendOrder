@@ -27,6 +27,7 @@ class OrderHydrator
 
     /**
      * @param \Enlight_Controller_Request_Request $request
+     *
      * @return OrderStruct
      */
     public function hydrateFromRequest(\Enlight_Controller_Request_Request $request)
@@ -54,6 +55,7 @@ class OrderHydrator
 
         $orderStruct->setNetOrder((boolean) $data['displayNet']);
         $orderStruct->setTaxFree((boolean) $data['taxFree']);
+        $orderStruct->setSendMail((bool) $data['sendMail']);
 
         $orderStruct->setTotal((float) $data['total']);
         $orderStruct->setTotalWithoutTax((float) $data['totalWithoutTax']);
