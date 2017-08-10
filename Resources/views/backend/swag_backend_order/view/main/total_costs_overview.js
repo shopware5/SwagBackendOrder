@@ -43,6 +43,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     initComponent: function () {
         var me = this;
 
+        me.getPluginConfig();
+
         me.currencyStore = me.subApplication.getStore('Currency');
         me.items = [
             me.createTotalCostsOverviewContainer()
@@ -300,7 +302,27 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         });
 
         return me.taxFreeCheckbox;
-    }
+    },
+
+    /**
+     * reads the plugin configuration
+     */
+    getPluginConfig: function() {
+        var me = this;
+
+        Ext.Ajax.request({
+            url: '{url action=getPluginConfig}',
+            success: function(response) {
+                var pluginConfigObj = Ext.decode(response.responseText);
+
+                me.sendMail = pluginConfigObj.data.sendMail;
+                if (me.sendMail == 1) {
+                    me.orderModel.set('sendMail', 1);
+                    me.sendMailCheckbox.setValue(true);
+                }
+            }
+        });
+    },
 });
 //
 //{/block}
