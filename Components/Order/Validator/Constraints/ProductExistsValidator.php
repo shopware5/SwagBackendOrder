@@ -26,7 +26,7 @@ class ProductExistsValidator extends ConstraintValidator
 
     /**
      * @param \Shopware_Components_Snippet_Manager $snippetManager
-     * @param Connection $connection
+     * @param Connection                           $connection
      */
     public function __construct(\Shopware_Components_Snippet_Manager $snippetManager, Connection $connection)
     {
@@ -35,7 +35,7 @@ class ProductExistsValidator extends ConstraintValidator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
@@ -54,6 +54,7 @@ class ProductExistsValidator extends ConstraintValidator
 
     /**
      * @param string $orderNumber
+     *
      * @return bool
      */
     private function productExists($orderNumber)
@@ -65,6 +66,7 @@ class ProductExistsValidator extends ConstraintValidator
         $builder->setParameter('number', $orderNumber);
 
         $stmt = $builder->execute();
+
         return $stmt->fetchColumn();
     }
 }

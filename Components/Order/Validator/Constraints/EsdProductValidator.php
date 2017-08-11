@@ -26,7 +26,7 @@ class EsdProductValidator extends ConstraintValidator
 
     /**
      * @param \Enlight_Components_Snippet_Manager $snippetManager
-     * @param Connection $connection
+     * @param Connection                          $connection
      */
     public function __construct(\Enlight_Components_Snippet_Manager $snippetManager, Connection $connection)
     {
@@ -35,7 +35,7 @@ class EsdProductValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $value
+     * @param string     $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)
@@ -55,6 +55,7 @@ class EsdProductValidator extends ConstraintValidator
 
     /**
      * @param string $orderNumber
+     *
      * @return bool|string
      */
     private function isEsdProduct($orderNumber)
@@ -67,6 +68,7 @@ class EsdProductValidator extends ConstraintValidator
         $builder->setParameter('number', $orderNumber);
 
         $stmt = $builder->execute();
+
         return $stmt->fetchColumn();
     }
 }

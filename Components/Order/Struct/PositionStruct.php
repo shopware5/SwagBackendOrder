@@ -261,4 +261,20 @@ class PositionStruct
     {
         $this->total = $total;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDiscount()
+    {
+        return strpos($this->getNumber(), 'DISCOUNT.') === 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiscountType()
+    {
+        return (int) explode('.', $this->getNumber())[1];
+    }
 }

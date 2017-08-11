@@ -30,15 +30,17 @@ use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
 use SwagBackendOrder\Components\CustomerRepository;
 use SwagBackendOrder\Components\Order\Hydrator\OrderHydrator;
-use SwagBackendOrder\Components\Order\OrderService;
+use SwagBackendOrder\Components\Order\OrderServiceInterface;
 use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Components\Order\Validator\OrderValidator;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\DiscountCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory;
+use SwagBackendOrder\Components\PriceCalculation\DiscountType;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator;
 use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
 use SwagBackendOrder\Components\PriceCalculation\Result\TotalPricesResult;
@@ -110,7 +112,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $shop = $shopRepository->getActiveById($orderStruct->getLanguageShopId());
             $shop->registerResources();
 
-            /** @var OrderService $orderService */
+            /** @var OrderServiceInterface $orderService */
             $orderService = $this->get('swag_backend_order.order.service');
             $order = $orderService->create($orderStruct);
 
@@ -260,6 +262,40 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
+    public function getDiscountAction()
+    {
+        $type = (int) $this->Request()->getParam('type');
+        $value = (float) $this->Request()->getParam('value');
+        $productName = $this->Request()->getParam('name');
+        $totalAmount = $this->Request()->getParam('currentTotal');
+        $taxRate = $this->Request()->getParam('tax');
+
+        if ($type === DiscountType::DISCOUNT_ABSOLUTE && $totalAmount < $value) {
+            $this->view->assign(['success' => false]);
+
+            return;
+        }
+
+        $result = [
+            'articleName' => $productName,
+            'articleNumber' => 'DISCOUNT.' . $type,
+            'articleId' => 0,
+            'price' => $value * -1,
+            'mode' => 4,
+            'quantity' => 1,
+            'inStock' => 1,
+            'isDiscount' => true,
+            'discountType' => $type,
+            'total' => $value * -1,
+            'taxRate' => $taxRate,
+        ];
+
+        $this->view->assign([
+            'data' => $result,
+            'success' => true,
+        ]);
+    }
+
     /**
      * gets all available payments for the backend order
      */
@@ -268,6 +304,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         /** @var PaymentTranslator $paymentTranslator */
         $paymentTranslator = $this->get('swag_backend_order.payment_translator');
 
+        /** @var \Shopware\Components\Model\QueryBuilder $builder */
         $builder = $this->get('models')->createQueryBuilder();
         $builder->select(['payment'])
             ->from(Payment::class, 'payment')
@@ -509,13 +546,20 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $totalPositionPrice = new PriceResult();
             $totalPositionPrice->setNet($this->getTotalPrice($positionPrice->getRoundedNetPrice(), $position->getQuantity()));
             $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getRoundedGrossPrice(), $position->getQuantity()));
-            $positionPrices[] = $totalPositionPrice;
 
-            $position->setPrice($positionPrice->getRoundedGrossPrice());
-            if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
-                $position->setPrice($positionPrice->getRoundedNetPrice());
+            //Don't set the total amount of the product if it's a discount.
+            if (!$position->getIsDiscount()) {
+                $positionPrices[] = $totalPositionPrice;
+
+                $position->setPrice($positionPrice->getRoundedGrossPrice());
+
+                //Use net prices if it's configured like that
+                if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
+                    $position->setPrice($positionPrice->getRoundedNetPrice());
+                }
+
+                $position->setTotal($this->getTotalPrice($position->getPrice(), $position->getQuantity()));
             }
-            $position->setTotal($this->getTotalPrice($position->getPrice(), $position->getQuantity()));
         }
         unset($position);
 
@@ -525,6 +569,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $totalPriceCalculator = $this->get('swag_backend_order.price_calculation.total_price_calculator');
         $totalPriceResult = $totalPriceCalculator->calculate($positionPrices, $dispatchPrice);
         $result = $this->createBasketCalculationResult($totalPriceResult, $requestStruct);
+        $result['isTaxFree'] = $requestStruct->isTaxFree();
+
+        /** @var DiscountCalculator $discountCalculator */
+        $discountCalculator = $this->get('swag_backend_order.price_calculation.discount_calculator');
+        $result = $discountCalculator->calculateDiscount($result);
 
         $this->view->assign([
             'data' => $result,

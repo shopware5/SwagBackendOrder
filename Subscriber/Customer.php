@@ -27,13 +27,13 @@ class Customer implements SubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer' => 'onCustomerPostDispatchSecure',
-            'Enlight_Controller_Action_PostDispatch_Backend_Customer' => 'onPostDispatchCustomer'
+            'Enlight_Controller_Action_PostDispatch_Backend_Customer' => 'onPostDispatchCustomer',
         ];
     }
 
@@ -41,6 +41,7 @@ class Customer implements SubscriberInterface
      * checks if the fake email was used to create accounts with the same email
      *
      * @param \Enlight_Controller_ActionEventArgs $arguments
+     *
      * @return bool
      */
     public function onPostDispatchCustomer(\Enlight_Controller_ActionEventArgs $arguments)

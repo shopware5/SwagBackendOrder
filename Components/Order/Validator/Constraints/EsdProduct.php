@@ -17,7 +17,7 @@ class EsdProduct extends Constraint
     public $namespace = 'backend/swag_backend_order/validations';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validatedBy()
     {

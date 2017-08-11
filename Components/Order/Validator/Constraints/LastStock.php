@@ -12,14 +12,14 @@ use Symfony\Component\Validator\Constraint;
 
 class LastStock extends Constraint
 {
-    public $namespace = "backend/swag_backend_order/validations";
+    public $namespace = 'backend/swag_backend_order/validations';
 
-    public $snippet = "last_stock";
+    public $snippet = 'last_stock';
 
     public $quantity;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validatedBy()
     {

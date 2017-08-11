@@ -28,7 +28,7 @@ class DetailFactory
 
     /**
      * @param ModelManager $modelManager
-     * @param Modules $modules
+     * @param Modules      $modules
      */
     public function __construct(ModelManager $modelManager, Modules $modules)
     {
@@ -38,14 +38,20 @@ class DetailFactory
 
     /**
      * @param PositionStruct $positionStruct
-     * @param boolean $isTaxFree
-     * @return Detail
+     * @param bool           $isTaxFree
+     *
      * @throws InvalidOrderException
+     *
+     * @return Detail
      */
     public function create(PositionStruct $positionStruct, $isTaxFree)
     {
         if (!$positionStruct->getNumber()) {
-            throw new InvalidOrderException("No product number was passed.");
+            throw new InvalidOrderException('No product number was passed.');
+        }
+
+        if ($positionStruct->isDiscount()) {
+            return $this->createDiscount($positionStruct);
         }
 
         $detail = new Detail();
@@ -53,7 +59,6 @@ class DetailFactory
         $repository = $this->modelManager->getRepository(ArticleDetail::class);
         $articleDetail = $repository->findOneBy(['number' => $positionStruct->getNumber()]);
         $article = $articleDetail->getArticle();
-
 
         $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());
         // Actually sOrder::sSaveOrder() sets this to the illegal value of '0' when the order is taxfree,
@@ -65,6 +70,7 @@ class DetailFactory
 
         $detail->setEsdArticle(0);
 
+        /** @var DetailStatus $detailStatus */
         $detailStatus = $this->modelManager->find(DetailStatus::class, 0);
         $detail->setStatus($detailStatus);
 
@@ -78,7 +84,34 @@ class DetailFactory
         $detail->setShipped(0);
         $detail->setUnit($articleDetail->getUnit() ? $articleDetail->getUnit()->getName() : 0);
         $detail->setPackUnit($articleDetail->getPackUnit());
+        $detail->setAttribute($this->createDetailAttribute());
 
+        return $detail;
+    }
+
+    /**
+     * @param PositionStruct $positionStruct
+     *
+     * @return Detail
+     */
+    private function createDiscount(PositionStruct $positionStruct)
+    {
+        $detail = new Detail();
+        $detail->setArticleNumber($positionStruct->getNumber());
+        $detail->setArticleName($positionStruct->getName());
+        $detail->setMode($positionStruct->getMode());
+        $detail->setPrice($positionStruct->getTotal());
+
+        $detail->setQuantity(1);
+        $detail->setShipped(0);
+        $detail->setArticleId($positionStruct->getArticleId());
+        $detail->setEsdArticle(0);
+
+        $detail->setTaxRate(0);
+
+        /** @var DetailStatus $detailStatus */
+        $detailStatus = $this->modelManager->find(DetailStatus::class, 0);
+        $detail->setStatus($detailStatus);
         $detail->setAttribute($this->createDetailAttribute());
 
         return $detail;

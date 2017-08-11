@@ -27,6 +27,7 @@ class OrderHydrator
 
     /**
      * @param \Enlight_Controller_Request_Request $request
+     *
      * @return OrderStruct
      */
     public function hydrateFromRequest(\Enlight_Controller_Request_Request $request)
@@ -52,8 +53,8 @@ class OrderHydrator
         $orderStruct->setCurrency((string) $data['currency']);
         $orderStruct->setDeviceType((string) $data['desktopType']);
 
-        $orderStruct->setNetOrder((boolean) $data['displayNet']);
-        $orderStruct->setTaxFree((boolean) $data['taxFree']);
+        $orderStruct->setNetOrder((bool) $data['displayNet']);
+        $orderStruct->setTaxFree((bool) $data['taxFree']);
 
         $orderStruct->setTotal((float) $data['total']);
         $orderStruct->setTotalWithoutTax((float) $data['totalWithoutTax']);

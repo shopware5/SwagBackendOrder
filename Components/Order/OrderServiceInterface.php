@@ -15,6 +15,7 @@ interface OrderServiceInterface
 {
     /**
      * @param OrderStruct $orderStruct
+     *
      * @return Order
      */
     public function create(OrderStruct $orderStruct);

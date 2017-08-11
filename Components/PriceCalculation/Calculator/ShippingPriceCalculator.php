@@ -25,7 +25,7 @@ class ShippingPriceCalculator
     private $taxCalculation;
 
     /**
-     * @param TaxCalculation $taxCalculation
+     * @param TaxCalculation    $taxCalculation
      * @param CurrencyConverter $currencyConverter
      */
     public function __construct(TaxCalculation $taxCalculation, CurrencyConverter $currencyConverter)
@@ -36,6 +36,7 @@ class ShippingPriceCalculator
 
     /**
      * @param PriceContext $context
+     *
      * @return PriceResult
      */
     public function calculate(PriceContext $context)
@@ -60,6 +61,7 @@ class ShippingPriceCalculator
 
     /**
      * @param PriceContext $context
+     *
      * @return float the base/gross shipping price in the standard currency
      */
     public function calculateBasePrice(PriceContext $context)

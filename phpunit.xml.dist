@@ -16,6 +16,7 @@
 
                 <!-- Bootstrap -->
                 <file>SwagBackendOrder.php</file>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -13,6 +13,7 @@ class TaxCalculation
     /**
      * @param float $price
      * @param float $taxRate
+     *
      * @return float
      */
     public function getNetPrice($price, $taxRate)
@@ -23,6 +24,7 @@ class TaxCalculation
     /**
      * @param float $price
      * @param float $taxRate
+     *
      * @return float
      */
     public function getGrossPrice($price, $taxRate)

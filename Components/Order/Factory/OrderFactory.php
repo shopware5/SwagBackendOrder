@@ -49,9 +49,9 @@ class OrderFactory
     private $detailFactory;
 
     /**
-     * @param ModelManager $modelManager
+     * @param ModelManager            $modelManager
      * @param AddressServiceInterface $addressService
-     * @param DetailFactory $detailFactory
+     * @param DetailFactory           $detailFactory
      */
     public function __construct(ModelManager $modelManager, AddressServiceInterface $addressService, DetailFactory $detailFactory)
     {
@@ -62,6 +62,7 @@ class OrderFactory
 
     /**
      * @param OrderStruct $orderStruct
+     *
      * @return Order
      */
     public function create(OrderStruct $orderStruct)
@@ -134,7 +135,8 @@ class OrderFactory
         $attributes->setOrder($order);
         $order->setAttribute($attributes);
 
-        $order->setPaymentInstances([ $this->createPaymentInstance($order) ]);
+        $order->setPaymentInstances([$this->createPaymentInstance($order)]);
+
         return $order;
     }
 
@@ -142,20 +144,22 @@ class OrderFactory
      * Workaround to fix 'Partner can not be null.' exception.
      *
      * @param OrderStruct $orderStruct
+     *
      * @return Order
      */
     private function initOrderModel(OrderStruct $orderStruct)
     {
         $connection = $this->modelManager->getConnection();
         $sql = 'INSERT INTO s_order (ordernumber) VALUES (?)';
-        $connection->executeQuery($sql, [ $orderStruct->getNumber() ]);
+        $connection->executeQuery($sql, [$orderStruct->getNumber()]);
 
         return $this->modelManager->find(Order::class, $connection->lastInsertId());
     }
 
     /**
      * @param OrderStruct $orderStruct
-     * @param Order $order
+     * @param Order       $order
+     *
      * @return Detail[]
      */
     private function createOrderDetails(OrderStruct $orderStruct, Order $order)
@@ -175,6 +179,7 @@ class OrderFactory
 
     /**
      * @param Order $orderModel
+     *
      * @return PaymentInstance
      */
     private function createPaymentInstance(Order $orderModel)
@@ -184,7 +189,7 @@ class OrderFactory
 
         /** @var PaymentData[] $paymentDataModel */
         $paymentDataModel = $orderModel->getCustomer()->getPaymentData()->filter(function (PaymentData $paymentData) use ($paymentId) {
-            return ($paymentData->getPaymentMeanId() == $paymentId);
+            return $paymentData->getPaymentMeanId() == $paymentId;
         });
 
         if ($paymentDataModel[0] instanceof PaymentData) {
@@ -220,13 +225,14 @@ class OrderFactory
 
     /**
      * @param OrderStruct $orderStruct
+     *
      * @return OrderAttributes
      */
     private function createOrderAttributes(OrderStruct $orderStruct)
     {
         $attributeData = $orderStruct->getAttributes();
 
-        $attributes = new OrderAttributes;
+        $attributes = new OrderAttributes();
         $attributes->setAttribute1($attributeData['attribute1']);
         $attributes->setAttribute2($attributeData['attribute2']);
         $attributes->setAttribute3($attributeData['attribute3']);
@@ -240,6 +246,7 @@ class OrderFactory
     /**
      * @param OrderStruct $orderStruct
      * @param $customer
+     *
      * @return Shipping
      */
     private function createShippingAddress(OrderStruct $orderStruct, $customer)
@@ -248,12 +255,14 @@ class OrderFactory
         $shipping = new Shipping();
         $shipping->fromAddress($shippingAddress);
         $shipping->setCustomer($customer);
+
         return $shipping;
     }
 
     /**
      * @param OrderStruct $orderStruct
      * @param $customer
+     *
      * @return Billing
      */
     private function createBillingAddress(OrderStruct $orderStruct, $customer)
@@ -262,6 +271,7 @@ class OrderFactory
         $billing = new Billing();
         $billing->fromAddress($billingAddress);
         $billing->setCustomer($customer);
+
         return $billing;
     }
 }

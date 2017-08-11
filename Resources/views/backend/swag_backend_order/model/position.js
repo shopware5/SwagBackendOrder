@@ -54,7 +54,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
                 }
                 return v.toFixed(2);
             }
-        }
+        },
+        { name: 'isDiscount', type: 'bool' },
+        { name: 'discountType', type: 'int' }
     ]
 });
 //

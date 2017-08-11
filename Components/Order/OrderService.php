@@ -39,10 +39,10 @@ class OrderService implements OrderServiceInterface
     private $validator;
 
     /**
-     * @param OrderFactory $orderFactory
-     * @param ModelManager $modelManager
+     * @param OrderFactory                    $orderFactory
+     * @param ModelManager                    $modelManager
      * @param NumberRangeIncrementerInterface $numberRangeIncrementer
-     * @param OrderValidatorInterface $validator
+     * @param OrderValidatorInterface         $validator
      */
     public function __construct(
         OrderFactory $orderFactory,
@@ -58,8 +58,10 @@ class OrderService implements OrderServiceInterface
 
     /**
      * @param OrderStruct $orderStruct
-     * @return Order
+     *
      * @throws InvalidOrderException
+     *
+     * @return Order
      */
     public function create(OrderStruct $orderStruct)
     {
@@ -68,7 +70,7 @@ class OrderService implements OrderServiceInterface
 
         $violations = $this->validator->validate($orderStruct);
         if ($violations->getMessages()) {
-            throw new InvalidOrderException("Invalid " . OrderStruct::class . " given.");
+            throw new InvalidOrderException('Invalid ' . OrderStruct::class . 'given.');
         }
 
         $order = $this->orderFactory->create($orderStruct);

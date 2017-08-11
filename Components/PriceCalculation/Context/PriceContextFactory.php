@@ -29,9 +29,10 @@ class PriceContextFactory
     /**
      * @param float $price
      * @param float $taxRate
-     * @param boolean $taxFree
-     * @param boolean $isNetPrice
-     * @param int $currencyId
+     * @param bool  $taxFree
+     * @param bool  $isNetPrice
+     * @param int   $currencyId
+     *
      * @return PriceContext
      */
     public function create($price, $taxRate, $taxFree, $isNetPrice, $currencyId)
@@ -50,6 +51,7 @@ class PriceContextFactory
     private function getBaseCurrency()
     {
         $repository = $this->modelManager->getRepository(Currency::class);
-        return $repository->findOneBy([ 'default' => 1 ]);
+
+        return $repository->findOneBy(['default' => 1]);
     }
 }

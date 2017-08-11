@@ -26,7 +26,7 @@ class CustomProductsValidation extends ConstraintValidator
 
     /**
      * @param \Shopware_Components_Snippet_Manager $snippetManager
-     * @param Connection $connection
+     * @param Connection                           $connection
      */
     public function __construct(\Shopware_Components_Snippet_Manager $snippetManager, Connection $connection)
     {
@@ -35,7 +35,7 @@ class CustomProductsValidation extends ConstraintValidator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
@@ -58,6 +58,7 @@ class CustomProductsValidation extends ConstraintValidator
 
     /**
      * @param CustomProduct $constraint
+     *
      * @return bool|string
      */
     private function isCustomProductsActivated(CustomProduct $constraint)
@@ -70,11 +71,13 @@ class CustomProductsValidation extends ConstraintValidator
         $builder->setParameter('name', $constraint->pluginName);
 
         $stmt = $builder->execute();
+
         return $stmt->fetchColumn();
     }
 
     /**
      * @param string $orderNumber
+     *
      * @return bool|string
      */
     private function isCustomProductArticle($orderNumber)
@@ -88,6 +91,7 @@ class CustomProductsValidation extends ConstraintValidator
         $builder->setParameter('number', $orderNumber);
 
         $stmt = $builder->execute();
+
         return $stmt->fetchColumn();
     }
 }

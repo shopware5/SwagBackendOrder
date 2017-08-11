@@ -15,7 +15,8 @@ class TotalPriceCalculator
 {
     /**
      * @param PriceResult[] $positionPrices
-     * @param PriceResult $shippingPrice
+     * @param PriceResult   $shippingPrice
+     *
      * @return TotalPricesResult
      */
     public function calculate(array $positionPrices, PriceResult $shippingPrice)
@@ -30,7 +31,7 @@ class TotalPriceCalculator
         $total = $this->getTotal($sum, $shippingPrice);
         $totalPrice->setTotal($total);
 
-        $taxes = $this->getTotalTaxPrices(array_merge($positionPrices, [ $shippingPrice ]));
+        $taxes = $this->getTotalTaxPrices(array_merge($positionPrices, [$shippingPrice]));
         $totalPrice->setTaxes($taxes);
 
         return $totalPrice;
@@ -38,6 +39,7 @@ class TotalPriceCalculator
 
     /**
      * @param PriceResult[] $positionPrices
+     *
      * @return PriceResult
      */
     private function getProductSum($positionPrices)
@@ -53,12 +55,14 @@ class TotalPriceCalculator
 
         $sum->setGross($sumGross);
         $sum->setNet($sumNet);
+
         return $sum;
     }
 
     /**
      * @param PriceResult $sum
      * @param PriceResult $shippingPrice
+     *
      * @return PriceResult
      */
     private function getTotal(PriceResult $sum, PriceResult $shippingPrice)
@@ -69,11 +73,13 @@ class TotalPriceCalculator
 
         $total->setNet($totalNet);
         $total->setGross($totalGross);
+
         return $total;
     }
 
     /**
      * @param PriceResult[] $prices
+     *
      * @return array
      */
     private function getTotalTaxPrices(array $prices)
@@ -88,6 +94,7 @@ class TotalPriceCalculator
 
             $taxes[$taxRate] += $price->getTaxSum();
         }
+
         return array_filter($taxes);
     }
 }

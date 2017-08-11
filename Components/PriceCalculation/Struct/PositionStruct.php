@@ -31,6 +31,16 @@ class PositionStruct
     private $taxRate;
 
     /**
+     * @var bool
+     */
+    private $isDiscount;
+
+    /**
+     * @var int
+     */
+    private $discountType;
+
+    /**
      * @return float
      */
     public function getPrice()
@@ -95,6 +105,38 @@ class PositionStruct
     }
 
     /**
+     * @return bool
+     */
+    public function getIsDiscount()
+    {
+        return $this->isDiscount;
+    }
+
+    /**
+     * @param bool $isDiscount
+     */
+    public function setIsDiscount($isDiscount)
+    {
+        $this->isDiscount = $isDiscount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiscountType()
+    {
+        return $this->discountType;
+    }
+
+    /**
+     * @param int $discountType
+     */
+    public function setDiscountType($discountType)
+    {
+        $this->discountType = $discountType;
+    }
+
+    /**
      * @return array
      */
     public function toArray()
@@ -104,6 +146,8 @@ class PositionStruct
             'quantity' => $this->getQuantity(),
             'total' => $this->getTotal(),
             'taxRate' => $this->getTaxRate(),
+            'isDiscount' => $this->getIsDiscount(),
+            'discountType' => $this->getDiscountType(),
         ];
     }
 }
