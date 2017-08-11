@@ -6,8 +6,13 @@
  * file that was distributed with this source code.
  */
 
-use Shopware\Bundle\StoreFrontBundle\Struct\ListProduct;
+use Shopware\Bundle\SearchBundle\Condition\SearchTermCondition;
+use Shopware\Bundle\SearchBundle\ProductSearchInterface;
+use Shopware\Bundle\SearchBundle\StoreFrontCriteriaFactoryInterface;
+use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
+use Shopware\Bundle\StoreFrontBundle\Service\ListProductServiceInterface;
 use Shopware\Components\Model\ModelManager;
+use Shopware\Components\Plugin\ConfigReader;
 use Shopware\Models\Article\Detail;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Customer\PaymentData;
@@ -16,8 +21,10 @@ use Shopware\Models\Dispatch\ShippingCost;
 use Shopware\Models\Order\Order;
 use Shopware\Models\Payment\Payment;
 use Shopware\Models\Shop\Currency;
+use Shopware\Models\Shop\Repository;
 use Shopware\Models\Shop\Shop;
 use Shopware\Models\Tax\Tax;
+use SwagBackendOrder\Bundle\SearchBundle\Condition\VariantCondition;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
@@ -28,13 +35,18 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Components\Order\Validator\OrderValidator;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
-use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
+use SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator;
 use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
 use SwagBackendOrder\Components\PriceCalculation\Result\TotalPricesResult;
 use SwagBackendOrder\Components\PriceCalculation\Struct\PositionStruct;
 use SwagBackendOrder\Components\PriceCalculation\Struct\RequestStruct;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
+use SwagBackendOrder\Components\Translation\PaymentTranslator;
+use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
@@ -93,7 +105,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $modelManager->getConnection()->beginTransaction();
         try {
             //we need to fake a shop instance if we want to use the Articles Module
-            /** @var \Shopware\Models\Shop\Repository $shopRepository */
+            /** @var Repository $shopRepository */
             $shopRepository = $this->get('models')->getRepository(Shop::class);
             $shop = $shopRepository->getActiveById($orderStruct->getLanguageShopId());
             $shop->registerResources();
@@ -136,39 +148,47 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     {
         $params = $this->Request()->getParams();
         $search = $params['filter'][0]['value'];
-        $shopId = (int) $params['shopId'];
+        $shopId = $this->getShopId();
 
         if (!isset($params['filter'][0]['value'])) {
             $search = '%' . $this->Request()->get('searchParam') . '%';
         }
-        $builder = $this->get('swag_backend_order.product_repository')->getProductQueryBuilder($search);
-        $result = $builder->getQuery()->getArrayResult();
-        $total = count($result);
 
-        foreach ($result as &$product) {
-            $product['price'] = $this->get('swag_backend_order.price_calculation.tax_calculation')->getGrossPrice($product['price'], $product['tax']);
-            if (!$product['additionalText']) {
-                if ($shopId === 0) {
-                    /** @var \Shopware\Models\Shop\Repository $shopRepo */
-                    $shopRepo = $this->get('models')->getRepository(Shop::class);
-                    $shopId = $shopRepo->getActiveDefault()->getId();
-                }
-                $listProduct = new ListProduct($product['id'], $product['variantId'], $product['number']);
-                $additionalTextService = $this->get('shopware_storefront.additional_text_service');
-                $shopContext = $this->get('shopware_storefront.context_service')->createShopContext($shopId);
+        /** @var ContextServiceInterface $contextService */
+        $contextService = $this->get('shopware_storefront.context_service');
+        $shopContext = $contextService->createShopContext($shopId);
 
-                $listProduct = $additionalTextService->buildAdditionalText($listProduct, $shopContext);
+        /** @var StoreFrontCriteriaFactoryInterface $criteriaFactory */
+        $criteriaFactory = $this->get('shopware_search.store_front_criteria_factory');
+        $criteria = $criteriaFactory->createBaseCriteria(
+            [$shopContext->getShop()->getCategory()->getId()],
+            $shopContext
+        );
+        $criteria->addCondition(new SearchTermCondition($search));
+        $criteria->addCondition(new VariantCondition('swag_backend_order_variant_condition'));
+        $criteria->limit(6);
 
-                $product['additionalText'] = $listProduct->getAdditional();
-            }
+        /** @var ProductSearchInterface $productSearch */
+        $productSearch = $this->get('shopware_search.product_search');
+        $productSearchResult = $productSearch->search($criteria, $shopContext);
+
+        $result = [];
+
+        foreach ($productSearchResult->getProducts() as $product) {
+            $productArray = [];
+
+            $productArray['number'] = $product->getNumber();
+            $productArray['name'] = $product->getName();
+            $productArray['additionalText'] = $product->getAdditional();
+
+            $result[] = $productArray;
         }
-        unset($product);
 
         $this->view->assign(
             [
                 'success' => true,
                 'data' => $result,
-                'total' => $total,
+                'total' => $productSearchResult->getTotalCount(),
             ]
         );
     }
@@ -176,62 +196,62 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     public function getProductAction()
     {
         $number = $this->Request()->getParam('ordernumber');
-        $customerId = (int) $this->Request()->getParam('customerId');
-        $shopId = (int) $this->Request()->getParam('shopId');
-
-        // default customer group key of shopware
-        $customerGroupKey = 'EK';
+        $shopId = $this->getShopId();
+        $customerGroupKey = $this->getCustomerGroupKey();
+        $quantity = $this->getQuantity();
 
         /** @var RequestHydrator $requestHydrator */
         $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
         $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
-        if ($customerId !== 0) {
-            $customer = $this->get('swag_backend_order.customer_repository')->get($customerId);
-            $customerGroupKey = $customer['groupKey'];
-        }
-
-        $builder = $this->get('swag_backend_order.product_repository')->getProductQueryBuilder($number, $customerGroupKey);
-        $result = $builder->getQuery()->getArrayResult()[0];
-
-        if (!$result['price']) {
-            $result['price'] = $result['fallbackPrice'];
-        }
-
-        if (!$result['additionalText']) {
-            if ($shopId === 0) {
-                /** @var \Shopware\Models\Shop\Repository $shopRepo */
-                $shopRepo = $this->get('models')->getRepository(Shop::class);
-                $shopId = $shopRepo->getActiveDefault()->getId();
-            }
-            $listProduct = new ListProduct($result['id'], $result['variantId'], $result['number']);
-            $additionalTextService = $this->get('shopware_storefront.additional_text_service');
-            $shopContext = $this->get('shopware_storefront.context_service')->createShopContext($shopId);
-
-            $listProduct = $additionalTextService->buildAdditionalText($listProduct, $shopContext);
-
-            $result['additionalText'] = $listProduct->getAdditional();
-        }
-
-        $currencyFactor = 1;
-        $currency = $this->getModelManager()->find(Currency::class, $requestStruct->getCurrencyId());
-        if ($currency instanceof Currency) {
-            $currencyFactor = $currency->getFactor();
-        }
-
-        $isNetPrice = true;
-        $priceContext = new PriceContext(
-            (float) $result['price'],
-            (float) $result['tax'],
-            $isNetPrice,
-            $requestStruct->isTaxFree(),
-            $currencyFactor
+        /** @var ContextServiceInterface $contextService */
+        $contextService = $this->get('shopware_storefront.context_service');
+        $shopContext = $contextService->createShopContext(
+            $shopId,
+            $requestStruct->getCurrencyId(),
+            $customerGroupKey
         );
 
-        $price = $this->get('swag_backend_order.price_calculation.product_calculator')->calculate($priceContext);
-        $result['price'] = $price->getRoundedGrossPrice();
+        /** @var ListProductServiceInterface $listProductService */
+        $listProductService = $this->get('shopware_storefront.list_product_service');
+        $listProduct = $listProductService->get($number, $shopContext);
+
+        $result = [];
+        $result['number'] = $listProduct->getNumber();
+        $result['name'] = $listProduct->getName();
+        $result['additionalText'] = $listProduct->getAdditional();
+        $result['inStock'] = $listProduct->getStock();
+        $result['taxId'] = $listProduct->getTax()->getId();
+        $result['quantity'] = $quantity;
+
+        $prices = $listProduct->getPrices();
+
+        $result['price'] = round($prices[0]->getCalculatedPrice(), PriceResult::ROUND_PRECISION);
         if ($requestStruct->isDisplayNet() || $requestStruct->isTaxFree()) {
-            $result['price'] = $price->getRoundedNetPrice();
+            $result['price'] = round($prices[0]->getRule()->getPrice(), PriceResult::ROUND_PRECISION);
+        }
+
+        if (count($prices) > 1) {
+            $blockPrices = [];
+            foreach ($prices as $priceStruct) {
+                $netPrice = round($priceStruct->getRule()->getPrice(), PriceResult::ROUND_PRECISION);
+                $grossPrice = round($priceStruct->getCalculatedPrice(), PriceResult::ROUND_PRECISION);
+
+                $blockPrice = $grossPrice;
+                if ($requestStruct->isDisplayNet() || $requestStruct->isTaxFree()) {
+                    $blockPrice = $netPrice;
+                }
+
+                if ($quantity >= $priceStruct->getFrom()) {
+                    $result['price'] = $blockPrice;
+                }
+
+                $blockPrices[$priceStruct->getFrom()] = [
+                    'net' => $netPrice,
+                    'gross' => $grossPrice,
+                ];
+            }
+            $result['blockPrices'] = json_encode($blockPrices);
         }
 
         $this->view->assign([
@@ -245,6 +265,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPaymentAction()
     {
+        /** @var PaymentTranslator $paymentTranslator */
         $paymentTranslator = $this->get('swag_backend_order.payment_translator');
 
         $builder = $this->get('models')->createQueryBuilder();
@@ -277,6 +298,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getShippingCostsAction()
     {
+        /** @var ShippingTranslator $dispatchTranslator */
         $dispatchTranslator = $this->get('swag_backend_order.shipping_translator');
 
         $builder = $this->get('models')->createQueryBuilder();
@@ -341,6 +363,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     public function getPluginConfigAction()
     {
+        /** @var ConfigReader $configReader */
         $configReader = $this->get('shopware.plugin.config_reader');
         $pluginConfig = $configReader->getByPluginName('SwagBackendOrder');
 
@@ -498,7 +521,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $dispatchPrice = $this->getShippingPrice($requestStruct);
 
-        $totalPriceResult = $this->get('swag_backend_order.price_calculation.total_price_calculator')->calculate($positionPrices, $dispatchPrice);
+        /** @var TotalPriceCalculator $totalPriceCalculator */
+        $totalPriceCalculator = $this->get('swag_backend_order.price_calculation.total_price_calculator');
+        $totalPriceResult = $totalPriceCalculator->calculate($positionPrices, $dispatchPrice);
         $result = $this->createBasketCalculationResult($totalPriceResult, $requestStruct);
 
         $this->view->assign([
@@ -642,7 +667,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function getPositionPrice($position, $requestStruct)
     {
+        /** @var PriceContextFactory $priceContextFactory */
         $priceContextFactory = $this->get('swag_backend_order.price_calculation.price_context_factory');
+        /** @var ProductPriceCalculator $productCalculator */
         $productCalculator = $this->get('swag_backend_order.price_calculation.product_calculator');
 
         $previousPriceContext = $priceContextFactory->create(
@@ -718,7 +745,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     private function getShippingPrice($requestStruct)
     {
         $dispatchTaxRate = $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates());
+        /** @var PriceContextFactory $priceContextFactory */
         $priceContextFactory = $this->get('swag_backend_order.price_calculation.price_context_factory');
+        /** @var ShippingPriceCalculator $shippingCalculator */
         $shippingCalculator = $this->get('swag_backend_order.price_calculation.shipping_calculator');
 
         // Get base/gross shipping costs (even if tax free)
@@ -741,5 +770,55 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         );
 
         return $shippingCalculator->calculate($currentPriceContext);
+    }
+
+    /**
+     * @return int
+     */
+    private function getShopId()
+    {
+        $shopId = (int) $this->Request()->getParam('shopId');
+
+        if ($shopId === 0) {
+            /** @var Repository $shopRepo */
+            $shopRepo = $this->get('models')->getRepository(Shop::class);
+            $shopId = $shopRepo->getActiveDefault()->getId();
+        }
+
+        return $shopId;
+    }
+
+    /**
+     * @return string
+     */
+    private function getCustomerGroupKey()
+    {
+        $customerId = (int) $this->Request()->getParam('customerId');
+
+        // default customer group key of shopware
+        $customerGroupKey = 'EK';
+
+        if ($customerId !== 0) {
+            /** @var CustomerRepository $customerRepo */
+            $customerRepo = $this->get('swag_backend_order.customer_repository');
+            $customer = $customerRepo->get($customerId);
+            $customerGroupKey = $customer['groupKey'];
+        }
+
+        return $customerGroupKey;
+    }
+
+    /**
+     * @return int
+     */
+    private function getQuantity()
+    {
+        $quantity = (int) $this->Request()->getParam('quantity');
+
+        if ($quantity === 0) {
+            return 1;
+        }
+
+        return $quantity;
     }
 }

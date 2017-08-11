@@ -26,7 +26,7 @@ class ProductPriceCalculator
     private $currencyConverter;
 
     /**
-     * @param TaxCalculation $taxCalculation
+     * @param TaxCalculation    $taxCalculation
      * @param CurrencyConverter $currencyConverter
      */
     public function __construct(TaxCalculation $taxCalculation, CurrencyConverter $currencyConverter)
@@ -37,13 +37,15 @@ class ProductPriceCalculator
 
     /**
      * @param PriceContext $context
+     *
+     * @throws \RuntimeException
+     *
      * @return PriceResult
-     * @throws \Exception
      */
     public function calculate(PriceContext $context)
     {
         if (!$context->isNetPrice()) {
-            throw new \Exception("The given price is not a net price.");
+            throw new \RuntimeException('The given price is not a net price.');
         }
 
         $result = new PriceResult();
@@ -55,23 +57,27 @@ class ProductPriceCalculator
         $result->setGross($grossPrice);
 
         $result->setTaxRate($context->getTaxRate());
+
         return $result;
     }
 
     /**
      * @param PriceContext $priceContext
+     *
      * @return float
      */
     public function calculateBasePrice(PriceContext $priceContext)
     {
         $baseCurrencyPrice = $this->currencyConverter->getBaseCurrencyPrice(
-            $priceContext->getPrice(), $priceContext->getCurrencyFactor()
+            $priceContext->getPrice(),
+            $priceContext->getCurrencyFactor()
         );
 
         $basePrice = $baseCurrencyPrice;
         if ($priceContext->isNetPrice() || $priceContext->isTaxFree()) {
             return $basePrice;
         }
+
         return $this->taxCalculation->getNetPrice($baseCurrencyPrice, $priceContext->getTaxRate());
     }
 }

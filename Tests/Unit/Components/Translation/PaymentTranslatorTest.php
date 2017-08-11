@@ -6,7 +6,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SwagBackendOrders\Tests\Unit\Components\Translation;
+namespace SwagBackendOrder\Tests\Unit\Components\Translation;
 
 use SwagBackendOrder\Components\Translation\PaymentTranslator;
 

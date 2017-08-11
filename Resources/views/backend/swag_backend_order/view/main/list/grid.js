@@ -78,6 +78,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         me.callParent(arguments);
 
         me.articleNameSearch.orderModel = me.orderModel;
+        me.articleNumberSearch.orderModel = me.orderModel;
         me.traceGridEvents();
     },
 
@@ -129,7 +130,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         var me = this;
 
         /**
-         * initializes the article search fields
+         * initializes the product search fields
          */
         me.articleNumberSearch.on('valueselect', function(field, value, hiddenValue, record) {
             me.fireEvent('articleNumberSelect', me.rowEditing, value, record);
@@ -152,17 +153,41 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         }, me);
 
         me.rowEditing.on('edit', function(editor, e) {
-            var articleId, positionModel, articlePosition;
+            var productId,
+                positionModel,
+                productPosition,
+                productModel,
+                blockPrices,
+                quantity;
 
             /**
-             * only remove positions which aren't saved in the store and save the articleid to open the correct article
+             * only remove positions which aren't saved in the store and save the 'articleId' to open the correct product
              */
-            articlePosition = me.articleNameSearch.dropDownStore.find('number', e.record.get('articleNumber'));
-            if (articlePosition > -1) {
-                articleId = me.articleNameSearch.dropDownStore.getAt(articlePosition).get('articleId');
+            productPosition = me.articleNameSearch.dropDownStore.find('number', e.record.get('articleNumber'));
+            if (productPosition > -1) {
                 positionModel = e.store.getAt(e.rowIdx);
+
                 if (!Ext.isEmpty(positionModel)) {
-                    positionModel.set('articleId', articleId);
+                    productModel = me.articleNameSearch.dropDownStore.getAt(productPosition);
+                    productId = productModel.get('articleId');
+                    positionModel.set('articleId', productId);
+
+                    // if there are block prices for the product, set a new price
+                    blockPrices = productModel.get('blockPrices');
+                    if (blockPrices !== '') {
+                        blockPrices = Ext.JSON.decode(blockPrices);
+                        quantity = positionModel.get('quantity');
+                        Ext.iterate(blockPrices, function(from, price) {
+                            from = parseInt(from, 10);
+                            if (quantity >= from) {
+                                if (me.orderModel.get('taxFree') || me.orderModel.get('displayNet')) {
+                                    positionModel.set('price', price.net);
+                                } else {
+                                    positionModel.set('price', price.gross);
+                                }
+                            }
+                        });
+                    }
                 }
             }
 
@@ -230,8 +255,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 header: me.snippets.columns.price,
                 dataIndex: 'price',
                 flex: 1,
-                renderer: function(value, metaData, record) {
-                    return me.renderPrice(value, record);
+                renderer: function(value) {
+                    return me.renderPrice(value);
                 },
                 editor: {
                     xtype: 'numberfield',
