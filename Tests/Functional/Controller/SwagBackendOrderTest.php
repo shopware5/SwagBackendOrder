@@ -38,6 +38,56 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(59.99, $result['positions'][0]['total']);
     }
 
+    public function testCalculateBasket_with_empty_dispatchId()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoDataWithEmptyDispatch());
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->calculateBasketAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertEquals(3.9, $result['shippingCosts']);
+        $this->assertEquals(3.9, $result['shippingCostsNet']);
+    }
+
+    public function testCalculateBasket_with_invalid_dispatchId()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoDataWithInvalidDispatch());
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Can not find given dispatch with id 99999');
+        $controller->calculateBasketAction();
+    }
+
+    public function testCalculateBasket_with_empty_basketTaxRates()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDemoDataWithEmptyPositions());
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->calculateBasketAction();
+
+        $result = $view->getAssign('data');
+        Shopware()->Front()->Router()->assemble();
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertEquals(3.9, $result['shippingCosts']);
+        $this->assertEquals(3.9, $result['shippingCostsNet']);
+    }
+
     public function testBasketCalculationWithChangedDisplayNetFlag()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -138,6 +188,26 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(59.99, $result['price']);
     }
 
+    public function test_getProduct_with_block_prices()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getProductDemoDataWithBlockPrices());
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getProductAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $blockPrices = $result['blockPrices'];
+        $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
+        $this->assertEquals($expectedBlockPricesJSON, $blockPrices);
+        $this->assertEquals(0.9, $result['price']);
+    }
+
     public function testGetProductWithDisplayNet()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -154,6 +224,26 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($view->getAssign('success'));
         $this->assertEquals('SW10002.1', $result['number']);
         $this->assertEquals(50.41, $result['price']);
+    }
+
+    public function test_getProduct_with_block_prices_and_display_net()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getProductDemoDataWithBlockPricesAndDisplayNetFlag());
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getProductAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $blockPrices = $result['blockPrices'];
+        $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
+        $this->assertEquals($expectedBlockPricesJSON, $blockPrices);
+        $this->assertEquals(0.76, $result['price']);
     }
 
     public function test_getCustomer_list()
@@ -213,6 +303,24 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertArraySubset($expectedUser, $result);
     }
 
+    public function test_getArticles()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getProductSearchData());
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getArticlesAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertCount(1, $result);
+        $this->assertEquals('SW10239', $result[0]['number']);
+    }
+
     /**
      * @return array
      */
@@ -220,6 +328,64 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":1,"price":"59.99","total":"59.99"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":5,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"94.95"}]',
+            'shippingCosts' => 3.90,
+            'shippingCostsNet' => 3.28,
+            'displayNet' => 'false',
+            'oldCurrencyId' => '',
+            'newCurrencyId' => '',
+            'dispatchId' => 9,
+            'taxFree' => 'false',
+            'previousDisplayNet' => 'false',
+            'previousTaxFree' => 'false',
+            'previousDispatchTaxRate' => '19',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getDemoDataWithEmptyDispatch()
+    {
+        return [
+            'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":1,"price":"59.99","total":"59.99"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":5,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"94.95"}]',
+            'shippingCosts' => 3.90,
+            'shippingCostsNet' => 3.28,
+            'displayNet' => 'false',
+            'oldCurrencyId' => '',
+            'newCurrencyId' => '',
+            'taxFree' => 'false',
+            'previousDisplayNet' => 'false',
+            'previousTaxFree' => 'false',
+            'previousDispatchTaxRate' => '19',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getDemoDataWithInvalidDispatch()
+    {
+        return [
+            'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":1,"price":"59.99","total":"59.99"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":5,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"94.95"}]',
+            'shippingCosts' => 3.90,
+            'shippingCostsNet' => 3.28,
+            'displayNet' => 'false',
+            'oldCurrencyId' => '',
+            'newCurrencyId' => '',
+            'dispatchId' => 99999,
+            'taxFree' => 'false',
+            'previousDisplayNet' => 'false',
+            'previousTaxFree' => 'false',
+            'previousDispatchTaxRate' => '19',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getDemoDataWithEmptyPositions()
+    {
+        return [
             'shippingCosts' => 3.90,
             'shippingCostsNet' => 3.28,
             'displayNet' => 'false',
@@ -300,6 +466,23 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
             'taxFree' => 'false',
             'previousDisplayNet' => 'false',
             'previousTaxRate' => 'false',
+            'customerId' => 1,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductDemoDataWithBlockPrices()
+    {
+        return [
+            'ordernumber' => 'SW10208',
+            'displayNet' => 'false',
+            'newCurrencyId' => '1',
+            'taxFree' => 'false',
+            'previousDisplayNet' => 'false',
+            'previousTaxRate' => 'false',
+            'quantity' => 12,
         ];
     }
 
@@ -315,6 +498,22 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
             'taxFree' => 'true',
             'previousDisplayNet' => 'false',
             'previousTaxRate' => 'false',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductDemoDataWithBlockPricesAndDisplayNetFlag()
+    {
+        return [
+            'ordernumber' => 'SW10208',
+            'displayNet' => 'true',
+            'newCurrencyId' => '1',
+            'taxFree' => 'true',
+            'previousDisplayNet' => 'false',
+            'previousTaxRate' => 'false',
+            'quantity' => 12,
         ];
     }
 
@@ -341,6 +540,16 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
             Shopware()->Container(),
             $view
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function getProductSearchData()
+    {
+        return [
+            'searchParam' => 'spachtel',
+        ];
     }
 }
 
