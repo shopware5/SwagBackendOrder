@@ -358,7 +358,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 previousDisplayNet: me.previousOrderModel.get('displayNet'),
                 previousTaxFree: me.previousOrderModel.get('taxFree'),
                 customerId: me.orderModel.get('customerId'),
-                shopId: me.orderModel.get('languageShopId')
+                shopId: me.orderModel.get('languageShopId'),
+                quantity: columns[3].getValue()
             },
             success: function(response) {
                 var responseObj = Ext.JSON.decode(response.responseText),
@@ -374,6 +375,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                     productName += ' ' + result.additionalText;
                 }
 
+                record.set('blockPrices', result.blockPrices);
+
                 /**
                  * columns[0] -> selected
                  * columns[1] -> articlenumber
@@ -386,7 +389,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                  */
                 columns[1].setValue(result.number);
                 columns[2].setValue(productName);
-                columns[3].setValue(1);
+                columns[3].setValue(result.quantity);
                 columns[4].setValue(price);
                 columns[7].setValue(result.inStock);
 

@@ -1,6 +1,4 @@
-//
-//{block name="backend/create_backend_order/model/article"}
-//
+// {block name="backend/create_backend_order/model/article"}
 Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
 
     extend: 'Ext.data.Model',
@@ -8,8 +6,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
     alternateClassName: 'SwagBackendOrder.model.Article',
 
     /**
-     * fields which represent an article row from it's doctrine model
-     * name field is for the live search to show the articlename + variant text
+     * fields which represent a product row from it's doctrine model
+     * name field is for the live search to show the product name + variant text
      */
     fields: [
         { name: 'id', type: 'int' },
@@ -18,11 +16,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
         {
             name: 'name',
             type: 'string',
-            convert: function (v, record) {
-                if (record.get('additionalText') == "") {
-                    return record.get('articleName')
+            convert: function(v, record) {
+                if (record.get('additionalText') === '') {
+                    return record.get('articleName');
                 }
-                return record.get('articleName') + ' ' + record.get('additionalText')
+                return record.get('articleName') + ' ' + record.get('additionalText');
             }
         },
         { name: 'articleId', type: 'int' },
@@ -33,7 +31,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
         { name: 'price', type: 'float' },
         { name: 'description', type: 'string' },
         { name: 'supplierName', type: 'string' },
-        { name: 'active', type: 'int' }
+        { name: 'active', type: 'int' },
+        { name: 'blockPrices', type: 'string' }
     ],
 
     proxy: {
@@ -54,5 +53,4 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
         }
     }
 });
-//
-//{/block}
+// {/block}
