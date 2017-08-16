@@ -104,7 +104,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             'createbackendorder-totalcostsoverview': {
                 calculateBasket: me.onCalculateBasket,
                 changeDisplayNet: me.onChangeDisplayNet,
-                changeTaxFreeCheckbox: me.onChangeTaxFree
+                changeTaxFreeCheckbox: me.onChangeTaxFree,
+                changeSendMail: me.onChangeSendMail
             }
         });
 
@@ -743,6 +744,15 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
         me.orderModel.set('displayNet', newValue);
         me.onCalculateBasket();
+    },
+
+    /**
+     * Is responsible for the mail send confirmation
+     *  @param { boolean } newValue
+     */
+    onChangeSendMail: function (newValue, oldValue) {
+        var me = this;
+        me.orderModel.set('sendMail', newValue);
     },
 
     /**
