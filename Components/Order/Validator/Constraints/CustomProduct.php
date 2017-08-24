@@ -19,7 +19,7 @@ class CustomProduct extends Constraint
     public $pluginName = 'SwagCustomProducts';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validatedBy()
     {

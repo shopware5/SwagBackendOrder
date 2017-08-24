@@ -26,7 +26,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         },
         toolbar: {
             delete: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/toolbar/delete"}Delete all selected{/s}',
-            add: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/toolbar/add"}Add position{/s}'
+            add: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/toolbar/add"}Add position{/s}',
+            addDiscount: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/toolbar/addDiscount"}Add Discount{/s}'
         },
         error: {
             articleNumberTitle: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/error/article_number_title"}Invalid article{/s}',
@@ -55,13 +56,20 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             clicksToMoveEditor: 2,
             autoCancel: true,
             listeners: {
-                beforeedit: function(editor, record) {
-                    me.record = record;
+                beforeEdit: function(editor, event) {
+                    var record = event.record;
+
+                    //Discounts do not support inline editing!
+                    if (record.get('isDiscount') === true) {
+                        return false;
+                    }
+
+                    me.record = event;
 
                     // Sets the column for the user input
                     var columns = editor.editor.items.items;
-                    columns[1].setValue(me.record.record.get('articleNumber'));
-                    columns[2].setValue(me.record.record.get('articleName'));
+                    columns[1].setValue(record.get('articleNumber'));
+                    columns[2].setValue(record.get('articleName'));
                 }
             }
         });
@@ -255,8 +263,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 header: me.snippets.columns.price,
                 dataIndex: 'price',
                 flex: 1,
-                renderer: function(value) {
-                    return me.renderPrice(value);
+                renderer: function(value, metaData, record) {
+                    return me.renderPrice(value, record);
                 },
                 editor: {
                     xtype: 'numberfield',
@@ -316,7 +324,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                                 me.snippets.confirmMsg.deleteRowTitle,
                                 me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + articleName + '</b> ' + me.snippets.confirmMsg.deleteRowMsg2,
                                 function(button) {
-                                    if (button == 'yes') {
+                                    if (button === 'yes') {
                                         me.store.removeAt(rowIndex);
                                     }
                                 },
@@ -376,7 +384,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 var title = me.snippets.confirmMsg.deleteMarkedTitle;
                 var message = me.snippets.confirmMsg.deleteMarkedMsg1 + ' <b>' + sel.length + '</b> ' + me.snippets.confirmMsg.deleteMarkedMsg2;
 
-                if (sel.length == 1) {
+                if (sel.length === 1) {
                     title = me.snippets.confirmMsg.deleteRowTitle;
                     message = me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + sel[0].get('articleName') + '</b> ' + me.snippets.confirmMsg.deleteRowMsg2;
                 }
@@ -385,7 +393,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                     title,
                     message,
                     function(button) {
-                        if (button == 'yes') {
+                        if (button === 'yes') {
                             for (var i = 0; i < sel.length; i++) {
                                 me.store.remove(sel[i]);
                             }
@@ -395,14 +403,26 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             }
         });
 
+        me.addDiscountButton = Ext.create('Ext.button.Button', {
+            iconCls: 'sprite-money--plus',
+            text: me.snippets.toolbar.addDiscount,
+            handler: Ext.bind(me.showDiscountModal, me),
+            itemId: 'addDiscountButton'
+        });
+
         return Ext.create('Ext.toolbar.Toolbar', {
             dock: 'top',
             ui: 'shopware-ui',
             items: [
                 me.addPositionButton,
-                me.deletePositionsButton
+                me.deletePositionsButton,
+                me.addDiscountButton
             ]
         });
+    },
+
+    showDiscountModal: function() {
+        Ext.create('Shopware.apps.SwagBackendOrder.view.main.discount.Window').show();
     },
 
     /**
@@ -455,7 +475,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      *
      * @param value
      * @param record
-     * @returns number
+     *
+     * @returns string
      */
     renderTotal: function(value, record) {
         var me = this,
@@ -465,21 +486,37 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         currencyStoreIndex = currencyStore.findExact('selected', 1);
 
         symbol = currencyStore.getAt(currencyStoreIndex).get('symbol');
-        total = record.data.quantity * record.data.price;
+
+        if (record.get('isDiscount') && record.get('discountType') === 0) {
+            total = record.get('total') * 1; // * 1 to "convert" to float so toFixed can to its stuff.
+        } else {
+            total = record.get('quantity') * record.get('price');
+        }
 
         total = total.toFixed(2);
         total = total + ' ' + symbol;
+
         return total;
     },
 
     /**
      *
      * @param value
+     * @param record
+     *
      * @returns string
      */
-    renderPrice: function(value) {
+    renderPrice: function(value, record) {
         var me = this,
             currencyStore, currencyStoreIndex, symbol;
+
+        if (record === undefined) {
+            return value;
+        }
+
+        if (record.get('isDiscount') && record.get('discountType') === 0) {
+            return value + ' %';
+        }
 
         currencyStore = me.subApplication.getStore('Currency');
         currencyStoreIndex = currencyStore.findExact('selected', 1);

@@ -17,7 +17,7 @@ class ProductExists extends Constraint
     public $snippet = 'article_not_found';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validatedBy()
     {

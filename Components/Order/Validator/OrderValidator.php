@@ -32,8 +32,8 @@ class OrderValidator implements OrderValidatorInterface
     private $productValidator;
 
     /**
-     * @param ProductValidator $productValidator
-     * @param ModelManager $modelManager
+     * @param ProductValidator                     $productValidator
+     * @param ModelManager                         $modelManager
      * @param \Shopware_Components_Snippet_Manager $snippetManager
      */
     public function __construct(
@@ -48,6 +48,7 @@ class OrderValidator implements OrderValidatorInterface
 
     /**
      * @param OrderStruct $order
+     *
      * @return ValidationResult
      */
     public function validate(OrderStruct $order)
@@ -59,11 +60,13 @@ class OrderValidator implements OrderValidatorInterface
         $violations = $this->validateOrderDetails($positions);
 
         $result->addMessages($violations->getMessages());
+
         return $result;
     }
 
     /**
      * @param PositionStruct[] $positions
+     *
      * @return ValidationResult
      */
     protected function validateOrderDetails(array $positions)
@@ -75,11 +78,13 @@ class OrderValidator implements OrderValidatorInterface
             $result = $this->productValidator->validate($this->getProductContext($position));
             $violations->addMessages($result->getMessages());
         }
+
         return $violations;
     }
 
     /**
      * @param PositionStruct $positionStruct
+     *
      * @return ProductContext
      */
     private function getProductContext(PositionStruct $positionStruct)

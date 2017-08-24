@@ -13,6 +13,7 @@ class CurrencyConverter
     /**
      * @param float $currencyFactor
      * @param float $price
+     *
      * @return float
      */
     public function getBaseCurrencyPrice($price, $currencyFactor)
@@ -23,6 +24,7 @@ class CurrencyConverter
     /**
      * @param float $currencyFactor
      * @param float $price
+     *
      * @return float
      */
     public function getCurrencyPrice($price, $currencyFactor)

@@ -16,12 +16,12 @@ class PriceContext
     private $price;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $netPrice;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $taxFree;
 
@@ -38,30 +38,31 @@ class PriceContext
     /**
      * @param float $price
      * @param float $taxRate
-     * @param boolean $netPrice
-     * @param boolean $taxFree
+     * @param bool  $netPrice
+     * @param bool  $taxFree
      * @param float $currencyFactor
+     *
      * @throws \Exception
      */
     public function __construct($price, $taxRate, $netPrice = false, $taxFree = false, $currencyFactor = 1.0)
     {
         if (!is_numeric($price)) {
-            throw new \Exception("Given price is not numeric.");
+            throw new \Exception('Given price is not numeric.');
         }
 
         if (!is_numeric($taxRate)) {
-            throw new \Exception("Given tax rate is not numeric.");
+            throw new \Exception('Given tax rate is not numeric.');
         }
 
         if (!is_numeric($currencyFactor)) {
-            throw new \Exception("Given currency factor rate is not numeric.");
+            throw new \Exception('Given currency factor rate is not numeric.');
         }
 
         $this->price = (float) $price;
         $this->taxRate = (float) $taxRate;
         $this->currencyFactor = (float) $currencyFactor;
-        $this->netPrice = (boolean) $netPrice;
-        $this->taxFree = (boolean) $taxFree;
+        $this->netPrice = (bool) $netPrice;
+        $this->taxFree = (bool) $taxFree;
     }
 
     /**
@@ -81,7 +82,7 @@ class PriceContext
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNetPrice()
     {
@@ -89,7 +90,7 @@ class PriceContext
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTaxFree()
     {

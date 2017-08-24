@@ -8,7 +8,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     extend: 'Ext.app.Controller',
 
     refs: [
-        { ref: 'totalCostsOverview', selector: 'createbackendorder-totalcostsoverview' }
+        { ref: 'totalCostsOverview', selector: 'createbackendorder-totalcostsoverview' },
+        { ref: 'positionGrid', selector: 'createbackendorder-position-grid' }
     ],
 
     /**
@@ -37,6 +38,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         hint: {
             changeCustomerTitle: '{s name="swagbackendorder/customer_change/title"}{/s}',
             changeCustomerMsg: '{s name="swagbackendorder/customer_change/message"}{/s}'
+        },
+        growl: {
+            discountRemoved: '{s name="swagbackendorder/growl/warning/removedDiscount"}The discount was automatically removed, because there is no other position left.{/s}',
+            discountRemovedTitle: '{s name="swagbackendorder/growl/warning/removedDiscountTitle"}Hint{/s}',
+            discountAmountMismatch: '{s name="swagbackendorder/growl/error/discountAmountMismatch"}The discount can not be higher that the actual value of goods.{/s}',
+            discountAmountMismatchTitle: '{s name="swagbackendorder/growl/error/discountAmountMismatchTitle"}Invalid discount{/s}',
+            discountFailure: '{s name="swagbackendorder/growl/error/discountFailure"}An unknown error occured while adding the discount.{/s}',
+            discountFailureTitle: '{s name="swagbackendorder/growl/error/discountFailureTitle"}Error{/s}'
+        },
+        discountName: {
+            percentage: '{s name="swagbackendorder/discountName/percentage"}Discount (percentage){/s}',
+            absolute: '{s name="swagbackendorder/discountName/absolute"}Discount (absolute){/s}'
         },
         title: '{s name="swagbackendorder/title/selected_user"}{/s}'
     },
@@ -105,6 +118,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 calculateBasket: me.onCalculateBasket,
                 changeDisplayNet: me.onChangeDisplayNet,
                 changeTaxFreeCheckbox: me.onChangeTaxFree
+            },
+            'createbackendorder-discount-window': {
+                addDiscount: me.onAddDiscount
             }
         });
 
@@ -138,6 +154,61 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         }).show();
 
         me.callParent(arguments);
+    },
+
+    /**
+     * @param { Object } discount
+     */
+    onAddDiscount: function(discount) {
+        var me = this,
+            discountName = discount.name;
+
+        //Check if the user has entered a name for this discount,
+        //If no discount name has been provided, we can use the default names.
+        if (discountName === undefined) {
+            discountName = discount.type === 0
+                ? me.snippets.discountName.percentage
+                : me.snippets.discountName.absolute;
+        }
+
+        Ext.Ajax.request({
+            url: '{url action="getDiscount"}',
+            params: {
+                type: discount.type,
+                value: discount.value,
+                name: discountName,
+                tax: discount.tax,
+                currentTotal: me.totalCostsModel.get('total') - me.totalCostsModel.get('shippingCosts')
+            },
+            failure: function() {
+                Shopware.Notification.createGrowlMessage(me.snippets.growl.discountFailureTitle, me.snippets.growl.discountFailure, '', 'growl', false)
+            },
+            success: Ext.bind(me.onAddDiscountAjaxCallback, me)
+        });
+    },
+
+    /**
+     * @param { Object } response
+     */
+    onAddDiscountAjaxCallback: function(response) {
+        var me = this,
+            positionsStore = me.subApplication.getStore('Position'),
+            responseObj = Ext.JSON.decode(response.responseText),
+            success = responseObj.success,
+            result = responseObj.data,
+            record = Ext.create('Shopware.apps.SwagBackendOrder.model.Position');
+
+        if (!success) {
+            Shopware.Notification.createGrowlMessage(me.snippets.growl.discountAmountMismatchTitle, me.snippets.growl.discountAmountMismatch, '', 'growl', false);
+            return;
+        }
+
+        record.set(result);
+
+        //Insert as last entry
+        positionsStore.insert(positionsStore.getCount(), record);
+
+        me.onCalculateBasket();
     },
 
     /**
@@ -677,7 +748,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             },
             success: function(response) {
                 var totalCostsJson = Ext.JSON.decode(response.responseText),
-                    record = totalCostsJson.data;
+                    record = totalCostsJson.data,
+                    addDiscountButton = me.getPositionGrid().addDiscountButton,
+                    discountRecord = me.getDiscountRecord();
 
                 me.previousOrderModel.set('taxFree', me.orderModel.get('taxFree'));
                 me.previousOrderModel.set('displayNet', me.orderModel.get('displayNet'));
@@ -719,6 +792,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 } finally {
                     me.totalCostsModel.endEdit();
                 }
+
+                //Don't allow any discount if there are no positions.
+                addDiscountButton.setDisabled(me.positionStore.getCount() <= 0 || discountRecord !== null);
+
+                //Remove discounts if there are no other positions inside the store.
+                if (me.positionStore.getCount() === 1 && discountRecord !== null) {
+                    me.positionStore.remove(discountRecord);
+
+                    Shopware.Notification.createGrowlMessage(me.snippets.growl.discountRemovedTitle, me.snippets.growl.discountRemoved, '', 'growl', false);
+                }
+
                 me.window.setLoading(false);
             }
         });
@@ -763,6 +847,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
         me.orderModel.set('taxFree', newValue);
         me.onCalculateBasket();
+    },
+
+    /**
+     * @returns { object }
+     */
+    getDiscountRecord: function() {
+        var me = this,
+            store = me.positionStore;
+
+        return store.findRecord('isDiscount', true);
     }
 });
 // {/block}

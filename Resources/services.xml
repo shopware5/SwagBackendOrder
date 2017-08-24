@@ -102,6 +102,7 @@
         </service>
 
         <service id="swag_backend_order.price_calculation.total_price_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator"/>
+        <service id="swag_backend_order.price_calculation.discount_calculator" class="SwagBackendOrder\Components\PriceCalculation\Calculator\DiscountCalculator"/>
 
         <service id="swag_backend_order.price_calculation.request_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator">
             <argument type="service" id="swag_backend_order.price_calculation.position_hydrator" />

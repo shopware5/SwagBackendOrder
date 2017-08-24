@@ -102,7 +102,7 @@ class TotalPricesResult
      */
     public function addTax($taxRate, $amount)
     {
-        $taxRate = (string)$taxRate;
+        $taxRate = (string) $taxRate;
         if (!isset($this->taxes[$taxRate])) {
             $this->taxes[$taxRate] = 0.00;
         }
@@ -118,6 +118,7 @@ class TotalPricesResult
         foreach ($this->taxes as $tax) {
             $amount += $tax;
         }
+
         return $amount;
     }
 }

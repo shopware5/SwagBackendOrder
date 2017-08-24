@@ -26,7 +26,7 @@ class LastStockValidator extends ConstraintValidator
 
     /**
      * @param \Enlight_Components_Snippet_Manager $snippetManager
-     * @param Connection $connection
+     * @param Connection                          $connection
      */
     public function __construct(
         \Enlight_Components_Snippet_Manager $snippetManager,
@@ -37,7 +37,7 @@ class LastStockValidator extends ConstraintValidator
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function validate($value, Constraint $constraint)
     {
@@ -61,6 +61,7 @@ class LastStockValidator extends ConstraintValidator
 
     /**
      * @param string $orderNumber
+     *
      * @return bool
      */
     private function getInStock($orderNumber)
@@ -72,12 +73,14 @@ class LastStockValidator extends ConstraintValidator
             ->setParameter('number', $orderNumber);
 
         $stmt = $builder->execute();
+
         return $stmt->fetchColumn();
     }
 
     /**
      * @param int $inStock
      * @param int $quantity
+     *
      * @return bool
      */
     private function isValid($inStock, $quantity)
@@ -87,6 +90,7 @@ class LastStockValidator extends ConstraintValidator
 
     /**
      * @param string $orderNumber
+     *
      * @return bool
      */
     private function isLastStockProduct($orderNumber)
@@ -99,6 +103,7 @@ class LastStockValidator extends ConstraintValidator
             ->setParameter('number', $orderNumber);
 
         $stmt = $builder->execute();
-        return ($stmt->fetchColumn() != 0);
+
+        return $stmt->fetchColumn() != 0;
     }
 }

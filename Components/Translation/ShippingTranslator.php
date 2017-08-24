@@ -16,14 +16,6 @@ class ShippingTranslator
     private $translationComponent;
 
     /**
-     * @return ShippingTranslator
-     */
-    public static function create()
-    {
-        return new self(new \Shopware_Components_Translation());
-    }
-
-    /**
      * @param \Shopware_Components_Translation $translationComponent
      */
     public function __construct(\Shopware_Components_Translation $translationComponent)
@@ -32,8 +24,17 @@ class ShippingTranslator
     }
 
     /**
+     * @return ShippingTranslator
+     */
+    public static function create()
+    {
+        return new self(new \Shopware_Components_Translation());
+    }
+
+    /**
      * @param array $shipping
-     * @param int $languageId
+     * @param int   $languageId
+     *
      * @return array
      */
     public function translate(array $shipping, $languageId)

@@ -16,8 +16,9 @@ class NumberFormatterWrapper
     const LOCALE_GERMANY = 'de_DE';
 
     /**
-     * @param float $number
+     * @param float  $number
      * @param string $locale
+     *
      * @return bool|string
      */
     public function format($number, $locale = self::LOCALE_GREAT_BRITAIN)

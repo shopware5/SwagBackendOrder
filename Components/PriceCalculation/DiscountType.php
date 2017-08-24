@@ -6,8 +6,10 @@
  * file that was distributed with this source code.
  */
 
-namespace SwagBackendOrder\Components\Order\Validator;
+namespace SwagBackendOrder\Components\PriceCalculation;
 
-class InvalidOrderException extends \Exception
+class DiscountType
 {
+    const DISCOUNT_PERCENTAGE = 0;
+    const DISCOUNT_ABSOLUTE = 1;
 }

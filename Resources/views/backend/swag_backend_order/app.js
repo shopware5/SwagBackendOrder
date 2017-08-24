@@ -53,32 +53,28 @@ Ext.define('Shopware.apps.SwagBackendOrder', {
          */
         'main.list.Positions',
         'main.list.Grid',
-        'main.list.ArticleSearchField'
+        'main.list.ArticleSearchField',
+        'main.discount.Window'
     ],
 
     stores: [
         'CreateBackendOrder',
         'DesktopTypes',
-
         'Customer',
-
         'Article',
         'Position',
-
         'ShippingCosts',
-        'TotalCosts'
+        'TotalCosts',
+        'DiscountTypes'
     ],
 
     models: [
         'CreateBackendOrder',
         'DesktopTypes',
-
         'Customer',
         'Address',
-
         'Article',
         'Position',
-
         'ShippingCosts',
         'TotalCosts'
     ],

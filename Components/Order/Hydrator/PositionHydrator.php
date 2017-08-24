@@ -14,6 +14,7 @@ class PositionHydrator
 {
     /**
      * @param array $data
+     *
      * @return PositionStruct
      */
     public function hydrate(array $data)

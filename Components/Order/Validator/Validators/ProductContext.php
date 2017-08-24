@@ -22,7 +22,7 @@ class ProductContext
 
     /**
      * @param string $orderNumber
-     * @param int $quantity
+     * @param int    $quantity
      */
     public function __construct($orderNumber, $quantity)
     {
@@ -44,5 +44,15 @@ class ProductContext
     public function getQuantity()
     {
         return $this->quantity;
+    }
+
+    /**
+     * Returns a value indicating whether or not this product is of type discount.
+     *
+     * @return bool
+     */
+    public function isDiscount()
+    {
+        return strpos($this->getOrderNumber(), 'DISCOUNT.') === 0;
     }
 }

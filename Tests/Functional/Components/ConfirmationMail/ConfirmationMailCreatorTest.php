@@ -8,8 +8,11 @@
 
 namespace SwagBackendOrder\Tests\Functional\Components\ConfirmationMail;
 
+use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Detail;
+use Shopware\Models\Order\Detail as OrderDetailModel;
 use Shopware\Models\Order\Order;
+use Shopware\Models\Order\Status;
 use Shopware_Components_Translation;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
@@ -55,6 +58,49 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('50,00', $orderDetails[0]['amountnet']);
         $this->assertEquals('59,99', $orderDetails[0]['priceNumeric']);
         $this->assertEquals('59,99', $orderDetails[0]['price']);
+    }
+
+    public function test_prepareOrderDetailsConfirmationMailData_with_discount()
+    {
+        $this->importFixtures(__DIR__ . '/test-fixtures.sql');
+
+        //Insert the discount into the order
+        /** @var Order $order */
+        $order = Shopware()->Models()->find(Order::class, self::ORDER_ID);
+        $confirmationMailCreator = $this->createConfirmationMailCreator();
+
+        $this->insertDiscount($order);
+
+        $orderDetails = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData($order, $order->getLanguageSubShop()->getLocale());
+        $discountDetails = $orderDetails[1];
+
+        $this->assertEquals('DISCOUNT.0', $discountDetails['ordernumber']);
+        $this->assertEquals('DISCOUNT.0', $discountDetails['ordernumber']);
+        $this->assertEquals(4, $discountDetails['modus']);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function insertDiscount(Order $order)
+    {
+        $detail = new OrderDetailModel();
+        $detail->setTaxRate(0);
+        $detail->setQuantity(1);
+        $detail->setShipped(0);
+        $detail->setOrder($order);
+        $detail->setNumber($order->getNumber());
+        $detail->setArticleId(0);
+        $detail->setArticleName('Discount (percentage)');
+        $detail->setArticleNumber('DISCOUNT.0');
+        $detail->setPrice(-10.0);
+        $detail->setMode(4);
+        $detail->setStatus(Shopware()->Models()->find(Status::class, 0));
+
+        /** @var ModelManager $em */
+        $em = Shopware()->Container()->get('models');
+        $em->persist($detail);
+        $em->flush($detail);
     }
 
     /**

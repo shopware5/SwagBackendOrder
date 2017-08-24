@@ -11,6 +11,7 @@ namespace SwagBackendOrder\Tests\Functional\Controller;
 require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 
 use Shopware\Components\DependencyInjection\Container;
+use SwagBackendOrder\Components\PriceCalculation\DiscountType;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
 class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
@@ -186,6 +187,69 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($view->getAssign('success'));
         $this->assertEquals('SW10002.1', $result['number']);
         $this->assertEquals(59.99, $result['price']);
+    }
+
+    public function test_getDiscount_absolute()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_ABSOLUTE, 50.0, 'Test_absolute'));
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+        $controller->getDiscountAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertEquals('Test_absolute', $result['articleName']);
+        $this->assertEquals('DISCOUNT.1', $result['articleNumber']);
+        $this->assertEquals(0, $result['articleId']);
+        $this->assertEquals(-50.0, $result['price']);
+        $this->assertEquals(4, $result['mode']);
+        $this->assertEquals(1, $result['quantity']);
+        $this->assertEquals(1, $result['inStock']);
+        $this->assertTrue($result['isDiscount']);
+        $this->assertEquals(DiscountType::DISCOUNT_ABSOLUTE, $result['discountType']);
+        $this->assertEquals(-50.0, $result['total']);
+    }
+
+    public function test_getDiscount_percentage()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_PERCENTAGE, 10.0, 'Test_percentage'));
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+        $controller->getDiscountAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertEquals('Test_percentage', $result['articleName']);
+        $this->assertEquals('DISCOUNT.0', $result['articleNumber']);
+        $this->assertEquals(0, $result['articleId']);
+        $this->assertEquals(-10.0, $result['price']);
+        $this->assertEquals(4, $result['mode']);
+        $this->assertEquals(1, $result['quantity']);
+        $this->assertEquals(1, $result['inStock']);
+        $this->assertTrue($result['isDiscount']);
+        $this->assertEquals(DiscountType::DISCOUNT_PERCENTAGE, $result['discountType']);
+        $this->assertEquals(-10.0, $result['total']);
+    }
+
+    public function test_getDiscount_absolute_will_fail_due_to_invalid_amount()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_ABSOLUTE, 999.0, 'Test_absolute'));
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+        $controller->getDiscountAction();
+
+        $this->assertFalse($view->getAssign('success'));
     }
 
     public function test_getProduct_with_block_prices()
@@ -549,6 +613,24 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
     {
         return [
             'searchParam' => 'spachtel',
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @param float  $value
+     * @param string $name
+     * @param float  $currentTotal
+     *
+     * @return array
+     */
+    private function getDiscountRequestData($type, $value, $name, $currentTotal = 500.0)
+    {
+        return [
+            'type' => $type,
+            'value' => $value,
+            'name' => $name,
+            'currentTotal' => $currentTotal,
         ];
     }
 }

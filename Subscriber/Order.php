@@ -25,14 +25,14 @@ class Order implements SubscriberInterface
     {
         $this->container = $container;
     }
-    
+
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
         return [
-            'Enlight_Controller_Action_PostDispatch_Backend_Order' => 'onOrderPostDispatch'
+            'Enlight_Controller_Action_PostDispatch_Backend_Order' => 'onOrderPostDispatch',
         ];
     }
 
