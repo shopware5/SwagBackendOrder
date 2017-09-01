@@ -24,8 +24,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             payment: '{s name="swagbackendorder/error/payment"}{/s}',
             shippingArt: '{s name="swagbackendorder/error/shipping_art"}{/s}',
             positions: '{s name="swagbackendorder/error/positions"}{/s}',
-            textInvalidArticle: '{s name="swagbackendorder/error/invalid_article"}{/s}',
-            invalidArticleTitle: '{s name="swagbackendorder/error/invalid_article_title"}{/s}',
             instanceText: '{s name="swagbackendorder/error/instanceText"}{/s}',
             instanceTitle: '{s name="swagbackendorder/error/instanceTitle"}{/s}',
             title: '{s name="swagbackendorder/error/title"}{/s}',
@@ -163,8 +161,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this,
             discountName = discount.name;
 
-        //Check if the user has entered a name for this discount,
-        //If no discount name has been provided, we can use the default names.
+        // Check if the user has entered a name for this discount,
+        // If no discount name has been provided, we can use the default names.
         if (discountName === undefined) {
             discountName = discount.type === 0
                 ? me.snippets.discountName.percentage
@@ -181,7 +179,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 currentTotal: me.totalCostsModel.get('total') - me.totalCostsModel.get('shippingCosts')
             },
             failure: function() {
-                Shopware.Notification.createGrowlMessage(me.snippets.growl.discountFailureTitle, me.snippets.growl.discountFailure, '', 'growl', false)
+                Shopware.Notification.createGrowlMessage(me.snippets.growl.discountFailureTitle, me.snippets.growl.discountFailure, '', 'growl', false);
             },
             success: Ext.bind(me.onAddDiscountAjaxCallback, me)
         });
@@ -205,7 +203,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
 
         record.set(result);
 
-        //Insert as last entry
+        // Insert as last entry
         positionsStore.insert(positionsStore.getCount(), record);
 
         me.onCalculateBasket();
@@ -793,10 +791,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                     me.totalCostsModel.endEdit();
                 }
 
-                //Don't allow any discount if there are no positions.
+                // Don't allow any discount if there are no positions.
                 addDiscountButton.setDisabled(me.positionStore.getCount() <= 0 || discountRecord !== null);
 
-                //Remove discounts if there are no other positions inside the store.
+                // Remove discounts if there are no other positions inside the store.
                 if (me.positionStore.getCount() === 1 && discountRecord !== null) {
                     me.positionStore.remove(discountRecord);
 
