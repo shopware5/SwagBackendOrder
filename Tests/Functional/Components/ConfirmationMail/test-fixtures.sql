@@ -7,6 +7,7 @@ VALUES
 (1000,10000,'99999',2,'SW10002.1',59.99,1,'Münsterländer Lagerkorn 32% 1,5 Liter',0,0,0,NULL,0,0,1,19,'',NULL,'Liter','Flasche(n)');
 
 INSERT INTO `s_order_shippingaddress`
+  (id, userID, orderID, company, department, salutation, firstname, lastname, street, zipcode, city, countryID, stateID, additional_address_line1, additional_address_line2, title)
 VALUES
   (1000,1,10000,'shopware AG','','mr','Max','Mustermann','Mustermannstraße 92','48624','Schöppingen',2,NULL,'','',NULL);
 
