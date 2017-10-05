@@ -45,8 +45,10 @@ class DiscountCalculator
      */
     private function updateOrderDetails(&$orderData, &$discountPosition, $discount)
     {
+        $taxRate = $discountPosition['taxRate'];
+        $discountNet = round($discount / (100 + $taxRate) * 100, 3);
+
         //Update order amount
-        $orderData['totalWithoutTax'] += $discount;
         $orderData['sum'] += $discount;
         $orderData['total'] += $discount;
 
@@ -54,9 +56,12 @@ class DiscountCalculator
         //we have to calculate the tax value of the discount and add it to the order tax sum.
         if (!$orderData['isTaxFree']) {
             //taxValue is always a negative number
-            $taxValue = $discount / 100 * $discountPosition['taxRate'];
+            $taxValue = $discountNet / 100 * $discountPosition['taxRate'];
 
             $orderData['taxSum'] += $taxValue;
+            $orderData['totalWithoutTax'] += $discountNet;
+        } else {
+            $orderData['totalWithoutTax'] += $discount;
         }
 
         //Update position
