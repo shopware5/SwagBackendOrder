@@ -269,7 +269,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $blockPrices = $result['blockPrices'];
         $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
         $this->assertEquals($expectedBlockPricesJSON, $blockPrices);
-        $this->assertEquals(0.9, $result['price']);
+        $this->assertEquals(0.904, $result['price']);
     }
 
     public function testGetProductWithDisplayNet()
