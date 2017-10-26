@@ -6,11 +6,8 @@
  * file that was distributed with this source code.
  */
 
-use Shopware\Bundle\SearchBundle\Condition\SearchTermCondition;
-use Shopware\Bundle\SearchBundle\ProductSearchInterface;
-use Shopware\Bundle\SearchBundle\StoreFrontCriteriaFactoryInterface;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
-use Shopware\Bundle\StoreFrontBundle\Service\ListProductServiceInterface;
+use Shopware\Bundle\StoreFrontBundle\Struct\Tax as TaxStruct;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin\ConfigReader;
 use Shopware\Models\Article\Detail;
@@ -24,7 +21,6 @@ use Shopware\Models\Shop\Currency;
 use Shopware\Models\Shop\Repository;
 use Shopware\Models\Shop\Shop;
 use Shopware\Models\Tax\Tax;
-use SwagBackendOrder\Bundle\SearchBundle\Condition\VariantCondition;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
@@ -148,116 +144,75 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     public function getArticlesAction()
     {
-        $params = $this->Request()->getParams();
+        $params = $this->request->getParams();
         $search = $params['filter'][0]['value'];
-        $shopId = $this->getShopId();
 
         if (!isset($params['filter'][0]['value'])) {
             $search = '%' . $this->Request()->get('searchParam') . '%';
         }
 
-        /** @var ContextServiceInterface $contextService */
-        $contextService = $this->get('shopware_storefront.context_service');
-        $shopContext = $contextService->createShopContext($shopId);
-
-        /** @var StoreFrontCriteriaFactoryInterface $criteriaFactory */
-        $criteriaFactory = $this->get('shopware_search.store_front_criteria_factory');
-        $criteria = $criteriaFactory->createBaseCriteria(
-            [$shopContext->getShop()->getCategory()->getId()],
-            $shopContext
-        );
-        $criteria->addCondition(new SearchTermCondition($search));
-        $criteria->addCondition(new VariantCondition('swag_backend_order_variant_condition'));
-        $criteria->limit(6);
-
-        /** @var ProductSearchInterface $productSearch */
-        $productSearch = $this->get('shopware_search.product_search');
-        $productSearchResult = $productSearch->search($criteria, $shopContext);
-
-        $result = [];
-
-        foreach ($productSearchResult->getProducts() as $product) {
-            $productArray = [];
-
-            $productArray['number'] = $product->getNumber();
-            $productArray['name'] = $product->getName();
-            $productArray['additionalText'] = $product->getAdditional();
-
-            $result[] = $productArray;
-        }
+        $queryBuilder = $this->container->get('dbal_connection')->createQueryBuilder();
+        $searchResult = $queryBuilder->select(['article.name', 'details.ordernumber AS number', 'details.additionalText'])
+            ->from('s_articles', 'article')
+            ->join('article', 's_articles_details', 'details', 'article.id = details.articleID')
+            ->where('article.name LIKE :searchTerm')
+            ->orWhere('details.ordernumber LIKE :searchTerm')
+            ->orWhere('details.additionalText LIKE :searchTerm')
+            ->setParameter('searchTerm', $search)
+            ->setMaxResults(6)
+            ->execute()
+            ->fetchAll(\PDO::FETCH_ASSOC);
 
         $this->view->assign(
             [
                 'success' => true,
-                'data' => $result,
-                'total' => $productSearchResult->getTotalCount(),
+                'data' => $searchResult,
+                'total' => count($searchResult),
             ]
         );
     }
 
     public function getProductAction()
     {
-        $number = $this->Request()->getParam('ordernumber');
-        $shopId = $this->getShopId();
-        $customerGroupKey = $this->getCustomerGroupKey();
-        $quantity = $this->getQuantity();
+        $params = $this->request->getParams();
+        $number = $this->request->getParam('ordernumber');
+        $product = $this->getProduct($number);
 
-        /** @var RequestHydrator $requestHydrator */
-        $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
-        $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
+        $tax = new TaxStruct();
+        $tax->setId($product['taxId']);
+        $tax->setTax($product['tax']);
 
-        /** @var ContextServiceInterface $contextService */
-        $contextService = $this->get('shopware_storefront.context_service');
-        $shopContext = $contextService->createShopContext(
-            $shopId,
-            $requestStruct->getCurrencyId(),
-            $customerGroupKey
-        );
+        $product['quantity'] = $this->request->getParam('quantity');
 
-        /** @var ListProductServiceInterface $listProductService */
-        $listProductService = $this->get('shopware_storefront.list_product_service');
-        $listProduct = $listProductService->get($number, $shopContext);
+        if ($product['to'] !== 'beliebig') {
+            $blockPrices = $this->getBlockPrices($product['id']);
+            $blockPricesResult = [];
 
-        $result = [];
-        $result['number'] = $listProduct->getNumber();
-        $result['name'] = $listProduct->getName();
-        $result['additionalText'] = $listProduct->getAdditional();
-        $result['inStock'] = $listProduct->getStock();
-        $result['taxId'] = $listProduct->getTax()->getId();
-        $result['quantity'] = $quantity;
-
-        $prices = $listProduct->getPrices();
-
-        $result['price'] = round($prices[0]->getCalculatedPrice(), PriceResult::ROUND_PRECISION);
-        if ($requestStruct->isDisplayNet() || $requestStruct->isTaxFree()) {
-            $result['price'] = round($prices[0]->getRule()->getPrice(), PriceResult::ROUND_PRECISION);
-        }
-
-        if (count($prices) > 1) {
-            $blockPrices = [];
-            foreach ($prices as $priceStruct) {
-                $netPrice = round($priceStruct->getRule()->getPrice(), PriceResult::ROUND_PRECISION);
-                $grossPrice = round($priceStruct->getCalculatedPrice(), PriceResult::ROUND_PRECISION);
-
-                $blockPrice = $grossPrice;
-                if ($requestStruct->isDisplayNet() || $requestStruct->isTaxFree()) {
-                    $blockPrice = $netPrice;
-                }
-
-                if ($quantity >= $priceStruct->getFrom()) {
-                    $result['price'] = $blockPrice;
-                }
-
-                $blockPrices[$priceStruct->getFrom()] = [
-                    'net' => $netPrice,
-                    'gross' => $grossPrice,
+            foreach ($blockPrices as $price) {
+                $blockPricesResult[$price['from']] = [
+                    'net' => round($price['price'], PriceResult::ROUND_PRECISION),
+                    'gross' => round($this->calculatePrice($price['price'], $tax, $params), PriceResult::ROUND_PRECISION),
                 ];
             }
-            $result['blockPrices'] = json_encode($blockPrices);
+
+            foreach ($blockPricesResult as $amount => $price) {
+                if ($product['quantity'] >= $amount) {
+                    $product['price'] = $price['net'];
+                }
+            }
+
+            $product['blockPrices'] = json_encode($blockPricesResult);
         }
 
+        $product['price'] = $this->calculatePrice(
+            $product['price'],
+            $tax,
+            $params,
+            $params['displayNet'] === 'true' ? true : false
+        );
+
         $this->view->assign([
-            'data' => $result,
+            'data' => $product,
             'success' => true,
         ]);
     }
@@ -579,6 +534,81 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'data' => $result,
             'success' => true,
         ]);
+    }
+
+    /**
+     * @param float     $price
+     * @param TaxStruct $tax
+     * @param array     $requestParams
+     * @param bool      $getNetPrice
+     *
+     * @return float
+     */
+    private function calculatePrice($price, TaxStruct $tax, $requestParams, $getNetPrice = false)
+    {
+        if ($getNetPrice) {
+            return round($price, PriceResult::ROUND_PRECISION);
+        }
+
+        $priceCalculator = $this->container->get('swag_backend_order.price_calculation.product_calculator');
+
+        $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
+        $requestStruct = $requestHydrator->hydrateFromRequest($requestParams);
+
+        /** @var ContextServiceInterface $contextService */
+        $contextService = $this->get('shopware_storefront.context_service');
+        $shopContext = $contextService->createShopContext(
+            $this->getShopId(),
+            $requestStruct->getCurrencyId(),
+            $this->getCustomerGroupKey()
+        );
+
+        return $priceCalculator->calculatePrice($price, $tax, $shopContext);
+    }
+
+    /**
+     * @param string $number
+     *
+     * @return array
+     */
+    private function getProduct($number)
+    {
+        return $this->container->get('dbal_connection')->createQueryBuilder()
+            ->select([
+                'article.name',
+                'article.taxID AS taxId',
+                'article.id',
+                'tax.tax',
+                'details.ordernumber AS number',
+                'details.additionalText',
+                'details.instock AS inStock',
+                'price.price',
+                'price.to',
+            ])
+            ->from('s_articles', 'article')
+            ->join('article', 's_articles_details', 'details', 'article.id = details.articleID')
+            ->join('details', 's_articles_prices', 'price', 'details.id = price.articledetailsID')
+            ->join('article', 's_core_tax', 'tax', 'tax.id = article.taxID')
+            ->where('details.ordernumber = :ordernumber')
+            ->setParameter('ordernumber', $number)
+            ->execute()
+            ->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array
+     */
+    private function getBlockPrices($productId)
+    {
+        return $this->container->get('dbal_connection')->createQueryBuilder()
+            ->select(['price.from', 'price.price'])
+            ->from('s_articles_prices', 'price')
+            ->where('articleID = :productId')
+            ->setParameter('productId', $productId)
+            ->execute()
+            ->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

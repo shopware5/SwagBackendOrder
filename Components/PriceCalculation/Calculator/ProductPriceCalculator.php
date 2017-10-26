@@ -8,6 +8,8 @@
 
 namespace SwagBackendOrder\Components\PriceCalculation\Calculator;
 
+use Shopware\Bundle\StoreFrontBundle\Struct\ShopContextInterface;
+use Shopware\Bundle\StoreFrontBundle\Struct\Tax;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
@@ -79,5 +81,31 @@ class ProductPriceCalculator
         }
 
         return $this->taxCalculation->getNetPrice($baseCurrencyPrice, $priceContext->getTaxRate());
+    }
+
+    /**
+     * @param float                $price
+     * @param Tax                  $tax
+     * @param ShopContextInterface $context
+     *
+     * @return float
+     */
+    public function calculatePrice($price, Tax $tax, ShopContextInterface $context)
+    {
+        $customerGroup = $context->getCurrentCustomerGroup();
+
+        if ($customerGroup->useDiscount() && $customerGroup->getPercentageDiscount()) {
+            $price = $price - ($price / 100 * $customerGroup->getPercentageDiscount());
+        }
+
+        $price = $price * $context->getCurrency()->getFactor();
+
+        if (!$customerGroup->displayGrossPrices()) {
+            return round($price, 3);
+        }
+
+        $price = $price * (100 + $tax->getTax()) / 100;
+
+        return round($price, 3);
     }
 }
