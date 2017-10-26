@@ -7,7 +7,6 @@
  */
 
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
-use Shopware\Bundle\StoreFrontBundle\Service\Core\PriceCalculator;
 use Shopware\Bundle\StoreFrontBundle\Struct\Tax as TaxStruct;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin\ConfigReader;
@@ -551,7 +550,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             return round($price, PriceResult::ROUND_PRECISION);
         }
 
-        $priceCalculator = new PriceCalculator();
+        $priceCalculator = $this->container->get('swag_backend_order.price_calculation.product_calculator');
 
         $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
         $requestStruct = $requestHydrator->hydrateFromRequest($requestParams);
