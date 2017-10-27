@@ -5,7 +5,7 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
@@ -45,5 +45,10 @@
     <changelog version="2.0.0">
         <changes lang="de">PT-3859 - Es ist nun möglich individuelle Rabatte zu Bestellungen hinzuzufügen; PT-4632 - Artikel Staffelpreise werden nun berücksichtigt; PT-6889 - Bestellbestätigung wird nicht mehr doppelt versendet; PT-7020 - Kundengruppe wird nun bei Artikelpreisberechnung berücksichtigt; PT-7657 - Anzeige von Artikel- und Kundensuche korrigiert; PT-7983 - Anzeige Steuersatz korrigiert; PT-7984 - Fehler bei Variantentexten korrigiert; PT-8241 - Produktsuche um Herstellernamen erweitert; PT-8365, PT-8491 - Snippets korrigiert;</changes>
         <changes lang="en">PT-3859 - It is now possible to add individual discounts to the orders; PT-4632 - Product block prices are now considered; PT-6889 - Order confirm mail is not send twice anymore; PT-7020 - Product price calculation considers customer group now; PT-7657 - Fix displaying fo product and customer search; PT-7983 - Fix tax displaying; PT-7984 - Fix issues with variant texts; PT-8241 - Extend product search with manufacturer name; PT-8365, PT-8491 - Fix snippets;</changes>
+    </changelog>
+
+    <changelog version="2.0.1">
+        <changes lang="de">PT-8535 - Optimieren der Artikelsuche  im Backend.</changes>
+        <changes lang="en">PT-8535 - Optimize backend article search.</changes>
     </changelog>
 </plugin>
