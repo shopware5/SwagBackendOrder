@@ -151,6 +151,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $search = '%' . $this->Request()->get('searchParam') . '%';
         }
 
+        $search = str_replace('_', '\_', $search);
+
         $queryBuilder = $this->container->get('dbal_connection')->createQueryBuilder();
         $searchResult = $queryBuilder->select(['article.name', 'details.ordernumber AS number', 'details.additionalText'])
             ->from('s_articles', 'article')
