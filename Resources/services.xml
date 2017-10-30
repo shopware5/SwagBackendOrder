@@ -135,5 +135,13 @@
             <argument id="swag_backend_order.search_bundle.query_builder_factory_decorator.inner" type="service"/>
         </service>
 
+        <service id="swag_backend_order.product_search" class="SwagBackendOrder\Components\ProductSearch\ProductSearch">
+            <argument type="service" id="dbal_connection"/>
+            <argument type="service" id="swag_backend_order.price_calculation.product_calculator" />
+            <argument type="service" id="shopware_storefront.context_service" />
+            <argument type="service" id="swag_backend_order.price_calculation.request_hydrator" />
+            <argument type="service" id="shopware_storefront.additional_text_service" />
+        </service>
+
     </services>
 </container>

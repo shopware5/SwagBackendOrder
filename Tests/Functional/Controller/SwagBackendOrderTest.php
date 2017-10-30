@@ -385,6 +385,72 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('SW10239', $result[0]['number']);
     }
 
+    public function test_getArticles_multiple()
+    {
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams([
+            'query' => 'flip flop',
+        ]);
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getArticlesAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertCount(35, $result);
+        $this->assertEquals('SW10153.1', $result[0]['number']);
+    }
+
+    public function test_getArticles_by_ordernumber()
+    {
+        $sql = file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
+        Shopware()->Container()->get('dbal_connection')->exec($sql);
+
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams([
+            'query' => '_test',
+        ]);
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getArticlesAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertCount(1, $result);
+        $this->assertEquals('SW_10002_test_123', $result[0]['number']);
+    }
+
+    public function test_getArticles_by_supplier()
+    {
+        $sql = file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
+        Shopware()->Container()->get('dbal_connection')->exec($sql);
+
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams([
+            'query' => 'shopware',
+        ]);
+
+        $view = $this->getView();
+
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->getArticlesAction();
+
+        $result = $view->getAssign('data');
+
+        $this->assertTrue($view->getAssign('success'));
+        $this->assertCount(1, $result);
+        $this->assertEquals('SW_10002_test_123', $result[0]['number']);
+    }
+
     /**
      * @return array
      */
@@ -612,7 +678,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
     private function getProductSearchData()
     {
         return [
-            'searchParam' => 'spachtel',
+            'query' => 'spachtel',
         ];
     }
 

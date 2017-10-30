@@ -1,5 +1,5 @@
 //
-//{block name="backend/create_backend_order/view/window"}
+// {block name="backend/create_backend_order/view/window"}
 //
 Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
 
@@ -10,7 +10,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
 
     height: 850,
 
-    width: 1100,
+    width: '85%',
 
     alias: 'widget.createbackendorder-mainwindow',
 
@@ -21,8 +21,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
     },
 
     confirmClosed: false,
-
-    //autoScroll: true,
 
     snippets: {
         title: '{s namespace="backend/swag_backend_order/view/main" name="swagbackendorder/title"}Create Order{/s}',
@@ -290,10 +288,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.Window', {
             if (me.orderModel.get(fieldName) > 0) {
                 return true;
             }
-
         }
         return false;
     }
 });
 //
-//{/block}
+// {/block}
