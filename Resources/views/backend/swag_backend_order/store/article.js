@@ -1,5 +1,5 @@
 //
-//{block name="backend/create_backend_order/store/article"}
+// {block name="backend/create_backend_order/store/article"}
 //
 Ext.define('Shopware.apps.SwagBackendOrder.store.Article', {
 
@@ -7,6 +7,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.store.Article', {
      * extends from the standard ExtJs store class
      */
     extend: 'Ext.data.Store',
+
+    alias: 'widget.backendorder-article-store',
 
     /**
      * defines an alternate class name for an easier identification
@@ -27,4 +29,4 @@ Ext.define('Shopware.apps.SwagBackendOrder.store.Article', {
     batch: true
 });
 //
-//{/block}
+// {/block}
