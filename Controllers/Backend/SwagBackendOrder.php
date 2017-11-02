@@ -767,18 +767,4 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         return $customerGroupKey;
     }
-
-    /**
-     * @return int
-     */
-    private function getQuantity()
-    {
-        $quantity = (int) $this->Request()->getParam('quantity');
-
-        if ($quantity === 0) {
-            return 1;
-        }
-
-        return $quantity;
-    }
 }
