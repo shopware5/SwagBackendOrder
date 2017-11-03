@@ -117,7 +117,7 @@ class ProductSearch implements ProductSearchInterface
      */
     public function getProduct($orderNumber, $params, $shopId, $customerGroupKey)
     {
-        $product = $this->getProductByNumber($orderNumber);
+        $product = $this->getProductByNumber($orderNumber, $customerGroupKey);
 
         $tax = new TaxStruct();
         $tax->setId($product['taxId']);
@@ -126,7 +126,7 @@ class ProductSearch implements ProductSearchInterface
         $product['quantity'] = $params['quantity'];
 
         if ($product['to'] !== 'beliebig') {
-            $blockPrices = $this->getBlockPrices($product['id']);
+            $blockPrices = $this->getBlockPrices($product['productDetailId']);
             $blockPricesResult = [];
 
             foreach ($blockPrices as $price) {
@@ -200,27 +200,28 @@ class ProductSearch implements ProductSearchInterface
     }
 
     /**
-     * @param int $productId
+     * @param int $productDetailsId
      *
      * @return array
      */
-    private function getBlockPrices($productId)
+    private function getBlockPrices($productDetailsId)
     {
         return $this->connection->createQueryBuilder()
             ->select(['price.from', 'price.price'])
             ->from('s_articles_prices', 'price')
-            ->where('articleID = :productId')
-            ->setParameter('productId', $productId)
+            ->where('articledetailsID = :productDetailId')
+            ->setParameter('productDetailId', $productDetailsId)
             ->execute()
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
-     * @param string $ordernumber
+     * @param string $orderNumber
+     * @param $customerGroupKey
      *
      * @return array
      */
-    private function getProductByNumber($ordernumber)
+    private function getProductByNumber($orderNumber, $customerGroupKey)
     {
         return $this->connection->createQueryBuilder()
             ->select([
@@ -231,15 +232,17 @@ class ProductSearch implements ProductSearchInterface
                 'details.ordernumber AS number',
                 'details.additionalText',
                 'details.instock AS inStock',
+                'details.id AS productDetailId',
                 'price.price',
                 'price.to',
             ])
             ->from('s_articles', 'article')
             ->join('article', 's_articles_details', 'details', 'article.id = details.articleID')
-            ->join('details', 's_articles_prices', 'price', 'details.id = price.articledetailsID')
+            ->join('details', 's_articles_prices', 'price', 'details.id = price.articledetailsID AND price.pricegroup = :priceGroup')
             ->join('article', 's_core_tax', 'tax', 'tax.id = article.taxID')
             ->where('details.ordernumber = :ordernumber')
-            ->setParameter('ordernumber', $ordernumber)
+            ->setParameter('priceGroup', $customerGroupKey)
+            ->setParameter('ordernumber', $orderNumber)
             ->execute()
             ->fetch(\PDO::FETCH_ASSOC);
     }
