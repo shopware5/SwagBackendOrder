@@ -62,6 +62,7 @@ class ProductSearchTest extends \PHPUnit_Framework_TestCase
         $expectedProduct = [
             'price' => '20.0',
             'to' => 'beliebig',
+            'isFallbackPrice' => true,
         ];
 
         $this->assertArraySubset($expectedProduct, $result);

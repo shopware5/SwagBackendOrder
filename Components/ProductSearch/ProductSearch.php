@@ -13,6 +13,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Shopware\Bundle\StoreFrontBundle\Service\AdditionalTextServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Service\ContextServiceInterface;
 use Shopware\Bundle\StoreFrontBundle\Struct\Product;
+use Shopware\Bundle\StoreFrontBundle\Struct\ShopContextInterface;
 use Shopware\Bundle\StoreFrontBundle\Struct\Tax as TaxStruct;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator;
@@ -125,10 +126,20 @@ class ProductSearch implements ProductSearchInterface
 
         $product['quantity'] = $params['quantity'];
 
-        if ($product['to'] !== 'beliebig') {
-            $blockPrices = $this->getBlockPrices($product['productDetailId']);
-            $blockPricesResult = [];
+        $requestStruct = $this->requestHydrator->hydrateFromRequest($params);
+        $shopContext = $this->contextService->createShopContext(
+            $shopId,
+            $requestStruct->getCurrencyId(),
+            $customerGroupKey
+        );
 
+        if ($product['to'] !== 'beliebig') {
+            $blockPrices = $this->getBlockPrices(
+                $product['productDetailId'],
+                $product['isFallbackPrice'] ? $shopContext->getFallbackCustomerGroup()->getKey() : $customerGroupKey
+            );
+
+            $blockPricesResult = [];
             foreach ($blockPrices as $price) {
                 $blockPricesResult[$price['from']] = [
                     'net' => round($price['price'], PriceResult::ROUND_PRECISION),
@@ -136,9 +147,7 @@ class ProductSearch implements ProductSearchInterface
                         $this->calculatePrice(
                             $price['price'],
                             $tax,
-                            $params,
-                            $shopId,
-                            $customerGroupKey
+                            $shopContext
                         ),
                         PriceResult::ROUND_PRECISION
                     ),
@@ -157,9 +166,7 @@ class ProductSearch implements ProductSearchInterface
         $product['price'] = $this->calculatePrice(
             $product['price'],
             $tax,
-            $params,
-            $shopId,
-            $customerGroupKey,
+            $shopContext,
             $params['displayNet'] === 'true'
         );
 
@@ -167,50 +174,41 @@ class ProductSearch implements ProductSearchInterface
     }
 
     /**
-     * @param float     $price
-     * @param TaxStruct $tax
-     * @param array     $requestParams
-     * @param int       $shopId
-     * @param string    $customerGroupKey
-     * @param bool      $getNetPrice
+     * @param float                $price
+     * @param TaxStruct            $tax
+     * @param ShopContextInterface $shopContext
+     * @param bool                 $getNetPrice
      *
      * @return float
      */
     private function calculatePrice(
         $price,
         TaxStruct $tax,
-        $requestParams,
-        $shopId,
-        $customerGroupKey,
+        ShopContextInterface $shopContext,
         $getNetPrice = false
     ) {
         if ($getNetPrice) {
             return round($price, PriceResult::ROUND_PRECISION);
         }
 
-        $requestStruct = $this->requestHydrator->hydrateFromRequest($requestParams);
-
-        $shopContext = $this->contextService->createShopContext(
-            $shopId,
-            $requestStruct->getCurrencyId(),
-            $customerGroupKey
-        );
-
         return $this->productPriceCalculator->calculatePrice($price, $tax, $shopContext);
     }
 
     /**
-     * @param int $productDetailsId
+     * @param int    $productDetailsId
+     * @param string $customerGroupKey
      *
      * @return array
      */
-    private function getBlockPrices($productDetailsId)
+    private function getBlockPrices($productDetailsId, $customerGroupKey)
     {
         return $this->connection->createQueryBuilder()
             ->select(['price.from', 'price.price'])
             ->from('s_articles_prices', 'price')
             ->where('articledetailsID = :productDetailId')
+            ->andWhere('price.pricegroup = :customerGroupKey')
             ->setParameter('productDetailId', $productDetailsId)
+            ->setParameter('customerGroupKey', $customerGroupKey)
             ->execute()
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
@@ -266,6 +264,7 @@ class ProductSearch implements ProductSearchInterface
         if (!$product['price']) {
             $product['price'] = $product['defaultPrice'];
             $product['to'] = $product['defaultPriceTo'];
+            $product['isFallbackPrice'] = true;
         }
 
         unset($product['defaultPrice']);
