@@ -217,28 +217,29 @@ class ProductSearch implements ProductSearchInterface
 
     /**
      * @param string $orderNumber
-     * @param $customerGroupKey
+     * @param string $customerGroupKey
      *
      * @return array
      */
     private function getProductByNumber($orderNumber, $customerGroupKey)
     {
-        return $this->connection->createQueryBuilder()
-            ->select([
-                'article.name',
-                'article.taxID AS taxId',
-                'article.id',
-                'tax.tax',
-                'details.ordernumber AS number',
-                'details.additionalText',
-                'details.instock AS inStock',
-                'details.id AS productDetailId',
-                'price.price',
-                'price.to',
-            ])
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        return $queryBuilder->select([
+            'article.name',
+            'article.taxID AS taxId',
+            'article.id',
+            'tax.tax',
+            'details.ordernumber AS number',
+            'details.additionalText',
+            'details.instock AS inStock',
+            'details.id AS productDetailId',
+            'price.price',
+            'price.to',
+        ])
             ->from('s_articles', 'article')
             ->join('article', 's_articles_details', 'details', 'article.id = details.articleID')
-            ->join('details', 's_articles_prices', 'price', 'details.id = price.articledetailsID AND price.pricegroup = :priceGroup')
+            ->leftJoin('details', 's_articles_prices', 'price', 'details.id = price.articledetailsID AND price.pricegroup = :priceGroup')
             ->join('article', 's_core_tax', 'tax', 'tax.id = article.taxID')
             ->where('details.ordernumber = :ordernumber')
             ->setParameter('priceGroup', $customerGroupKey)
