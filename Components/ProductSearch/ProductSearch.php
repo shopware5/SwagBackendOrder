@@ -117,7 +117,7 @@ class ProductSearch implements ProductSearchInterface
      */
     public function getProduct($orderNumber, $params, $shopId, $customerGroupKey)
     {
-        $product = $this->getProductByNumber($orderNumber, $customerGroupKey);
+        $product = $this->getProductByNumber($orderNumber, $customerGroupKey, $shopId);
 
         $tax = new TaxStruct();
         $tax->setId($product['taxId']);
@@ -218,14 +218,16 @@ class ProductSearch implements ProductSearchInterface
     /**
      * @param string $orderNumber
      * @param string $customerGroupKey
+     * @param int    $shopId
      *
      * @return array
      */
-    private function getProductByNumber($orderNumber, $customerGroupKey)
+    private function getProductByNumber($orderNumber, $customerGroupKey, $shopId)
     {
         $queryBuilder = $this->connection->createQueryBuilder();
+        $defaultCustomerGroup = $this->contextService->createShopContext($shopId)->getFallbackCustomerGroup()->getKey();
 
-        return $queryBuilder->select([
+        $product = $queryBuilder->select([
             'article.name',
             'article.taxID AS taxId',
             'article.id',
@@ -236,16 +238,40 @@ class ProductSearch implements ProductSearchInterface
             'details.id AS productDetailId',
             'price.price',
             'price.to',
+            'defaultPrice.price AS defaultPrice',
+            'defaultPrice.to AS defaultPriceTo',
         ])
             ->from('s_articles', 'article')
             ->join('article', 's_articles_details', 'details', 'article.id = details.articleID')
             ->leftJoin('details', 's_articles_prices', 'price', 'details.id = price.articledetailsID AND price.pricegroup = :priceGroup')
+            ->leftJoin('details', 's_articles_prices', 'defaultPrice', 'details.id = defaultPrice.articledetailsID AND defaultPrice.pricegroup = :defaultPriceGroup')
             ->join('article', 's_core_tax', 'tax', 'tax.id = article.taxID')
             ->where('details.ordernumber = :ordernumber')
             ->setParameter('priceGroup', $customerGroupKey)
+            ->setParameter('defaultPriceGroup', $defaultCustomerGroup)
             ->setParameter('ordernumber', $orderNumber)
             ->execute()
             ->fetch(\PDO::FETCH_ASSOC);
+
+        return $this->prepareProductPrice($product);
+    }
+
+    /**
+     * @param array $product
+     *
+     * @return array
+     */
+    private function prepareProductPrice(array $product)
+    {
+        if (!$product['price']) {
+            $product['price'] = $product['defaultPrice'];
+            $product['to'] = $product['defaultPriceTo'];
+        }
+
+        unset($product['defaultPrice']);
+        unset($product['defaultPriceTo']);
+
+        return $product;
     }
 
     /**
