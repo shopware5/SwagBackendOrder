@@ -122,19 +122,6 @@
             <factory class="SwagBackendOrder\Components\Translation\ShippingTranslator" method="create"/>
         </service>
 
-        <!-- SearchBundle Extension -->
-        <service id="swag_backend_order.search_bundle.variant_condition_handler"
-                 class="SwagBackendOrder\Bundle\SearchBundleDBAL\ConditionHandler\VariantConditionHandler">
-            <tag name="condition_handler_dbal"/>
-        </service>
-
-        <service id="swag_backend_order.search_bundle.query_builder_factory_decorator"
-                 class="SwagBackendOrder\Bundle\SearchBundleDBAL\QueryBuilderFactoryDecorator"
-                 decorates="shopware_searchdbal.dbal_query_builder_factory"
-                 public="false">
-            <argument id="swag_backend_order.search_bundle.query_builder_factory_decorator.inner" type="service"/>
-        </service>
-
         <service id="swag_backend_order.product_search" class="SwagBackendOrder\Components\ProductSearch\ProductSearch">
             <argument type="service" id="dbal_connection"/>
             <argument type="service" id="swag_backend_order.price_calculation.product_calculator" />
