@@ -1,5 +1,11 @@
 {
-    "name": "shopware/SwagPaymentPayPalUnified",
+    "name": "shopware/swag-backend-order",
+    "type": "shopware-plugin",
+    "description": "Plugin which allows you to create orders via the backend orders module.",
+    "license": "MIT",
+    "extra": {
+        "installer-name": "SwagBackendOrder"
+    },
     "require-dev": {
         "shopware/plugin-dev-tools": "master-dev"
     },
