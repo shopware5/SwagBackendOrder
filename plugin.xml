@@ -5,41 +5,31 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>2.0.3</version>
+    <version>2.1.0</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
     <author>shopware AG</author>
-    <compatibility minVersion="5.2.0" />
+    <compatibility minVersion="5.2.0"/>
 
-    <changelog version="1.0.0">
-        <changes lang="de">PT-3272 - Erstveröffentlichung;</changes>
-        <changes lang="en">PT-3272 - First release;</changes>
+    <changelog version="2.1.0">
+        <changes lang="de">PT-8793 - Obsoleten Code entfernt; Composer Kompatibilität;</changes>
+        <changes lang="en">PT-8793 - Removed obsolete code; Composer compatibility;</changes>
     </changelog>
 
-    <changelog version="1.0.1">
-        <changes lang="de">PT-3663 - Bugfix: Sprach- und Shopauswahl; PT-3675 - Bugfix: Kompatibilität zu anderen Plugins; PT-3709 - Bugfix: Problem mit Passwort zurücksetzen; PT-3789 - Bugfix: Versand Bestellbestätigung an Shopbetreiber; PT-3790 - Bugfix: Preise der Kundengruppe;</changes>
-        <changes lang="en">PT-3663 - Bugfix: Selection of language and shop; PT-3675 - Bugfix: Compatibility to other plugins; PT-3709 - Bugfix: Problem with password reset; PT-3789 - Bugfix: Send order confirmation to shop owner; PT-3790 - Bugfix: Prices of customer group;</changes>
+    <changelog version="2.0.3">
+        <changes lang="de">PT-8601 - Problem mit individuellen Kundengruppen und der Artikelsuche behoben</changes>
+        <changes lang="en">PT-8601 - Fix problem with individual customer groups and the product search</changes>
     </changelog>
 
-    <changelog version="1.0.2">
-        <changes lang="de">PT-3839 - Bugfix: Einfrieren, wenn ein Fehler beim Erstellen auftritt; Vielen Dank an das Team von <![CDATA[<a href=\"https://www.viison.com\" target=\"_blank\">VIISON</a>]]> für die folgenden Bugfixes; PT-4733 - Bugfix: Positionen auf Lieferschein; PT-4734 - Bugfix: Mehrwertsteuer auf Netto Rechnungen; PT-4735 - Bugfix: Berechnung Gesamtbetrag auf Netto Rechnungen; PT-4736 - Bugfix: Auswahl Lieferadresse; PT-4737, PT-4738, PT-4739 - Bugfix: Unnötige Felder und Events entfernt; PT-4740 - Bugfix: Netto Lieferkosten nur lesbar;</changes>
-        <changes lang="en">PT-3839 - Bugfix: Crashing, if error occurs on creating; Thanks a lot to the team of <![CDATA[<a href=\"https://www.viison.com\" target=\"_blank\">VIISON</a>]]> for the following bugfixes; PT-4733 - Bugfix: Positions on delivery note; PT-4734 - Bugfix: VAT on net invoices; PT-4735 - Bugfix: Calculation of amount on net invoices; PT-4736 - Bugfix: Select shipping address; PT-4737, PT-4738, PT-4739 - Bugfix: Remove unneccessary fields and events; PT-4740 - Bugfix: Net shipping costs only readable;</changes>
+    <changelog version="2.0.2">
+        <changes lang="de">PT-8535, PT-8567 - Verbessert die Artikelsuche und Auswahl</changes>
+        <changes lang="en">PT-8535, PT-8567 - Improves the product search and selection</changes>
     </changelog>
 
-    <changelog version="1.1.0">
-        <changes lang="de">PT-4903 - Bugfix: Support für Abverkaufsartikel; PT-6000 - Feature: Unterstützung für Nettoanzeige und steuerfreie Bestellungen; PT-6149, PT-6192 - Feature: Shopware 5.2 Kompatibilität; PT-6180 - Bugfix: Nutzung des Shopware 5.2 Adressmanagements; PT-6181 - Bugfix: Lastschrift entfernt; PT-6291 - Bugfix: Versandkostenberechnung bei Währungswechsel; PT-6295 - Bugfix: Anzeige der SEPA Informationen;</changes>
-        <changes lang="en">PT-4903 - Bugfix: Support for sale products; PT-6000 - Feature: Support for displaying net prices and tax free orders; PT-6149, PT-6192 - Feature: Shopware 5.2 compatibility; PT-6180 - Bugfix: Usage of Shopware 5.2 address management; PT-6181 - Bugfix: Remove debit; PT-6291 - Bugfix: Shipping cost calculation on changing the currency; PT-6295 - Bugfix: Displaying of SEPA information;</changes>
-    </changelog>
-
-    <changelog version="1.1.1">
-        <changes lang="de">PT-6925 - Bugfix: Versandkosten verhalten sich bei "Nettopreise anzeigen" wie im Frontend. Kostenaufstellungen werden nun in der Bestellbestätigungsemail lokalisiert formatiert; PT-6926 - Bugfix: Steuerfreie Bestellungen verhalten sich wie Frontend Bestellungen in der Datenbank; PT-6927, PT-7057 - Bugfix: Refaktorierung der Kundenmodul Erweiterung;</changes>
-        <changes lang="en">PT-6925 - Bugfix: Shipping costs will behave like the frontend calculation, if "Display net prices" is enabled. Costs will be formatted by locale in the order confirmation mail; PT-6926 - Bugfix: Tax free order behave like frontend orders in the database; PT-6927, PT-7057 - Bugfix: Refactoring of the customer module extension;</changes>
-    </changelog>
-
-    <changelog version="1.1.2">
-        <changes lang="de">PT-7651 - Shopware 5.3 Kompatibilität</changes>
-        <changes lang="en">PT-7651 - Shopware 5.3 compatibility</changes>
+    <changelog version="2.0.1">
+        <changes lang="de">PT-8535 - Optimieren der Artikelsuche im Backend</changes>
+        <changes lang="en">PT-8535 - Optimize backend product search</changes>
     </changelog>
 
     <changelog version="2.0.0">
@@ -47,17 +37,33 @@
         <changes lang="en">PT-3859 - It is now possible to add individual discounts to the orders; PT-4632 - Product block prices are now considered; PT-6889 - Order confirm mail is not send twice anymore; PT-7020 - Product price calculation considers customer group now; PT-7657 - Fix displaying fo product and customer search; PT-7983 - Fix tax displaying; PT-7984 - Fix issues with variant texts; PT-8241 - Extend product search with manufacturer name; PT-8365, PT-8491 - Fix snippets;</changes>
     </changelog>
 
-    <changelog version="2.0.1">
-        <changes lang="de">PT-8535 - Optimieren der Artikelsuche  im Backend</changes>
-        <changes lang="en">PT-8535 - Optimize backend product search</changes>
+    <changelog version="1.1.2">
+        <changes lang="de">PT-7651 - Shopware 5.3 Kompatibilität</changes>
+        <changes lang="en">PT-7651 - Shopware 5.3 compatibility</changes>
     </changelog>
 
-    <changelog version="2.0.2">
-        <changes lang="de">PT-8535, PT-8567 - Verbessert die Artikelsuche und Auswahl</changes>
-        <changes lang="en">PT-8535, PT-8567 - Improves the product search and selection</changes>
+    <changelog version="1.1.1">
+        <changes lang="de">PT-6925 - Bugfix: Versandkosten verhalten sich bei "Nettopreise anzeigen" wie im Frontend. Kostenaufstellungen werden nun in der Bestellbestätigungsemail lokalisiert formatiert; PT-6926 - Bugfix: Steuerfreie Bestellungen verhalten sich wie Frontend Bestellungen in der Datenbank; PT-6927, PT-7057 - Bugfix: Refaktorierung der Kundenmodul Erweiterung;</changes>
+        <changes lang="en">PT-6925 - Bugfix: Shipping costs will behave like the frontend calculation, if "Display net prices" is enabled. Costs will be formatted by locale in the order confirmation mail; PT-6926 - Bugfix: Tax free order behave like frontend orders in the database; PT-6927, PT-7057 - Bugfix: Refactoring of the customer module extension;</changes>
     </changelog>
-    <changelog version="2.0.3">
-        <changes lang="de">PT-8601 - Problem mit individuellen Kundengruppen und der Artikelsuche behoben</changes>
-        <changes lang="en">PT-8601 - Fix problem with individual customer groups and the product search</changes>
+
+    <changelog version="1.1.0">
+        <changes lang="de">PT-4903 - Bugfix: Support für Abverkaufsartikel; PT-6000 - Feature: Unterstützung für Nettoanzeige und steuerfreie Bestellungen; PT-6149, PT-6192 - Feature: Shopware 5.2 Kompatibilität; PT-6180 - Bugfix: Nutzung des Shopware 5.2 Adressmanagements; PT-6181 - Bugfix: Lastschrift entfernt; PT-6291 - Bugfix: Versandkostenberechnung bei Währungswechsel; PT-6295 - Bugfix: Anzeige der SEPA Informationen;</changes>
+        <changes lang="en">PT-4903 - Bugfix: Support for sale products; PT-6000 - Feature: Support for displaying net prices and tax free orders; PT-6149, PT-6192 - Feature: Shopware 5.2 compatibility; PT-6180 - Bugfix: Usage of Shopware 5.2 address management; PT-6181 - Bugfix: Remove debit; PT-6291 - Bugfix: Shipping cost calculation on changing the currency; PT-6295 - Bugfix: Displaying of SEPA information;</changes>
+    </changelog>
+
+    <changelog version="1.0.2">
+        <changes lang="de">PT-3839 - Bugfix: Einfrieren, wenn ein Fehler beim Erstellen auftritt; Vielen Dank an das Team von <![CDATA[<a href=\"https://www.viison.com\" target=\"_blank\">VIISON</a>]]> für die folgenden Bugfixes; PT-4733 - Bugfix: Positionen auf Lieferschein; PT-4734 - Bugfix: Mehrwertsteuer auf Netto Rechnungen; PT-4735 - Bugfix: Berechnung Gesamtbetrag auf Netto Rechnungen; PT-4736 - Bugfix: Auswahl Lieferadresse; PT-4737, PT-4738, PT-4739 - Bugfix: Unnötige Felder und Events entfernt; PT-4740 - Bugfix: Netto Lieferkosten nur lesbar;</changes>
+        <changes lang="en">PT-3839 - Bugfix: Crashing, if error occurs on creating; Thanks a lot to the team of <![CDATA[<a href=\"https://www.viison.com\" target=\"_blank\">VIISON</a>]]> for the following bugfixes; PT-4733 - Bugfix: Positions on delivery note; PT-4734 - Bugfix: VAT on net invoices; PT-4735 - Bugfix: Calculation of amount on net invoices; PT-4736 - Bugfix: Select shipping address; PT-4737, PT-4738, PT-4739 - Bugfix: Remove unneccessary fields and events; PT-4740 - Bugfix: Net shipping costs only readable;</changes>
+    </changelog>
+
+    <changelog version="1.0.1">
+        <changes lang="de">PT-3663 - Bugfix: Sprach- und Shopauswahl; PT-3675 - Bugfix: Kompatibilität zu anderen Plugins; PT-3709 - Bugfix: Problem mit Passwort zurücksetzen; PT-3789 - Bugfix: Versand Bestellbestätigung an Shopbetreiber; PT-3790 - Bugfix: Preise der Kundengruppe;</changes>
+        <changes lang="en">PT-3663 - Bugfix: Selection of language and shop; PT-3675 - Bugfix: Compatibility to other plugins; PT-3709 - Bugfix: Problem with password reset; PT-3789 - Bugfix: Send order confirmation to shop owner; PT-3790 - Bugfix: Prices of customer group;</changes>
+    </changelog>
+
+    <changelog version="1.0.0">
+        <changes lang="de">PT-3272 - Erstveröffentlichung;</changes>
+        <changes lang="en">PT-3272 - First release;</changes>
     </changelog>
 </plugin>
