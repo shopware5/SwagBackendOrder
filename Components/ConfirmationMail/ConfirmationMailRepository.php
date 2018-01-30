@@ -58,7 +58,7 @@ class ConfirmationMailRepository
             'details.purchaseunit',
             'details.releasedate',
             'details.unitID',
-            'article.laststock',
+            'details.laststock',
             'article.mode as modus',
             'article.main_detail_id as mainDetailId',
             'article.taxID',
