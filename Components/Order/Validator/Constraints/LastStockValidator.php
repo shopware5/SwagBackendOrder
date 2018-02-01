@@ -96,7 +96,7 @@ class LastStockValidator extends ConstraintValidator
     private function isLastStockProduct($orderNumber)
     {
         $builder = $this->connection->createQueryBuilder();
-        $builder->select('article.laststock')
+        $builder->select('details.laststock')
             ->from('s_articles', 'article')
             ->leftJoin('article', 's_articles_details', 'details', 'details.articleID = article.id')
             ->where('ordernumber = :number')

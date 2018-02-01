@@ -1,5 +1,5 @@
 {
-    "name": "shopware/swag-backend-order",
+    "name": "shopwareLabs/swag-backend-order",
     "type": "shopware-plugin",
     "description": "Plugin which allows you to create orders via the backend orders module.",
     "license": "MIT",
