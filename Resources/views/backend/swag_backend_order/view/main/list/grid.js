@@ -59,8 +59,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 beforeEdit: function (editor, event) {
                     var record = event.record;
 
-                    // Discounts do not support inline editing!
-                    if (record.get('isDiscount') === true) {
+                    // Discounts and surcharges do not support inline editing!
+                    if (record.get('isDiscount') === true || record.get('isSurcharge') === true) {
                         return false;
                     }
                 }
@@ -466,7 +466,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
 
         symbol = currencyStore.getAt(currencyStoreIndex).get('symbol');
 
-        if (record.get('isDiscount') && record.get('discountType') === 0) {
+        if (record.get('isDiscount') && record.get('discountType') === 0 || record.get('isSurcharge') && record.get('surchargeType') === 0) {
             total = record.get('total') * 1; // * 1 to "convert" to float so toFixed can to its stuff.
         } else {
             total = record.get('quantity') * record.get('price');
@@ -493,7 +493,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             return value;
         }
 
-        if (record.get('isDiscount') && record.get('discountType') === 0) {
+        if (record.get('isDiscount') && record.get('discountType') === 0 || record.get('isSurcharge') && record.get('surchargeType') === 0) {
             return value + ' %';
         }
 

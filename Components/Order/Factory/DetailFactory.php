@@ -50,7 +50,7 @@ class DetailFactory
             throw new InvalidOrderException('No product number was passed.');
         }
 
-        if ($positionStruct->isDiscount()) {
+        if ($positionStruct->isDiscount() || $positionStruct->isSurcharge()) {
             return $this->createDiscount($positionStruct);
         }
 

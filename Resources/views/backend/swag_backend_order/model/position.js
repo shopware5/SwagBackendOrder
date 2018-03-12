@@ -56,7 +56,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
             }
         },
         { name: 'isDiscount', type: 'bool' },
-        { name: 'discountType', type: 'int' }
+        { name: 'discountType', type: 'int' },
+        { name: 'isSurcharge', type: 'bool' },
+        { name: 'surchargeType', type: 'int' }
     ]
 });
 //

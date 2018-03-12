@@ -277,4 +277,20 @@ class PositionStruct
     {
         return (int) explode('.', $this->getNumber())[1];
     }
+
+    /**
+     * @return bool
+     */
+    public function isSurcharge()
+    {
+        return strpos($this->getNumber(), 'SURCHARGE.') === 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSurchargeType()
+    {
+        return (int) explode('.', $this->getNumber())[1];
+    }
 }

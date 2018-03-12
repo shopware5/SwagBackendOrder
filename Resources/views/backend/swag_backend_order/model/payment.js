@@ -22,6 +22,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Payment', {
         { name: 'name', type: 'string' },
         { name: 'description', type: 'string' },
         { name: 'position', type: 'int' },
+        { name: 'debitPercent', type: 'float' },
+        { name: 'surcharge', type: 'float' },
         { name: 'active', type: 'boolean' }
     ]
 });

@@ -32,6 +32,7 @@ use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\DiscountCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ShippingPriceCalculator;
+use SwagBackendOrder\Components\PriceCalculation\Calculator\SurchargeCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\TotalPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
@@ -459,7 +460,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getRoundedGrossPrice(), $position->getQuantity()));
 
             //Don't set the total amount of the product if it's a discount.
-            if (!$position->getIsDiscount()) {
+            if (!$position->getIsDiscount() && !$position->isSurcharge()) {
                 $positionPrices[] = $totalPositionPrice;
 
                 $position->setPrice($positionPrice->getRoundedGrossPrice());
@@ -485,6 +486,10 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         /** @var DiscountCalculator $discountCalculator */
         $discountCalculator = $this->get('swag_backend_order.price_calculation.discount_calculator');
         $result = $discountCalculator->calculateDiscount($result);
+
+        /** @var SurchargeCalculator $discountCalculator */
+        $surchargeCalculator = $this->get('swag_backend_order.price_calculation.surcharge_calculator');
+        $result = $surchargeCalculator->calculateSurcharge($result);
 
         $this->view->assign([
             'data' => $result,

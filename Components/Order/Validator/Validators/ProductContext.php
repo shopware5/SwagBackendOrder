@@ -55,4 +55,14 @@ class ProductContext
     {
         return strpos($this->getOrderNumber(), 'DISCOUNT.') === 0;
     }
+
+    /**
+     * Returns a value indicating whether or not this product is of type surcharge.
+     *
+     * @return bool
+     */
+    public function isSurcharge()
+    {
+        return strpos($this->getOrderNumber(), 'SURCHARGE.') === 0;
+    }
 }

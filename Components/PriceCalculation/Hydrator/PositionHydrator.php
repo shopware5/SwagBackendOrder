@@ -26,6 +26,8 @@ class PositionHydrator
         $position->setTaxRate((int) $data['taxRate']);
         $position->setIsDiscount((bool) $data['isDiscount']);
         $position->setDiscountType((int) $data['discountType']);
+        $position->setIsSurcharge((bool) $data['isSurcharge']);
+        $position->setSurchargeType((int) $data['surchargeType']);
 
         return $position;
     }

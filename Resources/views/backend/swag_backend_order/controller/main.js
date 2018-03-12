@@ -53,6 +53,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             percentage: '{s name="swagbackendorder/discountName/percentage"}Discount (percentage){/s}',
             absolute: '{s name="swagbackendorder/discountName/absolute"}Discount (absolute){/s}'
         },
+        paymentSurcharge: {
+            percentageName: '{s name="swagbackendorder/paymentSurchargeName/percentage"}Payment Surcharge (percentage){/s}',
+            absoluteName: '{s name="swagbackendorder/paymentSurchargeName/absolute"}Payment Surcharge (absolute){/s}',
+            paymentSurchargeNumber: 'SURCHARGE.',
+        },
         title: '{s name="swagbackendorder/title/selected_user"}{/s}'
     },
 
@@ -417,6 +422,70 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     onSelectPayment: function (record) {
         var me = this;
         me.orderModel.set('paymentId', record[0].data.id);
+
+        me.deleteAllSurcharges();
+
+        if (record[0].data.debitPercent > 0) {
+            me.positionStore.insert(
+                me.positionStore.getCount(),
+                Ext.create('Shopware.apps.SwagBackendOrder.model.Position', {
+                        quantity: 1,
+                        mode: 4,
+                        price: record[0].data.debitPercent,
+                        taxRate: me.getHighestTaxRate(),
+                        inStock: 1,
+                        articleNumber: me.snippets.paymentSurcharge.paymentSurchargeNumber + 0,
+                        articleName: me.snippets.paymentSurcharge.percentageName,
+                        isSurcharge: true,
+                        surchargeType: 0
+                    }
+                )
+            );
+        }
+
+        if (record[0].data.surcharge > 0) {
+            me.positionStore.insert(
+                me.positionStore.getCount(),
+                Ext.create('Shopware.apps.SwagBackendOrder.model.Position', {
+                        quantity: 1,
+                        mode: 4,
+                        price: record[0].data.surcharge,
+                        taxRate: me.getHighestTaxRate(),
+                        inStock: 1,
+                        articleNumber: me.snippets.paymentSurcharge.paymentSurchargeNumber + 1,
+                        articleName: me.snippets.paymentSurcharge.absoluteName,
+                        isSurcharge: true,
+                        surchargeType: 1
+                    }
+                )
+            );
+        }
+
+        me.onCalculateBasket();
+    },
+
+    getHighestTaxRate: function () {
+        var me = this,
+            taxArray = [19];
+
+        me.positionStore.each(function (record) {
+            taxArray.push(record.data.taxRate);
+        });
+
+        return Math.max(...taxArray);
+    },
+
+    deleteAllSurcharges: function () {
+        var me = this,
+            positionArray = [];
+
+        me.positionStore.each(function (record) {
+            if (record.data.isSurcharge) {
+                positionArray.push(record);
+            }
+        });
+
+        me.positionStore.remove(positionArray);
     },
 
     /**
