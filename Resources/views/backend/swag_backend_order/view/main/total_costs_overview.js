@@ -259,6 +259,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         return me.displayNetCheckbox;
     },
 
+    /**
+     * @returns { Ext.form.field.Checkbox }
+     */
     createSendMailCheckbox: function () {
         var me = this;
 
@@ -307,22 +310,26 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     /**
      * reads the plugin configuration
      */
-    getPluginConfig: function() {
+    getPluginConfig: function () {
         var me = this;
 
         Ext.Ajax.request({
             url: '{url action=getPluginConfig}',
-            success: function(response) {
-                var pluginConfigObj = Ext.decode(response.responseText);
-
-                me.sendMail = pluginConfigObj.data.sendMail;
-                if (me.sendMail == 1) {
-                    me.orderModel.set('sendMail', 1);
-                    me.sendMailCheckbox.setValue(true);
-                }
-            }
+            success: Ext.bind(me.onReceivePluginConfig, me)
         });
     },
+
+    /**
+     * @param { object } response
+     */
+    onReceivePluginConfig: function (response) {
+        var me = this,
+            pluginConfigObj = Ext.decode(response.responseText),
+            sendMail = pluginConfigObj.data.sendMail;
+
+        me.orderModel.set('sendMail', sendMail);
+        me.sendMailCheckbox.setValue(sendMail);
+    }
 });
 //
 //{/block}

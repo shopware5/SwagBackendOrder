@@ -55,7 +55,7 @@ class OrderHydrator
 
         $orderStruct->setNetOrder((bool) $data['displayNet']);
         $orderStruct->setTaxFree((bool) $data['taxFree']);
-	    $orderStruct->setSendMail((bool) $data['sendMail']);
+        $orderStruct->setSendMail((bool) $data['sendMail']);
 
         $orderStruct->setTotal((float) $data['total']);
         $orderStruct->setTotalWithoutTax((float) $data['totalWithoutTax']);
