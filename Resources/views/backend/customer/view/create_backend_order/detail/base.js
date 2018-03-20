@@ -13,6 +13,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
     createBaseFormLeft: function () {
         var me = this,
             baseFormLeft = me.callParent(arguments),
+            passwordElements,
             email;
 
         if (me.record.get('guest')) {
@@ -44,6 +45,12 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
                 }
             });
 
+            passwordElements = this.getPasswordElements(baseFormLeft);
+
+            //Remove password elements
+            baseFormLeft = Ext.Array.remove(baseFormLeft, passwordElements[0]); //Password input
+            baseFormLeft = Ext.Array.remove(baseFormLeft, passwordElements[1]); //Password confirm input
+
             baseFormLeft[0] = email;
         }
 
@@ -72,6 +79,35 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
         }
 
         return baseFormRight;
+    },
+
+    /**
+     * Iterates the given elements and finds the elements for the password field and password confirm field.
+     * Returns the result as an array.
+     *
+     * This function is required, because the view could have been extended already and the default indexes for the
+     * password fields may not match anymore.
+     *
+     * @param { array } elements
+     * @returns { array }
+     */
+    getPasswordElements: function (elements) {
+        var passwordEl,
+            passwordConfirmEl;
+
+        Ext.each(elements, function (element) {
+            //Since ExtJs does generate random IDs for the elements,
+            //it's important to find another constant for the fields.
+            //The password confirm field has a name, but the actual password field is just a container without a name.
+            //But it has the x-password-container class instead.
+            if (element.name === 'confirm') {
+                passwordConfirmEl = element;
+            } else if (element.cls === 'x-password-container') {
+                passwordEl = element;
+            }
+        });
+
+        return [ passwordEl, passwordConfirmEl ];
     }
 });
 // {/block}
