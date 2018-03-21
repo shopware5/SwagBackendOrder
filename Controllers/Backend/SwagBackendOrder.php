@@ -319,12 +319,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $desktopTypes = $pluginConfig['desktopTypes'];
         $desktopTypes = explode(',', $desktopTypes);
         $validationMail = $pluginConfig['validationMail'];
-        $sendMail = $pluginConfig['sendMail'];
-        $sendMailConfigGlobal = $this->get('config')->get('sendOrderMail');
-
-        if (!$sendMailConfigGlobal) {
-            $sendMail = $sendMailConfigGlobal;
-        }
 
         $config = [];
         $config['desktopTypes'] = [];
@@ -337,7 +331,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $config['validationMail'] = $validationMail;
-        $config['sendMail'] = $sendMail;
+        $config['sendMail'] = (bool) $pluginConfig['sendMail'];
 
         $total = count($config);
 
