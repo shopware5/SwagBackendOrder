@@ -36,10 +36,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
                     scope: me,
                     afterrender: function (field) {
                         window.setTimeout(function () {
-                            // only validates the email field if the mail is not the guest account email which can be configured in the plugin config
-                            if (field.getValue() != me.record.get('email')) {
-                                field.validationUrl = '{url action="validateEmail"}';
-                            }
+                            field.validationUrl = '{url action="validateEmail"}';
                         }, 500);
                     }
                 }
