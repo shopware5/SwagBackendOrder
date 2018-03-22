@@ -43,6 +43,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     initComponent: function () {
         var me = this;
 
+        me.getPluginConfig();
+
         me.currencyStore = me.subApplication.getStore('Currency');
         me.items = [
             me.createTotalCostsOverviewContainer()
@@ -53,6 +55,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         me.displayNetCheckbox.on('change', function (checkbox, newValue, oldValue) {
             me.taxFreeCheckbox.setDisabled(!!newValue);
             me.fireEvent('changeDisplayNet', newValue, oldValue);
+        });
+
+        me.sendMailCheckbox.on('change', function (checkbox, newValue, oldValue) {
+            me.fireEvent('changeSendMail', newValue, oldValue);
         });
 
         me.taxFreeCheckbox.on('change', function (checkbox, newValue, oldValue) {
@@ -254,6 +260,22 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
     },
 
     /**
+     * @returns { Ext.form.field.Checkbox }
+     */
+    createSendMailCheckbox: function () {
+        var me = this;
+
+        me.sendMailCheckbox = Ext.create('Ext.form.field.Checkbox', {
+            boxLabel: '{s name="send_mail"}{/s}',
+            inputValue: true,
+            uncheckedValue: false,
+            padding: '0 5 0 0'
+        });
+
+        return me.sendMailCheckbox;
+    },
+
+    /**
      * @returns { Ext.container.Container }
      */
     createLeftContainer: function () {
@@ -263,7 +285,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
             layout: 'vbox',
             items: [
                 me.createDisplayNetCheckbox(),
-                me.createTaxFreeCheckbox()
+                me.createTaxFreeCheckbox(),
+                me.createSendMailCheckbox()
             ]
         });
     },
@@ -282,6 +305,30 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.TotalCostsOverview', {
         });
 
         return me.taxFreeCheckbox;
+    },
+
+    /**
+     * reads the plugin configuration
+     */
+    getPluginConfig: function () {
+        var me = this;
+
+        Ext.Ajax.request({
+            url: '{url action=getPluginConfig}',
+            success: Ext.bind(me.onReceivePluginConfig, me)
+        });
+    },
+
+    /**
+     * @param { object } response
+     */
+    onReceivePluginConfig: function (response) {
+        var me = this,
+            pluginConfigObj = Ext.decode(response.responseText),
+            sendMail = pluginConfigObj.data.sendMail;
+
+        me.orderModel.set('sendMail', sendMail);
+        me.sendMailCheckbox.setValue(sendMail);
     }
 });
 //

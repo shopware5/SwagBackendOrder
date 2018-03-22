@@ -5,7 +5,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin\ConfigReader;
 use Shopware\Models\Article\Detail;
@@ -112,7 +111,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             $modelManager->getConnection()->commit();
 
-            $this->sendOrderConfirmationMail($order);
+            if ($orderStruct->getSendMail()) {
+                $this->sendOrderConfirmationMail($order);
+            }
         } catch (InvalidOrderException $e) {
             $modelManager->getConnection()->rollBack();
 
@@ -330,6 +331,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
 
         $config['validationMail'] = $validationMail;
+        $config['sendMail'] = (bool) $pluginConfig['sendMail'];
 
         $total = count($config);
 
