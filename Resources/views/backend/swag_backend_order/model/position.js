@@ -1,5 +1,5 @@
 //
-//{block name="backend/create_backend_order/model/position"}
+// {block name="backend/create_backend_order/model/position"}
 //
 Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
 
@@ -33,11 +33,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
             name: 'price',
             type: 'float',
             convert: function (v, record) {
-                v = parseFloat(v);
-                if (typeof v !== 'number') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         { name: 'taxId', type: 'int' },
@@ -48,11 +47,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
             name: 'total',
             type: 'float',
             convert: function (v, record) {
-                v = parseFloat(v);
-                if (typeof v !== 'number') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         { name: 'isDiscount', type: 'bool' },
@@ -60,4 +58,4 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
     ]
 });
 //
-//{/block}
+// {/block}
