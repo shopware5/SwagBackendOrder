@@ -51,7 +51,7 @@ class DetailFactory
         }
 
         if ($positionStruct->isDiscount()) {
-            return $this->createDiscount($positionStruct);
+            return $this->createDiscount($positionStruct, $isTaxFree);
         }
 
         $detail = new Detail();
@@ -91,10 +91,11 @@ class DetailFactory
 
     /**
      * @param PositionStruct $positionStruct
+     * @param bool           $isTaxFree
      *
      * @return Detail
      */
-    private function createDiscount(PositionStruct $positionStruct)
+    private function createDiscount(PositionStruct $positionStruct, $isTaxFree)
     {
         $detail = new Detail();
         $detail->setArticleNumber($positionStruct->getNumber());
@@ -107,7 +108,13 @@ class DetailFactory
         $detail->setArticleId($positionStruct->getArticleId());
         $detail->setEsdArticle(0);
 
-        $detail->setTaxRate(0);
+        $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());
+        // Actually sOrder::sSaveOrder() sets this to the illegal value of '0' when the order is taxfree,
+        // but this is not possible via Doctrine, so by not setting the value it falls back to NULL
+        if (!$isTaxFree) {
+            $detail->setTax($tax);
+        }
+        $detail->setTaxRate($tax->getTax());
 
         /** @var DetailStatus $detailStatus */
         $detailStatus = $this->modelManager->find(DetailStatus::class, 0);

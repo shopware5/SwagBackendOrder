@@ -27,6 +27,7 @@ class DetailFactoryTest extends \PHPUnit_Framework_TestCase
         $positionStruct->setName('Test_Discount');
         $positionStruct->setQuantity(1);
         $positionStruct->setArticleId(0);
+        $positionStruct->setTaxId(1);
 
         $result = $factory->create($positionStruct, true);
         $this->assertInstanceOf(Detail::class, $result);
