@@ -5,7 +5,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin\ConfigReader;
 use Shopware\Models\Article\Detail;
@@ -455,18 +454,23 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $positionPrice = $this->getPositionPrice($position, $requestStruct);
 
             $totalPositionPrice = new PriceResult();
-            $totalPositionPrice->setNet($this->getTotalPrice($positionPrice->getRoundedNetPrice(), $position->getQuantity()));
-            $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getRoundedGrossPrice(), $position->getQuantity()));
+            $totalPositionPrice->setNet($this->getTotalPrice($positionPrice->getNet(), $position->getQuantity()));
+            $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getGross(), $position->getQuantity()));
+
+            if ($requestStruct->isDisplayNet()) {
+                $calculatedGross = $positionPrice->getNet() * (1 + ($position->getTaxRate() / 100));
+                $totalPositionPrice->setGross($this->getTotalPrice($calculatedGross, $position->getQuantity()));
+            }
 
             //Don't set the total amount of the product if it's a discount.
             if (!$position->getIsDiscount()) {
                 $positionPrices[] = $totalPositionPrice;
 
-                $position->setPrice($positionPrice->getRoundedGrossPrice());
+                $position->setPrice($positionPrice->getGross());
 
                 //Use net prices if it's configured like that
                 if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
-                    $position->setPrice($positionPrice->getRoundedNetPrice());
+                    $position->setPrice($positionPrice->getNet());
                 }
 
                 $position->setTotal($this->getTotalPrice($position->getPrice(), $position->getQuantity()));

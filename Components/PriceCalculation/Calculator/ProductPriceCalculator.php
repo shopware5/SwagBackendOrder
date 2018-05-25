@@ -52,11 +52,11 @@ class ProductPriceCalculator
 
         $result = new PriceResult();
 
-        $netPrice = $this->currencyConverter->getCurrencyPrice($context->getPrice(), $context->getCurrencyFactor());
-        $result->setNet($netPrice);
+        $netPrice = round($this->currencyConverter->getCurrencyPrice($context->getPrice(), $context->getCurrencyFactor()), 3);
+        $result->setNet(round($netPrice, 2));
 
-        $grossPrice = $this->taxCalculation->getGrossPrice($netPrice, $context->getTaxRate());
-        $result->setGross($grossPrice);
+        $grossPrice = round($this->taxCalculation->getGrossPrice($netPrice, $context->getTaxRate()), 3);
+        $result->setGross(round($grossPrice, 2));
 
         $result->setTaxRate($context->getTaxRate());
 
