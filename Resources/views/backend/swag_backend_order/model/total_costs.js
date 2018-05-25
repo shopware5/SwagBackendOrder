@@ -18,60 +18,60 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             name: 'total',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         {
             name: 'sum',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         {
             name: 'totalWithoutTax',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         {
             name: 'shippingCosts',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         {
             name: 'shippingCostsNet',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         },
         {
             name: 'taxSum',
             type: 'float',
             convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+                if (!Ext.isNumeric(v)) {
+                    v = 0.0;
                 }
-                return v.toFixed(2);
+                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
             }
         }
     ]

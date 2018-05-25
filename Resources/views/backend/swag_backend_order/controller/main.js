@@ -298,9 +298,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 me.ordernumber = response.proxy.reader.rawData.ordernumber;
                 me.mailErrorMessage = response.proxy.reader.rawData.mail;
 
+                var orderManager = Ext.ComponentQuery.query('order-list-main-window');
+
                 switch (me.modus) {
                     case 'new':
                         me.window.close();
+
+                        if (Ext.isDefined(orderManager[0])) {
+                            var store = orderManager[0].listStore;
+                            store.getProxy().extraParams.orderID = null;
+                            store.load();
+                        }
+
                         if (response.proxy.reader.rawData.mail) {
                             Shopware.Notification.createGrowlMessage(me.snippets.error.mailTitle, me.mailErrorMessage);
                         }
@@ -313,6 +322,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                         break;
                     case 'close':
                         me.window.close();
+
+                        if (Ext.isDefined(orderManager[0])) {
+                            var store = orderManager[0].listStore;
+                            store.getProxy().extraParams.orderID = null;
+                            store.load();
+                        }
+
                         break;
                     case 'detail':
                         if (me.orderId > 0) {
@@ -329,6 +345,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                         }
                         Shopware.Notification.createGrowlMessage(me.snippets.success.title, me.snippets.success.text + ' - ' + me.ordernumber);
                         me.window.close();
+
+                        if (Ext.isDefined(orderManager[0])) {
+                            var store = orderManager[0].listStore;
+                            store.getProxy().extraParams.orderID = null;
+                            store.load();
+                        }
+
                         break;
                     default:
                         break;
