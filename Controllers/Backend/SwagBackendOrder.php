@@ -646,7 +646,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $requestStruct->isPreviousTaxFree(),
             $requestStruct->getPreviousCurrencyId()
         );
-        $basePrice = round($productCalculator->calculateBasePrice($previousPriceContext), 2);
+        $basePrice = $productCalculator->calculateBasePrice($previousPriceContext);
 
         $currentPriceContext = $priceContextFactory->create(
             $basePrice,
