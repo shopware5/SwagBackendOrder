@@ -5,12 +5,23 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>2.3.0</version>
+    <version>2.3.1</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
     <author>shopware AG</author>
     <compatibility minVersion="5.4.0"/>
+
+    <changelog version="2.3.1">
+        <changes lang="de">
+            PT-8973 - Behebt ein Problem bei der Berechnung der Bestellung;
+            PT-9140 - Steuer von Rabatten wird nun richtig persistiert;
+        </changes>
+        <changes lang="en">
+            PT-8973 - Solves an issue calculating the basket for the order;
+            PT-9140 - Tax of discounts is persisted correctly;
+        </changes>
+    </changelog>
 
     <changelog version="2.3.0">
         <changes lang="de">
