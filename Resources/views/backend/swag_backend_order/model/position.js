@@ -10,7 +10,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
     extend: 'Ext.data.Model',
 
     /**
-     * alternate class name to identitfy this model
+     * alternate class name to identify this model
      */
     alternateClassName: 'SwagBackendOrder.model.Position',
 
@@ -32,11 +32,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
         {
             name: 'price',
             type: 'float',
-            convert: function (v, record) {
-                if (!Ext.isNumeric(v)) {
-                    v = 0.0;
+            convert: function(v) {
+                var value = parseFloat(v);
+                if (typeof value !== 'number') {
+                    value = 0.0;
                 }
-                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
+                return value.toFixed(2);
             }
         },
         { name: 'taxId', type: 'int' },
@@ -46,11 +47,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
         {
             name: 'total',
             type: 'float',
-            convert: function (v, record) {
-                if (!Ext.isNumeric(v)) {
-                    v = 0.0;
+            convert: function(v) {
+                var value = parseFloat(v);
+                if (typeof value !== 'number') {
+                    value = 0.0;
                 }
-                return Ext.Number.toFixed(Ext.util.Format.round(v, 2), 2);
+                return value.toFixed(2);
             }
         },
         { name: 'isDiscount', type: 'bool' },
