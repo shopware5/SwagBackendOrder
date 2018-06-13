@@ -33,30 +33,7 @@ class Customer implements SubscriberInterface
     {
         return [
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer' => 'onCustomerPostDispatchSecure',
-            'Enlight_Controller_Action_PostDispatch_Backend_Customer' => 'onPostDispatchCustomer',
         ];
-    }
-
-    /**
-     * checks if the fake email was used to create accounts with the same email
-     *
-     * @param \Enlight_Controller_ActionEventArgs $arguments
-     *
-     * @return bool
-     */
-    public function onPostDispatchCustomer(\Enlight_Controller_ActionEventArgs $arguments)
-    {
-        $mail = $arguments->getSubject()->Request()->getParam('value');
-        $action = $arguments->getSubject()->Request()->getParam('action');
-
-        if (!empty($mail) && $action !== 'validateEmail') {
-            if (Shopware()->Config()->get('validationMail') == $mail) {
-                Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();
-                echo true;
-
-                return true;
-            }
-        }
     }
 
     /**
