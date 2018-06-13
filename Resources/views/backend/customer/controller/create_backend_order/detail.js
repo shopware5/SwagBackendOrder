@@ -6,7 +6,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     /**
      * Override init to add additional event for button to perform a backend order
      */
-    init: function () {
+    init: function() {
         var me = this;
 
         me.callParent(arguments);
@@ -23,7 +23,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
      *
      * @param record
      */
-    onPerformBackendOrder: function (record) {
+    onPerformBackendOrder: function(record) {
         Shopware.app.Application.addSubApplication({
             name: 'Shopware.apps.SwagBackendOrder',
             action: 'detail',
@@ -36,7 +36,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     /**
      * Overriding to set random password for new guest accounts
      */
-    onSaveCustomer: function (btn) {
+    onSaveCustomer: function(btn) {
         var me = this,
             win = btn.up('window'),
             form = win.down('form'),
@@ -53,9 +53,24 @@ Ext.define('Shopware.apps.CreateBackendOrder.controller.Detail', {
     },
 
     /**
+     * Override "getQuickView" (magicGetter) to prevent call function on null in this overwritten context.
+     *
+     * @return { object }
+     */
+    getQuickView: function() {
+        return {
+            getStore: function() {
+                return {
+                    load: Ext.emptyFn
+                };
+            }
+        };
+    },
+
+    /**
      * @returns { string }
      */
-    generateRandomPassword: function () {
+    generateRandomPassword: function() {
         var pool = '01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
             password = '', i = 8, length = pool.length;
 
