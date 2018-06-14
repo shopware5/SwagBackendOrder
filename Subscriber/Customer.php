@@ -8,22 +8,37 @@
 
 namespace SwagBackendOrder\Subscriber;
 
+use Composer\Plugin\PluginManager;
 use Enlight\Event\SubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Shopware\Components\Validator\EmailValidator;
 
 class Customer implements SubscriberInterface
 {
     /**
-     * @var ContainerInterface
+     * @var string
      */
-    private $container;
+    private $pluginDir;
 
     /**
-     * @param ContainerInterface $container
+     * @var EmailValidator
      */
-    public function __construct(ContainerInterface $container)
+    private $emailValidator;
+
+    /**
+     * @var PluginManager
+     */
+    private $pluginManager;
+
+    /**
+     * @param string                        $pluginDir
+     * @param EmailValidator                $emailValidator
+     * @param \Enlight_Plugin_PluginManager $pluginManager
+     */
+    public function __construct($pluginDir, EmailValidator $emailValidator, \Enlight_Plugin_PluginManager $pluginManager)
     {
-        $this->container = $container;
+        $this->pluginDir = $pluginDir;
+        $this->emailValidator = $emailValidator;
+        $this->pluginManager = $pluginManager;
     }
 
     /**
@@ -33,7 +48,33 @@ class Customer implements SubscriberInterface
     {
         return [
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer' => 'onCustomerPostDispatchSecure',
+            'Enlight_Controller_Action_Backend_Customer_validateEmail' => 'onPostDispatchCustomer',
         ];
+    }
+
+    /**
+     * @param \Enlight_Event_EventArgs $arguments
+     *
+     * @return bool | null
+     */
+    public function onPostDispatchCustomer(\Enlight_Event_EventArgs $arguments)
+    {
+        $controller = $arguments->get('subject');
+        $request = $controller->Request();
+        $mail = $request->getParam('value');
+        $isBackendOrder = $request->getParam('isBackendOrder', false);
+
+        if (!$isBackendOrder) {
+            return null;
+        }
+
+        $this->pluginManager->Controller()->ViewRenderer()->setNoRender();
+
+        $controller->Response()->setBody(
+            $this->emailValidator->isValid($mail)
+        );
+
+        return true;
     }
 
     /**
@@ -45,7 +86,7 @@ class Customer implements SubscriberInterface
     {
         $view = $args->getSubject()->View();
 
-        $args->getSubject()->View()->addTemplateDir($this->getPluginPath() . '/Resources/views/');
+        $args->getSubject()->View()->addTemplateDir($this->pluginDir . '/Resources/views/');
 
         if ($args->getRequest()->getActionName() === 'load') {
             $view->extendsTemplate('backend/customer/controller/create_backend_order/detail.js');
@@ -53,13 +94,5 @@ class Customer implements SubscriberInterface
             $view->extendsTemplate('backend/customer/view/create_backend_order/detail/additional.js');
             $view->extendsTemplate('backend/customer/view/create_backend_order/detail/window.js');
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getPluginPath()
-    {
-        return $this->container->getParameter('swag_backend_orders.plugin_dir');
     }
 }

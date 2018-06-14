@@ -30,7 +30,7 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
                 checkChangeBuffer: 700,
                 vtype: 'remote',
                 validationUrl: null,
-                validationRequestParams: { 'param': me.record.get('id'), 'subshopId': me.record.get('shopId') },
+                validationRequestParams: { 'isBackendOrder': true, 'param': me.record.get('id'), 'subshopId': me.record.get('shopId') },
                 validationErrorMsg: me.snippets.email.message,
                 listeners: {
                     scope: me,
