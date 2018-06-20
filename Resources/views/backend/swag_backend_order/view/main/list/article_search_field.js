@@ -74,6 +74,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
     getComboConfig: function () {
         var me = this,
             config = {
+                disableLoadingSelectedName: true,
                 emptyText: me.emptyText,
                 helpText: me.helpText,
                 helpTitle: me.helpTitle,

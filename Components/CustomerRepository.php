@@ -102,12 +102,12 @@ class CustomerRepository
             'customer.lastname as lastname',
             'customer.number as number',
             'billing.company as company',
-            'billing.zipCode as zipCode',
+            'billing.zipcode as zipCode',
             'billing.city as city',
         ]);
 
         $builder->from(Customer::class, 'customer')
-            ->join('customer.billing', 'billing');
+            ->join('customer.defaultBillingAddress', 'billing');
 
         //filter the displayed columns with the passed filter string
         if ($filter !== null) {
@@ -122,7 +122,7 @@ class CustomerRepository
                 ->orWhere('customer.email LIKE ?2') //Full text search for the customer email
                 ->orWhere('billing.company LIKE ?2') //Full text search for the company of the customer
                 ->orWhere('billing.city LIKE ?2') //Full text search for the city of the customer
-                ->orWhere('billing.zipCode LIKE ?1') //Search only the beginning of the customer number.
+                ->orWhere('billing.zipcode LIKE ?1') //Search only the beginning of the customer number.
                 ->setParameter(1, $filter . '%')
                 ->setParameter(2, '%' . $filter . '%');
         }
