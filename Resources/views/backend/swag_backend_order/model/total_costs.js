@@ -19,7 +19,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             type: 'float',
             convert: function (v) {
                 var value = v;
-                if (value == '') {
+                if (value === '') {
                     value = 0.0;
                 }
                 return value.toFixed(2);
@@ -30,7 +30,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             type: 'float',
             convert: function (v) {
                 var value = v;
-                if (value == '') {
+                if (value === '') {
                     value = 0.0;
                 }
                 return value.toFixed(2);
@@ -41,7 +41,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             type: 'float',
             convert: function (v) {
                 var value = v;
-                if (value == '') {
+                if (value === '') {
                     value = 0.0;
                 }
                 return value.toFixed(2);
@@ -52,7 +52,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             type: 'float',
             convert: function (v) {
                 var value = v;
-                if (value == '') {
+                if (value === '') {
                     value = 0.0;
                 }
                 return value.toFixed(2);
@@ -63,7 +63,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             type: 'float',
             convert: function (v) {
                 var value = v;
-                if (value == '') {
+                if (value === '') {
                     value = 0.0;
                 }
                 return value.toFixed(2);
@@ -74,11 +74,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             type: 'float',
             convert: function (v) {
                 var value = v;
-                if (value == '') {
+                if (value === '') {
                     value = 0.0;
                 }
                 return value.toFixed(2);
             }
+        },
+        {
+            name: 'proportionalTaxCalculation',
+            type: 'bool'
+        },
+        {
+            name: 'taxes',
+            type: 'array'
         }
     ]
 });
