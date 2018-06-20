@@ -169,6 +169,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     onBeforeLoadArticleStore: function (articleSearchField, operation) {
         var me = this;
 
+        if (!operation.params) {
+            operation.params = {};
+        }
+
         operation.params.shopId = me.orderModel.get('languageShopId');
     },
 

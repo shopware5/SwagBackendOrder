@@ -1,6 +1,5 @@
-INSERT INTO `s_order`
-VALUES
-(10000,'99999',1,63.89,53.69,3.9,3.28,'2017-01-02 16:33:33',0,17,3,'','','','',0,0,'','','',NULL,'','1',9,'EUR',1,1,'','Backend');
+INSERT INTO `s_order` (`id`, `ordernumber`, `userID`, `invoice_amount`, `invoice_amount_net`, `invoice_shipping`, `invoice_shipping_net`, `invoice_shipping_tax_rate`, `ordertime`, `status`, `cleared`, `paymentID`, `transactionID`, `comment`, `customercomment`, `internalcomment`, `net`, `taxfree`, `partnerID`, `temporaryID`, `referer`, `cleareddate`, `trackingcode`, `language`, `dispatchID`, `currency`, `currencyFactor`, `subshopID`, `remote_addr`, `deviceType`, `is_proportional_calculation`, `changed`) VALUES
+  (10000, '99999', 1, 63.89, 53.69, 3.9, 3.28, NULL, '2017-01-02 16:33:33', 0, 17, 3, '', '', '', '', 0, 0, NULL, '', '', NULL, '', '1', 9, 'EUR', 1, 1, '', 'Backend', 0, '2018-06-20 13:39:19');
 
 INSERT INTO `s_order_details`
 VALUES
