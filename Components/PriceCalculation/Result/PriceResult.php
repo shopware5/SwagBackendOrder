@@ -10,7 +10,7 @@ namespace SwagBackendOrder\Components\PriceCalculation\Result;
 
 class PriceResult
 {
-    const ROUND_PRECISION = 2;
+    const ROUND_PRECISION = 4;
 
     /**
      * @var float
