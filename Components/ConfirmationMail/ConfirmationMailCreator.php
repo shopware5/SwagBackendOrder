@@ -281,12 +281,14 @@ class ConfirmationMailCreator
 
         $formattedAmount = $this->numberFormatterWrapper->format($orderModel->getInvoiceAmount(), $localeModel->getLocale());
         $orderMail['sAmount'] = $formattedAmount . ' ' . $orderModel->getCurrency();
+        $orderMail['sAmountNumeric'] = $orderModel->getInvoiceAmount();
 
         $formattedAmountNet = $this->numberFormatterWrapper->format(
             $orderModel->getInvoiceAmountNet(),
             $localeModel->getLocale()
         );
         $orderMail['sAmountNet'] = $formattedAmountNet . ' ' . $orderModel->getCurrency();
+        $orderMail['sAmountNetNumeric'] = $orderModel->getInvoiceAmountNet();
 
         $formattedShippingCosts = $this->numberFormatterWrapper->format(
             $orderModel->getInvoiceShipping(),
@@ -301,6 +303,12 @@ class ConfirmationMailCreator
             );
             $orderMail['sShippingCosts'] = $formattedShippingCostsNet . ' ' . $orderModel->getCurrency();
         }
+
+        /** @var \Shopware_Models_Document_Order $orderClass */
+        $orderClass = \Enlight_Class::Instance('Shopware_Models_Document_Order', [$orderModel->getId(), []]);
+        $orderData = $orderClass->__toArray();
+
+        $orderMail['sTaxRates'] = $orderData['_tax'];
 
         return $orderMail;
     }
