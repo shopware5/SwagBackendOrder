@@ -833,6 +833,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                     me.totalCostsModel.set('shippingCosts', record.shippingCosts);
                     me.totalCostsModel.set('shippingCostsNet', record.shippingCostsNet);
                     me.totalCostsModel.set('taxSum', record.taxSum);
+                    me.totalCostsModel.set('taxes', record.taxes);
+                    me.totalCostsModel.set('proportionalTaxCalculation', record.proportionalTaxCalculation);
                 } finally {
                     me.totalCostsModel.endEdit();
                 }

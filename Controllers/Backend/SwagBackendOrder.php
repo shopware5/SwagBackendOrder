@@ -361,7 +361,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $paymentModel = $paymentModel[0];
 
         $accountHolder = false;
-        if (null !== $paymentModel) {
+        if ($paymentModel !== null) {
             /** @var Payment $paymentMean */
             $paymentMean = $paymentModel->getPaymentMean();
             if ($paymentModel->getUseBillingData() && $paymentMean->getName() === 'sepa') {
@@ -459,6 +459,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $totalPositionPrice = new PriceResult();
             $totalPositionPrice->setNet($this->getTotalPrice($positionPrice->getNet(), $position->getQuantity()));
             $totalPositionPrice->setGross($this->getTotalPrice($positionPrice->getGross(), $position->getQuantity()));
+            $totalPositionPrice->setTaxRate($position->getTaxRate());
 
             if ($requestStruct->isDisplayNet()) {
                 $calculatedGross = $positionPrice->getNet() * (1 + ($position->getTaxRate() / 100));
@@ -614,6 +615,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $totalNetPrice = $totalPriceResult->getTotal()->getRoundedNetPrice();
         $shippingCostsNet = $totalPriceResult->getShipping()->getRoundedNetPrice();
 
+        $proportionalTaxCalculation = $this->container->get('config')->get('proportionalTaxCalculation');
+
         return [
             'totalWithoutTax' => $totalNetPrice,
             'sum' => $productSum,
@@ -623,7 +626,27 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'taxSum' => $taxSum,
             'positions' => $requestStruct->getPositionsArray(),
             'dispatchTaxRate' => $totalPriceResult->getShipping()->getTaxRate(),
+            'proportionalTaxCalculation' => (int) $proportionalTaxCalculation && !$requestStruct->isTaxFree(),
+            'taxes' => $this->convertTaxes($totalPriceResult->getTaxes()),
         ];
+    }
+
+    /**
+     * @param array $taxes
+     *
+     * @return array
+     */
+    private function convertTaxes(array $taxes)
+    {
+        $result = [];
+        foreach ($taxes as $taxRate => $tax) {
+            $result[] = [
+                'taxRate' => $taxRate,
+                'tax' => round($tax, 2),
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -669,21 +692,21 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function getDispatchTaxRate($dispatchId, array $basketTaxRates = [])
     {
-        if (null === $dispatchId) {
+        if ($dispatchId === null) {
             return 0.00;
         }
 
         /** @var Dispatch $dispatch */
         $dispatch = $this->getModelManager()->find(Dispatch::class, $dispatchId);
 
-        if (null === $dispatch) {
+        if ($dispatch === null) {
             throw new \RuntimeException('Can not find given dispatch with id ' . $dispatchId);
         }
 
         $taxId = $dispatch->getTaxCalculation();
         $tax = $this->getModelManager()->find(Tax::class, $taxId);
 
-        if (null !== $tax) {
+        if ($tax !== null) {
             return $tax->getTax();
         }
 
