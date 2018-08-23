@@ -32,9 +32,9 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $result = $view->getAssign('data');
 
         $this->assertTrue($view->getAssign('success'));
-        $this->assertEquals(142.44, $result['totalWithoutTax']);
+        $this->assertEquals(142.43, $result['totalWithoutTax']);
         $this->assertEquals(154.94, $result['sum']);
-        $this->assertEquals(16.4, $result['taxSum']);
+        $this->assertEquals(16.4, round($result['taxSum'], 1));
         $this->assertEquals(59.99, $result['positions'][0]['price']);
         $this->assertEquals(59.99, $result['positions'][0]['total']);
     }
@@ -103,7 +103,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $result = $view->getAssign('data');
 
         $this->assertTrue($view->getAssign('success'));
-        $this->assertEquals(50.41, $result['sum']);
+        $this->assertEquals(50.41, round($result['sum'], 2));
 
         $this->assertEquals(3.90, $result['shippingCosts']);
         $this->assertEquals(3.28, $result['shippingCostsNet']);
@@ -113,7 +113,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(63.89, $result['total']);
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
-        $this->assertEquals(50.41, $result['positions'][0]['price']);
+        $this->assertEquals(50.41, round($result['positions'][0]['price'], 2));
     }
 
     public function testBasketCalculationWithChangedTaxfreeFlag()
@@ -130,7 +130,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $result = $view->getAssign('data');
 
         $this->assertTrue($view->getAssign('success'));
-        $this->assertEquals(50.41, $result['sum']);
+        $this->assertEquals(50.41, round($result['sum'], 2));
 
         $this->assertEquals(3.28, $result['shippingCosts']);
         $this->assertEquals(3.28, $result['shippingCostsNet']);
@@ -140,7 +140,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(53.69, $result['total']);
         $this->assertEquals(53.69, $result['totalWithoutTax']);
 
-        $this->assertEquals(50.41, $result['positions'][0]['price']);
+        $this->assertEquals(50.41, round($result['positions'][0]['price'], 2));
     }
 
     public function testBasketCalculationWithChangedCurrency()
@@ -157,18 +157,18 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $result = $view->getAssign('data');
 
         $this->assertTrue($view->getAssign('success'));
-        $this->assertEquals(271.09, $result['sum']);
+        $this->assertEquals(271.08, $result['sum']);
 
         $this->assertEquals(5.31, $result['shippingCosts']);
         $this->assertEquals(4.47, $result['shippingCostsNet']);
 
         $this->assertEquals(41.68, $result['taxSum']);
 
-        $this->assertEquals(276.4, $result['total']);
-        $this->assertEquals(234.72, $result['totalWithoutTax']);
+        $this->assertEquals(276.39, $result['total']);
+        $this->assertEquals(234.71, $result['totalWithoutTax']);
 
-        $this->assertEquals(81.74, $result['positions'][0]['price']);
-        $this->assertEquals(245.22, $result['positions'][0]['total']);
+        $this->assertEquals(81.74, round($result['positions'][0]['price'], 2));
+        $this->assertEquals(245.21, round($result['positions'][0]['total'], 2));
     }
 
     public function testGetProduct()
@@ -269,7 +269,7 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
         $blockPrices = $result['blockPrices'];
         $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
         $this->assertEquals($expectedBlockPricesJSON, $blockPrices);
-        $this->assertEquals(0.904, $result['price']);
+        $this->assertEquals(0.9044, $result['price']);
     }
 
     public function testGetProductWithDisplayNet()
@@ -535,13 +535,13 @@ class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
     private function getDemoDataWithChangedCurrency()
     {
         return [
-            'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":3,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":-4,"price":"59.99","total":"179.97"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":1,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"18.99"}]',
-            'shippingCosts' => 3.90,
-            'shippingCostsNet' => 3.28,
-            'displayNet' => 'false',
-            'oldCurrencyId' => '1',
-            'newCurrencyId' => '2',
-        ] + $this->getDemoData();
+                'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":3,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":-4,"price":"59.99","total":"179.97"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":1,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"18.99"}]',
+                'shippingCosts' => 3.90,
+                'shippingCostsNet' => 3.28,
+                'displayNet' => 'false',
+                'oldCurrencyId' => '1',
+                'newCurrencyId' => '2',
+            ] + $this->getDemoData();
     }
 
     /**

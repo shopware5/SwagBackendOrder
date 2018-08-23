@@ -52,11 +52,11 @@ class ProductPriceCalculator
 
         $result = new PriceResult();
 
-        $netPrice = round($this->currencyConverter->getCurrencyPrice($context->getPrice(), $context->getCurrencyFactor()), 3);
-        $result->setNet(round($netPrice, 2));
+        $netPrice = $this->currencyConverter->getCurrencyPrice($context->getPrice(), $context->getCurrencyFactor());
+        $result->setNet($netPrice);
 
-        $grossPrice = round($this->taxCalculation->getGrossPrice($netPrice, $context->getTaxRate()), 3);
-        $result->setGross(round($grossPrice, 2));
+        $grossPrice = $this->taxCalculation->getGrossPrice($netPrice, $context->getTaxRate());
+        $result->setGross($grossPrice);
 
         $result->setTaxRate($context->getTaxRate());
 
@@ -101,11 +101,11 @@ class ProductPriceCalculator
         $price = $price * $context->getCurrency()->getFactor();
 
         if (!$customerGroup->displayGrossPrices()) {
-            return round($price, 3);
+            return $price;
         }
 
         $price = $price * (100 + $tax->getTax()) / 100;
 
-        return round($price, 3);
+        return $price;
     }
 }
