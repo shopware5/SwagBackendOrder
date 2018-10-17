@@ -214,7 +214,7 @@ class ConfirmationMailCreator
         $result['additional']['charge_var'] = 1;
 
         //Prevent displaying of gross prices on confirmation mail.
-        if (1 === $orderModel->getTaxFree()) {
+        if ($orderModel->getTaxFree() === 1) {
             $result['sNet'] = 1;
         }
 

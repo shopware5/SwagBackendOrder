@@ -16,10 +16,11 @@ class TotalPriceCalculator
     /**
      * @param PriceResult[] $positionPrices
      * @param PriceResult   $shippingPrice
+     * @param bool          $isProportionalTaxCalculation
      *
-     * @return TotalPricesResult
+     * @return TotalPricesResult TotalPricesResult
      */
-    public function calculate(array $positionPrices, PriceResult $shippingPrice)
+    public function calculate(array $positionPrices, PriceResult $shippingPrice, $isProportionalTaxCalculation = false)
     {
         $totalPrice = new TotalPricesResult();
 
@@ -31,7 +32,12 @@ class TotalPriceCalculator
         $total = $this->getTotal($sum, $shippingPrice);
         $totalPrice->setTotal($total);
 
-        $taxes = $this->getTotalTaxPrices(array_merge($positionPrices, [$shippingPrice]));
+        if (!$isProportionalTaxCalculation) {
+            $taxes = $this->getTotalTaxPrices(array_merge($positionPrices, [$shippingPrice]));
+        } else {
+            $taxes = $this->getTotalTaxPrices($positionPrices);
+        }
+
         $totalPrice->setTaxes($taxes);
 
         return $totalPrice;
@@ -87,7 +93,7 @@ class TotalPriceCalculator
         $taxes = [];
 
         foreach ($prices as $price) {
-            $taxRate = (string) $price->getTaxRate();
+            $taxRate = (string)$price->getTaxRate();
             if (!array_key_exists($taxRate, $taxes)) {
                 $taxes[$taxRate] = 0;
             }

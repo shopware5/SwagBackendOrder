@@ -12,7 +12,9 @@
         </service>
 
         <service id="swag_backend_order.subscriber.customer" class="SwagBackendOrder\Subscriber\Customer">
-            <argument type="service" id="service_container"/>
+            <argument>%swag_backend_orders.plugin_dir%</argument>
+            <argument type="service" id="validator.email"/>
+            <argument type="service" id="plugin_manager" />
             <tag name="shopware.event_subscriber"/>
         </service>
 

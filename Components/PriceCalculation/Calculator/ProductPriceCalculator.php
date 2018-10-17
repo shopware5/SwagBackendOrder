@@ -101,11 +101,11 @@ class ProductPriceCalculator
         $price = $price * $context->getCurrency()->getFactor();
 
         if (!$customerGroup->displayGrossPrices()) {
-            return round($price, 3);
+            return $price;
         }
 
         $price = $price * (100 + $tax->getTax()) / 100;
 
-        return round($price, 3);
+        return $price;
     }
 }

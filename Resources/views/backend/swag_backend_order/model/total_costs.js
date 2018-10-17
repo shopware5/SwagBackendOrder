@@ -1,7 +1,7 @@
 /**
  * Model which holds the total costs for the data view
  */
-//{block name="backend/create_backend_order/model/total_costs"}
+// {block name="backend/create_backend_order/model/total_costs"}
 //
 Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
 
@@ -17,64 +17,78 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
         {
             name: 'total',
             type: 'float',
-            convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    value = 0.0;
                 }
-                return v.toFixed(2);
+                return value.toFixed(2);
             }
         },
         {
             name: 'sum',
             type: 'float',
-            convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    value = 0.0;
                 }
-                return v.toFixed(2);
+                return value.toFixed(2);
             }
         },
         {
             name: 'totalWithoutTax',
             type: 'float',
-            convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    value = 0.0;
                 }
-                return v.toFixed(2);
+                return value.toFixed(2);
             }
         },
         {
             name: 'shippingCosts',
             type: 'float',
-            convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    value = 0.0;
                 }
-                return v.toFixed(2);
+                return value.toFixed(2);
             }
         },
         {
             name: 'shippingCostsNet',
             type: 'float',
-            convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    value = 0.0;
                 }
-                return v.toFixed(2);
+                return value.toFixed(2);
             }
         },
         {
             name: 'taxSum',
             type: 'float',
-            convert: function (v, record) {
-                if (v == '') {
-                    v = 0.0
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    value = 0.0;
                 }
-                return v.toFixed(2);
+                return value.toFixed(2);
             }
+        },
+        {
+            name: 'proportionalTaxCalculation',
+            type: 'bool'
+        },
+        {
+            name: 'taxes',
+            type: 'array'
         }
     ]
 });
 //
-//{/block}
+// {/block}

@@ -36,8 +36,8 @@ class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
         $context = new PriceContext(50.41, 19.00, true, false, 1.3625);
 
         $price = $this->productPriceCalculator->calculate($context);
-        $this->assertEquals(68.683624999999992, $price->getNet());
-        $this->assertEquals(81.733513749999986, $price->getGross());
+        $this->assertEquals(68.68, round($price->getNet(), 2));
+        $this->assertEquals(81.73, round($price->getGross(), 2));
     }
 
     public function testCalculateBasePriceFromGrossPriceWithCurrencyFactor()

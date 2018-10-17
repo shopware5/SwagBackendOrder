@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "0d82d0ee1e63df6aa91054a9f0902e3e",
-    "content-hash": "73047e0f77ee42824ef4360e6b26d93f",
+    "content-hash": "cc9f2b04e2fb5dcba1d4ce5b834cef74",
     "packages": [],
     "packages-dev": [
         {
@@ -14,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/shopwareLabs/plugin-dev-tools.git",
-                "reference": "1913b26a6c17ffe3b6cba2ab0957a28537217059"
+                "reference": "78fef1ba3a52fa97c3f00940236c9e8455e012f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shopwareLabs/plugin-dev-tools/zipball/1913b26a6c17ffe3b6cba2ab0957a28537217059",
-                "reference": "1913b26a6c17ffe3b6cba2ab0957a28537217059",
+                "url": "https://api.github.com/repos/shopwareLabs/plugin-dev-tools/zipball/78fef1ba3a52fa97c3f00940236c9e8455e012f1",
+                "reference": "78fef1ba3a52fa97c3f00940236c9e8455e012f1",
                 "shasum": ""
             },
             "type": "application",
@@ -34,7 +33,7 @@
                 "source": "https://github.com/shopwareLabs/plugin-dev-tools/tree/master",
                 "issues": "https://github.com/shopwareLabs/plugin-dev-tools/issues"
             },
-            "time": "2017-07-28 13:14:21"
+            "time": "2017-12-20T07:47:21+00:00"
         }
     ],
     "aliases": [],

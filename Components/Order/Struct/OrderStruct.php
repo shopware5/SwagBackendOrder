@@ -76,6 +76,11 @@ class OrderStruct
     private $netOrder;
 
     /**
+     * @var bool
+     */
+    private $sendMail;
+
+    /**
      * @var PositionStruct[]
      */
     private $positions;
@@ -290,6 +295,22 @@ class OrderStruct
     public function setNetOrder($netOrder)
     {
         $this->netOrder = $netOrder;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSendMail()
+    {
+        return $this->sendMail;
+    }
+
+    /**
+     * @param bool $sendMail
+     */
+    public function setSendMail($sendMail)
+    {
+        $this->sendMail = $sendMail;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.4/engine/Shopware/Components/Plugin/schema/config.xsd">
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.5/engine/Shopware/Components/Plugin/schema/config.xsd">
 
     <elements>
         <element required="true" type="text">
@@ -18,6 +18,14 @@
             <value>Backend</value>
             <description lang="de">Hier kann angegeben werden über welchen Kommunikatoinskanal die Bestellung eingegagen ist. Zum Beispiel Telefon, Handy, Geschäft, ... \n Die Verschiedenen Typen werden durch ein Komma (,) getrennt.</description>
             <description lang="en">You can choose which communication channel are available. For example telephone, mobile phone, store, and so on.\n The different types are separated by a comma (,).</description>
+        </element>
+
+        <element required="true" type="boolean">
+            <name>sendMail</name>
+            <label lang="de">Bestätigungsmail standardmäßig versenden</label>
+            <label lang="en">Send confirmation mail as default</label>
+            <description lang="de">Hier kann angegeben werden, ob standardmäßig Bestätigungsmails aus den Backendbestellungen heraus versendet werden sollen.</description>
+            <description lang="en">This configuration is to decide whether to send confirmation mails from backend orders or not as default.</description>
         </element>
     </elements>
 </config>

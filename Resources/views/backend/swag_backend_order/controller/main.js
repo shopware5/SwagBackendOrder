@@ -124,7 +124,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
             'createbackendorder-totalcostsoverview': {
                 calculateBasket: me.onCalculateBasket,
                 changeDisplayNet: me.onChangeDisplayNet,
-                changeTaxFreeCheckbox: me.onChangeTaxFree
+                changeTaxFreeCheckbox: me.onChangeTaxFree,
+                changeSendMail: me.onChangeSendMail
             },
             'createbackendorder-discount-window': {
                 addDiscount: me.onAddDiscount
@@ -172,6 +173,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
      */
     onBeforeLoadArticleStore: function (articleSearchField, operation) {
         var me = this;
+
+        if (!operation.params) {
+            operation.params = {};
+        }
 
         operation.params.shopId = me.orderModel.get('languageShopId');
     },
@@ -302,9 +307,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 me.ordernumber = response.proxy.reader.rawData.ordernumber;
                 me.mailErrorMessage = response.proxy.reader.rawData.mail;
 
+                var orderManager = Ext.ComponentQuery.query('order-list-main-window');
+
                 switch (me.modus) {
                     case 'new':
                         me.window.close();
+
+                        if (Ext.isDefined(orderManager[0])) {
+                            var store = orderManager[0].listStore;
+                            store.getProxy().extraParams.orderID = null;
+                            store.load();
+                        }
+
                         if (response.proxy.reader.rawData.mail) {
                             Shopware.Notification.createGrowlMessage(me.snippets.error.mailTitle, me.mailErrorMessage);
                         }
@@ -317,6 +331,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                         break;
                     case 'close':
                         me.window.close();
+
+                        if (Ext.isDefined(orderManager[0])) {
+                            var store = orderManager[0].listStore;
+                            store.getProxy().extraParams.orderID = null;
+                            store.load();
+                        }
+
                         break;
                     case 'detail':
                         if (me.orderId > 0) {
@@ -333,6 +354,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                         }
                         Shopware.Notification.createGrowlMessage(me.snippets.success.title, me.snippets.success.text + ' - ' + me.ordernumber);
                         me.window.close();
+
+                        if (Ext.isDefined(orderManager[0])) {
+                            var store = orderManager[0].listStore;
+                            store.getProxy().extraParams.orderID = null;
+                            store.load();
+                        }
+
                         break;
                     default:
                         break;
@@ -874,6 +902,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                     me.totalCostsModel.set('shippingCosts', record.shippingCosts);
                     me.totalCostsModel.set('shippingCostsNet', record.shippingCostsNet);
                     me.totalCostsModel.set('taxSum', record.taxSum);
+                    me.totalCostsModel.set('taxes', record.taxes);
+                    me.totalCostsModel.set('proportionalTaxCalculation', record.proportionalTaxCalculation);
                 } finally {
                     me.totalCostsModel.endEdit();
                 }
@@ -912,6 +942,15 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
         var me = this;
         me.orderModel.set('displayNet', newValue);
         me.onCalculateBasket();
+    },
+
+    /**
+     * Is responsible for the mail send confirmation
+     *  @param { boolean } newValue
+     */
+    onChangeSendMail: function (newValue, oldValue) {
+        var me = this;
+        me.orderModel.set('sendMail', newValue);
     },
 
     /**
