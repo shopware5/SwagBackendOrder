@@ -33,6 +33,24 @@ class DetailFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Detail::class, $result);
     }
 
+    public function test_create_with_surcharge()
+    {
+        /** @var DetailFactory $factory */
+        $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
+
+        $positionStruct = new PositionStruct();
+        $positionStruct->setMode(4);
+        $positionStruct->setPrice(10);
+        $positionStruct->setNumber('SURCHARGE.0');
+        $positionStruct->setName('Test_Surcharge');
+        $positionStruct->setQuantity(1);
+        $positionStruct->setArticleId(0);
+        $positionStruct->setTaxId(1);
+
+        $result = $factory->create($positionStruct, true);
+        $this->assertInstanceOf(Detail::class, $result);
+    }
+
     public function test_create_will_throw_exception_if_no_number_was_provided()
     {
         /** @var DetailFactory $factory */

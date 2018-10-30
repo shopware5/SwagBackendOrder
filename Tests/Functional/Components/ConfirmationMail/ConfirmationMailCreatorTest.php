@@ -79,6 +79,25 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $discountDetails['modus']);
     }
 
+    public function test_prepareOrderDetailsConfirmationMailData_with_surcharge()
+    {
+        $this->importFixtures(__DIR__ . '/test-fixtures.sql');
+
+        //Insert the discount into the order
+        /** @var Order $order */
+        $order = Shopware()->Models()->find(Order::class, self::ORDER_ID);
+        $confirmationMailCreator = $this->createConfirmationMailCreator();
+
+        $this->insertSurcharge($order);
+
+        $orderDetails = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData($order, $order->getLanguageSubShop()->getLocale());
+        $surchargeDetails = $orderDetails[1];
+
+        $this->assertEquals('SURCHARGE.0', $surchargeDetails['ordernumber']);
+        $this->assertEquals('SURCHARGE.0', $surchargeDetails['ordernumber']);
+        $this->assertEquals(4, $surchargeDetails['modus']);
+    }
+
     /**
      * @param Order $order
      */
@@ -94,6 +113,30 @@ class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
         $detail->setArticleName('Discount (percentage)');
         $detail->setArticleNumber('DISCOUNT.0');
         $detail->setPrice(-10.0);
+        $detail->setMode(4);
+        $detail->setStatus(Shopware()->Models()->find(Status::class, 0));
+
+        /** @var ModelManager $em */
+        $em = Shopware()->Container()->get('models');
+        $em->persist($detail);
+        $em->flush($detail);
+    }
+
+    /**
+     * @param Order $order
+     */
+    private function insertSurcharge(Order $order)
+    {
+        $detail = new OrderDetailModel();
+        $detail->setTaxRate(0);
+        $detail->setQuantity(1);
+        $detail->setShipped(0);
+        $detail->setOrder($order);
+        $detail->setNumber($order->getNumber());
+        $detail->setArticleId(0);
+        $detail->setArticleName('Surcharge (percentage)');
+        $detail->setArticleNumber('SURCHARGE.0');
+        $detail->setPrice(10.0);
         $detail->setMode(4);
         $detail->setStatus(Shopware()->Models()->find(Status::class, 0));
 
