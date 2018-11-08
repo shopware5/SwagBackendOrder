@@ -49,6 +49,14 @@ class PositionStruct
     }
 
     /**
+     * @return float
+     */
+    public function getNetPrice()
+    {
+        return (float) $this->price / (1.0 + ($this->taxRate / 100));
+    }
+
+    /**
      * @param float $price
      */
     public function setPrice($price)
