@@ -16,6 +16,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
         { name: 'name', type: 'string' },
         { name: 'articleId', type: 'int' },
         { name: 'taxId', type: 'int' },
+        { name: 'ean', type: 'string' },
         { name: 'inStock', type: 'int' },
         { name: 'number', type: 'string' },
         { name: 'tax', type: 'int' },

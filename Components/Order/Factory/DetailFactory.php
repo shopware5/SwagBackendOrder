@@ -82,6 +82,7 @@ class DetailFactory
         $detail->setMode($positionStruct->getMode());
         $detail->setQuantity($positionStruct->getQuantity());
         $detail->setShipped(0);
+        $detail->setEan($positionStruct->getEan());
         $detail->setUnit($articleDetail->getUnit() ? $articleDetail->getUnit()->getName() : 0);
         $detail->setPackUnit($articleDetail->getPackUnit());
         $detail->setAttribute($this->createDetailAttribute());

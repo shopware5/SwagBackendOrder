@@ -41,6 +41,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Position', {
             }
         },
         { name: 'taxId', type: 'int' },
+        { name: 'ean', type: 'string' },
         { name: 'taxRate', type: 'float' },
         { name: 'taxDescription', type: 'string' },
         { name: 'inStock', type: 'int' },

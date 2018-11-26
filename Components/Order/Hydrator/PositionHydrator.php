@@ -30,6 +30,7 @@ class PositionHydrator
         $positionStruct->setStatusId((int) $data['statusId']);
         $positionStruct->setTaxRate((int) $data['taxRate']);
         $positionStruct->setTaxId((int) $data['taxId']);
+        $positionStruct->setEan((string) $data['ean']);
         $positionStruct->setPrice((float) $data['price']);
         $positionStruct->setTotal((float) $data['total']);
 

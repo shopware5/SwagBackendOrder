@@ -165,6 +165,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                     productModel = me.articleNameSearch.store.getAt(productPosition);
                     productId = productModel.get('articleId');
                     positionModel.set('articleId', productId);
+                    positionModel.set('ean', productModel.get('ean'));
 
                     // if there are block prices for the product, set a new price
                     blockPrices = productModel.get('blockPrices');

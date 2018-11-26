@@ -61,6 +61,11 @@ class PositionStruct
     private $taxId;
 
     /**
+     * @var string
+     */
+    private $ean;
+
+    /**
      * @var float
      */
     private $price;
@@ -228,6 +233,22 @@ class PositionStruct
     public function setTaxId($taxId)
     {
         $this->taxId = $taxId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEan()
+    {
+        return $this->ean;
+    }
+
+    /**
+     * @param string $ean
+     */
+    public function setEan($ean)
+    {
+        $this->ean = $ean;
     }
 
     /**
