@@ -70,6 +70,17 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.TotalCosts', {
             }
         },
         {
+            name: 'shippingCostsTaxRate',
+            type: 'float',
+            convert: function (v) {
+                var value = v;
+                if (value === '') {
+                    return 0;
+                }
+                return value;
+            }
+        },
+        {
             name: 'taxSum',
             type: 'float',
             convert: function (v) {
