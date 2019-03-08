@@ -41,6 +41,11 @@ class OrderStruct
     private $shippingCostsNet;
 
     /**
+     * @var float
+     */
+    private $shippingCostsTaxRate;
+
+    /**
      * @var int
      */
     private $paymentId;
@@ -183,6 +188,22 @@ class OrderStruct
     public function setShippingCostsNet($shippingCostsNet)
     {
         $this->shippingCostsNet = $shippingCostsNet;
+    }
+
+    /**
+     * @return float
+     */
+    public function getShippingCostsTaxRate()
+    {
+        return $this->shippingCostsTaxRate;
+    }
+
+    /**
+     * @param float $shippingCostsTaxRate
+     */
+    public function setShippingCostsTaxRate($shippingCostsTaxRate)
+    {
+        $this->shippingCostsTaxRate = $shippingCostsTaxRate;
     }
 
     /**

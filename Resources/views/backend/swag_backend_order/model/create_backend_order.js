@@ -1,7 +1,7 @@
 /**
  * models which holds the current order with the necessary information
  */
-//{block name="backend/create_backend_order/model/create_backend_order"}
+// {block name="backend/create_backend_order/model/create_backend_order"}
 //
 Ext.define('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder', {
     /**
@@ -20,6 +20,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder', {
         { name: 'shippingAddressId', type: 'int' },
         { name: 'shippingCosts', type: 'float' },
         { name: 'shippingCostsNet', type: 'float' },
+        { name: 'shippingCostsTaxRate', type: 'float' },
         { name: 'paymentId', type: 'int' },
         { name: 'dispatchId', type: 'int' },
         { name: 'languageShopId', type: 'int' },
@@ -60,4 +61,4 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder', {
     }
 });
 //
-//{/block}
+// {/block}

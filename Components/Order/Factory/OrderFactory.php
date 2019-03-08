@@ -89,6 +89,7 @@ class OrderFactory
 
         $order->setInvoiceShippingNet($orderStruct->getShippingCostsNet());
         $order->setInvoiceShipping($orderStruct->getShippingCosts());
+        $order->setInvoiceShippingTaxRate($orderStruct->getShippingCostsTaxRate());
 
         $order->setInvoiceAmount($orderStruct->getTotal());
         $order->setInvoiceAmountNet($orderStruct->getTotalWithoutTax());

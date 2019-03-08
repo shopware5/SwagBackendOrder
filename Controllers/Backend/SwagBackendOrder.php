@@ -633,6 +633,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'total' => $total,
             'shippingCosts' => $shippingCosts,
             'shippingCostsNet' => $shippingCostsNet,
+            'shippingCostsTaxRate' => $totalPriceResult->getShipping()->getTaxRate(),
             'taxSum' => $taxSum,
             'positions' => $requestStruct->getPositionsArray(),
             'dispatchTaxRate' => $totalPriceResult->getShipping()->getTaxRate(),

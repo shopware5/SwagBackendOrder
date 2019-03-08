@@ -1,5 +1,5 @@
 //
-//{block name="backend/create_backend_order/view/shipping_costs"}
+// {block name="backend/create_backend_order/view/shipping_costs"}
 //
 Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
 
@@ -103,7 +103,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
                         me.shippingCostsNetNumber.setValue(0);
                     }
 
-                    shippingFieldsArray = [me.shippingCostsNumber, me.shippingCostsNetNumber];
+                    shippingFieldsArray = [me.shippingCostsNumber, me.shippingCostsNetNumber, me.shippingCostsTaxRateHidden];
 
                     shippingCosts = me.shippingCostsNumber.getValue();
                     shippingCostsNet = me.shippingCostsNetNumber.getValue();
@@ -149,13 +149,18 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
             readOnly: true
         });
 
+        me.shippingCostsTaxRateHidden = Ext.create('Ext.form.field.Hidden', {
+            name: 'shippingCostsTaxRate'
+        });
+
         shippingCostsContainer = Ext.create('Ext.Container', {
             name: 'shippingCostsContainer',
             width: 75,
             height: 'auto',
             items: [
                 me.shippingCostsNumber,
-                me.shippingCostsNetNumber
+                me.shippingCostsNetNumber,
+                me.shippingCostsTaxRateHidden
             ]
         });
 
@@ -198,4 +203,4 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.ShippingCosts', {
     }
 });
 //
-//{/block}
+// {/block}

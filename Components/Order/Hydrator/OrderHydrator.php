@@ -61,6 +61,7 @@ class OrderHydrator
         $orderStruct->setTotalWithoutTax((float) $data['totalWithoutTax']);
         $orderStruct->setShippingCostsNet((float) $data['shippingCostsNet']);
         $orderStruct->setShippingCosts((float) $data['shippingCosts']);
+        $orderStruct->setShippingCostsTaxRate((float) $data['shippingCostsTaxRate']);
 
         $orderStruct->setAttributes($data['orderAttribute'][0]);
 
