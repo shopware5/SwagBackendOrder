@@ -73,12 +73,16 @@ class CustomerRepository
             'paymentData',
             'shop',
             'languageSubShop',
+            'defaultBillingAddress',
+            'defaultShippingAddress',
         ]);
 
         $builder->from(Customer::class, 'customer');
         $builder->leftJoin('customer.paymentData', 'paymentData');
         $builder->leftJoin('customer.languageSubShop', 'languageSubShop');
         $builder->leftJoin('customer.shop', 'shop');
+        $builder->leftJoin('customer.defaultBillingAddress', 'defaultBillingAddress');
+        $builder->leftJoin('customer.defaultShippingAddress', 'defaultShippingAddress');
         $builder->where('customer.id = :customerId');
         $builder->setParameter('customerId', $customerId);
 
@@ -103,11 +107,10 @@ class CustomerRepository
             'customer.number as number',
             'billing.company as company',
             'billing.zipcode as zipCode',
-            'billing.city as city',
+            'billing.city as city'
         ]);
 
-        $builder->from(Customer::class, 'customer')
-            ->join('customer.defaultBillingAddress', 'billing');
+        $builder->from(Customer::class, 'customer');
 
         //filter the displayed columns with the passed filter string
         if ($filter !== null) {

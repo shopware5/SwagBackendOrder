@@ -206,6 +206,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Payment
 
         me.paymentComboBox.setValue('');
         me.paymentDataView.setVisible(false);
+
+        if (customerModel.get('paymentId')) {
+            me.paymentComboBox.select(customerModel.get('paymentId'));
+        }
     }
 });
 //

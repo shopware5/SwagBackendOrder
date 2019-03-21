@@ -44,9 +44,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             if (Ext.isObject(me.customerStore) && me.customerStore.count() == 1) {
                 me.billingStore = me.customerStore.getAt(0).billing();
                 me.billingAddressComboBox.bindStore(me.billingStore);
-
-                me.resetFields();
             }
+
+            me.resetFields();
         });
 
         me.items = me.createBillingItems();
@@ -201,10 +201,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
     },
 
     resetFields: function () {
-        var me = this;
+        var me = this,
+            defaultBilling = null;
 
-        me.billingAddressComboBox.setValue('');
-        me.remove('billingDataView', true);
+        if (Ext.isObject(me.customerStore) && me.customerStore.count() === 1) {
+            defaultBilling = me.customerStore.getAt(0).getDefaultBilling();
+        }
+
+        if (defaultBilling) {
+            me.billingAddressComboBox.select(me.billingStore.getById(defaultBilling.get('id')));
+        } else {
+            me.billingAddressComboBox.setValue('');
+            me.remove('billingDataView', true);
+        }
         me.doLayout();
     }
 });

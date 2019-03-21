@@ -37,8 +37,15 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
         me.customerStore = me.subApplication.getStore('Customer');
         me.customerStore.on('load', function () {
             if (Ext.isObject(me.customerStore) && me.customerStore.count() == 1) {
-                me.shippingStore = me.customerStore.getAt(0).shipping();
+                var customerModel = me.customerStore.getAt(0);
+                me.shippingStore = customerModel.shipping();
                 me.shippingAddressComboBox.bindStore(me.shippingStore);
+
+                if (customerModel.getDefaultBilling() && customerModel.getDefaultShipping()) {
+                    if (customerModel.getDefaultBilling().get('id') !== customerModel.getDefaultShipping().get('id')) {
+                        me.billingAsShippingCheckbox.setValue(false);
+                    }
+                }
             }
 
             me.resetFields();
@@ -227,10 +234,19 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
     },
 
     resetFields: function () {
-        var me = this;
+        var me = this,
+            defaultShipping = null;
 
-        me.shippingAddressComboBox.setValue('');
-        me.remove('shippingDataView', true);
+        if (Ext.isObject(me.customerStore) && me.customerStore.count() === 1) {
+            defaultShipping = me.customerStore.getAt(0).getDefaultShipping();
+        }
+
+        if (defaultShipping && !me.billingAsShippingCheckbox.getValue()) {
+            me.shippingAddressComboBox.select(me.shippingStore.getById(defaultShipping.get('id')));
+        } else {
+            me.shippingAddressComboBox.setValue('');
+            me.remove('shippingDataView', true);
+        }
         me.doLayout();
     }
 });

@@ -20,7 +20,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
         { name: 'number', type: 'string' },
         { name: 'company', type: 'string' },
         { name: 'city', type: 'string' },
-        { name: 'zipCode', type: 'string' }
+        { name: 'zipCode', type: 'string' },
+        { name: 'paymentId', type: 'int' },
     ],
 
     alternateClassName: 'SwagBackendOrder.model.Customer',
@@ -54,6 +55,22 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Customer', {
             name: 'customerGroup',
             model: 'Shopware.apps.Base.model.CustomerGroup',
             associationKey: 'group'
+        },
+    ],
+    associations: [
+        {
+            type: 'hasOne',
+            associatedName: 'defaultBillingAddress',
+            model: 'Shopware.apps.Base.model.Address',
+            associationKey: 'defaultBillingAddress',
+            getterName: 'getDefaultBilling'
+        },
+        {
+            type: 'hasOne',
+            associatedName: 'defaultShippingAddress',
+            model: 'Shopware.apps.Base.model.Address',
+            associationKey: 'defaultShippingAddress',
+            getterName: 'getDefaultShipping'
         }
     ]
 });
