@@ -8,9 +8,10 @@
 
 namespace SwagBackendOrder\Tests\Unit\Components\Translation;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
-class ShippingTranslatorTest extends \PHPUnit_Framework_TestCase
+class ShippingTranslatorTest extends TestCase
 {
     const LANGUAGE_ID_ENGLISH = 2;
     const DISPATCH_ID = 1;

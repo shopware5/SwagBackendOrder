@@ -8,6 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Unit\Components\ConfirmationMail;
 
+use PHPUnit\Framework\TestCase;
 use Shopware\Models\Article\Repository;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
@@ -16,7 +17,7 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 use SwagBackendOrder\Components\Translation\PaymentTranslator;
 use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
-class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
+class ConfirmationMailCreatorTest extends TestCase
 {
     public function test_it_can_be_created()
     {

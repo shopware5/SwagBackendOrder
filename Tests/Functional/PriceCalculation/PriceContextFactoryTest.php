@@ -8,12 +8,13 @@
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
+use PHPUnit\Framework\TestCase;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Shop\Currency;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class PriceContextFactoryTest extends \PHPUnit_Framework_TestCase
+class PriceContextFactoryTest extends TestCase
 {
     use DatabaseTestCaseTrait;
 

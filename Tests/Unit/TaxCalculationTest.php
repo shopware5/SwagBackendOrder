@@ -8,9 +8,10 @@
 
 namespace SwagBackendOrder\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
-class TaxCalculationTest extends \PHPUnit_Framework_TestCase
+class TaxCalculationTest extends TestCase
 {
     public function testGetNetPrice()
     {

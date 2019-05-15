@@ -8,9 +8,10 @@
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\DiscountCalculator;
 
-class DiscountCalculatorTest extends \PHPUnit_Framework_TestCase
+class DiscountCalculatorTest extends TestCase
 {
     public function test_calculateDiscount_with_absolute_discount()
     {
