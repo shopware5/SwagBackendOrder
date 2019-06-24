@@ -51,19 +51,6 @@ Ext.define('Shopware.apps.CreateBackendOrder.view.Base', {
             baseFormLeft[0] = email;
         }
 
-        baseFormLeft.push = {
-            /* {if {config name=shopwareManagedCustomerNumbers}==1} */
-            xtype: 'displayfield',
-            /* {/if} */
-            name: 'number',
-            anchor: '95%',
-            labelWidth: 155,
-            fieldLabel: me.snippets.number.label,
-            helpText: me.snippets.number.helpText,
-            helpWidth: 360,
-            helpTitle: me.snippets.number.helpTitle
-        };
-
         return baseFormLeft;
     },
 
