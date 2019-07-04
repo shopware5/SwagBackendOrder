@@ -10,11 +10,12 @@ namespace SwagBackendOrder\Tests\Functional\Controller;
 
 require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 
+use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class SwagBackendOrderTest extends \PHPUnit_Framework_TestCase
+class SwagBackendOrderTest extends TestCase
 {
     use DatabaseTestCaseTrait;
 

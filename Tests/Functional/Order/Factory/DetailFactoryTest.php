@@ -8,12 +8,13 @@
 
 namespace SwagBackendOrder\Tests\Functional\Order;
 
+use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
 use SwagBackendOrder\Components\Order\Factory\DetailFactory;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 
-class DetailFactoryTest extends \PHPUnit_Framework_TestCase
+class DetailFactoryTest extends TestCase
 {
     public function test_create_with_discount()
     {

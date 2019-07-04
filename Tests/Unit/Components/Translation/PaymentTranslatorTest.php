@@ -8,9 +8,10 @@
 
 namespace SwagBackendOrder\Tests\Unit\Components\Translation;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\Translation\PaymentTranslator;
 
-class PaymentTranslatorTest extends \PHPUnit_Framework_TestCase
+class PaymentTranslatorTest extends TestCase
 {
     const LANGUAGE_ID_ENGLISH = 2;
     const PAYMENT_ID = 1;

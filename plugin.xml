@@ -16,6 +16,7 @@
         <changes lang="de">Verbessert Kompatibilität mit anderen Plugins;</changes>
         <changes lang="en">Improves compatibility with other plugins;</changes>
     </changelog>
+    <compatibility minVersion="5.5.0" maxVersion="5.99.99"/>
 
     <changelog version="2.4.2">
         <changes lang="de">PT-9770 - Behebt ein Problem beim Setzen der Versandkosten Steuerrate;</changes>

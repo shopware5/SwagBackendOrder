@@ -8,10 +8,11 @@
 
 namespace SwagBackendOrder\Tests\Unit\Components\ConfirmationMail;
 
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
 
-class NumberFormatterTest extends \PHPUnit_Framework_TestCase
+class NumberFormatterTest extends TestCase
 {
     const LOCALE_GERMANY = 'de_DE';
     const LOCALE_GREAT_BRITAIN = 'en_EN';

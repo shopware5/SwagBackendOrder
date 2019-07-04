@@ -8,11 +8,12 @@
 
 namespace SwagBackendOrder\Tests\Functional\Order;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class ProductValidatorTest extends \PHPUnit_Framework_TestCase
+class ProductValidatorTest extends TestCase
 {
     use DatabaseTestCaseTrait;
 

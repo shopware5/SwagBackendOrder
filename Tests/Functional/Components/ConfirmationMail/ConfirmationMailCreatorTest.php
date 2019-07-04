@@ -8,6 +8,7 @@
 
 namespace SwagBackendOrder\Tests\Functional\Components\ConfirmationMail;
 
+use PHPUnit\Framework\TestCase;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Article\Detail;
 use Shopware\Models\Order\Detail as OrderDetailModel;
@@ -23,7 +24,7 @@ use SwagBackendOrder\Components\Translation\ShippingTranslator;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 use SwagBackendOrder\Tests\FixtureImportTestCaseTrait;
 
-class ConfirmationMailCreatorTest extends \PHPUnit_Framework_TestCase
+class ConfirmationMailCreatorTest extends TestCase
 {
     use DatabaseTestCaseTrait;
     use FixtureImportTestCaseTrait;

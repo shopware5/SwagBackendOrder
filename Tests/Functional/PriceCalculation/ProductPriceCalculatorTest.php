@@ -8,13 +8,14 @@
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\Context\PriceContext;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
-class ProductPriceCalculatorTest extends \PHPUnit_Framework_TestCase
+class ProductPriceCalculatorTest extends TestCase
 {
     use DatabaseTestCaseTrait;
 

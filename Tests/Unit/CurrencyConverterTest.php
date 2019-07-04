@@ -8,9 +8,10 @@
 
 namespace SwagBackendOrder\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 
-class CurrencyConverterTest extends \PHPUnit_Framework_TestCase
+class CurrencyConverterTest extends TestCase
 {
     public function testGetBaseCurrencyPrice()
     {

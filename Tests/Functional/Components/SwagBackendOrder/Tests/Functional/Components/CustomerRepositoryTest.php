@@ -8,9 +8,10 @@
 
 namespace SwagBackendOrder\Tests\Functional\Components;
 
+use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\CustomerRepository;
 
-class CustomerRepositoryTest extends \PHPUnit_Framework_TestCase
+class CustomerRepositoryTest extends TestCase
 {
     public function test_getList_with_one_match()
     {
