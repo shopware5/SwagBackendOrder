@@ -65,13 +65,13 @@ class OrderService implements OrderServiceInterface
      */
     public function create(OrderStruct $orderStruct)
     {
-        $number = $this->numberRangeIncrementer->increment('invoice');
-        $orderStruct->setNumber($number);
-
         $violations = $this->validator->validate($orderStruct);
         if ($violations->getMessages()) {
             throw new InvalidOrderException('Invalid ' . OrderStruct::class . 'given.');
         }
+
+        $number = $this->numberRangeIncrementer->increment('invoice');
+        $orderStruct->setNumber($number);
 
         $order = $this->orderFactory->create($orderStruct);
 
