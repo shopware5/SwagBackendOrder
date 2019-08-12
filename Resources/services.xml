@@ -117,11 +117,11 @@
         </service>
 
         <service id="swag_backend_order.payment_translator" class="SwagBackendOrder\Components\Translation\PaymentTranslator">
-            <factory class="SwagBackendOrder\Components\Translation\PaymentTranslator" method="create"/>
+            <argument type="service" id="translation" />
         </service>
 
         <service id="swag_backend_order.shipping_translator" class="SwagBackendOrder\Components\Translation\ShippingTranslator">
-            <factory class="SwagBackendOrder\Components\Translation\ShippingTranslator" method="create"/>
+            <argument type="service" id="translation" />
         </service>
 
         <service id="swag_backend_order.product_search" class="SwagBackendOrder\Components\ProductSearch\ProductSearch">
