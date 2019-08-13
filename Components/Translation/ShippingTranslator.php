@@ -24,14 +24,6 @@ class ShippingTranslator
     }
 
     /**
-     * @return ShippingTranslator
-     */
-    public static function create()
-    {
-        return new self(new \Shopware_Components_Translation());
-    }
-
-    /**
      * @param array $shipping
      * @param int   $languageId
      *

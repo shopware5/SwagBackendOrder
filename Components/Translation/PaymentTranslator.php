@@ -26,14 +26,6 @@ class PaymentTranslator
     }
 
     /**
-     * @return PaymentTranslator
-     */
-    public static function create()
-    {
-        return new self(new Shopware_Components_Translation());
-    }
-
-    /**
      * @param array $paymentMethod
      * @param int   $languageId
      *
