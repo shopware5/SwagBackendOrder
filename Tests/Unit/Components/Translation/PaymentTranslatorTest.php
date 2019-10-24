@@ -25,14 +25,14 @@ class PaymentTranslatorTest extends TestCase
     {
         $paymentTranslator = new PaymentTranslator($this->createMock(\Shopware_Components_Translation::class));
 
-        $this->assertInstanceOf(PaymentTranslator::class, $paymentTranslator);
+        static::assertInstanceOf(PaymentTranslator::class, $paymentTranslator);
     }
 
     public function test_it_should_translate_payment_description()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('read')
             ->with(self::LANGUAGE_ID_ENGLISH, 'config_payment')
             ->willReturn([
@@ -48,15 +48,15 @@ class PaymentTranslatorTest extends TestCase
 
         $translatedPaymentMethod = $paymentTranslator->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
 
-        $this->assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
-        $this->assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
+        static::assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
+        static::assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
     }
 
     public function test_it_should_translate_payment_additionalDescription()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('read')
             ->willReturn([
                 self::PAYMENT_ID => ['additionalDescription' => self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH],
@@ -71,15 +71,15 @@ class PaymentTranslatorTest extends TestCase
 
         $translatedPaymentMethod = $paymentTranslator->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
 
-        $this->assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionalDescription']);
-        $this->assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionaldescription']);
+        static::assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionalDescription']);
+        static::assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionaldescription']);
     }
 
     public function test_it_should_given_description_if_no_translation_is_available()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('read')
             ->willReturn([
                 self::PAYMENT_ID => ['description' => null],
@@ -93,6 +93,6 @@ class PaymentTranslatorTest extends TestCase
         $paymentTranslator = new PaymentTranslator($translationComponentMock);
         $translatedPaymentMethod = $paymentTranslator->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
 
-        $this->assertEquals(self::PAYMENT_DESCRIPTION_GERMAN, $translatedPaymentMethod['description']);
+        static::assertEquals(self::PAYMENT_DESCRIPTION_GERMAN, $translatedPaymentMethod['description']);
     }
 }

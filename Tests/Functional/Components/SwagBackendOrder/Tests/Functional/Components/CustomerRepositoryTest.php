@@ -29,8 +29,14 @@ class CustomerRepositoryTest extends TestCase
 
         $result = $this->getCustomerRepository()->getList('test');
 
-        $this->assertCount(1, $result);
-        $this->assertArraySubset($expectedUser, $result);
+        static::assertCount(1, $result);
+        static::assertSame($expectedUser[0]['email'], $result[0]['email']);
+        static::assertSame($expectedUser[0]['firstname'], $result[0]['firstname']);
+        static::assertSame($expectedUser[0]['lastname'], $result[0]['lastname']);
+        static::assertSame($expectedUser[0]['number'], $result[0]['number']);
+        static::assertSame($expectedUser[0]['company'], $result[0]['company']);
+        static::assertSame($expectedUser[0]['zipCode'], $result[0]['zipCode']);
+        static::assertSame($expectedUser[0]['city'], $result[0]['city']);
     }
 
     public function test_getList_with_all_matches()
@@ -59,8 +65,36 @@ class CustomerRepositoryTest extends TestCase
 
         $result = $this->getCustomerRepository()->getList(null);
 
-        $this->assertCount(2, $result);
-        $this->assertArraySubset($expectedUsers, $result);
+        $result1 = null;
+        $result2 = null;
+
+        foreach ($result as $user) {
+            if ($user['email'] === 'test@example.com') {
+                $result1 = $user;
+            }
+
+            if ($user['email'] === 'mustermann@b2b.de') {
+                $result2 = $user;
+            }
+        }
+
+        static::assertCount(2, $result);
+
+        static::assertSame($expectedUsers[0]['email'], $result1['email']);
+        static::assertSame($expectedUsers[0]['firstname'], $result1['firstname']);
+        static::assertSame($expectedUsers[0]['lastname'], $result1['lastname']);
+        static::assertSame($expectedUsers[0]['number'], $result1['number']);
+        static::assertSame($expectedUsers[0]['company'], $result1['company']);
+        static::assertSame($expectedUsers[0]['zipCode'], $result1['zipCode']);
+        static::assertSame($expectedUsers[0]['city'], $result1['city']);
+
+        static::assertSame($expectedUsers[1]['email'], $result2['email']);
+        static::assertSame($expectedUsers[1]['firstname'], $result2['firstname']);
+        static::assertSame($expectedUsers[1]['lastname'], $result2['lastname']);
+        static::assertSame($expectedUsers[1]['number'], $result2['number']);
+        static::assertSame($expectedUsers[1]['company'], $result2['company']);
+        static::assertSame($expectedUsers[1]['zipCode'], $result2['zipCode']);
+        static::assertSame($expectedUsers[1]['city'], $result2['city']);
     }
 
     public function test_get_one_customer()
@@ -73,13 +107,17 @@ class CustomerRepositoryTest extends TestCase
         ];
 
         $result = $this->getCustomerRepository()->get(1);
-        $this->assertArraySubset($expectedUser, $result);
+
+        static::assertSame($expectedUser['email'], $result['email']);
+        static::assertSame($expectedUser['firstname'], $result['firstname']);
+        static::assertSame($expectedUser['lastname'], $result['lastname']);
+        static::assertSame($expectedUser['number'], $result['number']);
     }
 
     public function test_get_one_customer_by_invalid_id()
     {
         $result = $this->getCustomerRepository()->get(999);
-        $this->assertNull($result['email']);
+        static::assertNull($result['email']);
     }
 
     /**

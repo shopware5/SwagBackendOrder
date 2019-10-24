@@ -23,7 +23,7 @@ class NumberFormatterTest extends TestCase
     {
         $numberFormatterWrapper = new NumberFormatterWrapper();
 
-        $this->assertInstanceOf(NumberFormatterWrapper::class, $numberFormatterWrapper);
+        static::assertInstanceOf(NumberFormatterWrapper::class, $numberFormatterWrapper);
     }
 
     public function test_it_should_format_number_for_locale_de()
@@ -34,7 +34,7 @@ class NumberFormatterTest extends TestCase
 
         $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GERMANY);
 
-        $this->assertEquals('1,99', $formattedNumber);
+        static::assertEquals('1,99', $formattedNumber);
     }
 
     public function test_it_should_add_2_decimal_digits()
@@ -45,7 +45,7 @@ class NumberFormatterTest extends TestCase
 
         $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GERMANY);
 
-        $this->assertEquals('2,00', $formattedNumber);
+        static::assertEquals('2,00', $formattedNumber);
     }
 
     public function test_it_should_format_english_numbers()
@@ -56,7 +56,7 @@ class NumberFormatterTest extends TestCase
 
         $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GREAT_BRITAIN);
 
-        $this->assertEquals('2.00', $formattedNumber);
+        static::assertEquals('2.00', $formattedNumber);
     }
 
     public function test_it_should_throw_exception_if_locale_is_empty()
@@ -77,6 +77,6 @@ class NumberFormatterTest extends TestCase
 
         $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_ITALIA);
 
-        $this->assertEquals('2.00', $formattedNumber);
+        static::assertEquals('2.00', $formattedNumber);
     }
 }

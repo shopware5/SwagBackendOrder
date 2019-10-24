@@ -42,7 +42,8 @@ class ProductSearchTest extends TestCase
             'to' => 'beliebig',
         ];
 
-        $this->assertArraySubset($expectedProduct, $result);
+        static::assertSame($expectedProduct['price'], $result['price']);
+        static::assertSame($expectedProduct['to'], $result['to']);
     }
 
     public function test_prepareProductPrice_with_price_from_default_customerGroup()
@@ -66,7 +67,9 @@ class ProductSearchTest extends TestCase
             'isFallbackPrice' => true,
         ];
 
-        $this->assertArraySubset($expectedProduct, $result);
+        static::assertSame($expectedProduct['price'], $result['price']);
+        static::assertSame($expectedProduct['to'], $result['to']);
+        static::assertSame($expectedProduct['isFallbackPrice'], $result['isFallbackPrice']);
     }
 
     private function getService()

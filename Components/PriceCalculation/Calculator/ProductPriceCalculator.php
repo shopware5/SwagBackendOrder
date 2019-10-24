@@ -27,10 +27,6 @@ class ProductPriceCalculator
      */
     private $currencyConverter;
 
-    /**
-     * @param TaxCalculation    $taxCalculation
-     * @param CurrencyConverter $currencyConverter
-     */
     public function __construct(TaxCalculation $taxCalculation, CurrencyConverter $currencyConverter)
     {
         $this->taxCalculation = $taxCalculation;
@@ -38,8 +34,6 @@ class ProductPriceCalculator
     }
 
     /**
-     * @param PriceContext $context
-     *
      * @throws \RuntimeException
      *
      * @return PriceResult
@@ -64,8 +58,6 @@ class ProductPriceCalculator
     }
 
     /**
-     * @param PriceContext $priceContext
-     *
      * @return float
      */
     public function calculateBasePrice(PriceContext $priceContext)
@@ -84,9 +76,7 @@ class ProductPriceCalculator
     }
 
     /**
-     * @param float                $price
-     * @param Tax                  $tax
-     * @param ShopContextInterface $context
+     * @param float $price
      *
      * @return float
      */

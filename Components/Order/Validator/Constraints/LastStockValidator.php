@@ -24,10 +24,6 @@ class LastStockValidator extends ConstraintValidator
      */
     private $connection;
 
-    /**
-     * @param \Enlight_Components_Snippet_Manager $snippetManager
-     * @param Connection                          $connection
-     */
     public function __construct(
         \Enlight_Components_Snippet_Manager $snippetManager,
         Connection $connection

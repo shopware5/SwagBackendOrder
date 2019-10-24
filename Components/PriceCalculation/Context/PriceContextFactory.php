@@ -18,9 +18,6 @@ class PriceContextFactory
      */
     private $modelManager;
 
-    /**
-     * @param ModelManager $modelManager
-     */
     public function __construct(ModelManager $modelManager)
     {
         $this->modelManager = $modelManager;
@@ -38,7 +35,7 @@ class PriceContextFactory
     public function create($price, $taxRate, $taxFree, $isNetPrice, $currencyId)
     {
         $currency = $this->modelManager->find(Currency::class, $currencyId);
-        if (null === $currency) {
+        if ($currency === null) {
             $currency = $this->getBaseCurrency();
         }
 

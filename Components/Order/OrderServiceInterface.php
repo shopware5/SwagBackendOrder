@@ -14,8 +14,6 @@ use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 interface OrderServiceInterface
 {
     /**
-     * @param OrderStruct $orderStruct
-     *
      * @return Order
      */
     public function create(OrderStruct $orderStruct);

@@ -26,8 +26,8 @@ use SwagBackendOrder\Tests\FixtureImportTestCaseTrait;
 
 class ConfirmationMailCreatorTest extends TestCase
 {
-    use DatabaseTestCaseTrait;
     use FixtureImportTestCaseTrait;
+    use DatabaseTestCaseTrait;
 
     const ORDER_ID = 10000;
 
@@ -40,9 +40,9 @@ class ConfirmationMailCreatorTest extends TestCase
         $order = Shopware()->Models()->find(Order::class, self::ORDER_ID);
         $mailData = $confirmationMailCreator->prepareOrderConfirmationMailData($order);
 
-        $this->assertEquals('63,89 EUR', $mailData['sAmount']);
-        $this->assertEquals('53,69 EUR', $mailData['sAmountNet']);
-        $this->assertEquals('3,90 EUR', $mailData['sShippingCosts']);
+        static::assertEquals('63,89 EUR', $mailData['sAmount']);
+        static::assertEquals('53,69 EUR', $mailData['sAmountNet']);
+        static::assertEquals('3,90 EUR', $mailData['sShippingCosts']);
     }
 
     public function test_prepareOrderDetailsConfirmationMailData_should_return_localized_billing_sums()
@@ -54,11 +54,11 @@ class ConfirmationMailCreatorTest extends TestCase
         $order = Shopware()->Models()->find(Order::class, self::ORDER_ID);
         $orderDetails = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData($order, $order->getLanguageSubShop()->getLocale());
 
-        $this->assertEquals('50,41', $orderDetails[0]['netprice']);
-        $this->assertEquals('59,99', $orderDetails[0]['amount']);
-        $this->assertEquals('50,00', $orderDetails[0]['amountnet']);
-        $this->assertEquals('59,99', $orderDetails[0]['priceNumeric']);
-        $this->assertEquals('59,99', $orderDetails[0]['price']);
+        static::assertEquals('50,41', $orderDetails[0]['netprice']);
+        static::assertEquals('59,99', $orderDetails[0]['amount']);
+        static::assertEquals('50,00', $orderDetails[0]['amountnet']);
+        static::assertEquals('59,99', $orderDetails[0]['priceNumeric']);
+        static::assertEquals('59,99', $orderDetails[0]['price']);
     }
 
     public function test_prepareOrderDetailsConfirmationMailData_with_discount()
@@ -75,14 +75,11 @@ class ConfirmationMailCreatorTest extends TestCase
         $orderDetails = $confirmationMailCreator->prepareOrderDetailsConfirmationMailData($order, $order->getLanguageSubShop()->getLocale());
         $discountDetails = $orderDetails[1];
 
-        $this->assertEquals('DISCOUNT.0', $discountDetails['ordernumber']);
-        $this->assertEquals('DISCOUNT.0', $discountDetails['ordernumber']);
-        $this->assertEquals(4, $discountDetails['modus']);
+        static::assertEquals('DISCOUNT.0', $discountDetails['ordernumber']);
+        static::assertEquals('DISCOUNT.0', $discountDetails['ordernumber']);
+        static::assertEquals(4, $discountDetails['modus']);
     }
 
-    /**
-     * @param Order $order
-     */
     private function insertDiscount(Order $order)
     {
         $detail = new OrderDetailModel();
@@ -111,8 +108,8 @@ class ConfirmationMailCreatorTest extends TestCase
     {
         return new ConfirmationMailCreator(
             new TaxCalculation(),
-            new PaymentTranslator(new Shopware_Components_Translation()),
-            new ShippingTranslator(new Shopware_Components_Translation()),
+            new PaymentTranslator(new Shopware_Components_Translation(Shopware()->Container()->get('dbal_connection'), Shopware()->Container())),
+            new ShippingTranslator(new Shopware_Components_Translation(Shopware()->Container()->get('dbal_connection'), Shopware()->Container())),
             new ConfirmationMailRepository(Shopware()->Container()->get('dbal_connection')),
             Shopware()->Models()->getRepository(Detail::class),
             Shopware()->Container()->get('config'),

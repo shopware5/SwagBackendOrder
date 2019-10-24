@@ -350,9 +350,6 @@ class OrderStruct
         $this->positions = $positions;
     }
 
-    /**
-     * @param PositionStruct $position
-     */
     public function addPosition(PositionStruct $position)
     {
         $this->positions[] = $position;

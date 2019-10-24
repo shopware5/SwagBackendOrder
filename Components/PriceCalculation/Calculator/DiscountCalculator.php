@@ -13,8 +13,6 @@ use SwagBackendOrder\Components\PriceCalculation\DiscountType;
 class DiscountCalculator
 {
     /**
-     * @param array $orderData
-     *
      * @return array
      */
     public function calculateDiscount(array &$orderData)

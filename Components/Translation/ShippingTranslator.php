@@ -15,17 +15,13 @@ class ShippingTranslator
      */
     private $translationComponent;
 
-    /**
-     * @param \Shopware_Components_Translation $translationComponent
-     */
     public function __construct(\Shopware_Components_Translation $translationComponent)
     {
         $this->translationComponent = $translationComponent;
     }
 
     /**
-     * @param array $shipping
-     * @param int   $languageId
+     * @param int $languageId
      *
      * @return array
      */

@@ -5,6 +5,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 use Shopware\Kernel;
 use Shopware\Models\Shop\Shop;
 
@@ -20,11 +21,11 @@ class SwagBackendOrderTestKernel extends Kernel
         $container = $kernel->getContainer();
         $container->get('plugins')->Core()->ErrorHandler()->registerErrorHandler(E_ALL | E_STRICT);
 
-        /** @var $repository \Shopware\Models\Shop\Repository */
+        /** @var \Shopware\Models\Shop\Repository $repository */
         $repository = $container->get('models')->getRepository(Shop::class);
 
         $shop = $repository->getActiveDefault();
-        $shop->registerResources();
+        $container->get('shopware.components.shop_registration_service')->registerResources($shop);
 
         if (!self::assertPlugin('SwagBackendOrder')) {
             throw new \RuntimeException('Plugin SwagBackendOrder must be installed and activated.');

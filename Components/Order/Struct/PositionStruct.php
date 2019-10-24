@@ -71,6 +71,11 @@ class PositionStruct
     private $total;
 
     /**
+     * @var string|null
+     */
+    private $ean;
+
+    /**
      * @return int
      */
     public function getOrderId()
@@ -276,5 +281,15 @@ class PositionStruct
     public function getDiscountType()
     {
         return (int) explode('.', $this->getNumber())[1];
+    }
+
+    public function getEan(): ?string
+    {
+        return $this->ean;
+    }
+
+    public function setEan(?string $ean): void
+    {
+        $this->ean = $ean;
     }
 }

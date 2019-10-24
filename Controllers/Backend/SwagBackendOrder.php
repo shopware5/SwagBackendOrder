@@ -104,7 +104,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             /** @var Repository $shopRepository */
             $shopRepository = $this->get('models')->getRepository(Shop::class);
             $shop = $shopRepository->getActiveById($orderStruct->getLanguageShopId());
-            $shop->registerResources();
+
+            if ($shop === null) {
+                throw new RuntimeException('Shop not found');
+            }
+
+            $this->get('shopware.components.shop_registration_service')->registerResources($shop);
 
             /** @var OrderServiceInterface $orderService */
             $orderService = $this->get('swag_backend_order.order.service');
@@ -589,9 +594,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param TotalPricesResult $totalPriceResult
-     * @param RequestStruct     $requestStruct
-     *
      * @return array
      */
     private function createBasketCalculationResult(
@@ -643,8 +645,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param array $taxes
-     *
      * @return array
      */
     private function convertTaxes(array $taxes)

@@ -38,12 +38,6 @@ class OrderService implements OrderServiceInterface
      */
     private $validator;
 
-    /**
-     * @param OrderFactory                    $orderFactory
-     * @param ModelManager                    $modelManager
-     * @param NumberRangeIncrementerInterface $numberRangeIncrementer
-     * @param OrderValidatorInterface         $validator
-     */
     public function __construct(
         OrderFactory $orderFactory,
         ModelManager $modelManager,
@@ -57,8 +51,6 @@ class OrderService implements OrderServiceInterface
     }
 
     /**
-     * @param OrderStruct $orderStruct
-     *
      * @throws InvalidOrderException
      *
      * @return Order

@@ -31,7 +31,7 @@ class DetailFactoryTest extends TestCase
         $positionStruct->setTaxId(1);
 
         $result = $factory->create($positionStruct, true);
-        $this->assertInstanceOf(Detail::class, $result);
+        static::assertInstanceOf(Detail::class, $result);
     }
 
     public function test_create_will_throw_exception_if_no_number_was_provided()

@@ -19,15 +19,12 @@ class ShippingPriceCalculator
      * @var CurrencyConverter
      */
     private $currencyConverter;
+
     /**
      * @var TaxCalculation
      */
     private $taxCalculation;
 
-    /**
-     * @param TaxCalculation    $taxCalculation
-     * @param CurrencyConverter $currencyConverter
-     */
     public function __construct(TaxCalculation $taxCalculation, CurrencyConverter $currencyConverter)
     {
         $this->currencyConverter = $currencyConverter;
@@ -35,8 +32,6 @@ class ShippingPriceCalculator
     }
 
     /**
-     * @param PriceContext $context
-     *
      * @return PriceResult
      */
     public function calculate(PriceContext $context)
@@ -60,14 +55,13 @@ class ShippingPriceCalculator
     }
 
     /**
-     * @param PriceContext $context
-     *
      * @return float the base/gross shipping price in the standard currency
      */
     public function calculateBasePrice(PriceContext $context)
     {
         $basePrice = $this->currencyConverter->getBaseCurrencyPrice(
-            $context->getPrice(), $context->getCurrencyFactor()
+            $context->getPrice(),
+            $context->getCurrencyFactor()
         );
 
         if ($context->isTaxFree()) {

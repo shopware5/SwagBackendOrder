@@ -21,7 +21,7 @@ class CurrencyConverterTest extends TestCase
         $currencyCalculation = $this->getCurrencyCalculation();
         $actualPrice = $currencyCalculation->getBaseCurrencyPrice($price, $currencyFactor);
 
-        $this->assertEquals(59.992660550458709, $actualPrice);
+        static::assertEquals(59.992660550458709, $actualPrice);
     }
 
     public function testGetCurrencyPrice()
@@ -32,7 +32,7 @@ class CurrencyConverterTest extends TestCase
         $currencyCalculation = $this->getCurrencyCalculation();
         $actualPrice = $currencyCalculation->getCurrencyPrice($price, $currencyFactor);
 
-        $this->assertEquals(81.73637500000001, $actualPrice);
+        static::assertEquals(81.73637500000001, $actualPrice);
     }
 
     /**

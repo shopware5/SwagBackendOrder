@@ -1,0 +1,102 @@
+variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: "/certs"
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: app
+    MYSQL_PASSWORD: app
+    MYSQL_DATABASE: shopware
+    WEB_DOCUMENT_ROOT: $CI_PROJECT_DIR/
+    GIT_STRATEGY: clone
+    SHOPWARE_ENV: swagbackendordertest
+    CHECKOUT_SHOPWARE_BRANCH: "5.6"
+
+stages:
+    - Code Style Check
+    - PHPUnit
+
+default:
+    image: shopware/5-continuous:7.3
+    before_script:
+        - zip -rq plugin.zip .
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
+        - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
+        - cd shopware
+        - ./psh.phar init --SW_HOST="localhost"
+        - cp -r custom/plugins/SwagBackendOrder/Tests/config_gitlab.php config.php
+        - php bin/console sw:plugin:refresh
+        - php bin/console sw:plugin:list
+        - php bin/console sw:plugin:install --activate SwagBackendOrder
+        - php bin/console sw:cache:clear
+        - /entrypoint supervisord &>/dev/null &
+
+PHP analyze:
+    stage: Code Style Check
+    before_script: []
+    script:
+        - zip -rq plugin.zip .
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
+        - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
+        - cd shopware
+        - composer install
+        - vendor/bin/php-cs-fixer fix --dry-run -v --config=custom/plugins/SwagBackendOrder/.php_cs.dist --format=junit | tee php-cs-fixer.xml
+    artifacts:
+        reports:
+            junit: shopware/php-cs-fixer.xml
+
+Code Coverage:
+    stage: PHPUnit
+    needs: [PHP analyze]
+    script:
+        - composer req --dev phpunit/phpunit:~8.0 --update-with-all-dependencies
+        - cd custom/plugins/SwagBackendOrder
+        - php -d pcov.enabled=1 -d pcov.directory=$CI_PROJECT_DIR
+            ../../../vendor/bin/phpunit
+            --configuration phpunit.xml.dist
+            --log-junit build/artifacts/phpunit.junit.xml
+            --colors=never
+            --coverage-text=build/artifacts/phpunit-coverage-text
+        - cat build/artifacts/phpunit-coverage-text | sed -e '/\\Shopware\\.*/d' -e '/\s*Methods:\s*\d*/d'
+    coverage: '/^\s*Lines:\s*(\d+(?:\.\d+)?%)/'
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+    artifacts:
+        paths:
+            - shopware/custom/plugins/SwagBackendOrder/build/artifacts/*
+        reports:
+            junit: shopware/custom/plugins/SwagBackendOrder/build/artifacts/phpunit.junit.xml
+
+SW 5.6:
+    stage: PHPUnit
+    needs: [PHP analyze]
+    image: shopware/5-continuous:7.2
+    only:
+        - master
+    variables:
+        CHECKOUT_SHOPWARE_BRANCH: "5.6"
+    script:
+        - cd custom/plugins/SwagBackendOrder
+        - php ../../../vendor/bin/phpunit
+            --configuration phpunit.xml.dist
+            --colors=never
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+
+SW 5.7:
+    stage: PHPUnit
+    needs: [PHP analyze]
+    image: shopware/5-continuous:7.2
+    only:
+        - master
+    variables:
+        CHECKOUT_SHOPWARE_BRANCH: "5.7"
+    script:
+        - cd custom/plugins/SwagBackendOrder
+        - php ../../../vendor/bin/phpunit
+            --configuration phpunit.xml.dist
+            --colors=never
+    services:
+        -   name: mysql:5.7
+            alias: mysql

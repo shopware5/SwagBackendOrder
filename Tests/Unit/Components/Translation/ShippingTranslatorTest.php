@@ -26,14 +26,14 @@ class ShippingTranslatorTest extends TestCase
             $this->createMock(\Shopware_Components_Translation::class)
         );
 
-        $this->assertInstanceOf(ShippingTranslator::class, $shippingTranslator);
+        static::assertInstanceOf(ShippingTranslator::class, $shippingTranslator);
     }
 
     public function test_it_should_translate_dispatch()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('read')
             ->willReturn([
                 self::DISPATCH_ID => [
@@ -52,8 +52,8 @@ class ShippingTranslatorTest extends TestCase
         $shippingTranslator = new ShippingTranslator($translationComponentMock);
         $translatedDispatch = $shippingTranslator->translate($dispatch, self::LANGUAGE_ID_ENGLISH);
 
-        $this->assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['name']);
-        $this->assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['dispatch_name']);
-        $this->assertEquals(self::DISPATCH_DESCRIPTION_ENGLISH, $translatedDispatch['description']);
+        static::assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['name']);
+        static::assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['dispatch_name']);
+        static::assertEquals(self::DISPATCH_DESCRIPTION_ENGLISH, $translatedDispatch['description']);
     }
 }
