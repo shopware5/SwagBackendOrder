@@ -24,10 +24,6 @@ class ProductExistsValidator extends ConstraintValidator
      */
     private $connection;
 
-    /**
-     * @param \Shopware_Components_Snippet_Manager $snippetManager
-     * @param Connection                           $connection
-     */
     public function __construct(\Shopware_Components_Snippet_Manager $snippetManager, Connection $connection)
     {
         $this->snippetManager = $snippetManager;

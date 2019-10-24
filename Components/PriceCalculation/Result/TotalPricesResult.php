@@ -88,9 +88,6 @@ class TotalPricesResult
         return $this->taxes;
     }
 
-    /**
-     * @param array $taxes
-     */
     public function setTaxes(array $taxes)
     {
         $this->taxes = $taxes;

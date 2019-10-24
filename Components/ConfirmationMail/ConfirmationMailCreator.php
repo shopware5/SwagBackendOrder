@@ -66,16 +66,6 @@ class ConfirmationMailCreator
      */
     private $numberFormatterWrapper;
 
-    /**
-     * @param TaxCalculation             $taxCalculation
-     * @param PaymentTranslator          $paymentTranslator
-     * @param ShippingTranslator         $shippingTranslator
-     * @param ConfirmationMailRepository $confirmationMailRepository
-     * @param Repository                 $articleDetailRepository
-     * @param Shopware_Components_Config $config
-     * @param NumberFormatterWrapper     $numberFormatterWrapper
-     * @param sArticles                  $sArticles
-     */
     public function __construct(
         TaxCalculation $taxCalculation,
         PaymentTranslator $paymentTranslator,
@@ -97,9 +87,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order  $orderModel
-     * @param Locale $localeModel
-     *
      * @return array
      */
     public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel)
@@ -163,8 +150,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order $orderModel
-     *
      * @return array
      */
     public function prepareOrderConfirmationMailData(Order $orderModel)
@@ -222,9 +207,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param array  $mailOrderPositions
-     * @param Locale $localeModel
-     *
      * @return array
      */
     private function setPositionPrices(array $mailOrderPositions, Locale $localeModel)
@@ -252,8 +234,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param array $mailOrderPositions
-     *
      * @return array
      */
     private function getOrderDetailAttributes(array $mailOrderPositions)
@@ -269,10 +249,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order  $orderModel
-     * @param array  $orderMail
-     * @param Locale $localeModel
-     *
      * @return array
      */
     private function setOrderCosts(Order $orderModel, array $orderMail, Locale $localeModel)
@@ -306,8 +282,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order $orderModel
-     * @param array $orderMail
      * @param State $billingStateModel
      *
      * @return array
@@ -329,8 +303,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order $orderModel
-     * @param array $orderMail
      * @param State $shippingStateModel
      *
      * @return array
@@ -352,9 +324,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order $orderModel
-     * @param Shop  $languageShopModel
-     *
      * @return array
      */
     private function getTranslatedShipping(Order $orderModel, Shop $languageShopModel)
@@ -368,9 +337,6 @@ class ConfirmationMailCreator
     }
 
     /**
-     * @param Order $orderModel
-     * @param Shop  $languageShop
-     *
      * @return array
      */
     private function getTranslatedPayment(Order $orderModel, Shop $languageShop)

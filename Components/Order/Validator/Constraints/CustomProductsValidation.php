@@ -24,10 +24,6 @@ class CustomProductsValidation extends ConstraintValidator
      */
     private $connection;
 
-    /**
-     * @param \Shopware_Components_Snippet_Manager $snippetManager
-     * @param Connection                           $connection
-     */
     public function __construct(\Shopware_Components_Snippet_Manager $snippetManager, Connection $connection)
     {
         $this->snippetManager = $snippetManager;
@@ -57,8 +53,6 @@ class CustomProductsValidation extends ConstraintValidator
     }
 
     /**
-     * @param CustomProduct $constraint
-     *
      * @return bool|string
      */
     private function isCustomProductsActivated(CustomProduct $constraint)

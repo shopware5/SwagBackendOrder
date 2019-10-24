@@ -15,9 +15,6 @@ class ValidationResult
      */
     private $messages = [];
 
-    /**
-     * @param array $messages
-     */
     public function __construct(array $messages = [])
     {
         $this->messages = $messages;
@@ -31,17 +28,11 @@ class ValidationResult
         return $this->messages;
     }
 
-    /**
-     * @param array $messages
-     */
     public function setMessages(array $messages)
     {
         $this->messages = $messages;
     }
 
-    /**
-     * @param array $messages
-     */
     public function addMessages(array $messages)
     {
         foreach ($messages as $message) {

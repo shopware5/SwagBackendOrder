@@ -51,13 +51,6 @@ class ProductSearch implements ProductSearchInterface
      */
     private $additionalTextService;
 
-    /**
-     * @param Connection                     $connection
-     * @param ProductPriceCalculator         $productPriceCalculator
-     * @param ContextServiceInterface        $contextService
-     * @param RequestHydrator                $requestHydrator
-     * @param AdditionalTextServiceInterface $additionalTextService
-     */
     public function __construct(
         Connection $connection,
         ProductPriceCalculator $productPriceCalculator,
@@ -174,10 +167,8 @@ class ProductSearch implements ProductSearchInterface
     }
 
     /**
-     * @param float                $price
-     * @param TaxStruct            $tax
-     * @param ShopContextInterface $shopContext
-     * @param bool                 $getNetPrice
+     * @param float $price
+     * @param bool  $getNetPrice
      *
      * @return float
      */
@@ -256,8 +247,6 @@ class ProductSearch implements ProductSearchInterface
     }
 
     /**
-     * @param array $product
-     *
      * @return array
      */
     private function prepareProductPrice(array $product)

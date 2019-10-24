@@ -32,6 +32,6 @@ class ConfirmationMailCreatorTest extends TestCase
             $this->createMock(\sArticles::class)
         );
 
-        $this->assertInstanceOf(ConfirmationMailCreator::class, $confirmationMailCreator);
+        static::assertInstanceOf(ConfirmationMailCreator::class, $confirmationMailCreator);
     }
 }

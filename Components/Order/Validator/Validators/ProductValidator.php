@@ -23,17 +23,12 @@ class ProductValidator
      */
     private $validator;
 
-    /**
-     * @param ValidatorInterface $validator
-     */
     public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
     }
 
     /**
-     * @param ProductContext $context
-     *
      * @return ValidationResult
      */
     public function validate(ProductContext $context)

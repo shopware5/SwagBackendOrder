@@ -71,7 +71,7 @@ class PositionStruct
     private $total;
 
     /**
-     * @var ?string
+     * @var string|null
      */
     private $ean;
 
@@ -288,9 +288,6 @@ class PositionStruct
         return $this->ean;
     }
 
-    /**
-     * @param string $ean
-     */
     public function setEan(?string $ean): void
     {
         $this->ean = $ean;

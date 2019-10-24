@@ -30,9 +30,7 @@ class Customer implements SubscriberInterface
     private $pluginManager;
 
     /**
-     * @param string                        $pluginDir
-     * @param EmailValidator                $emailValidator
-     * @param \Enlight_Plugin_PluginManager $pluginManager
+     * @param string $pluginDir
      */
     public function __construct($pluginDir, EmailValidator $emailValidator, \Enlight_Plugin_PluginManager $pluginManager)
     {
@@ -53,8 +51,6 @@ class Customer implements SubscriberInterface
     }
 
     /**
-     * @param \Enlight_Event_EventArgs $arguments
-     *
      * @return bool | null
      */
     public function onPostDispatchCustomer(\Enlight_Event_EventArgs $arguments)
@@ -79,8 +75,6 @@ class Customer implements SubscriberInterface
 
     /**
      * adds the templates directories which expand the customer module
-     *
-     * @param \Enlight_Controller_ActionEventArgs $args
      */
     public function onCustomerPostDispatchSecure(\Enlight_Controller_ActionEventArgs $args)
     {

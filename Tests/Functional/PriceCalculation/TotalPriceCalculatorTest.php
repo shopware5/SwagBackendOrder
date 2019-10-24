@@ -22,7 +22,7 @@ class TotalPriceCalculatorTest extends TestCase
      */
     private $SUT;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->SUT = new TotalPriceCalculator();
     }
@@ -35,16 +35,16 @@ class TotalPriceCalculatorTest extends TestCase
 
         $result = $this->SUT->calculate($positionPrices, $shippingPrice);
 
-        $this->assertEquals(63.69, $result->getTotal()->getNet());
-        $this->assertEquals(75.79, $result->getTotal()->getGross());
+        static::assertEquals(63.69, $result->getTotal()->getNet());
+        static::assertEquals(75.79, $result->getTotal()->getGross());
 
-        $this->assertEquals(60.41, $result->getSum()->getNet());
-        $this->assertEquals(71.89, $result->getSum()->getGross());
+        static::assertEquals(60.41, $result->getSum()->getNet());
+        static::assertEquals(71.89, $result->getSum()->getGross());
 
-        $this->assertEquals(3.28, $result->getShipping()->getNet());
-        $this->assertEquals(3.90, $result->getShipping()->getGross());
+        static::assertEquals(3.28, $result->getShipping()->getNet());
+        static::assertEquals(3.90, $result->getShipping()->getGross());
 
-        $this->assertEquals($expectedTaxRates['19'], $result->getTaxes()['19']);
+        static::assertEquals($expectedTaxRates['19'], $result->getTaxes()['19']);
     }
 
     /**

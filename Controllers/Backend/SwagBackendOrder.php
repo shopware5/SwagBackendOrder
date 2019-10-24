@@ -594,9 +594,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param TotalPricesResult $totalPriceResult
-     * @param RequestStruct     $requestStruct
-     *
      * @return array
      */
     private function createBasketCalculationResult(
@@ -648,8 +645,6 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param array $taxes
-     *
      * @return array
      */
     private function convertTaxes(array $taxes)

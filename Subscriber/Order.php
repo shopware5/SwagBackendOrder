@@ -18,9 +18,6 @@ class Order implements SubscriberInterface
      */
     private $container;
 
-    /**
-     * @param ContainerInterface $container
-     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -38,8 +35,6 @@ class Order implements SubscriberInterface
 
     /**
      * adds the templates directories which expand the order module
-     *
-     * @param \Enlight_Controller_ActionEventArgs $args
      */
     public function onOrderPostDispatch(\Enlight_Controller_ActionEventArgs $args)
     {

@@ -18,17 +18,12 @@ class RequestHydrator
      */
     private $positionHydrator;
 
-    /**
-     * @param PositionHydrator $positionHydrator
-     */
     public function __construct(PositionHydrator $positionHydrator)
     {
         $this->positionHydrator = $positionHydrator;
     }
 
     /**
-     * @param array $data
-     *
      * @return RequestStruct
      */
     public function hydrateFromRequest(array $data)

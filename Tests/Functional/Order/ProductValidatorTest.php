@@ -25,7 +25,7 @@ class ProductValidatorTest extends TestCase
         $context = new ProductContext($this->getProductNumberWithActivatedOnSale(), $quantity);
         $violation = $validator->validate($context);
 
-        $this->assertContains($this->getProductNumberWithActivatedOnSale(), $violation->getMessages()[0]);
+        static::assertStringContainsString($this->getProductNumberWithActivatedOnSale(), $violation->getMessages()[0]);
     }
 
     /**

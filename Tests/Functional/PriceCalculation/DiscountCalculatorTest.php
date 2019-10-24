@@ -22,10 +22,10 @@ class DiscountCalculatorTest extends TestCase
 
         $result = $calculator->calculateDiscount($orderData);
 
-        $this->assertEquals(91.597, $result['totalWithoutTax']);
-        $this->assertEquals(90, $result['total']);
-        $this->assertEquals(90, $result['sum']);
-        $this->assertEquals(17.40343, $result['taxSum']);
+        static::assertEquals(91.597, $result['totalWithoutTax']);
+        static::assertEquals(90, $result['total']);
+        static::assertEquals(90, $result['sum']);
+        static::assertEquals(17.40343, $result['taxSum']);
     }
 
     public function test_calculateDiscount_with_percentage_discount()
@@ -37,11 +37,11 @@ class DiscountCalculatorTest extends TestCase
 
         $result = $calculator->calculateDiscount($orderData);
 
-        $this->assertEquals(45.798, $result['totalWithoutTax']);
-        $this->assertEquals(45, $result['total']);
-        $this->assertEquals(45, $result['sum']);
-        $this->assertEquals(-5, $result['positions'][1]['total']);
-        $this->assertEquals(8.70162, $result['taxSum']);
+        static::assertEquals(45.798, $result['totalWithoutTax']);
+        static::assertEquals(45, $result['total']);
+        static::assertEquals(45, $result['sum']);
+        static::assertEquals(-5, $result['positions'][1]['total']);
+        static::assertEquals(8.70162, $result['taxSum']);
     }
 
     public function test_calculateDiscount_with_tax_free_order()
@@ -53,10 +53,10 @@ class DiscountCalculatorTest extends TestCase
 
         $result = $calculator->calculateDiscount($orderData);
 
-        $this->assertEquals(90, $result['totalWithoutTax']);
-        $this->assertEquals(90, $result['total']);
-        $this->assertEquals(90, $result['sum']);
-        $this->assertEquals(0, $result['taxSum']);
+        static::assertEquals(90, $result['totalWithoutTax']);
+        static::assertEquals(90, $result['total']);
+        static::assertEquals(90, $result['sum']);
+        static::assertEquals(0, $result['taxSum']);
     }
 
     /**

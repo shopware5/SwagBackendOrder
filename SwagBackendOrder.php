@@ -16,9 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SwagBackendOrder extends Plugin
 {
-    /**
-     * @param ContainerBuilder $container
-     */
     public function build(ContainerBuilder $container)
     {
         $container->setParameter('swag_backend_orders.plugin_dir', $this->getPath());

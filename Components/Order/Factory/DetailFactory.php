@@ -26,10 +26,6 @@ class DetailFactory
     /** @var \sArticles $articleModule */
     private $articleModule;
 
-    /**
-     * @param ModelManager $modelManager
-     * @param Modules      $modules
-     */
     public function __construct(ModelManager $modelManager, Modules $modules)
     {
         $this->modelManager = $modelManager;
@@ -37,8 +33,7 @@ class DetailFactory
     }
 
     /**
-     * @param PositionStruct $positionStruct
-     * @param bool           $isTaxFree
+     * @param bool $isTaxFree
      *
      * @throws InvalidOrderException
      *
@@ -91,8 +86,7 @@ class DetailFactory
     }
 
     /**
-     * @param PositionStruct $positionStruct
-     * @param bool           $isTaxFree
+     * @param bool $isTaxFree
      *
      * @return Detail
      */

@@ -29,9 +29,9 @@ class OrderServiceTest extends TestCase
         $order = $orderService->create($orderStruct);
         $order = Shopware()->Container()->get('models')->find(Order::class, $order->getId());
 
-        $this->assertEquals($orderStruct->getTotal(), $order->getInvoiceAmount());
-        $this->assertEquals($orderStruct->getPositions()[0]->getPrice(), $order->getDetails()->get(0)->getPrice());
-        $this->assertInstanceOf(Order::class, $order);
+        static::assertEquals($orderStruct->getTotal(), $order->getInvoiceAmount());
+        static::assertEquals($orderStruct->getPositions()[0]->getPrice(), $order->getDetails()->get(0)->getPrice());
+        static::assertInstanceOf(Order::class, $order);
     }
 
     /**

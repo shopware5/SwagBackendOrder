@@ -13,7 +13,6 @@ use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 interface OrderValidatorInterface
 {
     /**
-     * @param OrderStruct $order
      * @returns ValidationResult
      */
     public function validate(OrderStruct $order);

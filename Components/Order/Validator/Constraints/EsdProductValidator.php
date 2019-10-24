@@ -24,10 +24,6 @@ class EsdProductValidator extends ConstraintValidator
      */
     private $connection;
 
-    /**
-     * @param \Enlight_Components_Snippet_Manager $snippetManager
-     * @param Connection                          $connection
-     */
     public function __construct(\Enlight_Components_Snippet_Manager $snippetManager, Connection $connection)
     {
         $this->snippetManager = $snippetManager;
@@ -35,8 +31,7 @@ class EsdProductValidator extends ConstraintValidator
     }
 
     /**
-     * @param string     $value
-     * @param Constraint $constraint
+     * @param string $value
      */
     public function validate($value, Constraint $constraint)
     {

@@ -24,7 +24,7 @@ class ShippingPriceCalculatorTest extends TestCase
      */
     private $SUT;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->SUT = $this->getShippingPriceCalculator();
     }
@@ -34,8 +34,8 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(3.90, 19.00, false, false, 1.3625);
 
         $price = $this->SUT->calculate($context);
-        $this->assertEquals(5.31375, $price->getGross());
-        $this->assertEquals(4.4653361344537812, $price->getNet());
+        static::assertEquals(5.31375, $price->getGross());
+        static::assertEquals(4.4653361344537812, $price->getNet());
     }
 
     public function testCalculateBasePriceNet()
@@ -43,7 +43,7 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(5.31, 19.00, false, false, 1.3625);
 
         $price = $this->SUT->calculateBasePrice($context);
-        $this->assertEquals(3.8972477064220179, $price);
+        static::assertEquals(3.8972477064220179, $price);
     }
 
     public function testCalculateBasePrice()
@@ -51,7 +51,7 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(5.31, 19.00, true, false, 1.3625);
 
         $price = $this->SUT->calculateBasePrice($context);
-        $this->assertEquals(3.8972477064220179, $price);
+        static::assertEquals(3.8972477064220179, $price);
     }
 
     public function testCalculateBasePriceTaxfree()
@@ -59,7 +59,7 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(4.47, 19.00, true, true, 1.3625);
 
         $price = $this->SUT->calculateBasePrice($context);
-        $this->assertEquals(3.9040733944954122, $price);
+        static::assertEquals(3.9040733944954122, $price);
     }
 
     /**

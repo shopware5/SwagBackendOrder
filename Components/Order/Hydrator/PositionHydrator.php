@@ -13,8 +13,6 @@ use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 class PositionHydrator
 {
     /**
-     * @param array $data
-     *
      * @return PositionStruct
      */
     public function hydrate(array $data)

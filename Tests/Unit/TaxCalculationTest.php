@@ -21,7 +21,7 @@ class TaxCalculationTest extends TestCase
         $taxCalculation = $this->getTaxCalculation();
         $netPrice = $taxCalculation->getNetPrice($grossPrice, $taxRate);
 
-        $this->assertEquals(50.411764705882355, $netPrice);
+        static::assertEquals(50.411764705882355, $netPrice);
     }
 
     public function testGetGrossPrice()
@@ -32,7 +32,7 @@ class TaxCalculationTest extends TestCase
         $taxCalculation = $this->getTaxCalculation();
         $grossPrice = $taxCalculation->getGrossPrice($netPrice, $taxRate);
 
-        $this->assertEquals(59.9879, $grossPrice);
+        static::assertEquals(59.9879, $grossPrice);
     }
 
     /**
