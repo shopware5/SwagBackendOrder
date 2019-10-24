@@ -489,6 +489,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 }
 
                 record.set('blockPrices', result.blockPrices);
+                editor.context.record.set('ean', result.ean);
 
                 /**
                  * columns[0] -> selected

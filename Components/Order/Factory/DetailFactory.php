@@ -85,6 +85,7 @@ class DetailFactory
         $detail->setUnit($articleDetail->getUnit() ? $articleDetail->getUnit()->getName() : 0);
         $detail->setPackUnit($articleDetail->getPackUnit());
         $detail->setAttribute($this->createDetailAttribute());
+        $detail->setEan($positionStruct->getEan());
 
         return $detail;
     }

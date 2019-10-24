@@ -25,7 +25,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
         { name: 'active', type: 'int' },
         { name: 'articleActive', type: 'int' },
         { name: 'variantActive', type: 'int' },
-        { name: 'blockPrices', type: 'string' }
+        { name: 'blockPrices', type: 'string' },
+        { name: 'ean', type: 'string' }
     ],
 
     proxy: {

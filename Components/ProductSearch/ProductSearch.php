@@ -234,6 +234,7 @@ class ProductSearch implements ProductSearchInterface
             'details.additionalText',
             'details.instock AS inStock',
             'details.id AS productDetailId',
+            'details.ean AS ean',
             'price.price',
             'price.to',
             'defaultPrice.price AS defaultPrice',
