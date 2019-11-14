@@ -5,12 +5,17 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>2.5.1</version>
+    <version>2.5.2</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
     <author>shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
+
+    <changelog version="2.5.2">
+        <changes lang="de">PT-10923 - Die EAN wird nun mit an der Bestellung gespeichert;</changes>
+        <changes lang="en">PT-10923 - The EAN is now saved with the order;</changes>
+    </changelog>
 
     <changelog version="2.5.1">
         <changes lang="de">PT-10709 - Behebt ein Problem mit der 5.6 Kompatibilität;</changes>
