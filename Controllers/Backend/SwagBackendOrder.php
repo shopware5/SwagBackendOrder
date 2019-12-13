@@ -139,6 +139,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             return;
         }
+        
+        $this->get('events')->notify('Shopware_Modules_Order_SaveOrder_OrderCreated', [
+            'subject' => $this,
+            'orderId' => $order->getId(),
+            'orderNumber' => $order->getNumber(),
+        ]);
 
         $this->view->assign([
             'success' => true,
