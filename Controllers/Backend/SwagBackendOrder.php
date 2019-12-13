@@ -1,11 +1,10 @@
-<?php
+    <?php
 /**
  * (c) shopware AG <info@shopware.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin\ConfigReader;
 use Shopware\Models\Article\Detail;
@@ -139,6 +138,12 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             return;
         }
+
+        $this->get('events')->notify('Shopware_Modules_Order_SaveOrder_OrderCreated', [
+            'subject' => $this,
+            'orderId' => $order->getId(),
+            'orderNumber' => $order->getNumber(),
+        ]);
 
         $orderService = $this->container->get('swag_backend_order.b2b_order_service');
         $orderService->createB2BOrder($order);
