@@ -481,6 +481,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $totalPriceResult = $totalPriceCalculator->calculate($positionPrices, $dispatchPrice, $proportionalTaxCalculation);
         $result = $this->createBasketCalculationResult($totalPriceResult, $requestStruct, $proportionalTaxCalculation);
         $result['isTaxFree'] = $requestStruct->isTaxFree();
+        $result['isDisplayNet'] = $requestStruct->isDisplayNet();
 
         $discountCalculator = $this->get('swag_backend_order.price_calculation.discount_calculator');
         $result = $discountCalculator->calculateDiscount($result);
