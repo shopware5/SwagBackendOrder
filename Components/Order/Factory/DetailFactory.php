@@ -73,7 +73,7 @@ class DetailFactory
         /** @var DetailStatus $detailStatus */
         $detailStatus = $this->modelManager->find(DetailStatus::class, 0);
         $detail->setStatus($detailStatus);
-
+        $detail->setArticleDetail($articleDetail);
         $detail->setArticleId($article->getId());
         $name = $this->articleModule->sGetArticleNameByOrderNumber($positionStruct->getNumber());
         $detail->setArticleName($name);
