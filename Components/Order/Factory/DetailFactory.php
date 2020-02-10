@@ -70,6 +70,7 @@ class DetailFactory
         $detail->setStatus($detailStatus);
 
         $detail->setArticleId($article->getId());
+        $detail->setArticleDetail($articleDetail);
         $name = $this->articleModule->sGetArticleNameByOrderNumber($positionStruct->getNumber());
         $detail->setArticleName($name);
         $detail->setArticleNumber($positionStruct->getNumber());
