@@ -26,7 +26,7 @@ class PositionStruct
     private $total;
 
     /**
-     * @var int
+     * @var float
      */
     private $taxRate;
 
@@ -97,7 +97,7 @@ class PositionStruct
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getTaxRate()
     {
@@ -105,7 +105,7 @@ class PositionStruct
     }
 
     /**
-     * @param int $taxRate
+     * @param float $taxRate
      */
     public function setTaxRate($taxRate)
     {
