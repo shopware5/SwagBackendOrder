@@ -137,7 +137,6 @@ class OrderFactory
     /**
      * Workaround to fix 'Partner can not be null.' exception.
      *
-     *
      * @return Order
      */
     private function initOrderModel(OrderStruct $orderStruct)

@@ -61,6 +61,7 @@ class DetailFactory
         if (!$isTaxFree) {
             $detail->setTax($tax);
         }
+
         $detail->setTaxRate($tax->getTax());
 
         $detail->setEsdArticle(0);

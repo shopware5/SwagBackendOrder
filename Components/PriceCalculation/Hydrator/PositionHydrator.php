@@ -21,7 +21,7 @@ class PositionHydrator
         $position->setPrice((float) $data['price']);
         $position->setQuantity((int) $data['quantity']);
         $position->setTotal((float) $data['total']);
-        $position->setTaxRate((int) $data['taxRate']);
+        $position->setTaxRate((float) $data['taxRate']);
         $position->setIsDiscount((bool) $data['isDiscount']);
         $position->setDiscountType((int) $data['discountType']);
 
