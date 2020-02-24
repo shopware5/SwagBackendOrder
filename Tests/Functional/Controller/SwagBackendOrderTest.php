@@ -13,11 +13,13 @@ require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
+use SwagBackendOrder\Tests\B2bOrderTrait;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
 
 class SwagBackendOrderTest extends TestCase
 {
     use DatabaseTestCaseTrait;
+    use B2bOrderTrait;
 
     public function testCalculateBasket()
     {
@@ -479,6 +481,45 @@ class SwagBackendOrderTest extends TestCase
         $sql = 'SELECT ean FROM s_order_details WHERE orderID = ?';
         $result = Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
         static::assertSame('UnitTestEAN', $result);
+
+        $b2bResult = $this->getB2bOrder($viewResult['ordernumber']);
+        static::assertNull($b2bResult);
+    }
+
+    public function test_createOrder_withB2bOrder()
+    {
+        $isB2bPluginInstalled = $this->isB2bPluginInstalled();
+
+        if (!$isB2bPluginInstalled) {
+            static::markTestSkipped('SwagB2bPlugin is not installed');
+        }
+
+        $this->b2bUserIsDebitor();
+
+        $requestHeaderData = require __DIR__ . '/_fixtures/HeaderData.php';
+        $requestHeaderData['data']['customerId'] = 2;
+
+        $view = $this->getView();
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($requestHeaderData);
+
+        $controller = $this->getControllerMock($request, $view);
+        $controller->createOrderAction();
+
+        $viewResult = $view->getAssign();
+        static::assertTrue($viewResult['success']);
+        static::assertNotEmpty($viewResult['orderId']);
+        static::assertNotEmpty($viewResult['ordernumber']);
+
+        $sql = 'SELECT ean FROM s_order_details WHERE orderID = ?';
+        $result = Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
+
+        static::assertSame('UnitTestEAN', $result);
+
+        $b2bResult = $this->getB2bOrder($viewResult['ordernumber']);
+        static::assertNotNull($b2bResult);
+        static::assertCount(1, $b2bResult);
+        static::assertSame($viewResult['ordernumber'], $b2bResult[0]['ordernumber']);
     }
 
     /**

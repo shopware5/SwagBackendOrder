@@ -134,5 +134,12 @@
             <argument type="service" id="shopware_storefront.additional_text_service" />
         </service>
 
+        <service id="swag_backend_order.b2b_order_service" class="SwagBackendOrder\Components\Order\B2BOrderService">
+            <argument type="service" id="b2b_order.conversion_service" on-invalid="null"/>
+            <argument type="service" id="b2b_front_auth.login_context" on-invalid="null"/>
+            <argument type="service" id="b2b_front_auth.credential_builder" on-invalid="null"/>
+            <argument type="service" id="b2b_sales_representative.client_debtor_authentication_identity_loader" on-invalid="null"/>
+        </service>
+
     </services>
 </container>
