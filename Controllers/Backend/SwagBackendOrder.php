@@ -140,6 +140,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             return;
         }
 
+        $orderService = $this->container->get('swag_backend_order.b2b_order_service');
+        $orderService->createB2BOrder($order);
+
         $this->view->assign([
             'success' => true,
             'orderId' => $order->getId(),
