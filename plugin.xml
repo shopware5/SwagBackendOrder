@@ -10,7 +10,7 @@
     <license>proprietary</license>
     <link>http://store.shopware.com</link>
     <author>shopware AG</author>
-    <compatibility minVersion="5.5.0" maxVersion="5.6.99"/>
+    <compatibility minVersion="5.5.0" maxVersion="5.5.99"/>
 
     <changelog version="2.4.4">
         <changes lang="de">PT-11346 - Verlinkung der Bestellposition mit Produkten korrigiert;</changes>
