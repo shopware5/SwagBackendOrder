@@ -50,4 +50,22 @@ class DetailFactoryTest extends TestCase
         $this->expectExceptionMessage('No product number was passed.');
         $factory->create($positionStruct, true);
     }
+
+    public function test_create_ensureProductDetailIsSet()
+    {
+        $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
+
+        $positionStruct = new PositionStruct();
+        $positionStruct->setMode(1);
+        $positionStruct->setPrice(19.95);
+        $positionStruct->setArticleId(178);
+        $positionStruct->setNumber('SW10178');
+        $positionStruct->setName('Beachtowel Ibiza');
+        $positionStruct->setQuantity(1);
+        $positionStruct->setTaxId(1);
+
+        $result = $factory->create($positionStruct, false);
+
+        static::assertNotNull($result->getArticleDetail());
+    }
 }
