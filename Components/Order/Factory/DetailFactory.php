@@ -20,10 +20,10 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 
 class DetailFactory
 {
-    /** @var ModelManager $modelManager */
+    /** @var ModelManager */
     private $modelManager;
 
-    /** @var \sArticles $articleModule */
+    /** @var \sArticles */
     private $articleModule;
 
     public function __construct(ModelManager $modelManager, Modules $modules)
