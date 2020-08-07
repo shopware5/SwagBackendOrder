@@ -254,7 +254,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder->select(['dispatch', 'shipping'])
             ->from(ShippingCost::class, 'shipping')
             ->innerJoin('shipping.dispatch', 'dispatch')
-            ->groupBy('dispatch.id');
+            ->groupBy('dispatch.id')
+            ->orderBy('dispatch.position', 'ASC');
         $shippingCosts = $builder->getQuery()->getArrayResult();
 
         $languageId = $this->getBackendLanguage();
