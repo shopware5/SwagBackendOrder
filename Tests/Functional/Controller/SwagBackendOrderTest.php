@@ -270,7 +270,7 @@ class SwagBackendOrderTest extends TestCase
 
         static::assertTrue($view->getAssign('success'));
         $blockPrices = $result['blockPrices'];
-        $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
+        $expectedBlockPricesJSON = '{"1":{"net":0.83999999999999997,"gross":1},"11":{"net":0.76000000000000001,"gross":0.90000000000000002},"21":{"net":0.67000000000000004,"gross":0.80000000000000004},"31":{"net":0.63,"gross":0.75},"41":{"net":0.58999999999999997,"gross":0.69999999999999996}}';
         static::assertEquals($expectedBlockPricesJSON, $blockPrices);
         static::assertEquals(0.9044, $result['price']);
     }
@@ -308,7 +308,7 @@ class SwagBackendOrderTest extends TestCase
 
         static::assertTrue($view->getAssign('success'));
         $blockPrices = $result['blockPrices'];
-        $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
+        $expectedBlockPricesJSON = '{"1":{"net":0.83999999999999997,"gross":1},"11":{"net":0.76000000000000001,"gross":0.90000000000000002},"21":{"net":0.67000000000000004,"gross":0.80000000000000004},"31":{"net":0.63,"gross":0.75},"41":{"net":0.58999999999999997,"gross":0.69999999999999996}}';
         static::assertEquals($expectedBlockPricesJSON, $blockPrices);
         static::assertEquals(0.76, $result['price']);
     }
@@ -465,6 +465,10 @@ class SwagBackendOrderTest extends TestCase
 
     public function test_createOrder_withEAN()
     {
+        if ($this->isB2bPluginInstalled() === false) {
+            static::markTestSkipped('SwagB2bPlugin is not installed');
+        }
+
         $requestHeaderData = require __DIR__ . '/_fixtures/HeaderData.php';
         $view = $this->getView();
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -729,9 +733,6 @@ class SwagBackendOrderTest extends TestCase
     }
 
     /**
-     * @param $request
-     * @param $view
-     *
      * @return SwagBackendOrderMock
      */
     private function getControllerMock($request, $view)

@@ -1,8 +1,10 @@
 <?php
 
+use PhpCsFixer\Config;
+use PhpCsFixerCustomFixers\Fixers;
+
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__)
-;
+    ->in(__DIR__);
 
 $header = <<<EOF
 (c) shopware AG <info@shopware.com>
@@ -11,7 +13,8 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 EOF;
 
-return PhpCsFixer\Config::create()
+return Config::create()
+    ->registerCustomFixers(new Fixers())
     ->setRiskyAllowed(true)
     ->setUsingCache(false)
     ->setRules([
@@ -38,5 +41,14 @@ return PhpCsFixer\Config::create()
         'doctrine_annotation_spaces' => true,
         'no_superfluous_phpdoc_tags' => true,
         'php_unit_test_case_static_method_calls' => true,
+        'single_line_throw' => false,
+        'native_constant_invocation' => true,
+        'native_function_invocation' => true,
+        PhpCsFixerCustomFixers\Fixer\NoUselessCommentFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\NoSuperfluousConcatenationFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\SingleSpaceAfterStatementFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\SingleSpaceBeforeStatementFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\PhpdocParamTypeFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\OperatorLinebreakFixer::name() => ['only_booleans' => true],
     ])
     ->setFinder($finder);
