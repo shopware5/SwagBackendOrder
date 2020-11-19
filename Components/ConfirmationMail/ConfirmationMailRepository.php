@@ -60,7 +60,7 @@ class ConfirmationMailRepository
             'article.main_detail_id as mainDetailId',
             'article.taxID',
         ];
-        $select = implode(',', $selectedColumns);
+        $select = \implode(',', $selectedColumns);
 
         $sql = "SELECT {$select} FROM s_articles_details details LEFT JOIN s_articles article ON article.id=details.articleID WHERE details.ordernumber=?";
         $articleDetail = $this->connection->executeQuery($sql, [$ordernumber])->fetchAll();
@@ -86,7 +86,7 @@ class ConfirmationMailRepository
         )[0];
 
         if (!empty($billingAddressAttributes)) {
-            $billingAddress = array_merge($billingAddress, $billingAddressAttributes);
+            $billingAddress = \array_merge($billingAddress, $billingAddressAttributes);
         }
 
         return $billingAddress;
@@ -110,7 +110,7 @@ class ConfirmationMailRepository
         )[0];
 
         if (!empty($shippingAddressAttributes)) {
-            $shippingAddress = array_merge($shippingAddress, $shippingAddressAttributes);
+            $shippingAddress = \array_merge($shippingAddress, $shippingAddressAttributes);
         }
 
         return $shippingAddress;

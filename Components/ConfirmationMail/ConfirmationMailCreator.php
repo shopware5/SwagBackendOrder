@@ -121,7 +121,7 @@ class ConfirmationMailCreator
 
             $articleDetail = $this->confirmationMailRepository->getArticleDetailsByOrderNumber($result['articleordernumber']);
 
-            $result = array_merge($result, $articleDetail);
+            $result = \array_merge($result, $articleDetail);
 
             $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber($articleDetailModel->getNumber());
 

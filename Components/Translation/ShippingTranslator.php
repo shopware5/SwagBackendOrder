@@ -31,7 +31,7 @@ class ShippingTranslator
 
         $dispatchId = $shipping['id'];
 
-        if (!is_null($shippingTranslations[$dispatchId]['dispatch_name'])) {
+        if (!\is_null($shippingTranslations[$dispatchId]['dispatch_name'])) {
             $shipping['name'] = $shippingTranslations[$dispatchId]['dispatch_name'];
             $shipping['dispatch_name'] = $shippingTranslations[$dispatchId]['dispatch_name'];
         }

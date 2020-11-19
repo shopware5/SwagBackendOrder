@@ -46,15 +46,15 @@ class PriceContext
      */
     public function __construct($price, $taxRate, $netPrice = false, $taxFree = false, $currencyFactor = 1.0)
     {
-        if (!is_numeric($price)) {
+        if (!\is_numeric($price)) {
             throw new \Exception('Given price is not numeric.');
         }
 
-        if (!is_numeric($taxRate)) {
+        if (!\is_numeric($taxRate)) {
             throw new \Exception('Given tax rate is not numeric.');
         }
 
-        if (!is_numeric($currencyFactor)) {
+        if (!\is_numeric($currencyFactor)) {
             throw new \Exception('Given currency factor rate is not numeric.');
         }
 

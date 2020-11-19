@@ -32,7 +32,7 @@ class TotalPriceCalculator
         $totalPrice->setTotal($total);
 
         if (!$isProportionalTaxCalculation) {
-            $taxes = $this->getTotalTaxPrices(array_merge($positionPrices, [$shippingPrice]));
+            $taxes = $this->getTotalTaxPrices(\array_merge($positionPrices, [$shippingPrice]));
         } else {
             $taxes = $this->getTotalTaxPrices($positionPrices);
         }
@@ -90,13 +90,13 @@ class TotalPriceCalculator
 
         foreach ($prices as $price) {
             $taxRate = (string) $price->getTaxRate();
-            if (!array_key_exists($taxRate, $taxes)) {
+            if (!\array_key_exists($taxRate, $taxes)) {
                 $taxes[$taxRate] = 0;
             }
 
             $taxes[$taxRate] += $price->getTaxSum();
         }
 
-        return array_filter($taxes);
+        return \array_filter($taxes);
     }
 }

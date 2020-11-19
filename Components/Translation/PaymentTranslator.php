@@ -33,7 +33,7 @@ class PaymentTranslator
 
         $paymentId = $paymentMethod['id'];
 
-        if (!is_null($paymentTranslations[$paymentId]['description'])) {
+        if (!\is_null($paymentTranslations[$paymentId]['description'])) {
             $paymentMethod['description'] = $paymentTranslations[$paymentId]['description'];
         }
 

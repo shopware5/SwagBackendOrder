@@ -53,6 +53,6 @@ class ProductContext
      */
     public function isDiscount()
     {
-        return strpos($this->getOrderNumber(), 'DISCOUNT.') === 0;
+        return \strpos($this->getOrderNumber(), 'DISCOUNT.') === 0;
     }
 }

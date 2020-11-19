@@ -22,7 +22,7 @@ default:
         - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
         - wget --header "Private-Token:${BOT_API_TOKEN}" -O  SwagB2bPlugin.zip https://gitlab.shopware.com/api/v4/projects/37/jobs/artifacts/minor/raw/build/SwagB2bPlugin.zip?job=Package%20-%20Build
         - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
-        - unzip -q SwagB2bPlugin.zip -d shopware/custom/plugins/SwagB2bPlugin
+        - unzip -q SwagB2bPlugin.zip -d shopware/custom/plugins
         - cd shopware
         - ./psh.phar init --SW_HOST="localhost"
         - cp -r custom/plugins/SwagBackendOrder/Tests/config_gitlab.php config.php
@@ -30,20 +30,8 @@ default:
         - php bin/console sw:plugin:list
         - php bin/console sw:plugin:install --activate SwagBackendOrder
         - php bin/console sw:plugin:install --activate cron
-        - php bin/console sw:plugin:install --activate SwagB2bPlugin
         - php bin/console sw:cache:clear
         - /entrypoint supervisord &>/dev/null &
-
-#B2bPlugin - Build:
-#    stage: BuildSwagB2bPlugin
-#    image: webdevops/php-apache-dev:7.2
-#    services:
-#        -   name: mysql:5.7
-#            alias: mysql
-#    before_script: []
-#    script:
-#        - wget --header "Private-Token:${BOT_API_TOKEN}" -O  SwagB2bPlugin.zip https://gitlab.shopware.com/api/v4/projects/37/jobs/artifacts/minor/raw/build/SwagB2bPlugin.zip?job=Package%20-%20Build
-#        - ls -la
 
 PHP analyze:
     stage: Code Style Check
@@ -112,13 +100,14 @@ SW 5.6:
         - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
         - wget --header "Private-Token:${BOT_API_TOKEN}" -O  SwagB2bPlugin.zip https://gitlab.shopware.com/api/v4/projects/37/jobs/artifacts/minor/raw/build/SwagB2bPlugin.zip?job=Package%20-%20Build
         - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
-        - unzip -q SwagB2bPlugin.zip -d shopware/custom/plugins/SwagB2bPlugin
+        - unzip -q SwagB2bPlugin.zip -d shopware/custom/plugins
         - cd shopware
         - cp .env.dist .env
         - make init
         - php bin/console sw:plugin:refresh
         - php bin/console sw:plugin:list
         - php bin/console sw:plugin:install --activate SwagBackendOrder
+        - php bin/console sw:plugin:install --activate cron
         - php bin/console sw:cache:clear
         - /entrypoint supervisord &>/dev/null &
         - cd custom/plugins/SwagBackendOrder

@@ -229,6 +229,8 @@ class OrderFactory
     }
 
     /**
+     * @param Customer $customer
+     *
      * @return Shipping
      */
     private function createShippingAddress(OrderStruct $orderStruct, $customer)
@@ -242,6 +244,8 @@ class OrderFactory
     }
 
     /**
+     * @param Customer $customer
+     *
      * @return Billing
      */
     private function createBillingAddress(OrderStruct $orderStruct, $customer)
