@@ -64,7 +64,7 @@ class PriceResult
      */
     public function getRoundedNetPrice()
     {
-        return round($this->getNet(), self::ROUND_PRECISION);
+        return \round($this->getNet(), self::ROUND_PRECISION);
     }
 
     /**
@@ -72,7 +72,7 @@ class PriceResult
      */
     public function getRoundedGrossPrice()
     {
-        return round($this->getGross(), self::ROUND_PRECISION);
+        return \round($this->getGross(), self::ROUND_PRECISION);
     }
 
     /**

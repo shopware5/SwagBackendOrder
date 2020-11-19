@@ -229,7 +229,7 @@ class OrderFactory
     }
 
     /**
-     * @param $customer
+     * @param Customer $customer
      *
      * @return Shipping
      */
@@ -244,7 +244,7 @@ class OrderFactory
     }
 
     /**
-     * @param $customer
+     * @param Customer $customer
      *
      * @return Billing
      */

@@ -44,7 +44,7 @@ class DiscountCalculator
     private function updateOrderDetails(&$orderData, &$discountPosition, $discount)
     {
         $taxRate = $discountPosition['taxRate'];
-        $discountNet = round($discount / (100 + $taxRate) * 100, 3);
+        $discountNet = \round($discount / (100 + $taxRate) * 100, 3);
 
         //Update order amount
         $orderData['sum'] += $discount;

@@ -32,7 +32,7 @@ class RequestHydrator
 
         if (!empty($data['positions'])) {
             /** @var array $positionsArray */
-            $positionsArray = json_decode($data['positions'], true);
+            $positionsArray = \json_decode($data['positions'], true);
             $positions = [];
             foreach ($positionsArray as $position) {
                 $positions[] = $this->positionHydrator->hydrate($position);
@@ -87,6 +87,6 @@ class RequestHydrator
             $taxRates[] = (float) $position->getTaxRate();
         }
 
-        return array_unique($taxRates);
+        return \array_unique($taxRates);
     }
 }

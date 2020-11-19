@@ -16,6 +16,6 @@ trait FixtureImportTestCaseTrait
     {
         /** @var Connection $connection */
         $connection = Shopware()->Container()->get('dbal_connection');
-        $connection->executeQuery(file_get_contents($file));
+        $connection->executeQuery(\file_get_contents($file));
     }
 }

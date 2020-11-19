@@ -7,7 +7,7 @@
         "installer-name": "SwagBackendOrder"
     },
     "require-dev": {
-        "shopware/plugin-dev-tools": "master-dev"
+        "shopware/plugin-dev-tools": "dev-2.x-dev"
     },
     "repositories": [
         {

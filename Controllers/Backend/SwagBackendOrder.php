@@ -1,10 +1,11 @@
-    <?php
+<?php
 /**
  * (c) shopware AG <info@shopware.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 use Shopware\Components\Model\ModelManager;
 use Shopware\Components\Plugin\ConfigReader;
 use Shopware\Models\Article\Detail;
@@ -58,7 +59,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
             $this->view->assign([
                 'data' => $result,
-                'total' => count($result),
+                'total' => \count($result),
                 'success' => true,
             ]);
 
@@ -70,7 +71,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $this->view->assign([
             'data' => $result,
-            'total' => count($result),
+            'total' => \count($result),
             'success' => true,
         ]);
     }
@@ -245,7 +246,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
         unset($paymentMethod);
 
-        $total = count($paymentMethods);
+        $total = \count($paymentMethods);
 
         $this->view->assign(
             [
@@ -279,7 +280,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         }
         unset($shippingCost);
 
-        $total = count($shippingCosts);
+        $total = \count($shippingCosts);
 
         $this->view->assign(
             [
@@ -331,7 +332,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $pluginConfig = $configReader->getByPluginName('SwagBackendOrder');
 
         $desktopTypes = $pluginConfig['desktopTypes'];
-        $desktopTypes = explode(',', $desktopTypes);
+        $desktopTypes = \explode(',', $desktopTypes);
         $validationMail = $pluginConfig['validationMail'];
 
         $config = [];
@@ -347,7 +348,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $config['validationMail'] = $validationMail;
         $config['sendMail'] = (bool) $pluginConfig['sendMail'];
 
-        $total = count($config);
+        $total = \count($config);
 
         $this->view->assign(
             [
@@ -418,7 +419,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $shop['name'] = $shopModel->getLocale()->getLanguage();
         }
         unset($shop);
-        $total = count($result);
+        $total = \count($result);
 
         $this->view->assign(
             [
@@ -661,7 +662,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         foreach ($taxes as $taxRate => $tax) {
             $result[] = [
                 'taxRate' => $taxRate,
-                'tax' => round($tax, 2),
+                'tax' => \round($tax, 2),
             ];
         }
 
@@ -743,7 +744,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
      */
     private function getHighestDispatchTaxRate(array $basketTaxRates)
     {
-        return max($basketTaxRates);
+        return \max($basketTaxRates);
     }
 
     /**

@@ -72,7 +72,7 @@ class OrderService implements OrderServiceInterface
             $this->modelManager->persist($instance);
         }
 
-        $this->modelManager->flush();
+        $this->modelManager->flush($order);
 
         return $order;
     }

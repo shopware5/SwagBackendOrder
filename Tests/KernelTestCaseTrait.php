@@ -38,7 +38,7 @@ trait KernelTestCaseTrait
         if (self::$kernel instanceof Kernel) {
             return;
         }
-        self::$kernel = new Kernel(getenv('SHOPWARE_ENV') ?: 'testing', true);
+        self::$kernel = new Kernel(\getenv('SHOPWARE_ENV') ?: 'testing', true);
         self::$kernel->boot();
 
         self::$kernel->getContainer()->get('dbal_connection')->beginTransaction();
@@ -59,7 +59,7 @@ trait KernelTestCaseTrait
         self::$kernel->getContainer()->get('dbal_connection')->rollBack();
 
         self::$kernel = null;
-        gc_collect_cycles();
+        \gc_collect_cycles();
         Shopware(new EmptyShopwareApplication());
     }
 

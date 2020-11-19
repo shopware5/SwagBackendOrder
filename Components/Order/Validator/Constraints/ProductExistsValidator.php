@@ -44,7 +44,7 @@ class ProductExistsValidator extends ConstraintValidator
             $namespace = $this->snippetManager->getNamespace($constraint->namespace);
             $message = $namespace->get($constraint->snippet);
 
-            $this->context->addViolation(sprintf($message, $value));
+            $this->context->addViolation(\sprintf($message, $value));
         }
     }
 

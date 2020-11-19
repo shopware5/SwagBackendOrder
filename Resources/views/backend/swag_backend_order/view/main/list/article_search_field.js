@@ -97,9 +97,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
                 '<div class="x-boundlist-item">' +
                     // active renderer
                     '<tpl if="articleActive && variantActive">' +
-                        '[{s name=active_single_selection}{/s}]' +
+                        '[{s name="active_single_selection"}{/s}]' +
                     '<tpl else>' +
-                        '[{s name=inactive_single_selection}{/s}]' +
+                        '[{s name="inactive_single_selection"}{/s}]' +
                     '</tpl>' +
 
                     // number + data renderer

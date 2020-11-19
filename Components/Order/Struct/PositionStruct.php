@@ -272,7 +272,7 @@ class PositionStruct
      */
     public function isDiscount()
     {
-        return strpos($this->getNumber(), 'DISCOUNT.') === 0;
+        return \strpos($this->getNumber(), 'DISCOUNT.') === 0;
     }
 
     /**
@@ -280,7 +280,7 @@ class PositionStruct
      */
     public function getDiscountType()
     {
-        return (int) explode('.', $this->getNumber())[1];
+        return (int) \explode('.', $this->getNumber())[1];
     }
 
     public function getEan(): ?string

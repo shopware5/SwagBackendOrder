@@ -37,8 +37,8 @@ class ProductPriceCalculatorTest extends TestCase
         $context = new PriceContext(50.41, 19.00, true, false, 1.3625);
 
         $price = $this->productPriceCalculator->calculate($context);
-        static::assertEquals(68.68, round($price->getNet(), 2));
-        static::assertEquals(81.73, round($price->getGross(), 2));
+        static::assertEquals(68.68, \round($price->getNet(), 2));
+        static::assertEquals(81.73, \round($price->getGross(), 2));
     }
 
     public function testCalculateBasePriceFromGrossPriceWithCurrencyFactor()

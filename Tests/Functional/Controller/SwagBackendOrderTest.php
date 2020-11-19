@@ -10,6 +10,8 @@ namespace SwagBackendOrder\Tests\Functional\Controller;
 
 require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 
+use Enlight_Controller_Request_RequestHttp;
+use Enlight_View_Default;
 use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
@@ -37,7 +39,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertTrue($view->getAssign('success'));
         static::assertEquals(142.43, $result['totalWithoutTax']);
         static::assertEquals(154.94, $result['sum']);
-        static::assertEquals(16.4, round($result['taxSum'], 1));
+        static::assertEquals(16.4, \round($result['taxSum'], 1));
         static::assertEquals(59.99, $result['positions'][0]['price']);
         static::assertEquals(59.99, $result['positions'][0]['total']);
     }
@@ -106,7 +108,7 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(50.41, round($result['sum'], 2));
+        static::assertEquals(50.41, \round($result['sum'], 2));
 
         static::assertEquals(3.90, $result['shippingCosts']);
         static::assertEquals(3.28, $result['shippingCostsNet']);
@@ -116,7 +118,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(63.89, $result['total']);
         static::assertEquals(53.69, $result['totalWithoutTax']);
 
-        static::assertEquals(50.41, round($result['positions'][0]['price'], 2));
+        static::assertEquals(50.41, \round($result['positions'][0]['price'], 2));
     }
 
     public function testBasketCalculationWithChangedTaxfreeFlag()
@@ -133,7 +135,7 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(50.41, round($result['sum'], 2));
+        static::assertEquals(50.41, \round($result['sum'], 2));
 
         static::assertEquals(3.28, $result['shippingCosts']);
         static::assertEquals(3.28, $result['shippingCostsNet']);
@@ -143,7 +145,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(53.69, $result['total']);
         static::assertEquals(53.69, $result['totalWithoutTax']);
 
-        static::assertEquals(50.41, round($result['positions'][0]['price'], 2));
+        static::assertEquals(50.41, \round($result['positions'][0]['price'], 2));
     }
 
     public function testBasketCalculationWithChangedCurrency()
@@ -170,8 +172,8 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(276.39, $result['total']);
         static::assertEquals(234.71, $result['totalWithoutTax']);
 
-        static::assertEquals(81.74, round($result['positions'][0]['price'], 2));
-        static::assertEquals(245.21, round($result['positions'][0]['total'], 2));
+        static::assertEquals(81.74, \round($result['positions'][0]['price'], 2));
+        static::assertEquals(245.21, \round($result['positions'][0]['total'], 2));
     }
 
     public function testGetProduct()
@@ -270,8 +272,35 @@ class SwagBackendOrderTest extends TestCase
 
         static::assertTrue($view->getAssign('success'));
         $blockPrices = $result['blockPrices'];
-        $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
-        static::assertEquals($expectedBlockPricesJSON, $blockPrices);
+
+        $expectedBlockPricesArray = [
+            1 => [
+                'net' => 0.83999999999999997,
+                'gross' => 1,
+            ],
+            11 => [
+                'net' => 0.76000000000000001,
+                'gross' => 0.90000000000000002,
+            ],
+            21 => [
+                'net' => 0.67000000000000004,
+                'gross' => 0.80000000000000004,
+            ],
+            31 => [
+                'net' => 0.63,
+                'gross' => 0.75,
+            ],
+            41 => [
+                'net' => 0.58999999999999997,
+                'gross' => 0.69999999999999996,
+            ],
+        ];
+
+        foreach ($blockPrices as $index => $blockPrice) {
+            static::assertSame(\round($blockPrice['net'], 2), \round($expectedBlockPricesArray[$index]['net'], 2));
+            static::assertSame(\round($blockPrice['gross'], 2), \round($expectedBlockPricesArray[$index]['gross'], 2));
+        }
+
         static::assertEquals(0.9044, $result['price']);
     }
 
@@ -308,8 +337,35 @@ class SwagBackendOrderTest extends TestCase
 
         static::assertTrue($view->getAssign('success'));
         $blockPrices = $result['blockPrices'];
-        $expectedBlockPricesJSON = '{"1":{"net":0.84,"gross":1},"11":{"net":0.76,"gross":0.9},"21":{"net":0.67,"gross":0.8},"31":{"net":0.63,"gross":0.75},"41":{"net":0.59,"gross":0.7}}';
-        static::assertEquals($expectedBlockPricesJSON, $blockPrices);
+
+        $expectedBlockPricesArray = [
+            1 => [
+                'net' => 0.83999999999999997,
+                'gross' => 1,
+            ],
+            11 => [
+                'net' => 0.76000000000000001,
+                'gross' => 0.90000000000000002,
+            ],
+            21 => [
+                'net' => 0.67000000000000004,
+                'gross' => 0.80000000000000004,
+            ],
+            31 => [
+                'net' => 0.63,
+                'gross' => 0.75,
+            ],
+            41 => [
+                'net' => 0.58999999999999997,
+                'gross' => 0.69999999999999996,
+            ],
+        ];
+
+        foreach ($blockPrices as $index => $blockPrice) {
+            static::assertSame(\round($blockPrice['net'], 2), \round($expectedBlockPricesArray[$index]['net'], 2));
+            static::assertSame(\round($blockPrice['gross'], 2), \round($expectedBlockPricesArray[$index]['gross'], 2));
+        }
+
         static::assertEquals(0.76, $result['price']);
     }
 
@@ -419,7 +475,7 @@ class SwagBackendOrderTest extends TestCase
 
     public function test_getArticles_by_ordernumber()
     {
-        $sql = file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
+        $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -442,7 +498,7 @@ class SwagBackendOrderTest extends TestCase
 
     public function test_getArticles_by_supplier()
     {
-        $sql = file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
+        $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -465,6 +521,10 @@ class SwagBackendOrderTest extends TestCase
 
     public function test_createOrder_withEAN()
     {
+        if ($this->isB2bPluginInstalled() === false) {
+            static::markTestSkipped('SwagB2bPlugin is not installed');
+        }
+
         $requestHeaderData = require __DIR__ . '/_fixtures/HeaderData.php';
         $view = $this->getView();
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -719,22 +779,19 @@ class SwagBackendOrderTest extends TestCase
     }
 
     /**
-     * @return \Enlight_View_Default
+     * @return Enlight_View_Default
      */
     private function getView()
     {
-        return new \Enlight_View_Default(
+        return new Enlight_View_Default(
             new \Enlight_Template_Manager()
         );
     }
 
     /**
-     * @param $request
-     * @param $view
-     *
      * @return SwagBackendOrderMock
      */
-    private function getControllerMock($request, $view)
+    private function getControllerMock(Enlight_Controller_Request_RequestHttp $request, Enlight_View_Default $view)
     {
         return new SwagBackendOrderMock(
             $request,
@@ -777,7 +834,7 @@ class SwagBackendOrderMock extends \Shopware_Controllers_Backend_SwagBackendOrde
     public function __construct(
         \Enlight_Controller_Request_RequestTestCase $request,
         Container $container,
-        \Enlight_View_Default $view
+        Enlight_View_Default $view
     ) {
         $this->request = $request;
         $this->response = new \Enlight_Controller_Response_ResponseTestCase();

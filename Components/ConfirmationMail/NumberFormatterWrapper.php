@@ -32,6 +32,6 @@ class NumberFormatterWrapper
             $decimalPoint = ',';
         }
 
-        return number_format($number, 2, $decimalPoint, '');
+        return \number_format($number, 2, $decimalPoint, '');
     }
 }

@@ -79,7 +79,7 @@ class ProductSearch implements ProductSearchInterface
     public function findProducts($searchTerm, $shopId, $limit = 10, $offset = 0)
     {
         // Escape "_" (MySQL wildcards) and surround with "%" (MySQL wildcards)
-        $searchTerm = '%' . str_replace('_', '\_', $searchTerm) . '%';
+        $searchTerm = '%' . \str_replace('_', '\_', $searchTerm) . '%';
 
         $queryBuilder = $this->getSearchBaseQuery();
         $searchResult = $queryBuilder
@@ -98,7 +98,7 @@ class ProductSearch implements ProductSearchInterface
         }
         unset($product);
 
-        $this->totalCount = count($this->getSearchBaseQuery()
+        $this->totalCount = \count($this->getSearchBaseQuery()
             ->setParameter('searchTerm', $searchTerm)
             ->execute()
             ->fetchAll(\PDO::FETCH_ASSOC));
@@ -135,8 +135,8 @@ class ProductSearch implements ProductSearchInterface
             $blockPricesResult = [];
             foreach ($blockPrices as $price) {
                 $blockPricesResult[$price['from']] = [
-                    'net' => round($price['price'], PriceResult::ROUND_PRECISION),
-                    'gross' => round(
+                    'net' => \round($price['price'], PriceResult::ROUND_PRECISION),
+                    'gross' => \round(
                         $this->calculatePrice(
                             $price['price'],
                             $tax,
@@ -153,7 +153,7 @@ class ProductSearch implements ProductSearchInterface
                 }
             }
 
-            $product['blockPrices'] = json_encode($blockPricesResult);
+            $product['blockPrices'] = \json_encode($blockPricesResult);
         }
 
         $product['price'] = $this->calculatePrice(
@@ -179,7 +179,7 @@ class ProductSearch implements ProductSearchInterface
         $getNetPrice = false
     ) {
         if ($getNetPrice) {
-            return round($price, PriceResult::ROUND_PRECISION);
+            return \round($price, PriceResult::ROUND_PRECISION);
         }
 
         return $this->productPriceCalculator->calculatePrice($price, $tax, $shopContext);
