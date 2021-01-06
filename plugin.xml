@@ -12,6 +12,17 @@
     <author>shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
+    <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION">
+        <changes lang="de">
+            PT-12112 - Shopware 5.7 Kompatibilität;
+            PT-12217 - Behebt ein Problem mit den Adressen von Gastbestellern im Bestellprozess;
+        </changes>
+        <changes lang="en">
+            PT-12112 - Shopware 5.7 compatibility;
+            PT-12217 - Fixes a problem with addresses of guest orderers in the order process;
+        </changes>
+    </changelog>
+
     <changelog version="2.6.2">
         <changes lang="de">PT-11552 - Löst ein neues Event im Bestellprozess aus;</changes>
         <changes lang="en">PT-11552 - Emits a new event in the order processing;</changes>
