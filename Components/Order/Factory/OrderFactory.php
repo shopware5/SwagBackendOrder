@@ -235,9 +235,15 @@ class OrderFactory
      */
     private function createShippingAddress(OrderStruct $orderStruct, $customer)
     {
-        $shippingAddress = $this->modelManager->find(Address::class, $orderStruct->getShippingAddressId());
         $shipping = new Shipping();
-        $shipping->fromAddress($shippingAddress);
+
+        if ($customer->getDefaultShippingAddress()->getId() === $orderStruct->getShippingAddressId()) {
+            $shipping->fromAddress($customer->getDefaultShippingAddress());
+        } else {
+            $shippingAddress = $this->modelManager->find(Address::class, $orderStruct->getShippingAddressId());
+            $shipping->fromAddress($shippingAddress);
+        }
+
         $shipping->setCustomer($customer);
 
         return $shipping;
@@ -250,9 +256,15 @@ class OrderFactory
      */
     private function createBillingAddress(OrderStruct $orderStruct, $customer)
     {
-        $billingAddress = $this->modelManager->find(Address::class, $orderStruct->getBillingAddressId());
         $billing = new Billing();
-        $billing->fromAddress($billingAddress);
+
+        if ($customer->getDefaultBillingAddress()->getId() === $orderStruct->getBillingAddressId()) {
+            $billing->fromAddress($customer->getDefaultBillingAddress());
+        } else {
+            $billingAddress = $this->modelManager->find(Address::class, $orderStruct->getBillingAddressId());
+            $billing->fromAddress($billingAddress);
+        }
+
         $billing->setCustomer($customer);
 
         return $billing;
