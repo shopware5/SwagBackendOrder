@@ -67,6 +67,13 @@ class OrderService implements OrderServiceInterface
 
         $order = $this->orderFactory->create($orderStruct);
 
+        //Dirty fix for several Issues: (https://issues.shopware.com/issues/SW-25905, https://issues.shopware.com/issues/SW-26125, https://issues.shopware.com/issues/SW-26134)
+        //When calculation is not correct Shopware does not save the order correctly
+        //TODO: Rework
+        /** @var CalculationServiceInterface $service */
+        $service = Shopware()->Container()->get(\Shopware\Bundle\OrderBundle\Service\CalculationServiceInterface::class);
+        $service->recalculateOrderTotals($order);
+
         $this->modelManager->persist($order);
         foreach ($order->getPaymentInstances() as $instance) {
             $this->modelManager->persist($instance);
