@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Unit\Components\ProductSearch;
@@ -22,7 +23,7 @@ class ProductSearchTest extends TestCase
 {
     use KernelTestCaseTrait;
 
-    public function test_prepareProductPrice_normal_selected_price_by_customerGroup()
+    public function testPrepareProductPriceNormalSelectedPriceByCustomerGroup()
     {
         $reflectionClass = new ReflectionClass(ProductSearch::class);
         $method = $reflectionClass->getMethod('prepareProductPrice');
@@ -46,7 +47,7 @@ class ProductSearchTest extends TestCase
         static::assertSame($expectedProduct['to'], $result['to']);
     }
 
-    public function test_prepareProductPrice_with_price_from_default_customerGroup()
+    public function testPrepareProductPriceWithPriceFromDefaultCustomerGroup()
     {
         $reflectionClass = new ReflectionClass(ProductSearch::class);
         $method = $reflectionClass->getMethod('prepareProductPrice');

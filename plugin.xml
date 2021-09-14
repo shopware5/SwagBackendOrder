@@ -12,6 +12,11 @@
     <author>shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
+    <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION (3.0.0)">
+        <changes lang="de">PT-10770 - Composer 2 Kompatibilität;</changes>
+        <changes lang="en">PT-10770 - Composer 2 compatibility;</changes>
+    </changelog>
+
     <changelog version="2.6.3">
         <changes lang="de">
             PT-12112 - Shopware 5.7 Kompatibilität;

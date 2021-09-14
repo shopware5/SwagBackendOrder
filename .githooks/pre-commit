@@ -26,11 +26,12 @@ class PreCommitChecks
         if ($this->isRebase()) {
             echo 'Not on branch' . PHP_EOL;
 
-            return (int) 0;
+            return 0;
         }
 
-        $this->runPhpLint($this->getCommittedFileList('php'));
-        $this->runPhpCsFixer($this->getCommittedFileList('php'));
+        $this->runPhpLint($this->getCommittedFileList());
+        $this->runPhpCsFixer($this->getCommittedFileList());
+        $this->runPHPStan($this->getCommittedFileList());
         $this->runEsLint($this->getCommittedFileList('js'));
 
         if ($this->error) {
@@ -139,6 +140,32 @@ class PreCommitChecks
         $this->writeln();
     }
 
+    private function runPHPStan(array $fileList)
+    {
+        $this->writeln('# Checking code with PHPStan');
+        $this->writeln('> phpstan analyse');
+        $this->writeln();
+
+        if ($fileList === []) {
+            return;
+        }
+
+        if (!$this->isPHPStanAvailable()) {
+            $this->writeln('- PHPStan is NOT installed. Please install composer with dev dependencies or use higher Shopware version.', 2);
+            $this->writeln();
+
+            return;
+        }
+
+        exec('./../../../vendor/bin/phpstan analyse .', $output, $return);
+        if ($return !== 0) {
+            $this->error = true;
+            $this->writeln('> PHPStan errors found');
+        }
+
+        $this->writeln();
+    }
+
     /**
      * @param array $fileList
      */
@@ -159,28 +186,19 @@ class PreCommitChecks
         $this->writeln();
     }
 
-    /**
-     * @return bool
-     */
-    private function isPHPCSFixerAvailable()
+    public function isPHPCSFixerAvailable(): bool
     {
-        $output = [];
-        $return = 0;
-        exec('command -v ./../../../vendor/bin/php-cs-fixer >/dev/null 2>&1', $output, $return);
-
-        return !(bool) $return;
+        return is_executable('./../../../vendor/bin/php-cs-fixer');
     }
 
-    /**
-     * @return bool
-     */
-    private function isESLintAvailable()
+    private function isPHPStanAvailable(): bool
     {
-        $output = [];
-        $return = 0;
-        exec('command -v ./../../../themes/node_modules/eslint/bin/eslint.js >/dev/null 2>&1', $output, $return);
+        return is_executable('./../../../vendor/bin/phpstan');
+    }
 
-        return !(bool) $return;
+    public function isESLintAvailable(): bool
+    {
+        return is_executable('./../../../themes/node_modules/eslint/bin/eslint.js');
     }
 
     /**

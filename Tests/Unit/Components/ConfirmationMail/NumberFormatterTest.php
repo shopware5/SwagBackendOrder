@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Unit\Components\ConfirmationMail;
@@ -14,19 +15,19 @@ use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
 
 class NumberFormatterTest extends TestCase
 {
-    const LOCALE_GERMANY = 'de_DE';
-    const LOCALE_GREAT_BRITAIN = 'en_EN';
-    const LOCALE_ITALIA = 'it_IT';
-    const EMPTY_LOCALE = '';
+    public const LOCALE_GERMANY = 'de_DE';
+    public const LOCALE_GREAT_BRITAIN = 'en_EN';
+    public const LOCALE_ITALIA = 'it_IT';
+    public const EMPTY_LOCALE = '';
 
-    public function test_it_can_be_created()
+    public function testItCanBeCreated()
     {
         $numberFormatterWrapper = new NumberFormatterWrapper();
 
         static::assertInstanceOf(NumberFormatterWrapper::class, $numberFormatterWrapper);
     }
 
-    public function test_it_should_format_number_for_locale_de()
+    public function testItShouldFormatNumberForLocaleDe()
     {
         $number = 1.988888;
 
@@ -37,7 +38,7 @@ class NumberFormatterTest extends TestCase
         static::assertEquals('1,99', $formattedNumber);
     }
 
-    public function test_it_should_add_2_decimal_digits()
+    public function testItShouldAdd2DecimalDigits()
     {
         $number = 2;
 
@@ -48,7 +49,7 @@ class NumberFormatterTest extends TestCase
         static::assertEquals('2,00', $formattedNumber);
     }
 
-    public function test_it_should_format_english_numbers()
+    public function testItShouldFormatEnglishNumbers()
     {
         $number = 2;
 
@@ -59,7 +60,7 @@ class NumberFormatterTest extends TestCase
         static::assertEquals('2.00', $formattedNumber);
     }
 
-    public function test_it_should_throw_exception_if_locale_is_empty()
+    public function testItShouldThrowExceptionIfLocaleIsEmpty()
     {
         $number = 1;
 
@@ -69,7 +70,7 @@ class NumberFormatterTest extends TestCase
         $numberFormatterWrapper->format($number, self::EMPTY_LOCALE);
     }
 
-    public function test_it_should_use_english_notation_as_default()
+    public function testItShouldUseEnglishNotationAsDefault()
     {
         $number = 2;
 

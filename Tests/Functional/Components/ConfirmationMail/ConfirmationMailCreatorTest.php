@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Components\ConfirmationMail;
@@ -29,9 +30,9 @@ class ConfirmationMailCreatorTest extends TestCase
     use FixtureImportTestCaseTrait;
     use DatabaseTestCaseTrait;
 
-    const ORDER_ID = 10000;
+    public const ORDER_ID = 10000;
 
-    public function test_prepareOrderConfirmationMailData_should_return_localized_billing_sums()
+    public function testPrepareOrderConfirmationMailDataShouldReturnLocalizedBillingSums()
     {
         $this->importFixtures(__DIR__ . '/test-fixtures.sql');
 
@@ -45,7 +46,7 @@ class ConfirmationMailCreatorTest extends TestCase
         static::assertEquals('3,90 EUR', $mailData['sShippingCosts']);
     }
 
-    public function test_prepareOrderDetailsConfirmationMailData_should_return_localized_billing_sums()
+    public function testPrepareOrderDetailsConfirmationMailDataShouldReturnLocalizedBillingSums()
     {
         $this->importFixtures(__DIR__ . '/test-fixtures.sql');
 
@@ -61,7 +62,7 @@ class ConfirmationMailCreatorTest extends TestCase
         static::assertEquals('59,99', $orderDetails[0]['price']);
     }
 
-    public function test_prepareOrderDetailsConfirmationMailData_with_discount()
+    public function testPrepareOrderDetailsConfirmationMailDataWithDiscount()
     {
         $this->importFixtures(__DIR__ . '/test-fixtures.sql');
 
