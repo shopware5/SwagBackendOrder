@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Components;
@@ -13,7 +14,7 @@ use SwagBackendOrder\Components\CustomerRepository;
 
 class CustomerRepositoryTest extends TestCase
 {
-    public function test_getList_with_one_match()
+    public function testGetListWithOneMatch()
     {
         $expectedUser = [
             [
@@ -39,7 +40,7 @@ class CustomerRepositoryTest extends TestCase
         static::assertSame($expectedUser[0]['city'], $result[0]['city']);
     }
 
-    public function test_getList_with_all_matches()
+    public function testGetListWithAllMatches()
     {
         $expectedUsers = [
             [
@@ -97,7 +98,7 @@ class CustomerRepositoryTest extends TestCase
         static::assertSame($expectedUsers[1]['city'], $result2['city']);
     }
 
-    public function test_get_one_customer()
+    public function testGetOneCustomer()
     {
         $expectedUser = [
             'email' => 'test@example.com',
@@ -114,7 +115,7 @@ class CustomerRepositoryTest extends TestCase
         static::assertSame($expectedUser['number'], $result['number']);
     }
 
-    public function test_get_one_customer_by_invalid_id()
+    public function testGetOneCustomerByInvalidId()
     {
         $result = $this->getCustomerRepository()->get(999);
         static::assertNull($result['email']);

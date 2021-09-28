@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Unit\Components\Translation;
@@ -13,14 +14,14 @@ use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
 class ShippingTranslatorTest extends TestCase
 {
-    const LANGUAGE_ID_ENGLISH = 2;
-    const DISPATCH_ID = 1;
-    const DISPATCH_NAME_GERMAN = 'Versandart';
-    const DISPATCH_NAME_ENGLISH = 'Shipping type';
-    const DISPATCH_DESCRIPTION_GERMAN = 'Beschreibung der Versandart';
-    const DISPATCH_DESCRIPTION_ENGLISH = 'Description of the shipping type';
+    public const LANGUAGE_ID_ENGLISH = 2;
+    public const DISPATCH_ID = 1;
+    public const DISPATCH_NAME_GERMAN = 'Versandart';
+    public const DISPATCH_NAME_ENGLISH = 'Shipping type';
+    public const DISPATCH_DESCRIPTION_GERMAN = 'Beschreibung der Versandart';
+    public const DISPATCH_DESCRIPTION_ENGLISH = 'Description of the shipping type';
 
-    public function test_it_can_be_created()
+    public function testItCanBeCreated()
     {
         $shippingTranslator = new ShippingTranslator(
             $this->createMock(\Shopware_Components_Translation::class)
@@ -29,7 +30,7 @@ class ShippingTranslatorTest extends TestCase
         static::assertInstanceOf(ShippingTranslator::class, $shippingTranslator);
     }
 
-    public function test_it_should_translate_dispatch()
+    public function testItShouldTranslateDispatch()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock

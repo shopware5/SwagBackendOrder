@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Unit\Components\ConfirmationMail;
@@ -19,7 +20,7 @@ use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
 class ConfirmationMailCreatorTest extends TestCase
 {
-    public function test_it_can_be_created()
+    public function testItCanBeCreated()
     {
         $confirmationMailCreator = new ConfirmationMailCreator(
             $this->createMock(TaxCalculation::class),

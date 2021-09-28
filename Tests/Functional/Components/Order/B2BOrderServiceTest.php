@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Components\Order;
@@ -33,7 +34,7 @@ class B2BOrderServiceTest extends TestCase
         }
     }
 
-    public function test_createB2BOrder_shouldEarlyReturn(): void
+    public function testCreateB2BOrderShouldEarlyReturn(): void
     {
         $this->b2bUserIsDebitor();
 
@@ -46,7 +47,7 @@ class B2BOrderServiceTest extends TestCase
         static::assertNull($this->getB2bOrder());
     }
 
-    public function test_createB2BOrder_shouldReturnInTryCatch(): void
+    public function testCreateB2BOrderShouldReturnInTryCatch(): void
     {
         $this->b2bUserIsDebitor();
 
@@ -59,7 +60,7 @@ class B2BOrderServiceTest extends TestCase
         static::assertNull($this->getB2bOrder());
     }
 
-    public function test_createB2BOrder_shouldCreateAB2bOrder(): void
+    public function testCreateB2BOrderShouldCreateAB2bOrder(): void
     {
         $this->b2bUserIsDebitor();
 

@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Unit\Components\Translation;
@@ -13,22 +14,22 @@ use SwagBackendOrder\Components\Translation\PaymentTranslator;
 
 class PaymentTranslatorTest extends TestCase
 {
-    const LANGUAGE_ID_ENGLISH = 2;
-    const PAYMENT_ID = 1;
+    public const LANGUAGE_ID_ENGLISH = 2;
+    public const PAYMENT_ID = 1;
 
-    const PAYMENT_DESCRIPTION_GERMAN = 'Vorkasse';
-    const PAYMENT_DESCRIPTION_ENGLISH = 'Payment in advance';
-    const PAYMENT_ADDITIONAL_DESCRIPTION_GERMAN = 'Payment beschreibung';
-    const PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH = 'Payment description';
+    public const PAYMENT_DESCRIPTION_GERMAN = 'Vorkasse';
+    public const PAYMENT_DESCRIPTION_ENGLISH = 'Payment in advance';
+    public const PAYMENT_ADDITIONAL_DESCRIPTION_GERMAN = 'Payment beschreibung';
+    public const PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH = 'Payment description';
 
-    public function test_it_can_be_created()
+    public function testItCanBeCreated()
     {
         $paymentTranslator = new PaymentTranslator($this->createMock(\Shopware_Components_Translation::class));
 
         static::assertInstanceOf(PaymentTranslator::class, $paymentTranslator);
     }
 
-    public function test_it_should_translate_payment_description()
+    public function testItShouldTranslatePaymentDescription()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
@@ -52,7 +53,7 @@ class PaymentTranslatorTest extends TestCase
         static::assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
     }
 
-    public function test_it_should_translate_payment_additionalDescription()
+    public function testItShouldTranslatePaymentAdditionalDescription()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
@@ -75,7 +76,7 @@ class PaymentTranslatorTest extends TestCase
         static::assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionaldescription']);
     }
 
-    public function test_it_should_given_description_if_no_translation_is_available()
+    public function testItShouldGivenDescriptionIfNoTranslationIsAvailable()
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock

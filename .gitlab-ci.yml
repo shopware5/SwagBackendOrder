@@ -9,51 +9,49 @@ variables:
     WEB_DOCUMENT_ROOT: $CI_PROJECT_DIR/
     GIT_STRATEGY: clone
     SHOPWARE_ENV: swagbackendordertest
-    CHECKOUT_SHOPWARE_BRANCH: "5.6"
+    CHECKOUT_SHOPWARE_BRANCH: "5.7"
+    PLUGIN_NAME: SwagBackendOrder
 
 stages:
-    - Code Style Check
+    - Code Analysis
     - PHPUnit
 
 default:
-    image: shopware/5-continuous:7.3
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.4
+    services:
+        -   name: mysql:5.7
+            alias: mysql
     before_script:
         - zip -rq plugin.zip .
         - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
-        - wget --header "Private-Token:${BOT_API_TOKEN}" -O  SwagB2bPlugin.zip https://gitlab.shopware.com/api/v4/projects/37/jobs/artifacts/minor/raw/build/SwagB2bPlugin.zip?job=Package%20-%20Build
-        - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
+        - curl --output ./SwagB2bPlugin.zip  --location --header "PRIVATE-TOKEN:${BOT_API_TOKEN}" "https://gitlab.shopware.com/api/v4/projects/452/jobs/artifacts/minor-3.0/raw/build/SwagB2bPlugin.zip?job=Package%20Build"
+        - unzip -q plugin.zip -d shopware/custom/plugins/${PLUGIN_NAME}
         - unzip -q SwagB2bPlugin.zip -d shopware/custom/plugins
         - cd shopware
-        - ./psh.phar init --SW_HOST="localhost"
-        - cp -r custom/plugins/SwagBackendOrder/Tests/config_gitlab.php config.php
+        - cp .env.dist .env
+        - make init
+        - cp -r custom/plugins/${PLUGIN_NAME}/Tests/config_gitlab.php config.php
         - php bin/console sw:plugin:refresh
         - php bin/console sw:plugin:list
-        - php bin/console sw:plugin:install --activate SwagBackendOrder
         - php bin/console sw:plugin:install --activate cron
+        - php bin/console sw:plugin:install --activate ${PLUGIN_NAME}
+        - php bin/console sw:plugin:install --activate SwagB2bPlugin
         - php bin/console sw:cache:clear
         - /entrypoint supervisord &>/dev/null &
 
 PHP analyze:
-    stage: Code Style Check
-    before_script: []
+    stage: Code Analysis
     script:
-        - zip -rq plugin.zip .
-        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
-        - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
-        - cd shopware
-        - composer install
-        - vendor/bin/php-cs-fixer fix --dry-run -v --config=custom/plugins/SwagBackendOrder/.php_cs.dist --format=junit | tee php-cs-fixer.xml
-    artifacts:
-        reports:
-            junit: shopware/php-cs-fixer.xml
+        - php bin/console -e production
+        - cd custom/plugins/${PLUGIN_NAME}
+        - make fix-cs-dry
+        - make phpstan
 
 Code Coverage:
     stage: PHPUnit
-    needs:
-        - PHP analyze
+    needs: [ PHP analyze ]
     script:
-        - composer req --dev phpunit/phpunit:~8.0 --update-with-all-dependencies
-        - cd custom/plugins/SwagBackendOrder
+        - cd custom/plugins/${PLUGIN_NAME}
         - php -d pcov.enabled=1 -d pcov.directory=$CI_PROJECT_DIR
             ../../../vendor/bin/phpunit
             --configuration phpunit.xml.dist
@@ -62,26 +60,32 @@ Code Coverage:
             --coverage-text=build/artifacts/phpunit-coverage-text
         - cat build/artifacts/phpunit-coverage-text | sed -e '/\\Shopware\\.*/d' -e '/\s*Methods:\s*\d*/d'
     coverage: '/^\s*Lines:\s*(\d+(?:\.\d+)?%)/'
-    services:
-        -   name: mysql:5.7
-            alias: mysql
     artifacts:
         paths:
-            - shopware/custom/plugins/SwagBackendOrder/build/artifacts/*
+            - shopware/custom/plugins/${PLUGIN_NAME}/build/artifacts/*
         reports:
-            junit: shopware/custom/plugins/SwagBackendOrder/build/artifacts/phpunit.junit.xml
+            junit: shopware/custom/plugins/${PLUGIN_NAME}/build/artifacts/phpunit.junit.xml
 
 SW 5.6:
     stage: PHPUnit
-    needs:
-        - PHP analyze
-    image: shopware/5-continuous:7.2
-    only:
-        - master
+    needs: [ PHP analyze ]
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.2
     variables:
         CHECKOUT_SHOPWARE_BRANCH: "5.6"
+    before_script: [ ]
     script:
-        - cd custom/plugins/SwagBackendOrder
+        - zip -rq plugin.zip .
+        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
+        - unzip -q plugin.zip -d shopware/custom/plugins/${PLUGIN_NAME}
+        - cd shopware
+        - ./psh.phar init --SW_HOST="localhost"
+        - cp -r custom/plugins/${PLUGIN_NAME}/Tests/config_gitlab.php config.php
+        - php bin/console sw:plugin:refresh
+        - php bin/console sw:plugin:list
+        - php bin/console sw:plugin:install --activate ${PLUGIN_NAME}
+        - php bin/console sw:cache:clear
+        - /entrypoint supervisord &>/dev/null &
+        - cd custom/plugins/${PLUGIN_NAME}
         - php ../../../vendor/bin/phpunit
             --configuration phpunit.xml.dist
             --colors=never
@@ -92,36 +96,16 @@ SW 5.6:
 .SW 5.7 default:
     stage: PHPUnit
     needs: [PHP analyze]
-    variables:
-        CHECKOUT_SHOPWARE_BRANCH: "5.7"
-    before_script: []
     script:
-        - zip -rq plugin.zip .
-        - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.shopware.com/shopware/5/product/shopware.git shopware --depth=1 -b ${CHECKOUT_SHOPWARE_BRANCH}
-        - wget --header "Private-Token:${BOT_API_TOKEN}" -O  SwagB2bPlugin.zip https://gitlab.shopware.com/api/v4/projects/37/jobs/artifacts/minor/raw/build/SwagB2bPlugin.zip?job=Package%20-%20Build
-        - unzip -q plugin.zip -d shopware/custom/plugins/SwagBackendOrder
-        - unzip -q SwagB2bPlugin.zip -d shopware/custom/plugins
-        - cd shopware
-        - cp .env.dist .env
-        - make init
-        - php bin/console sw:plugin:refresh
-        - php bin/console sw:plugin:list
-        - php bin/console sw:plugin:install --activate SwagBackendOrder
-        - php bin/console sw:plugin:install --activate cron
-        - php bin/console sw:cache:clear
-        - /entrypoint supervisord &>/dev/null &
-        - cd custom/plugins/SwagBackendOrder
+        - cd custom/plugins/${PLUGIN_NAME}
         - php ../../../vendor/bin/phpunit
             --configuration phpunit.xml.dist
             --colors=never
-    services:
-        -   name: mysql:5.7
-            alias: mysql
 
-SW 5.7 PHP 7.3:
+SW 5.7 PHP 7.4:
     extends: .SW 5.7 default
-    image: shopware/5-continuous:7.3
-    before_script: []
+    only:
+        - master
 
 SW 5.7 PHP 8.0:
     extends: .SW 5.7 default

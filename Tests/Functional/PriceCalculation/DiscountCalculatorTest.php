@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
@@ -13,7 +14,7 @@ use SwagBackendOrder\Components\PriceCalculation\Calculator\DiscountCalculator;
 
 class DiscountCalculatorTest extends TestCase
 {
-    public function test_calculateDiscount_with_absolute_discount()
+    public function testCalculateDiscountWithAbsoluteDiscount()
     {
         $orderData = $this->getTestOrderDataWithAbsoluteDiscount();
 
@@ -28,7 +29,7 @@ class DiscountCalculatorTest extends TestCase
         static::assertEquals(17.40343, $result['taxSum']);
     }
 
-    public function test_calculateDiscount_with_percentage_discount()
+    public function testCalculateDiscountWithPercentageDiscount()
     {
         $orderData = $this->getTestOrderDataWithPercentageDiscount();
 
@@ -44,7 +45,7 @@ class DiscountCalculatorTest extends TestCase
         static::assertEquals(8.70162, $result['taxSum']);
     }
 
-    public function test_calculateDiscount_with_tax_free_order()
+    public function testCalculateDiscountWithTaxFreeOrder()
     {
         $orderData = $this->getTestOrderDataTaxFree();
 

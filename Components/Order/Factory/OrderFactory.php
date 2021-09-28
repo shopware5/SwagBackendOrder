@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Components\Order\Factory;
@@ -29,9 +30,9 @@ use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 
 class OrderFactory
 {
-    const ORDER_STATUS_OPEN = 0;
-    const PAYMENT_STATUS_OPEN = 17;
-    const DEFAULT_DEVICE_TYPE = 'Backend';
+    public const ORDER_STATUS_OPEN = 0;
+    public const PAYMENT_STATUS_OPEN = 17;
+    public const DEFAULT_DEVICE_TYPE = 'Backend';
 
     /**
      * @var ModelManager

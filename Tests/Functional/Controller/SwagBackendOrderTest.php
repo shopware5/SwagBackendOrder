@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Controller;
@@ -44,7 +45,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(59.99, $result['positions'][0]['total']);
     }
 
-    public function testCalculateBasket_with_empty_dispatchId()
+    public function testCalculateBasketWithEmptyDispatchId()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithEmptyDispatch());
@@ -62,7 +63,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(3.9, $result['shippingCostsNet']);
     }
 
-    public function testCalculateBasket_with_invalid_dispatchId()
+    public function testCalculateBasketWithInvalidDispatchId()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithInvalidDispatch());
@@ -76,7 +77,7 @@ class SwagBackendOrderTest extends TestCase
         $controller->calculateBasketAction();
     }
 
-    public function testCalculateBasket_with_empty_basketTaxRates()
+    public function testCalculateBasketWithEmptyBasketTaxRates()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithEmptyPositions());
@@ -194,7 +195,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(59.99, $result['price']);
     }
 
-    public function test_getDiscount_absolute()
+    public function testGetDiscountAbsolute()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_ABSOLUTE, 50.0, 'Test_absolute'));
@@ -219,7 +220,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(-50.0, $result['total']);
     }
 
-    public function test_getDiscount_percentage()
+    public function testGetDiscountPercentage()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_PERCENTAGE, 10.0, 'Test_percentage'));
@@ -244,7 +245,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(-10.0, $result['total']);
     }
 
-    public function test_getDiscount_absolute_will_fail_due_to_invalid_amount()
+    public function testGetDiscountAbsoluteWillFailDueToInvalidAmount()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_ABSOLUTE, 999.0, 'Test_absolute'));
@@ -257,7 +258,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertFalse($view->getAssign('success'));
     }
 
-    public function test_getProduct_with_block_prices()
+    public function testGetProductWithBlockPrices()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductDemoDataWithBlockPrices());
@@ -322,7 +323,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(50.41, $result['price']);
     }
 
-    public function test_getProduct_with_block_prices_and_display_net()
+    public function testGetProductWithBlockPricesAndDisplayNet()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductDemoDataWithBlockPricesAndDisplayNetFlag());
@@ -369,7 +370,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(0.76, $result['price']);
     }
 
-    public function test_getCustomer_list()
+    public function testGetCustomerList()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $filter = [
@@ -408,7 +409,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['city'], $result['city']);
     }
 
-    public function test_getCustomer_single()
+    public function testGetCustomerSingle()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParam('searchParam', 1);
@@ -435,7 +436,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['number'], $result['number']);
     }
 
-    public function test_getArticles()
+    public function testGetArticles()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductSearchData());
@@ -453,7 +454,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals('SW10239', $result[0]['number']);
     }
 
-    public function test_getArticles_multiple()
+    public function testGetArticlesMultiple()
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
@@ -473,7 +474,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals('SW10153.1', $result[0]['number']);
     }
 
-    public function test_getArticles_by_ordernumber()
+    public function testGetArticlesByOrdernumber()
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
@@ -496,7 +497,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals('SW_10002_test_123', $result[0]['number']);
     }
 
-    public function test_getArticles_by_supplier()
+    public function testGetArticlesBySupplier()
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         Shopware()->Container()->get('dbal_connection')->exec($sql);
@@ -519,7 +520,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals('SW_10002_test_123', $result[0]['number']);
     }
 
-    public function test_createOrder_withEAN()
+    public function testCreateOrderWithEAN()
     {
         if ($this->isB2bPluginInstalled() === false) {
             static::markTestSkipped('SwagB2bPlugin is not installed');
@@ -546,7 +547,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertNull($b2bResult);
     }
 
-    public function test_createOrder_withB2bOrder()
+    public function testCreateOrderWithB2bOrder()
     {
         $isB2bPluginInstalled = $this->isB2bPluginInstalled();
 

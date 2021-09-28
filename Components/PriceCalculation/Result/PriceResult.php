@@ -4,13 +4,14 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Components\PriceCalculation\Result;
 
 class PriceResult
 {
-    const ROUND_PRECISION = 2;
+    public const ROUND_PRECISION = 2;
 
     /**
      * @var float

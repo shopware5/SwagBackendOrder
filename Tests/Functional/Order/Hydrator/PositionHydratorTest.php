@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Order\Hydrator;
@@ -13,7 +14,7 @@ use SwagBackendOrder\Components\Order\Hydrator\PositionHydrator;
 
 class PositionHydratorTest extends TestCase
 {
-    public function test_hydrate_valueCasting()
+    public function testHydrateValueCasting()
     {
         $data = [
             'mode' => '12',

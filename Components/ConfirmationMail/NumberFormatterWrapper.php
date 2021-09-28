@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Components\ConfirmationMail;
@@ -12,8 +13,8 @@ use RuntimeException;
 
 class NumberFormatterWrapper
 {
-    const LOCALE_GREAT_BRITAIN = 'en_EN';
-    const LOCALE_GERMANY = 'de_DE';
+    public const LOCALE_GREAT_BRITAIN = 'en_EN';
+    public const LOCALE_GERMANY = 'de_DE';
 
     /**
      * @param float  $number

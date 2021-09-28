@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Order;
@@ -16,7 +17,7 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 
 class DetailFactoryTest extends TestCase
 {
-    public function test_create_with_discount()
+    public function testCreateWithDiscount()
     {
         /** @var DetailFactory $factory */
         $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
@@ -34,7 +35,7 @@ class DetailFactoryTest extends TestCase
         static::assertInstanceOf(Detail::class, $result);
     }
 
-    public function test_create_will_throw_exception_if_no_number_was_provided()
+    public function testCreateWillThrowExceptionIfNoNumberWasProvided()
     {
         /** @var DetailFactory $factory */
         $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
@@ -51,7 +52,7 @@ class DetailFactoryTest extends TestCase
         $factory->create($positionStruct, true);
     }
 
-    public function test_create_ensureProductDetailIsSet()
+    public function testCreateEnsureProductDetailIsSet()
     {
         $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
 

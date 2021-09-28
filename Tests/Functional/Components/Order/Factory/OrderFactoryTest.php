@@ -4,6 +4,7 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
  */
 
 namespace SwagBackendOrder\Tests\Functional\Components\Order\Factory;
@@ -15,7 +16,7 @@ use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 
 class OrderFactoryTest extends TestCase
 {
-    public function test_createShippingAddress_shoudAddDefaultShippingToCustomer()
+    public function testCreateShippingAddressShoudAddDefaultShippingToCustomer()
     {
         $orderFactory = $this->getOrderFactory();
 
@@ -33,7 +34,7 @@ class OrderFactoryTest extends TestCase
         static::assertSame('Musterhausen', $result->getCity());
     }
 
-    public function test_createBillingAddress_shoudAddDefaultShippingToCustomer()
+    public function testCreateBillingAddressShoudAddDefaultShippingToCustomer()
     {
         $orderFactory = $this->getOrderFactory();
 
