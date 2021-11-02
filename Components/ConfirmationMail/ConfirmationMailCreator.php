@@ -9,15 +9,14 @@
 
 namespace SwagBackendOrder\Components\ConfirmationMail;
 
-use DateTime;
 use sArticles;
-use Shopware\Models\Article\Detail;
+use Shopware\Models\Article\Detail as ProductVariant;
 use Shopware\Models\Article\Repository;
-use Shopware\Models\Attribute\Payment;
 use Shopware\Models\Country\State;
 use Shopware\Models\Customer\Customer;
-use Shopware\Models\Dispatch\Dispatch;
+use Shopware\Models\Order\Billing;
 use Shopware\Models\Order\Order;
+use Shopware\Models\Order\Shipping;
 use Shopware\Models\Shop\Locale;
 use Shopware\Models\Shop\Shop;
 use Shopware_Components_Config;
@@ -50,7 +49,7 @@ class ConfirmationMailCreator
     /**
      * @var Repository
      */
-    private $articleDetailRepository;
+    private $productVariantRepository;
 
     /**
      * @var sArticles
@@ -72,7 +71,7 @@ class ConfirmationMailCreator
         PaymentTranslator $paymentTranslator,
         ShippingTranslator $shippingTranslator,
         ConfirmationMailRepository $confirmationMailRepository,
-        Repository $articleDetailRepository,
+        Repository $productVariantRepository,
         Shopware_Components_Config $config,
         NumberFormatterWrapper $numberFormatterWrapper,
         sArticles $sArticles
@@ -81,7 +80,7 @@ class ConfirmationMailCreator
         $this->paymentTranslator = $paymentTranslator;
         $this->shippingTranslator = $shippingTranslator;
         $this->confirmationMailRepository = $confirmationMailRepository;
-        $this->articleDetailRepository = $articleDetailRepository;
+        $this->productVariantRepository = $productVariantRepository;
         $this->config = $config;
         $this->numberFormatterWrapper = $numberFormatterWrapper;
         $this->sArticles = $sArticles;
@@ -92,10 +91,11 @@ class ConfirmationMailCreator
      */
     public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel)
     {
-        /** @var Customer $customerModel */
         $customerModel = $orderModel->getCustomer();
+        if (!$customerModel instanceof Customer) {
+            throw new \RuntimeException(sprintf('Order with ID "%s" has no customer', $orderModel->getId()));
+        }
 
-        /** @var DateTime $orderDateTime */
         $orderDateTime = $orderModel->getOrderTime();
 
         $details = $this->confirmationMailRepository->getOrderDetailsByOrderId($orderModel->getId());
@@ -116,15 +116,17 @@ class ConfirmationMailCreator
                 continue;
             }
 
-            /** @var Detail $articleDetailModel */
-            $articleDetailModel = $this->articleDetailRepository->findOneBy(['number' => $result['articleordernumber']]);
+            $productVariant = $this->productVariantRepository->findOneBy(['number' => $result['articleordernumber']]);
+            if (!$productVariant instanceof ProductVariant) {
+                throw new \RuntimeException(sprintf('Could not find %s with number "%s"', ProductVariant::class, $result['articleordernumber']));
+            }
             $result['articlename'] = $result['name'];
 
-            $articleDetail = $this->confirmationMailRepository->getArticleDetailsByOrderNumber($result['articleordernumber']);
+            $productVariantArray = $this->confirmationMailRepository->getArticleDetailsByOrderNumber($result['articleordernumber']);
 
-            $result = \array_merge($result, $articleDetail);
+            $result = \array_merge($result, $productVariantArray);
 
-            $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber($articleDetailModel->getNumber());
+            $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber($productVariant->getNumber());
 
             $result = $this->setPositionPrices($result, $localeModel);
 
@@ -132,7 +134,7 @@ class ConfirmationMailCreator
                 $result['articleID'],
                 true,
                 $this->config->get('sTHUMBBASKET'),
-                $articleDetailModel->getNumber()
+                $productVariant->getNumber()
             );
 
             $result = $this->getOrderDetailAttributes($result);
@@ -156,23 +158,28 @@ class ConfirmationMailCreator
     public function prepareOrderConfirmationMailData(Order $orderModel)
     {
         $result = [];
-        /** @var DateTime $orderTime */
         $orderTime = $orderModel->getOrderTime();
 
-        /** @var Shop $languageShopModel */
         $languageShopModel = $orderModel->getLanguageSubShop();
 
-        /** @var Locale $languageLocaleModel */
         $languageLocaleModel = $languageShopModel->getLocale();
 
-        /** @var Shop $languageShop */
         $shopModel = $orderModel->getShop();
 
         $shippingModel = $orderModel->getShipping();
+        if (!$shippingModel instanceof Shipping) {
+            throw new \RuntimeException(sprintf('Order with ID "%s" has no shipping address', $orderModel->getId()));
+        }
         $billingModel = $orderModel->getBilling();
+        if (!$billingModel instanceof Billing) {
+            throw new \RuntimeException(sprintf('Order with ID "%s" has no billing address', $orderModel->getId()));
+        }
         $shippingStateModel = $shippingModel->getState();
         $billingStateModel = $billingModel->getState();
         $customerModel = $orderModel->getCustomer();
+        if (!$customerModel instanceof Customer) {
+            throw new \RuntimeException(sprintf('Order with ID "%s" has no customer', $orderModel->getId()));
+        }
 
         $orderAttributes = $this->confirmationMailRepository->getOrderAttributesByOrderId($orderModel->getId());
         $customer = $this->confirmationMailRepository->getCustomerByUserId($customerModel->getId());
@@ -329,7 +336,6 @@ class ConfirmationMailCreator
      */
     private function getTranslatedShipping(Order $orderModel, Shop $languageShopModel)
     {
-        /** @var Dispatch $dispatchModel */
         $dispatchModel = $orderModel->getDispatch();
 
         $dispatch = $this->confirmationMailRepository->getDispatchByDispatchId($dispatchModel->getId());
@@ -342,7 +348,6 @@ class ConfirmationMailCreator
      */
     private function getTranslatedPayment(Order $orderModel, Shop $languageShop)
     {
-        /** @var Payment $paymentModel */
         $paymentModel = $orderModel->getPayment();
 
         $payment = $this->confirmationMailRepository->getPaymentmeanByPaymentmeanId($paymentModel->getId());

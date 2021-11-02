@@ -1,17 +1,77 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to method getId\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Payment\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailCreator.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 2
 			path: Components/ConfirmationMail/ConfirmationMailCreator.php
 
 		-
-			message: "#^PHPDoc tag @var for variable \\$paymentModel contains unknown class Shopware\\\\Models\\\\Attribute\\\\Payment\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:getOrderDetailAttributes\\(\\) has parameter \\$mailOrderPositions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:getOrderDetailAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:getTranslatedPayment\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:getTranslatedShipping\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:prepareOrderConfirmationMailData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:prepareOrderDetailsConfirmationMailData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setBillingAddress\\(\\) has parameter \\$orderMail with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setBillingAddress\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setOrderCosts\\(\\) has parameter \\$orderMail with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setOrderCosts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setPositionPrices\\(\\) has parameter \\$mailOrderPositions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setPositionPrices\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setShippingAddress\\(\\) has parameter \\$orderMail with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator\\:\\:setShippingAddress\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/ConfirmationMail/ConfirmationMailCreator.php
 
@@ -31,17 +91,72 @@ parameters:
 			path: Components/ConfirmationMail/ConfirmationMailCreator.php
 
 		-
-			message: "#^Variable \\$languageShop in PHPDoc tag @var does not match assigned variable \\$shopModel\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getArticleDetailsByOrderNumber\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailCreator.php
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<Shopware\\\\Models\\\\Customer\\\\Address\\>\\:\\:getListArray\\(\\)\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getBillingAddressByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getCountryByCountryId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getCustomerByUserId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getDispatchByDispatchId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getOrderAttributesByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getOrderDetailsByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getPaymentmeanByPaymentmeanId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getShippingAddressByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getStateByStateId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ConfirmationMail/ConfirmationMailRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\CustomerRepository\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/CustomerRepository.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\CustomerRepository\\:\\:getDetailBuilder\\(\\) should return Shopware\\\\Components\\\\Model\\\\QueryBuilder but returns Doctrine\\\\ORM\\\\QueryBuilder\\.$#"
+			count: 1
+			path: Components/CustomerRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\CustomerRepository\\:\\:getGroup\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/CustomerRepository.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\CustomerRepository\\:\\:getList\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/CustomerRepository.php
 
@@ -56,117 +171,7 @@ parameters:
 			path: Components/CustomerRepository.php
 
 		-
-			message: "#^Call to method convertOrderToB2bOrderContext\\(\\) on an unknown class Shopware\\\\B2B\\\\Order\\\\Framework\\\\OrderConversionService\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Call to method createCredentialsByUserId\\(\\) on an unknown class Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\CredentialsBuilderInterface\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Call to method fetchIdentityByCredentials\\(\\) on an unknown class Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\AuthenticationIdentityLoaderInterface\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Call to method getOwnershipContext\\(\\) on an unknown class Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\Identity\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Caught class Shopware\\\\B2B\\\\Common\\\\Repository\\\\NotFoundException not found\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Parameter \\$authenticationIdentityLoader of method SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:__construct\\(\\) has invalid typehint type Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\AuthenticationIdentityLoaderInterface\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Parameter \\$conversionService of method SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:__construct\\(\\) has invalid typehint type Shopware\\\\B2B\\\\Order\\\\Framework\\\\OrderConversionService\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Parameter \\$credentialsBuilder of method SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:__construct\\(\\) has invalid typehint type Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\CredentialsBuilderInterface\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Parameter \\$loginContextService of method SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:__construct\\(\\) has invalid typehint type Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\LoginContextService\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:\\$authenticationIdentityLoader has unknown class Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\AuthenticationIdentityLoaderInterface as its type\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:\\$conversionService has unknown class Shopware\\\\B2B\\\\Order\\\\Framework\\\\OrderConversionService as its type\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:\\$credentialsBuilder has unknown class Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\CredentialsBuilderInterface as its type\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:\\$loginContextService has unknown class Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\LoginContextService as its type\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Return typehint of method SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService\\:\\:getIdentity\\(\\) has invalid type Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\Identity\\.$#"
-			count: 1
-			path: Components/Order/B2BOrderService.php
-
-		-
-			message: "#^Call to method setAttribute1\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Call to method setAttribute2\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Call to method setAttribute3\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Call to method setAttribute4\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Call to method setAttribute5\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Call to method setAttribute6\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Cannot call method getArticle\\(\\) on Shopware\\\\Models\\\\Article\\\\Detail\\|null\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
 			message: "#^Cannot call method getName\\(\\) on Shopware\\\\Models\\\\Article\\\\Unit\\|null\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Cannot call method getPackUnit\\(\\) on Shopware\\\\Models\\\\Article\\\\Detail\\|null\\.$#"
 			count: 1
 			path: Components/Order/Factory/DetailFactory.php
 
@@ -176,33 +181,8 @@ parameters:
 			path: Components/Order/Factory/DetailFactory.php
 
 		-
-			message: "#^Cannot call method getUnit\\(\\) on Shopware\\\\Models\\\\Article\\\\Detail\\|null\\.$#"
-			count: 2
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Instantiated class Shopware\\\\Models\\\\Attribute\\\\OrderDetail not found\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^PHPDoc tag @var for variable \\$orderDetailAttribute contains unknown class Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$articleName of method Shopware\\\\Models\\\\Order\\\\Detail\\:\\:setArticleName\\(\\) expects string, array\\|string\\|false given\\.$#"
 			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$tax of method Shopware\\\\Models\\\\Order\\\\Detail\\:\\:setTax\\(\\) expects Shopware\\\\Models\\\\Tax\\\\Tax, Shopware\\\\Models\\\\Tax\\\\Tax\\|null given\\.$#"
-			count: 2
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$taxRate of method Shopware\\\\Models\\\\Order\\\\Detail\\:\\:setTaxRate\\(\\) expects float, float\\|null given\\.$#"
-			count: 2
 			path: Components/Order/Factory/DetailFactory.php
 
 		-
@@ -211,57 +191,12 @@ parameters:
 			path: Components/Order/Factory/DetailFactory.php
 
 		-
-			message: "#^Return typehint of method SwagBackendOrder\\\\Components\\\\Order\\\\Factory\\\\DetailFactory\\:\\:createDetailAttribute\\(\\) has invalid type Shopware\\\\Models\\\\Attribute\\\\OrderDetail\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
-			message: "#^Call to method setAttribute1\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Call to method setAttribute2\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Call to method setAttribute3\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Call to method setAttribute4\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Call to method setAttribute5\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Call to method setAttribute6\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Call to method setOrder\\(\\) on an unknown class Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on Shopware\\\\Models\\\\Customer\\\\Address\\|null\\.$#"
 			count: 2
 			path: Components/Order/Factory/OrderFactory.php
 
 		-
 			message: "#^Cannot call method getShop\\(\\) on Shopware\\\\Models\\\\Customer\\\\Customer\\|null\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
-			message: "#^Instantiated class Shopware\\\\Models\\\\Attribute\\\\Order not found\\.$#"
 			count: 1
 			path: Components/Order/Factory/OrderFactory.php
 
@@ -306,11 +241,6 @@ parameters:
 			path: Components/Order/Factory/OrderFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$customer of method Shopware\\\\Models\\\\Order\\\\Order\\:\\:setCustomer\\(\\) expects Shopware\\\\Models\\\\Customer\\\\Customer, Shopware\\\\Models\\\\Customer\\\\Customer\\|null given\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$dispatch of method Shopware\\\\Models\\\\Order\\\\Order\\:\\:setDispatch\\(\\) expects Shopware\\\\Models\\\\Dispatch\\\\Dispatch, Shopware\\\\Models\\\\Dispatch\\\\Dispatch\\|null given\\.$#"
 			count: 1
 			path: Components/Order/Factory/OrderFactory.php
@@ -341,11 +271,6 @@ parameters:
 			path: Components/Order/Factory/OrderFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$paymentInstances of method Shopware\\\\Models\\\\Order\\\\Order\\:\\:setPaymentInstances\\(\\) expects Doctrine\\\\Common\\\\Collections\\\\ArrayCollection&iterable\\<Shopware\\\\Models\\\\Payment\\\\PaymentInstance\\>, array\\<int, Shopware\\\\Models\\\\Payment\\\\PaymentInstance\\> given\\.$#"
-			count: 1
-			path: Components/Order/Factory/OrderFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$paymentStatus of method Shopware\\\\Models\\\\Order\\\\Order\\:\\:setPaymentStatus\\(\\) expects Shopware\\\\Models\\\\Order\\\\Status, Shopware\\\\Models\\\\Order\\\\Status\\|null given\\.$#"
 			count: 1
 			path: Components/Order/Factory/OrderFactory.php
@@ -361,9 +286,9 @@ parameters:
 			path: Components/Order/Factory/OrderFactory.php
 
 		-
-			message: "#^Return typehint of method SwagBackendOrder\\\\Components\\\\Order\\\\Factory\\\\OrderFactory\\:\\:createOrderAttributes\\(\\) has invalid type Shopware\\\\Models\\\\Attribute\\\\Order\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Hydrator\\\\PositionHydrator\\:\\:hydrate\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Components/Order/Factory/OrderFactory.php
+			path: Components/Order/Hydrator/PositionHydrator.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:addPosition\\(\\) has no return typehint specified\\.$#"
@@ -371,7 +296,17 @@ parameters:
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:getAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Struct/OrderStruct.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setAttributes\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Components/Order/Struct/OrderStruct.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setAttributes\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
@@ -471,6 +406,11 @@ parameters:
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Struct/OrderStruct.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setArticleId\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
@@ -546,11 +486,6 @@ parameters:
 			path: Components/Order/Validator/Constraints/CustomProduct.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 2
-			path: Components/Order/Validator/Constraints/CustomProductsValidation.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProductsValidation\\:\\:validate\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/CustomProductsValidation.php
@@ -569,11 +504,6 @@ parameters:
 			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProduct\\:\\:\\$snippet has no typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/EsdProduct.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Components/Order/Validator/Constraints/EsdProductValidator.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProductValidator\\:\\:validate\\(\\) has no return typehint specified\\.$#"
@@ -601,11 +531,6 @@ parameters:
 			path: Components/Order/Validator/Constraints/LastStock.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 2
-			path: Components/Order/Validator/Constraints/LastStockValidator.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStockValidator\\:\\:validate\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/LastStockValidator.php
@@ -631,11 +556,6 @@ parameters:
 			path: Components/Order/Validator/Constraints/ProductExists.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 1
-			path: Components/Order/Validator/Constraints/ProductExistsValidator.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExistsValidator\\:\\:validate\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/ProductExistsValidator.php
@@ -651,6 +571,11 @@ parameters:
 			path: Components/Order/Validator/OrderValidatorInterface.php
 
 		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:__construct\\(\\) has parameter \\$messages with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Validator/ValidationResult.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:addMessage\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/ValidationResult.php
@@ -661,9 +586,39 @@ parameters:
 			path: Components/Order/Validator/ValidationResult.php
 
 		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:addMessages\\(\\) has parameter \\$messages with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Validator/ValidationResult.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:getMessages\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Validator/ValidationResult.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:setMessages\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/ValidationResult.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:setMessages\\(\\) has parameter \\$messages with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Validator/ValidationResult.php
+
+		-
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:\\$messages type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Order/Validator/ValidationResult.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:calculateDiscount\\(\\) has parameter \\$orderData with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:calculateDiscount\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:updateOrderDetails\\(\\) has no return typehint specified\\.$#"
@@ -671,9 +626,44 @@ parameters:
 			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
 
 		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:updateOrderDetails\\(\\) has parameter \\$discountPosition with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:updateOrderDetails\\(\\) has parameter \\$orderData with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\TotalPriceCalculator\\:\\:getTotalTaxPrices\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Calculator/TotalPriceCalculator.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Context\\\\PriceContextFactory\\:\\:getBaseCurrency\\(\\) should return Shopware\\\\Models\\\\Shop\\\\Currency but returns Shopware\\\\Models\\\\Shop\\\\Currency\\|null\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Context/PriceContextFactory.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Hydrator\\\\PositionHydrator\\:\\:hydrate\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Hydrator/PositionHydrator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Hydrator\\\\RequestHydrator\\:\\:getBasketTaxRates\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Hydrator/RequestHydrator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Hydrator\\\\RequestHydrator\\:\\:hydrateFromRequest\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Hydrator/RequestHydrator.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$positionsArray has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Hydrator/RequestHydrator.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setGross\\(\\) has no return typehint specified\\.$#"
@@ -696,6 +686,11 @@ parameters:
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
 		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:getTaxes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Result/TotalPricesResult.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setShipping\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
@@ -707,6 +702,11 @@ parameters:
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setTaxes\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Result/TotalPricesResult.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setTaxes\\(\\) has parameter \\$taxes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
@@ -742,6 +742,11 @@ parameters:
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setTotal\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Components/PriceCalculation/Struct/PositionStruct.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
@@ -811,44 +816,74 @@ parameters:
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Cannot call method fetchAll\\(\\) on Doctrine\\\\DBAL\\\\Driver\\\\ResultStatement\\|int\\.$#"
-			count: 2
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:findProducts\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
 			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method calculate\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:getBlockPrices\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
+			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method createB2BOrder\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:getProduct\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
+			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method findProducts\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:getProduct\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
+			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:getProductByNumber\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
+			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method getBilling\\(\\) on Shopware\\\\Models\\\\Customer\\\\Customer\\|null\\.$#"
-			count: 2
-			path: Controllers/Backend/SwagBackendOrder.php
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:prepareProductPrice\\(\\) has parameter \\$product with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method getLastResultTotalCount\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch\\:\\:prepareProductPrice\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
+			path: Components/ProductSearch/ProductSearch.php
 
 		-
-			message: "#^Cannot call method getProduct\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearchInterface\\:\\:findProducts\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
+			path: Components/ProductSearch/ProductSearchInterface.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearchInterface\\:\\:getProduct\\(\\) has parameter \\$params with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ProductSearch/ProductSearchInterface.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearchInterface\\:\\:getProduct\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/ProductSearch/ProductSearchInterface.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Translation\\\\PaymentTranslator\\:\\:translate\\(\\) has parameter \\$paymentMethod with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Translation/PaymentTranslator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Translation\\\\PaymentTranslator\\:\\:translate\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Translation/PaymentTranslator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Translation\\\\ShippingTranslator\\:\\:translate\\(\\) has parameter \\$shipping with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Translation/ShippingTranslator.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Translation\\\\ShippingTranslator\\:\\:translate\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Components/Translation/ShippingTranslator.php
 
 		-
 			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:calculateBasketAction\\(\\) has no return typehint specified\\.$#"
@@ -856,7 +891,22 @@ parameters:
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:convertTaxes\\(\\) has parameter \\$taxes with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controllers/Backend/SwagBackendOrder.php
+
+		-
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:convertTaxes\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Controllers/Backend/SwagBackendOrder.php
+
+		-
 			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:createBasketCalculationResult\\(\\) has parameter \\$proportionalTaxCalculation with no typehint specified\\.$#"
+			count: 1
+			path: Controllers/Backend/SwagBackendOrder.php
+
+		-
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:createBasketCalculationResult\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
@@ -887,16 +937,6 @@ parameters:
 
 		-
 			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getDiscountAction\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
-
-		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getDispatchTaxRate\\(\\) should return float but returns float\\|null\\.$#"
-			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
-
-		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getHighestDispatchTaxRate\\(\\) should return float but returns float\\|false\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
@@ -936,37 +976,27 @@ parameters:
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between Shopware\\\\Models\\\\Dispatch\\\\Dispatch and null will always evaluate to false\\.$#"
-			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between int and null will always evaluate to false\\.$#"
-			count: 1
-			path: Controllers/Backend/SwagBackendOrder.php
-
-		-
-			message: "#^Cannot call method addConfigDir\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Subscriber/BackendController.php
-
-		-
-			message: "#^Cannot call method addTemplateDir\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Subscriber/BackendController.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\BackendController\\:\\:getPluginPath\\(\\) should return string but returns array\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: Subscriber/BackendController.php
-
-		-
 			message: "#^Call to method Controller\\(\\) on an unknown class Composer\\\\Plugin\\\\PluginManager\\.$#"
 			count: 1
 			path: Subscriber/Customer.php
 
 		-
+			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:__construct\\(\\) has parameter \\$pluginManager with no value type specified in iterable type Enlight_Plugin_PluginManager\\.$#"
+			count: 1
+			path: Subscriber/Customer.php
+
+		-
 			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onCustomerPostDispatchSecure\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Subscriber/Customer.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onCustomerPostDispatchSecure\\(\\) has parameter \\$args with no value type specified in iterable type Enlight_Controller_ActionEventArgs\\.$#"
+			count: 1
+			path: Subscriber/Customer.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onPostDispatchCustomer\\(\\) has parameter \\$arguments with no value type specified in iterable type Enlight_Event_EventArgs\\.$#"
 			count: 1
 			path: Subscriber/Customer.php
 
@@ -981,44 +1011,19 @@ parameters:
 			path: Subscriber/Customer.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:getPluginPath\\(\\) should return string but returns array\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: Subscriber/Order.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:onOrderPostDispatch\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Subscriber/Order.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:onOrderPostDispatch\\(\\) has parameter \\$args with no value type specified in iterable type Enlight_Controller_ActionEventArgs\\.$#"
+			count: 1
+			path: Subscriber/Order.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$pluginConfig has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: SwagBackendOrder.php
-
-		-
-			message: "#^Cannot call method getByPluginName\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: SwagBackendOrder.php
-
-		-
-			message: "#^Cannot call method Core\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Bootstrap.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Bootstrap.php
-
-		-
-			message: "#^Cannot call method getRepository\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Bootstrap.php
-
-		-
-			message: "#^Cannot call method registerResources\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Bootstrap.php
 
 		-
 			message: "#^Method SwagBackendOrderTestKernel\\:\\:start\\(\\) has no return typehint specified\\.$#"
@@ -1071,16 +1076,6 @@ parameters:
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$connection of class Shopware_Components_Translation constructor expects Doctrine\\\\DBAL\\\\Connection, object\\|null given\\.$#"
-			count: 2
-			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$connection of class SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository constructor expects Doctrine\\\\DBAL\\\\Connection, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$number of method Shopware\\\\Models\\\\Order\\\\Detail\\:\\:setNumber\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
@@ -1106,32 +1101,12 @@ parameters:
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$articleDetailRepository of class SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator constructor expects Shopware\\\\Models\\\\Article\\\\Repository, Doctrine\\\\ORM\\\\EntityRepository\\<Shopware\\\\Models\\\\Article\\\\Detail\\> given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$config of class SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreator constructor expects Shopware_Components_Config, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
-
-		-
-			message: "#^Cannot call method createQueryBuilder\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Cannot call method exec\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Cannot call method fetchColumn\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:getB2BOrderService\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:getB2bOrder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
 
@@ -1139,31 +1114,6 @@ parameters:
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:isB2bPlugin\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$conversionService of class SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService constructor expects Shopware\\\\B2B\\\\Order\\\\Framework\\\\OrderConversionService\\|null, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$loginContextService of class SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService constructor expects Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\LoginContextService\\|null, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$credentialsBuilder of class SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService constructor expects Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\CredentialsBuilderInterface\\|null, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$authenticationIdentityLoader of class SwagBackendOrder\\\\Components\\\\Order\\\\B2BOrderService constructor expects Shopware\\\\B2B\\\\StoreFrontAuthentication\\\\Framework\\\\AuthenticationIdentityLoaderInterface\\|null, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
-
-		-
-			message: "#^Cannot call method getRepository\\(\\) on object\\|null\\.$#"
-			count: 2
-			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:getOrderFactory\\(\\) has no return typehint specified\\.$#"
@@ -1179,26 +1129,6 @@ parameters:
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:testCreateShippingAddressShoudAddDefaultShippingToCustomer\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$modelManager of class SwagBackendOrder\\\\Components\\\\Order\\\\Factory\\\\OrderFactory constructor expects Shopware\\\\Components\\\\Model\\\\ModelManager, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$addressService of class SwagBackendOrder\\\\Components\\\\Order\\\\Factory\\\\OrderFactory constructor expects Shopware\\\\Bundle\\\\AccountBundle\\\\Service\\\\AddressServiceInterface, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$detailFactory of class SwagBackendOrder\\\\Components\\\\Order\\\\Factory\\\\OrderFactory constructor expects SwagBackendOrder\\\\Components\\\\Order\\\\Factory\\\\DetailFactory, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:getCustomerRepository\\(\\) should return SwagBackendOrder\\\\Components\\\\CustomerRepository but returns object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Components/SwagBackendOrder/Tests/Functional/Components/CustomerRepositoryTest.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetListWithAllMatches\\(\\) has no return typehint specified\\.$#"
@@ -1226,18 +1156,73 @@ parameters:
 			path: Tests/Functional/Components/SwagBackendOrder/Tests/Functional/Components/CustomerRepositoryTest.php
 
 		-
-			message: "#^Cannot call method createQueryBuilder\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getB2bOrder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Cannot call method exec\\(\\) on object\\|null\\.$#"
-			count: 3
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Cannot call method fetchColumn\\(\\) on object\\|null\\.$#"
-			count: 3
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoDataWithChangedCurrency\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoDataWithEmptyDispatch\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoDataWithEmptyPositions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoDataWithInvalidDispatch\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoWithChangedDisplayNetFlag\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDemoWithChangedTaxfreeFlag\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getDiscountRequestData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getProductDemoData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getProductDemoDataWithBlockPrices\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getProductDemoDataWithBlockPricesAndDisplayNetFlag\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getProductDemoDataWithDisplayNetFlag\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/Controller/SwagBackendOrderTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getProductSearchData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
@@ -1406,11 +1391,6 @@ parameters:
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Cannot call method create\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Order/Factory/DetailFactoryTest.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateEnsureProductDetailIsSet\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/Factory/DetailFactoryTest.php
@@ -1431,7 +1411,7 @@ parameters:
 			path: Tests/Functional/Order/Hydrator/PositionHydratorTest.php
 
 		-
-			message: "#^Cannot call method find\\(\\) on object\\|null\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:getAttributes\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Tests/Functional/Order/OrderServiceTest.php
 
@@ -1451,11 +1431,6 @@ parameters:
 			path: Tests/Functional/Order/OrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:getProductValidator\\(\\) should return SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Validators\\\\ProductValidator but returns object\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/Order/ProductValidatorTest.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/ProductValidatorTest.php
@@ -1469,6 +1444,21 @@ parameters:
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:testValidate\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/ProductValidatorTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:getTestOrderDataTaxFree\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:getTestOrderDataWithAbsoluteDiscount\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
+
+		-
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:getTestOrderDataWithPercentageDiscount\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithAbsoluteDiscount\\(\\) has no return typehint specified\\.$#"
@@ -1492,11 +1482,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getFactor\\(\\) on Shopware\\\\Models\\\\Shop\\\\Currency\\|null\\.$#"
-			count: 1
-			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:getModelManager\\(\\) should return Shopware\\\\Components\\\\Model\\\\ModelManager but returns object\\|null\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
@@ -1666,16 +1651,6 @@ parameters:
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Cannot call method exec\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
-
-		-
-			message: "#^Cannot call method rollBack\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:bootKernelBefore\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
@@ -1711,22 +1686,7 @@ parameters:
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$connection of class SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch constructor expects Doctrine\\\\DBAL\\\\Connection, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$newInstance of function Shopware expects Shopware\\|null, SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication given\\.$#"
-			count: 1
-			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$contextService of class SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch constructor expects Shopware\\\\Bundle\\\\StoreFrontBundle\\\\Service\\\\ContextServiceInterface, object\\|null given\\.$#"
-			count: 1
-			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$additionalTextService of class SwagBackendOrder\\\\Components\\\\ProductSearch\\\\ProductSearch constructor expects Shopware\\\\Bundle\\\\StoreFrontBundle\\\\Service\\\\AdditionalTextServiceInterface, object\\|null given\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 

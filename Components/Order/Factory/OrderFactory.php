@@ -9,7 +9,7 @@
 
 namespace SwagBackendOrder\Components\Order\Factory;
 
-use Shopware\Bundle\AccountBundle\Service\AddressServiceInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Shopware\Components\Model\ModelManager;
 use Shopware\Models\Attribute\Order as OrderAttributes;
 use Shopware\Models\Customer\Address;
@@ -26,7 +26,6 @@ use Shopware\Models\Payment\PaymentInstance;
 use Shopware\Models\Shop\Currency;
 use Shopware\Models\Shop\Shop;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
-use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 
 class OrderFactory
 {
@@ -40,19 +39,13 @@ class OrderFactory
     private $modelManager;
 
     /**
-     * @var AddressServiceInterface
-     */
-    private $addressService;
-
-    /**
      * @var DetailFactory
      */
     private $detailFactory;
 
-    public function __construct(ModelManager $modelManager, AddressServiceInterface $addressService, DetailFactory $detailFactory)
+    public function __construct(ModelManager $modelManager, DetailFactory $detailFactory)
     {
         $this->modelManager = $modelManager;
-        $this->addressService = $addressService;
         $this->detailFactory = $detailFactory;
     }
 
@@ -112,8 +105,10 @@ class OrderFactory
             $order->setNet(1);
         }
 
-        /** @var Currency $currency */
         $currency = $this->modelManager->getReference(Currency::class, $orderStruct->getCurrencyId());
+        if (!$currency instanceof Currency) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Currency::class, $orderStruct->getCurrencyId()));
+        }
         $order->setCurrencyFactor($currency->getFactor());
         $order->setCurrency($currency->getCurrency());
 
@@ -130,7 +125,7 @@ class OrderFactory
         $attributes->setOrder($order);
         $order->setAttribute($attributes);
 
-        $order->setPaymentInstances([$this->createPaymentInstance($order)]);
+        $order->setPaymentInstances(new ArrayCollection([$this->createPaymentInstance($order)]));
 
         return $order;
     }
@@ -156,7 +151,6 @@ class OrderFactory
     {
         $details = [];
 
-        /** @var PositionStruct $positionStruct */
         foreach ($orderStruct->getPositions() as $positionStruct) {
             $detail = $this->detailFactory->create($positionStruct, $orderStruct->getNetOrder());
             $detail->setNumber($orderStruct->getNumber());
@@ -175,13 +169,15 @@ class OrderFactory
         $paymentId = $orderModel->getPayment()->getId();
         $paymentInstance = new PaymentInstance();
 
-        /** @var PaymentData[] $paymentDataModel */
+        if (!$orderModel->getCustomer() instanceof Customer) {
+            throw new \RuntimeException(sprintf('Order with ID "%s" has no customer', $orderModel->getId()));
+        }
+
         $paymentDataModel = $orderModel->getCustomer()->getPaymentData()->filter(function (PaymentData $paymentData) use ($paymentId) {
             return $paymentData->getPaymentMeanId() == $paymentId;
         });
 
         if ($paymentDataModel[0] instanceof PaymentData) {
-            /** @var PaymentData $paymentDataModel */
             $paymentDataModel = $paymentDataModel[0];
 
             $paymentInstance->setBankName($paymentDataModel->getBankName());
@@ -200,6 +196,9 @@ class OrderFactory
         $paymentInstance->setOrder($orderModel);
         $paymentInstance->setCreatedAt($orderModel->getOrderTime());
 
+        if (!$orderModel->getBilling() instanceof Billing) {
+            throw new \RuntimeException(sprintf('Order with ID "%s" has no billing address', $orderModel->getId()));
+        }
         $paymentInstance->setCustomer($orderModel->getCustomer());
         $paymentInstance->setFirstName($orderModel->getBilling()->getFirstName());
         $paymentInstance->setLastName($orderModel->getBilling()->getLastName());

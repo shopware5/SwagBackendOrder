@@ -38,7 +38,6 @@
 
         <service id="swag_backend_order.order.order_factory" class="SwagBackendOrder\Components\Order\Factory\OrderFactory">
             <argument type="service" id="models"/>
-            <argument type="service" id="shopware_account.address_service"/>
             <argument type="service" id="swag_backend_order.order.detail_factory"/>
         </service>
 

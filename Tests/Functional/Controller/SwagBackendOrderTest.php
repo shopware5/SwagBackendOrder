@@ -477,6 +477,7 @@ class SwagBackendOrderTest extends TestCase
     public function testGetArticlesByOrdernumber()
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
+        static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -500,6 +501,7 @@ class SwagBackendOrderTest extends TestCase
     public function testGetArticlesBySupplier()
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
+        static::assertIsString($sql);
         Shopware()->Container()->get('dbal_connection')->exec($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();

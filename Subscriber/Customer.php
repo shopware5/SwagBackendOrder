@@ -52,7 +52,7 @@ class Customer implements SubscriberInterface
     }
 
     /**
-     * @return bool | null
+     * @return bool|null
      */
     public function onPostDispatchCustomer(\Enlight_Event_EventArgs $arguments)
     {
