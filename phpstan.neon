@@ -3,8 +3,16 @@ includes:
 
 parameters:
     level: 8
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
+    symfony:
+        constant_hassers: false
+        container_xml_path: ../../../var/cache/production____REVISION___/container.xml
+        console_application_loader: ../../../tests/phpstan-console-application.php
+    doctrine:
+        repositoryClass: Shopware\Components\Model\ModelRepository
+        objectManagerLoader: ../../../tests/phpstan-doctrine-model-manager.php
     excludes_analyse:
         - .githooks
         - vendor
+    ignoreErrors:
+        # Needs some improvements in the doctrine PHPStan extensions: see https://github.com/phpstan/phpstan-doctrine/pull/167
+        - '#Cannot call method fetch.*\(\) on Doctrine\\DBAL\\.*Statement\|int#'

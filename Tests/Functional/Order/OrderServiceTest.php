@@ -10,8 +10,8 @@
 namespace SwagBackendOrder\Tests\Functional\Order;
 
 use PHPUnit\Framework\TestCase;
+use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\Order;
-use SwagBackendOrder\Components\Order\OrderService;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
@@ -22,17 +22,17 @@ class OrderServiceTest extends TestCase
 
     public function testCreateOrder()
     {
-        /** @var OrderService $orderService */
         $orderService = Shopware()->Container()->get('swag_backend_order.order.service');
         $orderStruct = $this->getOrderStruct();
 
-        /** @var Order $order */
         $order = $orderService->create($orderStruct);
         $order = Shopware()->Container()->get('models')->find(Order::class, $order->getId());
+        static::assertInstanceOf(Order::class, $order);
 
         static::assertEquals($orderStruct->getTotal(), $order->getInvoiceAmount());
-        static::assertEquals($orderStruct->getPositions()[0]->getPrice(), $order->getDetails()->get(0)->getPrice());
-        static::assertInstanceOf(Order::class, $order);
+        $firstPosition = $order->getDetails()->get(0);
+        static::assertInstanceOf(Detail::class, $firstPosition);
+        static::assertEquals($orderStruct->getPositions()[0]->getPrice(), $firstPosition->getPrice());
     }
 
     /**

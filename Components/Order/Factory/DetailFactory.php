@@ -10,7 +10,7 @@
 namespace SwagBackendOrder\Components\Order\Factory;
 
 use Shopware\Components\Model\ModelManager;
-use Shopware\Models\Article\Detail as ArticleDetail;
+use Shopware\Models\Article\Detail as ProductVariant;
 use Shopware\Models\Attribute\OrderDetail;
 use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\DetailStatus;
@@ -21,10 +21,14 @@ use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 
 class DetailFactory
 {
-    /** @var ModelManager */
+    /**
+     * @var ModelManager
+     */
     private $modelManager;
 
-    /** @var \sArticles */
+    /**
+     * @var \sArticles
+     */
     private $articleModule;
 
     public function __construct(ModelManager $modelManager, Modules $modules)
@@ -52,9 +56,12 @@ class DetailFactory
 
         $detail = new Detail();
 
-        $repository = $this->modelManager->getRepository(ArticleDetail::class);
-        $articleDetail = $repository->findOneBy(['number' => $positionStruct->getNumber()]);
-        $article = $articleDetail->getArticle();
+        $repository = $this->modelManager->getRepository(ProductVariant::class);
+        $productVariant = $repository->findOneBy(['number' => $positionStruct->getNumber()]);
+        if (!$productVariant instanceof ProductVariant) {
+            throw new \RuntimeException(sprintf('Could not find %s with number "%s"', ProductVariant::class, $positionStruct->getNumber()));
+        }
+        $product = $productVariant->getArticle();
 
         $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());
         // Actually sOrder::sSaveOrder() sets this to the illegal value of '0' when the order is taxfree,
@@ -63,16 +70,18 @@ class DetailFactory
             $detail->setTax($tax);
         }
 
-        $detail->setTaxRate($tax->getTax());
+        $detail->setTaxRate((float) $tax->getTax());
 
         $detail->setEsdArticle(0);
 
-        /** @var DetailStatus $detailStatus */
         $detailStatus = $this->modelManager->find(DetailStatus::class, 0);
+        if (!$detailStatus instanceof DetailStatus) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', DetailStatus::class, 0));
+        }
         $detail->setStatus($detailStatus);
 
-        $detail->setArticleId($article->getId());
-        $detail->setArticleDetail($articleDetail);
+        $detail->setArticleId($product->getId());
+        $detail->setArticleDetail($productVariant);
         $name = $this->articleModule->sGetArticleNameByOrderNumber($positionStruct->getNumber());
         $detail->setArticleName($name);
         $detail->setArticleNumber($positionStruct->getNumber());
@@ -80,8 +89,8 @@ class DetailFactory
         $detail->setMode($positionStruct->getMode());
         $detail->setQuantity($positionStruct->getQuantity());
         $detail->setShipped(0);
-        $detail->setUnit($articleDetail->getUnit() ? $articleDetail->getUnit()->getName() : 0);
-        $detail->setPackUnit($articleDetail->getPackUnit());
+        $detail->setUnit($productVariant->getUnit() ? $productVariant->getUnit()->getName() : 0);
+        $detail->setPackUnit($productVariant->getPackUnit());
         $detail->setAttribute($this->createDetailAttribute());
         $detail->setEan($positionStruct->getEan());
 
@@ -112,10 +121,12 @@ class DetailFactory
         if (!$isTaxFree) {
             $detail->setTax($tax);
         }
-        $detail->setTaxRate($tax->getTax());
+        $detail->setTaxRate((float) $tax->getTax());
 
-        /** @var DetailStatus $detailStatus */
         $detailStatus = $this->modelManager->find(DetailStatus::class, 0);
+        if (!$detailStatus instanceof DetailStatus) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', DetailStatus::class, 0));
+        }
         $detail->setStatus($detailStatus);
         $detail->setAttribute($this->createDetailAttribute());
 
@@ -127,7 +138,6 @@ class DetailFactory
      */
     private function createDetailAttribute()
     {
-        /** @var OrderDetail $orderDetailAttribute */
         $orderDetailAttribute = new OrderDetail();
         $orderDetailAttribute->setAttribute1('');
         $orderDetailAttribute->setAttribute2('');

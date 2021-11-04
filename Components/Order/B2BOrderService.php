@@ -15,6 +15,7 @@ use Shopware\B2B\StoreFrontAuthentication\Framework\AuthenticationIdentityLoader
 use Shopware\B2B\StoreFrontAuthentication\Framework\CredentialsBuilderInterface;
 use Shopware\B2B\StoreFrontAuthentication\Framework\Identity;
 use Shopware\B2B\StoreFrontAuthentication\Framework\LoginContextService;
+use Shopware\Models\Customer\Customer;
 use Shopware\Models\Order\Order;
 
 class B2BOrderService implements B2BOrderServiceInterface
@@ -61,8 +62,17 @@ class B2BOrderService implements B2BOrderServiceInterface
             return;
         }
 
+        if (!$order->getCustomer() instanceof Customer) {
+            return;
+        }
+
         try {
-            $ownershipContext = $this->getIdentity($order->getCustomer()->getId())->getOwnershipContext();
+            $ownershipContext = $this->getIdentity(
+                $order->getCustomer()->getId(),
+                $this->credentialsBuilder,
+                $this->authenticationIdentityLoader,
+                $this->loginContextService
+            )->getOwnershipContext();
         } catch (NotFoundException $exception) {
             return;
         }
@@ -73,10 +83,14 @@ class B2BOrderService implements B2BOrderServiceInterface
         );
     }
 
-    private function getIdentity(int $userId): Identity
-    {
-        $credentials = $this->credentialsBuilder->createCredentialsByUserId($userId);
+    private function getIdentity(
+        int $customerId,
+        CredentialsBuilderInterface $credentialsBuilder,
+        AuthenticationIdentityLoaderInterface $authenticationIdentityLoader,
+        LoginContextService $loginContextService
+    ): Identity {
+        $credentials = $credentialsBuilder->createCredentialsByUserId($customerId);
 
-        return $this->authenticationIdentityLoader->fetchIdentityByCredentials($credentials, $this->loginContextService);
+        return $authenticationIdentityLoader->fetchIdentityByCredentials($credentials, $loginContextService);
     }
 }
