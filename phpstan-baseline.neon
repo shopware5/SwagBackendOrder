@@ -981,22 +981,7 @@ parameters:
 			path: Subscriber/Customer.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:__construct\\(\\) has parameter \\$pluginManager with no value type specified in iterable type Enlight_Plugin_PluginManager\\.$#"
-			count: 1
-			path: Subscriber/Customer.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onCustomerPostDispatchSecure\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Subscriber/Customer.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onCustomerPostDispatchSecure\\(\\) has parameter \\$args with no value type specified in iterable type Enlight_Controller_ActionEventArgs\\.$#"
-			count: 1
-			path: Subscriber/Customer.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onPostDispatchCustomer\\(\\) has parameter \\$arguments with no value type specified in iterable type Enlight_Event_EventArgs\\.$#"
 			count: 1
 			path: Subscriber/Customer.php
 
@@ -1012,11 +997,6 @@ parameters:
 
 		-
 			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:onOrderPostDispatch\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Subscriber/Order.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:onOrderPostDispatch\\(\\) has parameter \\$args with no value type specified in iterable type Enlight_Controller_ActionEventArgs\\.$#"
 			count: 1
 			path: Subscriber/Order.php
 
@@ -1754,4 +1734,3 @@ parameters:
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\TaxCalculationTest\\:\\:testGetNetPrice\\(\\) has no return typehint specified\\.$#"
 			count: 1
 			path: Tests/Unit/TaxCalculationTest.php
-

@@ -3,6 +3,7 @@ includes:
 
 parameters:
     level: 8
+    reportUnmatchedIgnoredErrors: true
     symfony:
         constant_hassers: false
         container_xml_path: ../../../var/cache/production____REVISION___/container.xml
