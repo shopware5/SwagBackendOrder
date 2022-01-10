@@ -9,7 +9,6 @@
 
 namespace SwagBackendOrder\Components\Order\Validator;
 
-use Shopware\Components\Model\ModelManager;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
@@ -18,27 +17,13 @@ use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
 class OrderValidator implements OrderValidatorInterface
 {
     /**
-     * @var ModelManager
-     */
-    private $modelManager;
-
-    /**
-     * @var \Shopware_Components_Snippet_Manager
-     */
-    private $snippetManager;
-
-    /**
      * @var ProductValidator
      */
     private $productValidator;
 
     public function __construct(
-        ProductValidator $productValidator,
-        ModelManager $modelManager,
-        \Shopware_Components_Snippet_Manager $snippetManager
+        ProductValidator $productValidator
     ) {
-        $this->modelManager = $modelManager;
-        $this->snippetManager = $snippetManager;
         $this->productValidator = $productValidator;
     }
 

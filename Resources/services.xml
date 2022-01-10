@@ -62,8 +62,6 @@
 
         <service id="swag_backend_order.order.order_validator" class="SwagBackendOrder\Components\Order\Validator\OrderValidator">
             <argument type="service" id="swag_backend_order.order.product_validator"/>
-            <argument type="service" id="models"/>
-            <argument type="service" id="snippets"/>
         </service>
 
         <service id="swag_backend_order.validator.constraint.last_stock" class="SwagBackendOrder\Components\Order\Validator\Constraints\LastStockValidator">
