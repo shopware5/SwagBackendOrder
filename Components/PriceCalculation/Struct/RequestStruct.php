@@ -80,7 +80,7 @@ class RequestStruct
     }
 
     /**
-     * @return array[]
+     * @return list<array{price: float, quantity: int, total: float, taxRate: float, isDiscount: bool, discountType: int}>
      */
     public function getPositionsArray()
     {

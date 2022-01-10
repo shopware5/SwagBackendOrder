@@ -370,7 +370,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertEquals(0.76, $result['price']);
     }
 
-    public function testGetCustomerList()
+    public function testGetCustomerList(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $filter = [
@@ -385,18 +385,16 @@ class SwagBackendOrderTest extends TestCase
         $controller->getCustomerAction();
 
         $expectedUser = [
-            [
-                'email' => 'test@example.com',
-                'firstname' => 'Max',
-                'lastname' => 'Mustermann',
-                'number' => '20001',
-                'company' => 'Muster GmbH',
-                'zipCode' => '55555',
-                'city' => 'Musterhausen',
-            ],
+            'email' => 'test@example.com',
+            'firstname' => 'Max',
+            'lastname' => 'Mustermann',
+            'number' => '20001',
+            'company' => 'Muster GmbH',
+            'zipCode' => '55555',
+            'city' => 'Musterhausen',
         ];
 
-        $result = $view->getAssign('data');
+        $result = $view->getAssign('data')[0];
 
         static::assertTrue($view->getAssign('success'));
         static::assertSame(1, $view->getAssign('total'));

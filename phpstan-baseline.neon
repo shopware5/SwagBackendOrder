@@ -171,11 +171,6 @@ parameters:
 			path: Components/CustomerRepository.php
 
 		-
-			message: "#^Cannot call method getName\\(\\) on Shopware\\\\Models\\\\Article\\\\Unit\\|null\\.$#"
-			count: 1
-			path: Components/Order/Factory/DetailFactory.php
-
-		-
 			message: "#^Cannot call method getTax\\(\\) on Shopware\\\\Models\\\\Tax\\\\Tax\\|null\\.$#"
 			count: 2
 			path: Components/Order/Factory/DetailFactory.php
@@ -291,7 +286,7 @@ parameters:
 			path: Components/Order/Hydrator/PositionHydrator.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:addPosition\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:addPosition\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
@@ -301,7 +296,7 @@ parameters:
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setAttributes\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setAttributes\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
@@ -311,97 +306,97 @@ parameters:
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setBillingAddressId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setBillingAddressId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setCurrency\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setCurrency\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setCurrencyId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setCurrencyId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setCustomerId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setCustomerId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setDeviceType\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setDeviceType\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setDispatchId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setDispatchId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setLanguageShopId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setLanguageShopId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setNetOrder\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setNetOrder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setNumber\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setNumber\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setPaymentId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setPaymentId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setPositions\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setPositions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setSendMail\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setSendMail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingAddressId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingAddressId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingCosts\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingCosts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingCostsNet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingCostsNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingCostsTaxRate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setShippingCostsTaxRate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setTaxFree\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setTaxFree\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setTotal\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setTotal\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setTotalWithoutTax\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\OrderStruct\\:\\:setTotalWithoutTax\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/OrderStruct.php
 
@@ -411,82 +406,82 @@ parameters:
 			path: Components/Order/Struct/OrderStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setArticleId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setArticleId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setDetailId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setDetailId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setMode\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setMode\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setName\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setNumber\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setNumber\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setOrderId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setOrderId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setQuantity\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setQuantity\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setStatusId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setStatusId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setTaxId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setTaxId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setTaxRate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setTaxRate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setTotal\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Struct\\\\PositionStruct\\:\\:setTotal\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Struct/PositionStruct.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProduct\\:\\:\\$namespace has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProduct\\:\\:\\$namespace has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/CustomProduct.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProduct\\:\\:\\$pluginName has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProduct\\:\\:\\$pluginName has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/CustomProduct.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProduct\\:\\:\\$snippet has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProduct\\:\\:\\$snippet has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/CustomProduct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProductsValidation\\:\\:validate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\CustomProductsValidation\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/CustomProductsValidation.php
 
@@ -496,17 +491,17 @@ parameters:
 			path: Components/Order/Validator/Constraints/CustomProductsValidation.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProduct\\:\\:\\$namespace has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProduct\\:\\:\\$namespace has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/EsdProduct.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProduct\\:\\:\\$snippet has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProduct\\:\\:\\$snippet has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/EsdProduct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProductValidator\\:\\:validate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\EsdProductValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/EsdProductValidator.php
 
@@ -516,22 +511,22 @@ parameters:
 			path: Components/Order/Validator/Constraints/EsdProductValidator.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStock\\:\\:\\$namespace has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStock\\:\\:\\$namespace has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/LastStock.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStock\\:\\:\\$quantity has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStock\\:\\:\\$quantity has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/LastStock.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStock\\:\\:\\$snippet has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStock\\:\\:\\$snippet has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/LastStock.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStockValidator\\:\\:validate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\LastStockValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/LastStockValidator.php
 
@@ -546,17 +541,17 @@ parameters:
 			path: Components/Order/Validator/Constraints/LastStockValidator.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExists\\:\\:\\$namespace has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExists\\:\\:\\$namespace has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/ProductExists.php
 
 		-
-			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExists\\:\\:\\$snippet has no typehint specified\\.$#"
+			message: "#^Property SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExists\\:\\:\\$snippet has no type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/ProductExists.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExistsValidator\\:\\:validate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\Constraints\\\\ProductExistsValidator\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/Constraints/ProductExistsValidator.php
 
@@ -566,7 +561,7 @@ parameters:
 			path: Components/Order/Validator/Constraints/ProductExistsValidator.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\OrderValidatorInterface\\:\\:validate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\OrderValidatorInterface\\:\\:validate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/OrderValidatorInterface.php
 
@@ -576,12 +571,12 @@ parameters:
 			path: Components/Order/Validator/ValidationResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:addMessage\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:addMessage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/ValidationResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:addMessages\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:addMessages\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/ValidationResult.php
 
@@ -596,7 +591,7 @@ parameters:
 			path: Components/Order/Validator/ValidationResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:setMessages\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\Order\\\\Validator\\\\ValidationResult\\:\\:setMessages\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/Order/Validator/ValidationResult.php
 
@@ -621,7 +616,7 @@ parameters:
 			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:updateOrderDetails\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Calculator\\\\DiscountCalculator\\:\\:updateOrderDetails\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Calculator/DiscountCalculator.php
 
@@ -666,22 +661,22 @@ parameters:
 			path: Components/PriceCalculation/Hydrator/RequestHydrator.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setGross\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setGross\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/PriceResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setNet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/PriceResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setTaxRate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\PriceResult\\:\\:setTaxRate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/PriceResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:addTax\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:addTax\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
@@ -691,17 +686,17 @@ parameters:
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setShipping\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setShipping\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setSum\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setSum\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setTaxes\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setTaxes\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
@@ -711,102 +706,97 @@ parameters:
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setTotal\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Result\\\\TotalPricesResult\\:\\:setTotal\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Result/TotalPricesResult.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setDiscountType\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setDiscountType\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setIsDiscount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setIsDiscount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setQuantity\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setQuantity\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setTaxRate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setTaxRate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setTotal\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:setTotal\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/PositionStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\PositionStruct\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/PriceCalculation/Struct/PositionStruct.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setBasketTaxRates\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setBasketTaxRates\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setCurrencyId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setCurrencyId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setDispatchId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setDispatchId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setDisplayNet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setDisplayNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPositions\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPositions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousCurrencyId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousCurrencyId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousDisplayNet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousDisplayNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousShippingTaxRate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousShippingTaxRate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousTaxFree\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setPreviousTaxFree\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setShippingCosts\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setShippingCosts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setShippingCostsNet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setShippingCostsNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setTaxFree\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Components\\\\PriceCalculation\\\\Struct\\\\RequestStruct\\:\\:setTaxFree\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Components/PriceCalculation/Struct/RequestStruct.php
 
@@ -886,7 +876,7 @@ parameters:
 			path: Components/Translation/ShippingTranslator.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:calculateBasketAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:calculateBasketAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
@@ -901,7 +891,7 @@ parameters:
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:createBasketCalculationResult\\(\\) has parameter \\$proportionalTaxCalculation with no typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:createBasketCalculationResult\\(\\) has parameter \\$proportionalTaxCalculation with no type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
@@ -911,67 +901,67 @@ parameters:
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:createOrderAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:createOrderAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getArticlesAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getArticlesAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getCurrenciesAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getCurrenciesAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getCustomerAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getCustomerAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getCustomerPaymentDataAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getCustomerPaymentDataAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getDiscountAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getDiscountAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getLanguageSubShopsAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getLanguageSubShopsAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getPaymentAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getPaymentAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getPluginConfigAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getPluginConfigAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getProductAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getProductAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getShippingCostsAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:getShippingCostsAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:sendOrderConfirmationMail\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:sendOrderConfirmationMail\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
 		-
-			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:validateEditAction\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method Shopware_Controllers_Backend_SwagBackendOrder\\:\\:validateEditAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Controllers/Backend/SwagBackendOrder.php
 
@@ -981,7 +971,7 @@ parameters:
 			path: Subscriber/Customer.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onCustomerPostDispatchSecure\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Customer\\:\\:onCustomerPostDispatchSecure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Subscriber/Customer.php
 
@@ -996,7 +986,7 @@ parameters:
 			path: Subscriber/Customer.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:onOrderPostDispatch\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Subscriber\\\\Order\\:\\:onOrderPostDispatch\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Subscriber/Order.php
 
@@ -1006,7 +996,7 @@ parameters:
 			path: SwagBackendOrder.php
 
 		-
-			message: "#^Method SwagBackendOrderTestKernel\\:\\:start\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrderTestKernel\\:\\:start\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Bootstrap.php
 
@@ -1016,42 +1006,42 @@ parameters:
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:importFixtures\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:importFixtures\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:importFixtures\\(\\) has parameter \\$file with no typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:importFixtures\\(\\) has parameter \\$file with no type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:insertDiscount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:insertDiscount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testPrepareOrderConfirmationMailDataShouldReturnLocalizedBillingSums\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testPrepareOrderConfirmationMailDataShouldReturnLocalizedBillingSums\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testPrepareOrderDetailsConfirmationMailDataShouldReturnLocalizedBillingSums\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testPrepareOrderDetailsConfirmationMailDataShouldReturnLocalizedBillingSums\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testPrepareOrderDetailsConfirmationMailDataWithDiscount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testPrepareOrderDetailsConfirmationMailDataWithDiscount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
@@ -1081,7 +1071,7 @@ parameters:
 			path: Tests/Functional/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:getB2BOrderService\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:getB2BOrderService\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
 
@@ -1091,42 +1081,42 @@ parameters:
 			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:isB2bPlugin\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\B2BOrderServiceTest\\:\\:isB2bPlugin\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/B2BOrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:getOrderFactory\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:getOrderFactory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:testCreateBillingAddressShoudAddDefaultShippingToCustomer\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:testCreateBillingAddressShoudAddDefaultShippingToCustomer\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:testCreateShippingAddressShoudAddDefaultShippingToCustomer\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\Order\\\\Factory\\\\OrderFactoryTest\\:\\:testCreateShippingAddressShoudAddDefaultShippingToCustomer\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/Order/Factory/OrderFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetListWithAllMatches\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetListWithAllMatches\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/SwagBackendOrder/Tests/Functional/Components/CustomerRepositoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetListWithOneMatch\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetListWithOneMatch\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/SwagBackendOrder/Tests/Functional/Components/CustomerRepositoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetOneCustomer\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetOneCustomer\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/SwagBackendOrder/Tests/Functional/Components/CustomerRepositoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetOneCustomerByInvalidId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\CustomerRepositoryTest\\:\\:testGetOneCustomerByInvalidId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Components/SwagBackendOrder/Tests/Functional/Components/CustomerRepositoryTest.php
 
@@ -1206,157 +1196,117 @@ parameters:
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testBasketCalculationWithChangedCurrency\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testBasketCalculationWithChangedCurrency\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testBasketCalculationWithChangedDisplayNetFlag\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testBasketCalculationWithChangedDisplayNetFlag\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testBasketCalculationWithChangedTaxfreeFlag\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testBasketCalculationWithChangedTaxfreeFlag\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasket\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasket\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasketWithEmptyBasketTaxRates\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasketWithEmptyBasketTaxRates\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasketWithEmptyDispatchId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasketWithEmptyDispatchId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasketWithInvalidDispatchId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCalculateBasketWithInvalidDispatchId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCreateOrderWithB2bOrder\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCreateOrderWithB2bOrder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCreateOrderWithEAN\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testCreateOrderWithEAN\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticles\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticles\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticlesByOrdernumber\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticlesByOrdernumber\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticlesBySupplier\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticlesBySupplier\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticlesMultiple\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetArticlesMultiple\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetCustomerList\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetCustomerSingle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetCustomerSingle\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetDiscountAbsolute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetDiscountAbsolute\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetDiscountAbsoluteWillFailDueToInvalidAmount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetDiscountAbsoluteWillFailDueToInvalidAmount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetDiscountPercentage\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetDiscountPercentage\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProduct\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProduct\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProductWithBlockPrices\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProductWithBlockPrices\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProductWithBlockPricesAndDisplayNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProductWithBlockPricesAndDisplayNet\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProductWithDisplayNet\\(\\) has no return typehint specified\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'city' does not exist on array\\(0 \\=\\> array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\), 'email' \\=\\> mixed, 'firstname' \\=\\> mixed, 'lastname' \\=\\> mixed, 'number' \\=\\> mixed, 'company' \\=\\> mixed, 'zipCode' \\=\\> mixed\\)\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'company' does not exist on array\\(0 \\=\\> array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\), 'email' \\=\\> mixed, 'firstname' \\=\\> mixed, 'lastname' \\=\\> mixed, 'number' \\=\\> mixed\\)\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'email' does not exist on array\\(array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\)\\)\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'firstname' does not exist on array\\(0 \\=\\> array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\), 'email' \\=\\> mixed\\)\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'lastname' does not exist on array\\(0 \\=\\> array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\), 'email' \\=\\> mixed, 'firstname' \\=\\> mixed\\)\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'number' does not exist on array\\(0 \\=\\> array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\), 'email' \\=\\> mixed, 'firstname' \\=\\> mixed, 'lastname' \\=\\> mixed\\)\\.$#"
-			count: 1
-			path: Tests/Functional/Controller/SwagBackendOrderTest.php
-
-		-
-			message: "#^Offset 'zipCode' does not exist on array\\(0 \\=\\> array\\('email' \\=\\> 'test@example\\.com', 'firstname' \\=\\> 'Max', 'lastname' \\=\\> 'Mustermann', 'number' \\=\\> '20001', 'company' \\=\\> 'Muster GmbH', 'zipCode' \\=\\> '55555', 'city' \\=\\> 'Musterhausen'\\), 'email' \\=\\> mixed, 'firstname' \\=\\> mixed, 'lastname' \\=\\> mixed, 'number' \\=\\> mixed, 'company' \\=\\> mixed\\)\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:testGetProductWithDisplayNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
@@ -1371,22 +1321,22 @@ parameters:
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateEnsureProductDetailIsSet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateEnsureProductDetailIsSet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/Factory/DetailFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateWillThrowExceptionIfNoNumberWasProvided\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateWillThrowExceptionIfNoNumberWasProvided\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/Factory/DetailFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateWithDiscount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\DetailFactoryTest\\:\\:testCreateWithDiscount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/Factory/DetailFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\Hydrator\\\\PositionHydratorTest\\:\\:testHydrateValueCasting\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\Hydrator\\\\PositionHydratorTest\\:\\:testHydrateValueCasting\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/Hydrator/PositionHydratorTest.php
 
@@ -1396,32 +1346,32 @@ parameters:
 			path: Tests/Functional/Order/OrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/OrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/OrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:testCreateOrder\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\OrderServiceTest\\:\\:testCreateOrder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/OrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/ProductValidatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/ProductValidatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:testValidate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Order\\\\ProductValidatorTest\\:\\:testValidate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/Order/ProductValidatorTest.php
 
@@ -1441,22 +1391,22 @@ parameters:
 			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithAbsoluteDiscount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithAbsoluteDiscount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithPercentageDiscount\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithPercentageDiscount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithTaxFreeOrder\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:testCalculateDiscountWithTaxFreeOrder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/DiscountCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\Hydrator\\\\PositionHydratorTest\\:\\:testHydrateValueCasting\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\Hydrator\\\\PositionHydratorTest\\:\\:testHydrateValueCasting\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/Hydrator/PositionHydratorTest.php
 
@@ -1466,27 +1416,27 @@ parameters:
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:testCreate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:testCreate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:testCreateWithInvalidCurrencyId\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:testCreateWithInvalidCurrencyId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:testCreateWithInvalidNumbers\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\PriceContextFactoryTest\\:\\:testCreateWithInvalidNumbers\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
@@ -1501,162 +1451,162 @@ parameters:
 			path: Tests/Functional/PriceCalculation/PriceContextFactoryTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromGrossPriceWithCurrencyFactor\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromGrossPriceWithCurrencyFactor\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromNetPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromNetPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromTaxFreePrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromTaxFreePrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromTaxFreePriceWithCurrencyFactor\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ProductPriceCalculatorTest\\:\\:testCalculateBasePriceFromTaxFreePriceWithCurrencyFactor\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ProductPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ShippingPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ShippingPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ShippingPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculateBasePrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculateBasePrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ShippingPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculateBasePriceNet\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculateBasePriceNet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ShippingPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculateBasePriceTaxfree\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\ShippingPriceCalculatorTest\\:\\:testCalculateBasePriceTaxfree\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/ShippingPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\TotalPriceCalculatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\TotalPriceCalculatorTest\\:\\:rollbackTransactionAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/TotalPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\TotalPriceCalculatorTest\\:\\:startTransactionBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\TotalPriceCalculatorTest\\:\\:startTransactionBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/TotalPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\TotalPriceCalculatorTest\\:\\:testCalculate\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\PriceCalculation\\\\TotalPriceCalculatorTest\\:\\:testCalculate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Functional/PriceCalculation/TotalPriceCalculatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication\\:\\:__call\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication\\:\\:__call\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/KernelTestCaseTrait.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication\\:\\:__call\\(\\) has parameter \\$arguments with no typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication\\:\\:__call\\(\\) has parameter \\$arguments with no type specified\\.$#"
 			count: 1
 			path: Tests/KernelTestCaseTrait.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication\\:\\:__call\\(\\) has parameter \\$name with no typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\EmptyShopwareApplication\\:\\:__call\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: Tests/KernelTestCaseTrait.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testItCanBeCreated\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailCreatorTest\\:\\:testItCanBeCreated\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/ConfirmationMailCreatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItCanBeCreated\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItCanBeCreated\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldAdd2DecimalDigits\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldAdd2DecimalDigits\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldFormatEnglishNumbers\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldFormatEnglishNumbers\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldFormatNumberForLocaleDe\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldFormatNumberForLocaleDe\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldThrowExceptionIfLocaleIsEmpty\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldThrowExceptionIfLocaleIsEmpty\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldUseEnglishNotationAsDefault\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ConfirmationMail\\\\NumberFormatterTest\\:\\:testItShouldUseEnglishNotationAsDefault\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ConfirmationMail/NumberFormatterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:bootKernelBefore\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:bootKernelBefore\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:destroyKernelAfter\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:destroyKernelAfter\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:execSql\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:execSql\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:getService\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:getService\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:testPrepareProductPriceNormalSelectedPriceByCustomerGroup\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:testPrepareProductPriceNormalSelectedPriceByCustomerGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:testPrepareProductPriceWithPriceFromDefaultCustomerGroup\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\ProductSearch\\\\ProductSearchTest\\:\\:testPrepareProductPriceWithPriceFromDefaultCustomerGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
@@ -1686,51 +1636,51 @@ parameters:
 			path: Tests/Unit/Components/ProductSearch/ProductSearchTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItCanBeCreated\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItCanBeCreated\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/Translation/PaymentTranslatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItShouldGivenDescriptionIfNoTranslationIsAvailable\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItShouldGivenDescriptionIfNoTranslationIsAvailable\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/Translation/PaymentTranslatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItShouldTranslatePaymentAdditionalDescription\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItShouldTranslatePaymentAdditionalDescription\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/Translation/PaymentTranslatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItShouldTranslatePaymentDescription\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\PaymentTranslatorTest\\:\\:testItShouldTranslatePaymentDescription\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/Translation/PaymentTranslatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\ShippingTranslatorTest\\:\\:testItCanBeCreated\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\ShippingTranslatorTest\\:\\:testItCanBeCreated\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/Translation/ShippingTranslatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\ShippingTranslatorTest\\:\\:testItShouldTranslateDispatch\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\Components\\\\Translation\\\\ShippingTranslatorTest\\:\\:testItShouldTranslateDispatch\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/Components/Translation/ShippingTranslatorTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\CurrencyConverterTest\\:\\:testGetBaseCurrencyPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\CurrencyConverterTest\\:\\:testGetBaseCurrencyPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/CurrencyConverterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\CurrencyConverterTest\\:\\:testGetCurrencyPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\CurrencyConverterTest\\:\\:testGetCurrencyPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/CurrencyConverterTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\TaxCalculationTest\\:\\:testGetGrossPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\TaxCalculationTest\\:\\:testGetGrossPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/TaxCalculationTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\TaxCalculationTest\\:\\:testGetNetPrice\\(\\) has no return typehint specified\\.$#"
+			message: "#^Method SwagBackendOrder\\\\Tests\\\\Unit\\\\TaxCalculationTest\\:\\:testGetNetPrice\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Tests/Unit/TaxCalculationTest.php

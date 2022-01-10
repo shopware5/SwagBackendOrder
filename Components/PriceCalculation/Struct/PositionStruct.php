@@ -146,7 +146,7 @@ class PositionStruct
     }
 
     /**
-     * @return array
+     * @return array{price: float, quantity: int, total: float, taxRate: float, isDiscount: bool, discountType: int}
      */
     public function toArray()
     {
