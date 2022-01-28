@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -25,18 +26,17 @@ class RequestHydrator
     }
 
     /**
-     * @return RequestStruct
+     * @param array<string, mixed> $data
      */
-    public function hydrateFromRequest(array $data)
+    public function hydrateFromRequest(array $data): RequestStruct
     {
         $requestStruct = new RequestStruct();
 
         if (!empty($data['positions'])) {
-            /** @var array $positionsArray */
             $positionsArray = \json_decode($data['positions'], true);
             $positions = [];
             foreach ($positionsArray as $position) {
-                $positions[] = $this->positionHydrator->hydrate($position);
+                $positions[] = $this->positionHydrator->hydrate($position, (int) $data['billingAddressId']);
             }
             $requestStruct->setPositions($positions);
         }
@@ -66,12 +66,7 @@ class RequestHydrator
         return $requestStruct;
     }
 
-    /**
-     * @param string $value
-     *
-     * @return bool
-     */
-    private function convertBoolean($value)
+    private function convertBoolean(?string $value): bool
     {
         return $value === 'true';
     }
@@ -79,9 +74,9 @@ class RequestHydrator
     /**
      * @param PositionStruct[] $positions
      *
-     * @return array
+     * @return array<float>
      */
-    private function getBasketTaxRates(array $positions)
+    private function getBasketTaxRates(array $positions): array
     {
         $taxRates = [];
         foreach ($positions as $position) {

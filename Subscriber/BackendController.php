@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -10,24 +11,37 @@
 namespace SwagBackendOrder\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Enlight_Template_Manager as TemplateManager;
+use Shopware_Components_Snippet_Manager as SnippetManager;
 
 class BackendController implements SubscriberInterface
 {
     /**
-     * @var ContainerInterface
+     * @var TemplateManager
      */
-    private $container;
+    private $templateManager;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var SnippetManager
+     */
+    private $snippetManager;
+
+    /**
+     * @var string
+     */
+    private $pluginDir;
+
+    public function __construct(TemplateManager $templateManager, SnippetManager $snippetManager, string $pluginDir)
     {
-        $this->container = $container;
+        $this->templateManager = $templateManager;
+        $this->snippetManager = $snippetManager;
+        $this->pluginDir = $pluginDir;
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'Enlight_Controller_Dispatcher_ControllerPath_Backend_SwagBackendOrder' => 'onGetBackendController',
@@ -36,22 +50,12 @@ class BackendController implements SubscriberInterface
 
     /**
      * adds the templates and snippets dir
-     *
-     * @return string
      */
-    public function onGetBackendController()
+    public function onGetBackendController(): string
     {
-        $this->container->get('template')->addTemplateDir($this->getPluginPath() . '/Resources/views/');
-        $this->container->get('snippets')->addConfigDir($this->getPluginPath() . '/Resources/snippets/');
+        $this->templateManager->addTemplateDir($this->pluginDir . '/Resources/views/');
+        $this->snippetManager->addConfigDir($this->pluginDir . '/Resources/snippets/');
 
-        return $this->getPluginPath() . '/Controllers/Backend/SwagBackendOrder.php';
-    }
-
-    /**
-     * @return string
-     */
-    private function getPluginPath()
-    {
-        return $this->container->getParameter('swag_backend_orders.plugin_dir');
+        return $this->pluginDir . '/Controllers/Backend/SwagBackendOrder.php';
     }
 }

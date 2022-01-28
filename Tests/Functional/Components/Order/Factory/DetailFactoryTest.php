@@ -12,6 +12,8 @@ namespace SwagBackendOrder\Tests\Functional\Components\Order\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
+use Shopware\Models\Tax\Tax;
+use SwagBackendOrder\Components\Order\Factory\DetailFactory;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Tests\Functional\ContainerTrait;
@@ -69,5 +71,23 @@ class DetailFactoryTest extends TestCase
         $result = $factory->create($positionStruct, false);
 
         static::assertNotNull($result->getArticleDetail());
+    }
+
+    public function testCreateWithDifferentTaxRule(): void
+    {
+        $modelManager = $this->getContainer()->get('models');
+        $modules = $this->getContainer()->get('modules');
+        $factory = new DetailFactory($modelManager, $modules);
+
+        $positionStruct = new PositionStruct();
+        $positionStruct->setNumber('SW10003');
+        $positionStruct->setTaxId(1);
+        $positionStruct->setTaxRate(20.0);
+        $detail = $factory->create($positionStruct, false);
+
+        static::assertSame(20.0, $detail->getTaxRate());
+        static::assertInstanceOf(Tax::class, $detail->getTax());
+        static::assertSame(1, $detail->getTax()->getId());
+        static::assertNotSame($detail->getTax()->getTax(), $detail->getTaxRate());
     }
 }

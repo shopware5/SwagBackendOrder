@@ -13,8 +13,16 @@
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
     <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION (3.0.0)">
-        <changes lang="de">PT-10770 - Composer 2 Kompatibilität;</changes>
-        <changes lang="en">PT-10770 - Composer 2 compatibility;</changes>
+        <changes lang="de">
+            PT-10770 - Composer 2 Kompatibilität;
+            PT-12386 - Steuerregeln für Länder werden nun korrekt berücksichtigt;
+            SW-26398, PT-12454, PT-26422 - Verbesserung der allgemeinen Code-Qualität;
+        </changes>
+        <changes lang="en">
+            PT-10770 - Composer 2 compatibility;
+            PT-12386 - Tax rules for countries are now considered correctly;
+            SW-26398, PT-12454, PT-26422 - Improve overall code quality;
+        </changes>
     </changelog>
 
     <changelog version="2.6.3">

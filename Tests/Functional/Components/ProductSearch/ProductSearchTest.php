@@ -12,6 +12,7 @@ namespace SwagBackendOrder\Tests\Functional\Components\ProductSearch;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use Shopware\Bundle\StoreFrontBundle\Service\Core\ShopContextFactoryInterface;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator;
@@ -85,7 +86,7 @@ class ProductSearchTest extends TestCase
             new RequestHydrator(
                 new PositionHydrator(
                     $this->getContainer()->get('models'),
-                    $this->getContainer()->get('shopware_storefront.shop_context_factory')
+                    $this->getContainer()->get(ShopContextFactoryInterface::class)
                 )
             ),
             $this->getContainer()->get('shopware_storefront.additional_text_service')

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace SwagBackendOrder\Tests\Functional\Components\PriceCalculation\Hydrator;
 
 use PHPUnit\Framework\TestCase;
+use Shopware\Bundle\StoreFrontBundle\Service\Core\ShopContextFactoryInterface;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator;
 use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
@@ -31,7 +32,7 @@ class PositionHydratorTest extends TestCase
 
         $position = (new PositionHydrator(
             $this->getContainer()->get('models'),
-            $this->getContainer()->get('shopware_storefront.shop_context_factory')
+            $this->getContainer()->get(ShopContextFactoryInterface::class)
         ))->hydrate($data);
 
         // Should be float values
