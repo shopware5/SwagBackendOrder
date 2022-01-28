@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -29,94 +30,67 @@ class TotalPricesResult
     /**
      * Indexed by tax rate, value is the amount of the tax
      *
-     * @var float[]
+     * @var array<string|int, float>
      */
     private $taxes;
 
-    /**
-     * @return PriceResult
-     */
-    public function getTotal()
+    public function getTotal(): PriceResult
     {
         return $this->total;
     }
 
-    /**
-     * @param PriceResult $total
-     */
-    public function setTotal($total)
+    public function setTotal(PriceResult $total): void
     {
         $this->total = $total;
     }
 
-    /**
-     * @return PriceResult
-     */
-    public function getSum()
+    public function getSum(): PriceResult
     {
         return $this->sum;
     }
 
-    /**
-     * @param PriceResult $sum
-     */
-    public function setSum($sum)
+    public function setSum(PriceResult $sum): void
     {
         $this->sum = $sum;
     }
 
-    /**
-     * @return PriceResult
-     */
-    public function getShipping()
+    public function getShipping(): PriceResult
     {
         return $this->shipping;
     }
 
-    /**
-     * @param PriceResult $shipping
-     */
-    public function setShipping($shipping)
+    public function setShipping(PriceResult $shipping): void
     {
         $this->shipping = $shipping;
     }
 
     /**
-     * @return array
+     * @return array<string|int, float>
      */
-    public function getTaxes()
+    public function getTaxes(): array
     {
         return $this->taxes;
     }
 
-    public function setTaxes(array $taxes)
+    /**
+     * @param array<string|int, float> $taxes
+     */
+    public function setTaxes(array $taxes): void
     {
         $this->taxes = $taxes;
     }
 
-    /**
-     * @param float $taxRate
-     * @param float $amount
-     */
-    public function addTax($taxRate, $amount)
+    public function addTax(float $taxRate, float $amount): void
     {
-        $taxRate = (string) $taxRate;
-        if (!isset($this->taxes[$taxRate])) {
-            $this->taxes[$taxRate] = 0.00;
+        $taxRateKey = (string) $taxRate;
+        if (!isset($this->taxes[$taxRateKey])) {
+            $this->taxes[$taxRateKey] = 0.00;
         }
-        $this->taxes[$taxRate] += $amount;
+        $this->taxes[$taxRateKey] += $amount;
     }
 
-    /**
-     * @return float
-     */
-    public function getTaxAmount()
+    public function getTaxAmount(): float
     {
-        $amount = 0.00;
-        foreach ($this->taxes as $tax) {
-            $amount += $tax;
-        }
-
-        return $amount;
+        return array_sum($this->taxes);
     }
 }

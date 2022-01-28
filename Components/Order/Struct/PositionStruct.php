@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -11,6 +12,8 @@ namespace SwagBackendOrder\Components\Order\Struct;
 
 class PositionStruct
 {
+    public const DISCOUNT_ORDER_NUMBER_PREFIX = 'DISCOUNT.';
+
     /**
      * @var int
      */
@@ -19,7 +22,7 @@ class PositionStruct
     /**
      * @var int
      */
-    private $mode;
+    private $mode = 0;
 
     /**
      * @var int
@@ -34,7 +37,7 @@ class PositionStruct
     /**
      * @var string
      */
-    private $number;
+    private $number = '';
 
     /**
      * @var string
@@ -44,7 +47,7 @@ class PositionStruct
     /**
      * @var int
      */
-    private $quantity;
+    private $quantity = 1;
 
     /**
      * @var int
@@ -54,7 +57,7 @@ class PositionStruct
     /**
      * @var float
      */
-    private $taxRate;
+    private $taxRate = 0.0;
 
     /**
      * @var int
@@ -64,222 +67,144 @@ class PositionStruct
     /**
      * @var float
      */
-    private $price;
+    private $price = 0.0;
 
     /**
      * @var float
      */
-    private $total;
+    private $total = 0.0;
 
     /**
      * @var string|null
      */
     private $ean;
 
-    /**
-     * @return int
-     */
-    public function getOrderId()
+    public function getOrderId(): int
     {
         return $this->orderId;
     }
 
-    /**
-     * @param int $orderId
-     */
-    public function setOrderId($orderId)
+    public function setOrderId(int $orderId): void
     {
         $this->orderId = $orderId;
     }
 
-    /**
-     * @return int
-     */
-    public function getMode()
+    public function getMode(): int
     {
         return $this->mode;
     }
 
-    /**
-     * @param int $mode
-     */
-    public function setMode($mode)
+    public function setMode(int $mode): void
     {
         $this->mode = $mode;
     }
 
-    /**
-     * @return int
-     */
-    public function getArticleId()
+    public function getArticleId(): int
     {
         return $this->articleId;
     }
 
-    /**
-     * @param int $articleId
-     */
-    public function setArticleId($articleId)
+    public function setArticleId(int $articleId): void
     {
         $this->articleId = $articleId;
     }
 
-    /**
-     * @return int
-     */
-    public function getDetailId()
+    public function getDetailId(): int
     {
         return $this->detailId;
     }
 
-    /**
-     * @param int $detailId
-     */
-    public function setDetailId($detailId)
+    public function setDetailId(int $detailId): void
     {
         $this->detailId = $detailId;
     }
 
-    /**
-     * @return string
-     */
-    public function getNumber()
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    /**
-     * @param string $number
-     */
-    public function setNumber($number)
+    public function setNumber(string $number): void
     {
         $this->number = $number;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
-    /**
-     * @param int $quantity
-     */
-    public function setQuantity($quantity)
+    public function setQuantity(int $quantity): void
     {
         $this->quantity = $quantity;
     }
 
-    /**
-     * @return int
-     */
-    public function getStatusId()
+    public function getStatusId(): int
     {
         return $this->statusId;
     }
 
-    /**
-     * @param int $statusId
-     */
-    public function setStatusId($statusId)
+    public function setStatusId(int $statusId): void
     {
         $this->statusId = $statusId;
     }
 
-    /**
-     * @return float
-     */
-    public function getTaxRate()
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
 
-    /**
-     * @param float $taxRate
-     */
-    public function setTaxRate($taxRate)
+    public function setTaxRate(float $taxRate): void
     {
         $this->taxRate = $taxRate;
     }
 
-    /**
-     * @return int
-     */
-    public function getTaxId()
+    public function getTaxId(): int
     {
         return $this->taxId;
     }
 
-    /**
-     * @param int $taxId
-     */
-    public function setTaxId($taxId)
+    public function setTaxId(int $taxId): void
     {
         $this->taxId = $taxId;
     }
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @param float $price
-     */
-    public function setPrice($price)
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotal()
+    public function getTotal(): float
     {
         return $this->total;
     }
 
-    /**
-     * @param float $total
-     */
-    public function setTotal($total)
+    public function setTotal(float $total): void
     {
         $this->total = $total;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDiscount()
+    public function isDiscount(): bool
     {
-        return \strpos($this->getNumber(), 'DISCOUNT.') === 0;
+        return \strpos($this->getNumber(), self::DISCOUNT_ORDER_NUMBER_PREFIX) === 0;
     }
 
-    /**
-     * @return int
-     */
-    public function getDiscountType()
+    public function getDiscountType(): int
     {
         return (int) \explode('.', $this->getNumber())[1];
     }

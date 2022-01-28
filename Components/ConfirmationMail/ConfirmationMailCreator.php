@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -26,6 +27,11 @@ use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
 class ConfirmationMailCreator
 {
+    /**
+     * Once the minimum version is Shopware 5.7.4, \Shopware\Bundle\CartBundle\CartPositionsMode::PAYMENT_SURCHARGE_OR_DISCOUNT should be used instead
+     */
+    public const PAYMENT_SURCHARGE_OR_DISCOUNT = 4;
+
     /**
      * @var TaxCalculation
      */
@@ -86,10 +92,7 @@ class ConfirmationMailCreator
         $this->sArticles = $sArticles;
     }
 
-    /**
-     * @return array
-     */
-    public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel)
+    public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel): array
     {
         $customerModel = $orderModel->getCustomer();
         if (!$customerModel instanceof Customer) {
@@ -102,7 +105,7 @@ class ConfirmationMailCreator
 
         foreach ($details as &$result) {
             //Handle position as discount
-            if ($result['modus'] === '4') {
+            if ((int) $result['modus'] === self::PAYMENT_SURCHARGE_OR_DISCOUNT) {
                 $result['ordernumber'] = $result['articleordernumber'];
                 $result['articlename'] = $result['name'];
                 $result['shippinginfo'] = 1;
@@ -126,7 +129,7 @@ class ConfirmationMailCreator
 
             $result = \array_merge($result, $productVariantArray);
 
-            $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber($productVariant->getNumber());
+            $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber((string) $productVariant->getNumber());
 
             $result = $this->setPositionPrices($result, $localeModel);
 
@@ -152,10 +155,7 @@ class ConfirmationMailCreator
         return $details;
     }
 
-    /**
-     * @return array
-     */
-    public function prepareOrderConfirmationMailData(Order $orderModel)
+    public function prepareOrderConfirmationMailData(Order $orderModel): array
     {
         $result = [];
         $orderTime = $orderModel->getOrderTime();
@@ -214,12 +214,9 @@ class ConfirmationMailCreator
         return $result;
     }
 
-    /**
-     * @return array
-     */
-    private function setPositionPrices(array $mailOrderPositions, Locale $localeModel)
+    private function setPositionPrices(array $mailOrderPositions, Locale $localeModel): array
     {
-        $netPrice = $this->taxCalculation->getNetPrice($mailOrderPositions['price'], $mailOrderPositions['tax_rate']);
+        $netPrice = $this->taxCalculation->getNetPrice((float) $mailOrderPositions['price'], (float) $mailOrderPositions['tax_rate']);
         $mailOrderPositions['netprice'] = $this->numberFormatterWrapper->format($netPrice, $localeModel->getLocale());
 
         $amount = $mailOrderPositions['price'] * $mailOrderPositions['quantity'];
@@ -229,22 +226,19 @@ class ConfirmationMailCreator
         $mailOrderPositions['amountnet'] = $this->numberFormatterWrapper->format($amountNet, $localeModel->getLocale());
 
         $mailOrderPositions['priceNumeric'] = $this->numberFormatterWrapper->format(
-            $mailOrderPositions['price'],
+            (float) $mailOrderPositions['price'],
             $localeModel->getLocale()
         );
 
         $mailOrderPositions['price'] = $this->numberFormatterWrapper->format(
-            $mailOrderPositions['price'],
+            (float) $mailOrderPositions['price'],
             $localeModel->getLocale()
         );
 
         return $mailOrderPositions;
     }
 
-    /**
-     * @return array
-     */
-    private function getOrderDetailAttributes(array $mailOrderPositions)
+    private function getOrderDetailAttributes(array $mailOrderPositions): array
     {
         $mailOrderPositions['ob_attr1'] = '';
         $mailOrderPositions['ob_attr2'] = '';
@@ -256,10 +250,7 @@ class ConfirmationMailCreator
         return $mailOrderPositions;
     }
 
-    /**
-     * @return array
-     */
-    private function setOrderCosts(Order $orderModel, array $orderMail, Locale $localeModel)
+    private function setOrderCosts(Order $orderModel, array $orderMail, Locale $localeModel): array
     {
         $orderMail['sCurrency'] = $orderModel->getCurrency();
 
@@ -289,15 +280,10 @@ class ConfirmationMailCreator
         return $orderMail;
     }
 
-    /**
-     * @param State $billingStateModel
-     *
-     * @return array
-     */
-    private function setBillingAddress(Order $orderModel, array $orderMail, $billingStateModel)
+    private function setBillingAddress(Order $orderModel, array $orderMail, ?State $billingStateModel): array
     {
         $billingAddress = $this->confirmationMailRepository->getBillingAddressByOrderId($orderModel->getId());
-        $billingCountry = $this->confirmationMailRepository->getCountryByCountryId($billingAddress['countryID']);
+        $billingCountry = $this->confirmationMailRepository->getCountryByCountryId((int) $billingAddress['countryID']);
 
         $orderMail['billingaddress'] = $billingAddress;
         $orderMail['additional']['country'] = $billingCountry;
@@ -310,15 +296,10 @@ class ConfirmationMailCreator
         return $orderMail;
     }
 
-    /**
-     * @param State $shippingStateModel
-     *
-     * @return array
-     */
-    private function setShippingAddress(Order $orderModel, array $orderMail, $shippingStateModel)
+    private function setShippingAddress(Order $orderModel, array $orderMail, ?State $shippingStateModel): array
     {
         $shippingAddress = $this->confirmationMailRepository->getShippingAddressByOrderId($orderModel->getId());
-        $shippingCountry = $this->confirmationMailRepository->getCountryByCountryId($shippingAddress['countryID']);
+        $shippingCountry = $this->confirmationMailRepository->getCountryByCountryId((int) $shippingAddress['countryID']);
 
         $orderMail['shippingaddress'] = $shippingAddress;
         $orderMail['additional']['countryShipping'] = $shippingCountry;
@@ -331,10 +312,7 @@ class ConfirmationMailCreator
         return $orderMail;
     }
 
-    /**
-     * @return array
-     */
-    private function getTranslatedShipping(Order $orderModel, Shop $languageShopModel)
+    private function getTranslatedShipping(Order $orderModel, Shop $languageShopModel): array
     {
         $dispatchModel = $orderModel->getDispatch();
 
@@ -343,10 +321,7 @@ class ConfirmationMailCreator
         return $this->shippingTranslator->translate($dispatch, $languageShopModel->getId());
     }
 
-    /**
-     * @return array
-     */
-    private function getTranslatedPayment(Order $orderModel, Shop $languageShop)
+    private function getTranslatedPayment(Order $orderModel, Shop $languageShop): array
     {
         $paymentModel = $orderModel->getPayment();
 

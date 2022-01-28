@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -36,9 +37,8 @@ class LastStockValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /** @var LastStock $constraint */
         if ($constraint instanceof LastStock === false) {
             return;
         }
@@ -49,19 +49,13 @@ class LastStockValidator extends ConstraintValidator
 
         $currentInStock = $this->getInStock($value);
         if (!$this->isValid($currentInStock, $constraint->quantity)) {
-            $namespace = $this->snippetManager->getNamespace($constraint->namespace);
-            $message = $namespace->get($constraint->snippet);
+            $message = $this->snippetManager->getNamespace($constraint->namespace)->get($constraint->snippet);
 
             $this->context->addViolation(\sprintf($message, $value));
         }
     }
 
-    /**
-     * @param string $orderNumber
-     *
-     * @return bool
-     */
-    private function getInStock($orderNumber)
+    private function getInStock(string $orderNumber): int
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('detail.instock')
@@ -69,28 +63,15 @@ class LastStockValidator extends ConstraintValidator
             ->where('ordernumber = :number')
             ->setParameter('number', $orderNumber);
 
-        $stmt = $builder->execute();
-
-        return $stmt->fetchColumn();
+        return (int) $builder->execute()->fetchColumn();
     }
 
-    /**
-     * @param int $inStock
-     * @param int $quantity
-     *
-     * @return bool
-     */
-    private function isValid($inStock, $quantity)
+    private function isValid(int $inStock, int $quantity): bool
     {
         return ($inStock - $quantity) >= 0;
     }
 
-    /**
-     * @param string $orderNumber
-     *
-     * @return bool
-     */
-    private function isLastStockProduct($orderNumber)
+    private function isLastStockProduct(string $orderNumber): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('details.laststock')
@@ -99,8 +80,6 @@ class LastStockValidator extends ConstraintValidator
             ->where('ordernumber = :number')
             ->setParameter('number', $orderNumber);
 
-        $stmt = $builder->execute();
-
-        return $stmt->fetchColumn() != 0;
+        return (bool) $builder->execute()->fetchColumn();
     }
 }

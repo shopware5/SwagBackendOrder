@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -27,43 +28,25 @@ class CustomerRepository
         $this->modelManager = $modelManager;
     }
 
-    /**
-     * @param string $filter
-     *
-     * @return array
-     */
-    public function getList($filter)
+    public function getList(?string $filter = null): array
     {
-        $builder = $this->getListQueryBuilder($filter);
-
-        return $builder->getQuery()->getArrayResult();
+        return $this->getListQueryBuilder($filter)->getQuery()->getArrayResult();
     }
 
-    /**
-     * @param int $customerId
-     *
-     * @return array
-     */
-    public function get($customerId)
+    public function get(int $customerId): array
     {
         $builder = $this->getDetailBuilder($customerId);
         $customer = $builder->getQuery()->getArrayResult()[0];
 
-        $addressRepository = $this->modelManager->getRepository(Address::class);
-        $customer['address'] = $addressRepository->getListArray($customerId);
+        $customer['address'] = $this->modelManager->getRepository(Address::class)->getListArray($customerId);
         $customer['billing'] = $customer['address'];
         $customer['shipping'] = $customer['address'];
-        $customer['group'] = $this->getGroup($customer['groupKey']);
+        $customer['group'] = $this->getGroup((string) $customer['groupKey']);
 
         return $customer;
     }
 
-    /**
-     * @param int $customerId
-     *
-     * @return QueryBuilder
-     */
-    protected function getDetailBuilder($customerId)
+    protected function getDetailBuilder(int $customerId): QueryBuilder
     {
         $builder = $this->modelManager->createQueryBuilder();
         $builder->select([
@@ -83,12 +66,7 @@ class CustomerRepository
         return $builder;
     }
 
-    /**
-     * @param string|null $filter
-     *
-     * @return QueryBuilder
-     */
-    protected function getListQueryBuilder($filter = null)
+    protected function getListQueryBuilder(?string $filter = null): QueryBuilder
     {
         $builder = $this->modelManager->createQueryBuilder();
 
@@ -128,15 +106,12 @@ class CustomerRepository
         return $builder;
     }
 
-    /**
-     * @param string $key
-     *
-     * @return array
-     */
-    private function getGroup($key)
+    private function getGroup(string $key): array
     {
-        $repository = $this->modelManager->getRepository(Group::class);
-        $group = $repository->findOneBy(['key' => $key]);
+        $group = $this->modelManager->getRepository(Group::class)->findOneBy(['key' => $key]);
+        if (!$group instanceof Group) {
+            return [];
+        }
 
         return $this->modelManager->toArray($group);
     }

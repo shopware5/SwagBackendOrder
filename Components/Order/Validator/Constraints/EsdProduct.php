@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -13,14 +14,20 @@ use Symfony\Component\Validator\Constraint;
 
 class EsdProduct extends Constraint
 {
+    /**
+     * @var string
+     */
     public $snippet = 'esd_product';
 
+    /**
+     * @var string
+     */
     public $namespace = 'backend/swag_backend_order/validations';
 
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function validatedBy(): string
     {
         return 'swag_backend_order.validator.constraint.esd_product';
     }

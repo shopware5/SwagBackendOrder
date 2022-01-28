@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -14,7 +15,6 @@ use SwagBackendOrder\Components\Order\Validator\Constraints\EsdProduct;
 use SwagBackendOrder\Components\Order\Validator\Constraints\LastStock;
 use SwagBackendOrder\Components\Order\Validator\Constraints\ProductExists;
 use SwagBackendOrder\Components\Order\Validator\ValidationResult;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductValidator
@@ -29,10 +29,7 @@ class ProductValidator
         $this->validator = $validator;
     }
 
-    /**
-     * @return ValidationResult
-     */
-    public function validate(ProductContext $context)
+    public function validate(ProductContext $context): ValidationResult
     {
         $result = new ValidationResult();
 
@@ -49,9 +46,8 @@ class ProductValidator
             new LastStock(['quantity' => $context->getQuantity()]),
         ]);
 
-        /** @var ConstraintViolationInterface $violation */
         foreach ($violationList as $violation) {
-            $result->addMessage($violation->getMessage());
+            $result->addMessage((string) $violation->getMessage());
         }
 
         return $result;

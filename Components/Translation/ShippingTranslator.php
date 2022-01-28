@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -21,12 +22,7 @@ class ShippingTranslator
         $this->translationComponent = $translationComponent;
     }
 
-    /**
-     * @param int $languageId
-     *
-     * @return array
-     */
-    public function translate(array $shipping, $languageId)
+    public function translate(array $shipping, int $languageId): array
     {
         $shippingTranslations = $this->translationComponent->read($languageId, 'config_dispatch');
 

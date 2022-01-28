@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -16,13 +17,7 @@ class NumberFormatterWrapper
     public const LOCALE_GREAT_BRITAIN = 'en_EN';
     public const LOCALE_GERMANY = 'de_DE';
 
-    /**
-     * @param float  $number
-     * @param string $locale
-     *
-     * @return bool|string
-     */
-    public function format($number, $locale = self::LOCALE_GREAT_BRITAIN)
+    public function format(float $number, string $locale = self::LOCALE_GREAT_BRITAIN): string
     {
         $decimalPoint = '.';
         if (!$locale) {

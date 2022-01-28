@@ -34,11 +34,12 @@ else
 	SHOPWARE_ENV=$(envname) ./../../../vendor/phpunit/phpunit/phpunit --verbose --filter $(filter)
 endif
 
+CS_FIXER_RUN=
 fix-cs: ## Run the code style fixer
-	./../../../vendor/bin/php-cs-fixer fix
+	./../../../vendor/bin/php-cs-fixer fix -v $(CS_FIXER_RUN)
 
-fix-cs-dry: ## Run the code style fixer in dry mode
-	./../../../vendor/bin/php-cs-fixer fix --dry-run -v
+fix-cs-dry: CS_FIXER_RUN= --dry-run
+fix-cs-dry: fix-cs  ## Run the code style fixer in dry mode
 
 phpstan: ## Run PHPStan
 	./../../../vendor/bin/phpstan analyse .
@@ -49,4 +50,3 @@ phpstan-generate-baseline: ## Run PHPStan and generate a baseline file
 .refresh-plugin-list:
 	@echo "Refresh the plugin list"
 	./../../../bin/console sw:plugin:refresh
-

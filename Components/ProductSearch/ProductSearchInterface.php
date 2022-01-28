@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -11,28 +12,9 @@ namespace SwagBackendOrder\Components\ProductSearch;
 
 interface ProductSearchInterface
 {
-    /**
-     * @return int
-     */
-    public function getLastResultTotalCount();
+    public function getLastResultTotalCount(): int;
 
-    /**
-     * @param string $searchTerm
-     * @param int    $shopId
-     * @param int    $limit
-     * @param int    $offset
-     *
-     * @return array
-     */
-    public function findProducts($searchTerm, $shopId, $limit, $offset);
+    public function findProducts(string $searchTerm, int $shopId, int $limit, int $offset): array;
 
-    /**
-     * @param string $orderNumber
-     * @param array  $params
-     * @param int    $shopId
-     * @param string $customerGroupKey
-     *
-     * @return array
-     */
-    public function getProduct($orderNumber, $params, $shopId, $customerGroupKey);
+    public function getProduct(string $orderNumber, array $params, int $shopId, string $customerGroupKey): array;
 }

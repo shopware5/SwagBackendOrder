@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -14,9 +15,9 @@ use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 class PositionHydrator
 {
     /**
-     * @return PositionStruct
+     * @param array<string, mixed> $data
      */
-    public function hydrate(array $data)
+    public function hydrate(array $data): PositionStruct
     {
         $positionStruct = new PositionStruct();
 

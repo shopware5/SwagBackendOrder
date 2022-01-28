@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -16,11 +17,8 @@ class TotalPriceCalculator
 {
     /**
      * @param PriceResult[] $positionPrices
-     * @param bool          $isProportionalTaxCalculation
-     *
-     * @return TotalPricesResult TotalPricesResult
      */
-    public function calculate(array $positionPrices, PriceResult $shippingPrice, $isProportionalTaxCalculation = false)
+    public function calculate(array $positionPrices, PriceResult $shippingPrice, bool $isProportionalTaxCalculation = false): TotalPricesResult
     {
         $totalPrice = new TotalPricesResult();
 
@@ -45,10 +43,8 @@ class TotalPriceCalculator
 
     /**
      * @param PriceResult[] $positionPrices
-     *
-     * @return PriceResult
      */
-    private function getProductSum($positionPrices)
+    private function getProductSum(array $positionPrices): PriceResult
     {
         $sum = new PriceResult();
         $sumGross = 0;
@@ -65,10 +61,7 @@ class TotalPriceCalculator
         return $sum;
     }
 
-    /**
-     * @return PriceResult
-     */
-    private function getTotal(PriceResult $sum, PriceResult $shippingPrice)
+    private function getTotal(PriceResult $sum, PriceResult $shippingPrice): PriceResult
     {
         $total = new PriceResult();
         $totalNet = $sum->getNet() + $shippingPrice->getRoundedNetPrice();
@@ -83,9 +76,9 @@ class TotalPriceCalculator
     /**
      * @param PriceResult[] $prices
      *
-     * @return array
+     * @return array<string|int, float>
      */
-    private function getTotalTaxPrices(array $prices)
+    private function getTotalTaxPrices(array $prices): array
     {
         $taxes = [];
 

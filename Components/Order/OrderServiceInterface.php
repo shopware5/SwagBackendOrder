@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -14,8 +15,5 @@ use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 
 interface OrderServiceInterface
 {
-    /**
-     * @return Order
-     */
-    public function create(OrderStruct $orderStruct);
+    public function create(OrderStruct $orderStruct): Order;
 }

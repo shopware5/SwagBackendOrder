@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -9,8 +10,12 @@
 
 namespace SwagBackendOrder\Components\PriceCalculation;
 
-class DiscountType
+final class DiscountType
 {
     public const DISCOUNT_PERCENTAGE = 0;
     public const DISCOUNT_ABSOLUTE = 1;
+
+    private function __construct()
+    {
+    }
 }

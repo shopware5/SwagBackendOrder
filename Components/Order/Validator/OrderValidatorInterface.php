@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -13,8 +14,5 @@ use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 
 interface OrderValidatorInterface
 {
-    /**
-     * @returns ValidationResult
-     */
-    public function validate(OrderStruct $order);
+    public function validate(OrderStruct $order): ValidationResult;
 }

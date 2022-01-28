@@ -9,15 +9,13 @@
 
 namespace SwagBackendOrder;
 
-use Shopware\Bundle\PluginInstallerBundle\Service\InstallerService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\InstallContext;
-use Shopware\Models\Plugin\Plugin as PluginModel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SwagBackendOrder extends Plugin
 {
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->setParameter('swag_backend_orders.plugin_dir', $this->getPath());
         parent::build($container);
@@ -26,14 +24,12 @@ class SwagBackendOrder extends Plugin
     /**
      * {@inheritdoc}
      */
-    public function install(InstallContext $context)
+    public function install(InstallContext $context): void
     {
         /*
          * The following code sets the initial value of the sendMail configuration in the plugin to the core config value of "sendOrderMail".
          * If the plugin has been configured already, it will not overwrite the existing value.
          */
-
-        /** @var array $pluginConfig */
         $pluginConfig = $this->container->get('shopware.plugin.cached_config_reader')->getByPluginName($this->getName());
         $sendMailConfigGlobal = (bool) $this->container->get('config')->get('sendOrderMail');
 
@@ -45,10 +41,8 @@ class SwagBackendOrder extends Plugin
             return;
         }
 
-        /** @var InstallerService $pluginManager */
         $pluginManager = $this->container->get('shopware_plugininstaller.plugin_manager');
 
-        /** @var PluginModel $plugin */
         $plugin = $pluginManager->getPluginByName($this->getName());
 
         //Finally set the plugin config value to the core config value.

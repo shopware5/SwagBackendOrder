@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -21,6 +22,7 @@ use Shopware\Models\Tax\Tax;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
+use SwagBackendOrder\Components\Order\Struct\PositionStruct as OrderPositionStruct;
 use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
@@ -30,12 +32,16 @@ use SwagBackendOrder\Components\PriceCalculation\Struct\PositionStruct;
 use SwagBackendOrder\Components\PriceCalculation\Struct\RequestStruct;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
+/**
+ * @phpstan-import-type PositionArray from RequestStruct
+ * @phpstan-type TaxArray list<array{taxRate: float, tax: float}>
+ */
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
     /**
      * Return a list of customer on search or return a single customer on select.
      */
-    public function getCustomerAction()
+    public function getCustomerAction(): void
     {
         $repository = $this->get('swag_backend_order.customer_repository');
 
@@ -61,7 +67,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
-    public function createOrderAction()
+    public function createOrderAction(): void
     {
         $modelManager = $this->get('models');
 
@@ -136,11 +142,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
-    public function getArticlesAction()
+    public function getArticlesAction(): void
     {
-        $limit = $this->request->getParam('limit');
-        $offset = $this->request->getParam('start');
-        $search = $this->request->getParam('query');
+        $limit = (int) $this->request->getParam('limit', 10);
+        $offset = (int) $this->request->getParam('start', 0);
+        $search = (string) $this->request->getParam('query');
         $shopId = $this->getShopId();
 
         $productSearch = $this->container->get('swag_backend_order.product_search');
@@ -155,7 +161,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         );
     }
 
-    public function getProductAction()
+    public function getProductAction(): void
     {
         $params = $this->request->getParams();
         $number = $this->request->getParam('ordernumber');
@@ -169,7 +175,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
-    public function getDiscountAction()
+    public function getDiscountAction(): void
     {
         $type = (int) $this->Request()->getParam('type');
         $value = (float) $this->Request()->getParam('value');
@@ -185,7 +191,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $result = [
             'articleName' => $productName,
-            'articleNumber' => 'DISCOUNT.' . $type,
+            'articleNumber' => OrderPositionStruct::DISCOUNT_ORDER_NUMBER_PREFIX . $type,
             'articleId' => 0,
             'price' => $value * -1,
             'mode' => 4,
@@ -206,7 +212,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * gets all available payments for the backend order
      */
-    public function getPaymentAction()
+    public function getPaymentAction(): void
     {
         $paymentTranslator = $this->get('swag_backend_order.payment_translator');
 
@@ -238,7 +244,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * method which selects all shipping costs
      */
-    public function getShippingCostsAction()
+    public function getShippingCostsAction(): void
     {
         $dispatchTranslator = $this->get('swag_backend_order.shipping_translator');
 
@@ -268,7 +274,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         );
     }
 
-    public function getCurrenciesAction()
+    public function getCurrenciesAction(): void
     {
         $repository = $this->get('models')->getRepository(Currency::class);
 
@@ -302,7 +308,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * reads the plugin config and passes it to the ext js application
      */
-    public function getPluginConfigAction()
+    public function getPluginConfigAction(): void
     {
         $configReader = $this->get('shopware.plugin.config_reader');
         $pluginConfig = $configReader->getByPluginName('SwagBackendOrder');
@@ -338,7 +344,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * assigns the payment data for a user to ExtJs to show the data in the view
      */
-    public function getCustomerPaymentDataAction()
+    public function getCustomerPaymentDataAction(): void
     {
         $modelManager = $this->get('models');
         $request = $this->Request()->getParams();
@@ -371,7 +377,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * assigns the shop data to ExtJs to show the data in the view
      */
-    public function getLanguageSubShopsAction()
+    public function getLanguageSubShopsAction(): void
     {
         $mainShopId = $this->Request()->getParam('mainShopId');
 
@@ -405,7 +411,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * checks if the article which was added or edited is no voucher or esd article
      */
-    public function validateEditAction()
+    public function validateEditAction(): void
     {
         $data = $this->Request()->getParams();
         $articleNumber = (string) $data['articleNumber'];
@@ -431,13 +437,13 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     /**
      * calculates the tax for this order
      */
-    public function calculateBasketAction()
+    public function calculateBasketAction(): void
     {
         $requestHydrator = $this->get('swag_backend_order.price_calculation.request_hydrator');
         $requestStruct = $requestHydrator->hydrateFromRequest($this->Request()->getParams());
 
         $config = $this->container->get('config');
-        $proportionalTaxCalculation = $config->get('proportionalTaxCalculation') && !$requestStruct->isTaxFree();
+        $proportionalTaxCalculation = ((bool) $config->get('proportionalTaxCalculation')) && !$requestStruct->isTaxFree();
 
         //Basket position price calculation
         $positionPrices = [];
@@ -484,10 +490,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
-    /**
-     * @param Order $orderModel
-     */
-    private function sendOrderConfirmationMail($orderModel)
+    private function sendOrderConfirmationMail(Order $orderModel): void
     {
         $confirmationMailCreator = new ConfirmationMailCreator(
             new TaxCalculation(),
@@ -511,7 +514,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $mail->addTo($context['additional']['user']['email']);
             $mail->send();
 
-            //If configured send an email to the shop owner
+            //If configured email to the shop owner
             $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
             if (!$mailNotToShopOwner) {
                 $mail->clearRecipients();
@@ -534,48 +537,33 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         return (int) $identity->locale->getId();
     }
 
-    /**
-     * @return string
-     */
-    private function getListRequestParam()
+    private function getListRequestParam(): ?string
     {
         $data = $this->Request()->getParams();
 
         return $data['filter'][0]['value'];
     }
 
-    /**
-     * @param float $price
-     * @param int   $quantity
-     *
-     * @return float
-     */
-    private function getTotalPrice($price, $quantity)
+    private function getTotalPrice(float $price, int $quantity): float
     {
         return $price * $quantity;
     }
 
-    /**
-     * @param int $customerId
-     *
-     * @return string
-     */
-    private function getAccountHolder($customerId)
+    private function getAccountHolder(int $customerId): string
     {
-        $modelManager = $this->get('models');
-        $customer = $modelManager->find(Customer::class, $customerId);
+        $customer = $this->get('models')->find(Customer::class, $customerId);
 
         return $customer->getBilling()->getFirstName() . ' ' . $customer->getBilling()->getLastName();
     }
 
     /**
-     * @return array
+     * @return array{totalWithoutTax: float, sum: float, total: float, shippingCosts: float, shippingCostsNet: float, shippingCostsTaxRate: float, taxSum: float, positions: PositionArray, dispatchTaxRate: float, proportionalTaxCalculation: bool, taxes: TaxArray}
      */
     private function createBasketCalculationResult(
         TotalPricesResult $totalPriceResult,
         RequestStruct $requestStruct,
-        $proportionalTaxCalculation
-    ) {
+        bool $proportionalTaxCalculation
+    ): array {
         $shippingCosts = $totalPriceResult->getShipping()->getRoundedGrossPrice();
         $productSum = $totalPriceResult->getSum()->getRoundedGrossPrice();
         $total = $totalPriceResult->getTotal()->getRoundedGrossPrice();
@@ -614,20 +602,22 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             'taxSum' => $taxSum,
             'positions' => $requestStruct->getPositionsArray(),
             'dispatchTaxRate' => $totalPriceResult->getShipping()->getTaxRate(),
-            'proportionalTaxCalculation' => (int) $proportionalTaxCalculation && !$requestStruct->isTaxFree(),
+            'proportionalTaxCalculation' => $proportionalTaxCalculation && !$requestStruct->isTaxFree(),
             'taxes' => $this->convertTaxes($totalPriceResult->getTaxes()),
         ];
     }
 
     /**
-     * @return array
+     * @param array<string|int, float> $taxes
+     *
+     * @return TaxArray
      */
-    private function convertTaxes(array $taxes)
+    private function convertTaxes(array $taxes): array
     {
         $result = [];
         foreach ($taxes as $taxRate => $tax) {
             $result[] = [
-                'taxRate' => $taxRate,
+                'taxRate' => (float) $taxRate,
                 'tax' => \round($tax, 2),
             ];
         }
@@ -635,13 +625,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         return $result;
     }
 
-    /**
-     * @param PositionStruct $position
-     * @param RequestStruct  $requestStruct
-     *
-     * @return PriceResult
-     */
-    private function getPositionPrice($position, $requestStruct)
+    private function getPositionPrice(PositionStruct $position, RequestStruct $requestStruct): PriceResult
     {
         $priceContextFactory = $this->get('swag_backend_order.price_calculation.price_context_factory');
         $productCalculator = $this->get('swag_backend_order.price_calculation.product_calculator');
@@ -667,14 +651,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @param int|null $dispatchId
-     * @param float[]  $basketTaxRates
+     * @param float[] $basketTaxRates
      *
      * @throws \RuntimeException
-     *
-     * @return float
      */
-    private function getDispatchTaxRate($dispatchId, array $basketTaxRates = [])
+    private function getDispatchTaxRate(?int $dispatchId, array $basketTaxRates = []): float
     {
         if ($dispatchId === null) {
             return 0.00;
@@ -708,12 +689,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         return (float) \max($basketTaxRates);
     }
 
-    /**
-     * @param RequestStruct $requestStruct
-     *
-     * @return PriceResult
-     */
-    private function getShippingPrice($requestStruct)
+    private function getShippingPrice(RequestStruct $requestStruct): PriceResult
     {
         $dispatchTaxRate = $this->getDispatchTaxRate($requestStruct->getDispatchId(), $requestStruct->getBasketTaxRates());
         $priceContextFactory = $this->get('swag_backend_order.price_calculation.price_context_factory');
@@ -741,10 +717,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         return $shippingCalculator->calculate($currentPriceContext);
     }
 
-    /**
-     * @return int
-     */
-    private function getShopId()
+    private function getShopId(): int
     {
         $shopId = (int) $this->Request()->getParam('shopId');
 
@@ -756,10 +729,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         return $shopId;
     }
 
-    /**
-     * @return string
-     */
-    private function getCustomerGroupKey()
+    private function getCustomerGroupKey(): string
     {
         $customerId = (int) $this->Request()->getParam('customerId');
 

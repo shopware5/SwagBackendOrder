@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -18,18 +19,12 @@ class ConfirmationMailRepository
      */
     private $connection;
 
-    public function __construct(
-        Connection $connection
-    ) {
+    public function __construct(Connection $connection)
+    {
         $this->connection = $connection;
     }
 
-    /**
-     * @param int $orderId
-     *
-     * @return array
-     */
-    public function getOrderDetailsByOrderId($orderId)
+    public function getOrderDetailsByOrderId(int $orderId): array
     {
         return $this->connection->fetchAll(
             'SELECT * FROM s_order_details WHERE orderID = ?',
@@ -37,12 +32,7 @@ class ConfirmationMailRepository
         );
     }
 
-    /**
-     * @param string $ordernumber
-     *
-     * @return array
-     */
-    public function getArticleDetailsByOrderNumber($ordernumber)
+    public function getArticleDetailsByOrderNumber(string $ordernumber): array
     {
         $selectedColumns = [
             'details.id AS articleDetailId',
@@ -63,28 +53,22 @@ class ConfirmationMailRepository
         ];
         $select = \implode(',', $selectedColumns);
 
-        $sql = "SELECT {$select} FROM s_articles_details details LEFT JOIN s_articles article ON article.id=details.articleID WHERE details.ordernumber=?";
-        $articleDetail = $this->connection->executeQuery($sql, [$ordernumber])->fetchAll();
+        $sql = sprintf('SELECT %s FROM s_articles_details details LEFT JOIN s_articles article ON article.id=details.articleID WHERE details.ordernumber=?', $select);
 
-        return $articleDetail[0];
+        return $this->connection->executeQuery($sql, [$ordernumber])->fetch();
     }
 
-    /**
-     * @param int $orderId
-     *
-     * @return array
-     */
-    public function getBillingAddressByOrderId($orderId)
+    public function getBillingAddressByOrderId(int $orderId): array
     {
-        $billingAddress = $this->connection->fetchAll(
+        $billingAddress = $this->connection->executeQuery(
             'SELECT *, userID AS customerBillingId FROM s_order_billingaddress WHERE orderID = ?',
             [$orderId]
-        )[0];
+        )->fetch();
 
-        $billingAddressAttributes = $this->connection->fetchAll(
+        $billingAddressAttributes = $this->connection->executeQuery(
             'SELECT * FROM s_order_billingaddress_attributes WHERE billingID = ?',
             [$billingAddress['id']]
-        )[0];
+        )->fetch();
 
         if (!empty($billingAddressAttributes)) {
             $billingAddress = \array_merge($billingAddress, $billingAddressAttributes);
@@ -93,22 +77,17 @@ class ConfirmationMailRepository
         return $billingAddress;
     }
 
-    /**
-     * @param int $orderId
-     *
-     * @return array
-     */
-    public function getShippingAddressByOrderId($orderId)
+    public function getShippingAddressByOrderId(int $orderId): array
     {
-        $shippingAddress = $this->connection->fetchAll(
+        $shippingAddress = $this->connection->executeQuery(
             'SELECT *, userID AS customerBillingId FROM s_order_shippingaddress WHERE orderID = ?',
             [$orderId]
-        )[0];
+        )->fetch();
 
-        $shippingAddressAttributes = $this->connection->fetchAll(
+        $shippingAddressAttributes = $this->connection->executeQuery(
             'SELECT * FROM s_order_shippingaddress_attributes WHERE shippingID = ?',
             [$shippingAddress['id']]
-        )[0];
+        )->fetch();
 
         if (!empty($shippingAddressAttributes)) {
             $shippingAddress = \array_merge($shippingAddress, $shippingAddressAttributes);
@@ -117,81 +96,57 @@ class ConfirmationMailRepository
         return $shippingAddress;
     }
 
-    /**
-     * @param int $orderId
-     *
-     * @return array
-     */
-    public function getOrderAttributesByOrderId($orderId)
+    public function getOrderAttributesByOrderId(int $orderId): ?array
     {
-        return $this->connection->fetchAll(
+        $orderAttributes = $this->connection->executeQuery(
             'SELECT * FROM s_order_attributes WHERE orderID = ?',
             [$orderId]
-        )[0];
+        )->fetch();
+
+        if (!\is_array($orderAttributes)) {
+            return null;
+        }
+
+        return $orderAttributes;
     }
 
-    /**
-     * @param int $dispatchId
-     *
-     * @return array
-     */
-    public function getDispatchByDispatchId($dispatchId)
+    public function getDispatchByDispatchId(int $dispatchId): array
     {
-        return $this->connection->fetchAll(
+        return $this->connection->executeQuery(
             'SELECT * FROM s_premium_dispatch WHERE id = ?',
             [$dispatchId]
-        )[0];
+        )->fetch();
     }
 
-    /**
-     * @param int $userId
-     *
-     * @return array
-     */
-    public function getCustomerByUserId($userId)
+    public function getCustomerByUserId(int $userId): array
     {
-        return $this->connection->fetchAll(
+        return $this->connection->executeQuery(
             'SELECT * FROM s_user WHERE id = ?',
             [$userId]
-        )[0];
+        )->fetch();
     }
 
-    /**
-     * @param int $countryId
-     *
-     * @return array
-     */
-    public function getCountryByCountryId($countryId)
+    public function getCountryByCountryId(int $countryId): array
     {
-        return $this->connection->fetchAll(
+        return $this->connection->executeQuery(
             'SELECT * FROM s_core_countries WHERE id = ?',
             [$countryId]
-        )[0];
+        )->fetch();
     }
 
-    /**
-     * @param int $stateId
-     *
-     * @return array
-     */
-    public function getStateByStateId($stateId)
+    public function getStateByStateId(int $stateId): array
     {
-        return $this->connection->fetchAll(
+        return $this->connection->executeQuery(
             'SELECT * FROM s_core_countries_states WHERE id = ?',
             [$stateId]
-        )[0];
+        )->fetch();
     }
 
-    /**
-     * @param int $paymentmeanId
-     *
-     * @return array
-     */
-    public function getPaymentmeanByPaymentmeanId($paymentmeanId)
+    public function getPaymentmeanByPaymentmeanId(int $paymentmeanId): array
     {
-        return $this->connection->fetchAll(
+        return $this->connection->executeQuery(
             'SELECT * FROM s_core_paymentmeans WHERE id = ?',
             [$paymentmeanId]
-        )[0];
+        )->fetch();
     }
 }

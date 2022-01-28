@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -12,39 +13,45 @@ namespace SwagBackendOrder\Components\Order\Validator;
 class ValidationResult
 {
     /**
-     * @var array
+     * @var array<string>
      */
-    private $messages = [];
+    private $messages;
 
+    /**
+     * @param array<string> $messages
+     */
     public function __construct(array $messages = [])
     {
         $this->messages = $messages;
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->messages;
     }
 
-    public function setMessages(array $messages)
+    /**
+     * @param array<string> $messages
+     */
+    public function setMessages(array $messages): void
     {
         $this->messages = $messages;
     }
 
-    public function addMessages(array $messages)
+    /**
+     * @param array<string> $messages
+     */
+    public function addMessages(array $messages): void
     {
         foreach ($messages as $message) {
             $this->addMessage($message);
         }
     }
 
-    /**
-     * @param string $message
-     */
-    public function addMessage($message)
+    public function addMessage(string $message): void
     {
         $this->messages[] = $message;
     }
