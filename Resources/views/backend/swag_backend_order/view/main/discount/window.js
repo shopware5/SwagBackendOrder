@@ -125,10 +125,12 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.discount.Window', {
      * @returns { Ext.form.field.ComboBox }
      */
     createTaxSelection: function() {
-        var store = Ext.create('Shopware.apps.Base.store.Tax').load({ callback: function () {
-            var firstEntry = store.getAt(0);
-            taxSelection.setValue(firstEntry);
-        }});
+        var store = Ext.create('Shopware.apps.Base.store.Tax').load({
+            callback: function () {
+                var firstEntry = store.getAt(0);
+                taxSelection.setValue(firstEntry);
+            }
+        });
 
         var taxSelection = Ext.create('Ext.form.field.ComboBox', {
             name: 'tax',
