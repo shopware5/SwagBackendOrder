@@ -30,12 +30,12 @@ class DetailFactory
     /**
      * @var \sArticles
      */
-    private $articleModule;
+    private $productCoreClass;
 
     public function __construct(ModelManager $modelManager, Modules $modules)
     {
         $this->modelManager = $modelManager;
-        $this->articleModule = $modules->Articles();
+        $this->productCoreClass = $modules->Articles();
     }
 
     /**
@@ -78,7 +78,7 @@ class DetailFactory
 
         $detail->setArticleId($product->getId());
         $detail->setArticleDetail($productVariant);
-        $name = $this->articleModule->sGetArticleNameByOrderNumber($positionStruct->getNumber());
+        $name = $this->productCoreClass->sGetArticleNameByOrderNumber($positionStruct->getNumber());
         $name = \is_string($name) ? $name : '';
         $detail->setArticleName($name);
         $detail->setArticleNumber($positionStruct->getNumber());
@@ -104,7 +104,7 @@ class DetailFactory
 
         $detail->setQuantity(1);
         $detail->setShipped(0);
-        $detail->setArticleId($positionStruct->getArticleId());
+        $detail->setArticleId($positionStruct->getProductId());
         $detail->setEsdArticle(0);
 
         $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());

@@ -70,7 +70,7 @@ class OrderServiceTest extends TestCase
         $positionStruct = new PositionStruct();
 
         $positionStruct->setMode(0);
-        $positionStruct->setArticleId(2);
+        $positionStruct->setProductId(2);
         $positionStruct->setNumber('SW10002.1');
         $positionStruct->setName('Münsterländer Lagerkorn 32% 1,5 Liter');
         $positionStruct->setQuantity(1);

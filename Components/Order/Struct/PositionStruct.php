@@ -27,12 +27,12 @@ class PositionStruct
     /**
      * @var int
      */
-    private $articleId;
+    private $productId;
 
     /**
      * @var int
      */
-    private $detailId;
+    private $variantId;
 
     /**
      * @var string
@@ -99,24 +99,24 @@ class PositionStruct
         $this->mode = $mode;
     }
 
-    public function getArticleId(): int
+    public function getProductId(): int
     {
-        return $this->articleId;
+        return $this->productId;
     }
 
-    public function setArticleId(int $articleId): void
+    public function setProductId(int $productId): void
     {
-        $this->articleId = $articleId;
+        $this->productId = $productId;
     }
 
-    public function getDetailId(): int
+    public function getVariantId(): int
     {
-        return $this->detailId;
+        return $this->variantId;
     }
 
-    public function setDetailId(int $detailId): void
+    public function setVariantId(int $variantId): void
     {
-        $this->detailId = $detailId;
+        $this->variantId = $variantId;
     }
 
     public function getNumber(): string

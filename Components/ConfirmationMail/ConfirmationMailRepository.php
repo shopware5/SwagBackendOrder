@@ -24,6 +24,9 @@ class ConfirmationMailRepository
         $this->connection = $connection;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOrderDetailsByOrderId(int $orderId): array
     {
         return $this->connection->fetchAll(
@@ -32,7 +35,10 @@ class ConfirmationMailRepository
         );
     }
 
-    public function getArticleDetailsByOrderNumber(string $ordernumber): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function getProductVariantsByOrderNumber(string $ordernumber): array
     {
         $selectedColumns = [
             'details.id AS articleDetailId',
@@ -58,6 +64,9 @@ class ConfirmationMailRepository
         return $this->connection->executeQuery($sql, [$ordernumber])->fetch();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getBillingAddressByOrderId(int $orderId): array
     {
         $billingAddress = $this->connection->executeQuery(
@@ -77,6 +86,9 @@ class ConfirmationMailRepository
         return $billingAddress;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getShippingAddressByOrderId(int $orderId): array
     {
         $shippingAddress = $this->connection->executeQuery(
@@ -96,6 +108,9 @@ class ConfirmationMailRepository
         return $shippingAddress;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getOrderAttributesByOrderId(int $orderId): ?array
     {
         $orderAttributes = $this->connection->executeQuery(
@@ -110,6 +125,9 @@ class ConfirmationMailRepository
         return $orderAttributes;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getDispatchByDispatchId(int $dispatchId): array
     {
         return $this->connection->executeQuery(
@@ -118,6 +136,9 @@ class ConfirmationMailRepository
         )->fetch();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getCustomerByUserId(int $userId): array
     {
         return $this->connection->executeQuery(
@@ -126,6 +147,9 @@ class ConfirmationMailRepository
         )->fetch();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getCountryByCountryId(int $countryId): array
     {
         return $this->connection->executeQuery(
@@ -134,6 +158,9 @@ class ConfirmationMailRepository
         )->fetch();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getStateByStateId(int $stateId): array
     {
         return $this->connection->executeQuery(
@@ -142,6 +169,9 @@ class ConfirmationMailRepository
         )->fetch();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPaymentmeanByPaymentmeanId(int $paymentmeanId): array
     {
         return $this->connection->executeQuery(

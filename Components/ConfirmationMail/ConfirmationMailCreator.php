@@ -60,7 +60,7 @@ class ConfirmationMailCreator
     /**
      * @var sArticles
      */
-    private $sArticles;
+    private $productCoreClass;
 
     /**
      * @var Shopware_Components_Config
@@ -80,7 +80,7 @@ class ConfirmationMailCreator
         Repository $productVariantRepository,
         Shopware_Components_Config $config,
         NumberFormatterWrapper $numberFormatterWrapper,
-        sArticles $sArticles
+        sArticles $productCoreClass
     ) {
         $this->taxCalculation = $taxCalculation;
         $this->paymentTranslator = $paymentTranslator;
@@ -89,7 +89,7 @@ class ConfirmationMailCreator
         $this->productVariantRepository = $productVariantRepository;
         $this->config = $config;
         $this->numberFormatterWrapper = $numberFormatterWrapper;
-        $this->sArticles = $sArticles;
+        $this->productCoreClass = $productCoreClass;
     }
 
     public function prepareOrderDetailsConfirmationMailData(Order $orderModel, Locale $localeModel): array
@@ -125,15 +125,15 @@ class ConfirmationMailCreator
             }
             $result['articlename'] = $result['name'];
 
-            $productVariantArray = $this->confirmationMailRepository->getArticleDetailsByOrderNumber($result['articleordernumber']);
+            $productVariantArray = $this->confirmationMailRepository->getProductVariantsByOrderNumber($result['articleordernumber']);
 
             $result = \array_merge($result, $productVariantArray);
 
-            $result['additional_details'] = $this->sArticles->sGetProductByOrdernumber((string) $productVariant->getNumber());
+            $result['additional_details'] = $this->productCoreClass->sGetProductByOrdernumber((string) $productVariant->getNumber());
 
             $result = $this->setPositionPrices($result, $localeModel);
 
-            $result['image'] = $this->sArticles->sGetArticlePictures(
+            $result['image'] = $this->productCoreClass->sGetArticlePictures(
                 $result['articleID'],
                 true,
                 $this->config->get('sTHUMBBASKET'),

@@ -22,8 +22,8 @@ class PositionHydrator
         $positionStruct = new PositionStruct();
 
         $positionStruct->setMode((int) $data['mode']);
-        $positionStruct->setArticleId((int) $data['articleId']);
-        $positionStruct->setDetailId((int) $data['detailId']);
+        $positionStruct->setProductId((int) $data['articleId']);
+        $positionStruct->setVariantId((int) $data['detailId']);
         $positionStruct->setNumber((string) $data['articleNumber']);
         $positionStruct->setName((string) $data['articleName']);
         $positionStruct->setQuantity((int) $data['quantity']);

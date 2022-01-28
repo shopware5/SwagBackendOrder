@@ -22,7 +22,7 @@ class ProductExists extends Constraint
     /**
      * @var string
      */
-    public $snippet = 'article_not_found';
+    public $snippet = 'product_not_found';
 
     /**
      * {@inheritdoc}

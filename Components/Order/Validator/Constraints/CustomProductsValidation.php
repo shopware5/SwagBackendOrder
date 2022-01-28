@@ -41,18 +41,18 @@ class CustomProductsValidation extends ConstraintValidator
             return;
         }
 
-        if (!$this->isCustomProductsActivated($constraint)) {
+        if (!$this->isCustomProductsPluginActivate($constraint)) {
             return;
         }
 
-        if ($this->isCustomProductArticle($value)) {
+        if ($this->isCustomProduct($value)) {
             $message = $this->snippetManager->getNamespace($constraint->namespace)->get($constraint->snippet);
 
             $this->context->addViolation(\sprintf($message, $value));
         }
     }
 
-    private function isCustomProductsActivated(CustomProduct $constraint): bool
+    private function isCustomProductsPluginActivate(CustomProduct $constraint): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('plugins.name');
@@ -66,7 +66,7 @@ class CustomProductsValidation extends ConstraintValidator
         return (bool) $stmt->fetchColumn();
     }
 
-    private function isCustomProductArticle(string $orderNumber): bool
+    private function isCustomProduct(string $orderNumber): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('article.id');

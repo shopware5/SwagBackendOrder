@@ -33,7 +33,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Article', {
         type: 'ajax',
 
         api: {
-            read: '{url action="getArticles"}'
+            read: '{url action="getProducts"}'
         },
 
         reader: {

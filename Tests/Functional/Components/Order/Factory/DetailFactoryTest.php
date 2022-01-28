@@ -32,7 +32,7 @@ class DetailFactoryTest extends TestCase
         $positionStruct->setNumber('DISCOUNT.0');
         $positionStruct->setName('Test_Discount');
         $positionStruct->setQuantity(1);
-        $positionStruct->setArticleId(0);
+        $positionStruct->setProductId(0);
         $positionStruct->setTaxId(1);
 
         $result = $factory->create($positionStruct, true);
@@ -48,7 +48,7 @@ class DetailFactoryTest extends TestCase
         $positionStruct->setPrice(-10);
         $positionStruct->setName('Test_Discount');
         $positionStruct->setQuantity(1);
-        $positionStruct->setArticleId(0);
+        $positionStruct->setProductId(0);
 
         $this->expectException(InvalidOrderException::class);
         $this->expectExceptionMessage('No product number was passed.');
@@ -62,7 +62,7 @@ class DetailFactoryTest extends TestCase
         $positionStruct = new PositionStruct();
         $positionStruct->setMode(1);
         $positionStruct->setPrice(19.95);
-        $positionStruct->setArticleId(178);
+        $positionStruct->setProductId(178);
         $positionStruct->setNumber('SW10178');
         $positionStruct->setName('Beachtowel Ibiza');
         $positionStruct->setQuantity(1);

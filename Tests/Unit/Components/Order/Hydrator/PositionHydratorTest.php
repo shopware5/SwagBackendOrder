@@ -36,8 +36,8 @@ class PositionHydratorTest extends TestCase
 
         // should be int values
         static::assertSame(12, $position->getMode());
-        static::assertSame(12, $position->getArticleId());
-        static::assertSame(12, $position->getDetailId());
+        static::assertSame(12, $position->getProductId());
+        static::assertSame(12, $position->getVariantId());
         static::assertSame(12, $position->getQuantity());
         static::assertSame(12, $position->getStatusId());
         static::assertSame(12, $position->getTaxId());

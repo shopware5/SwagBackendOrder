@@ -142,7 +142,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         ]);
     }
 
-    public function getArticlesAction(): void
+    public function getProductsAction(): void
     {
         $limit = (int) $this->request->getParam('limit', 10);
         $offset = (int) $this->request->getParam('start', 0);
@@ -409,18 +409,17 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * checks if the article which was added or edited is no voucher or esd article
+     * checks if the product which was added or edited is no voucher or esd product
      */
     public function validateEditAction(): void
     {
         $data = $this->Request()->getParams();
-        $articleNumber = (string) $data['articleNumber'];
+        $productNumber = (string) $data['articleNumber'];
         $quantity = (int) $data['quantity'];
 
-        $productContext = new ProductContext($articleNumber, $quantity);
+        $productContext = new ProductContext($productNumber, $quantity);
 
-        $validator = $this->get('swag_backend_order.order.product_validator');
-        $violations = $validator->validate($productContext);
+        $violations = $this->get('swag_backend_order.order.product_validator')->validate($productContext);
 
         if ($violations->getMessages()) {
             $this->view->assign([

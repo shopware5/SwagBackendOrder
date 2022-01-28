@@ -436,7 +436,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['number'], $result['number']);
     }
 
-    public function testGetArticles(): void
+    public function testGetProducts(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductSearchData());
@@ -445,7 +445,7 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
@@ -454,7 +454,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame('SW10239', $result[0]['number']);
     }
 
-    public function testGetArticlesMultiple(): void
+    public function testGetProductsMultiple(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
@@ -466,7 +466,7 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
@@ -475,7 +475,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame('SW10153.1', $result[0]['number']);
     }
 
-    public function testGetArticlesByOrdernumber(): void
+    public function testGetProductsByOrdernumber(): void
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         static::assertIsString($sql);
@@ -490,7 +490,7 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
@@ -499,7 +499,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame('SW_10002_test_123', $result[0]['number']);
     }
 
-    public function testGetArticlesBySupplier(): void
+    public function testGetProductsBySupplier(): void
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         static::assertIsString($sql);
@@ -514,7 +514,7 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 

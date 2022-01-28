@@ -71,56 +71,6 @@ parameters:
 			path: Components/ConfirmationMail/ConfirmationMailCreator.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getArticleDetailsByOrderNumber\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getBillingAddressByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getCountryByCountryId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getCustomerByUserId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getDispatchByDispatchId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getOrderAttributesByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getOrderDetailsByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getPaymentmeanByPaymentmeanId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getShippingAddressByOrderId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Components\\\\ConfirmationMail\\\\ConfirmationMailRepository\\:\\:getStateByStateId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Components/ConfirmationMail/ConfirmationMailRepository.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Components\\\\CustomerRepository\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Components/CustomerRepository.php

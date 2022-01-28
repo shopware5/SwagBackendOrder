@@ -56,37 +56,37 @@ class OrderFactory
 
         $customer = $this->modelManager->find(Customer::class, $orderStruct->getCustomerId());
         if (!$customer instanceof Customer) {
-            throw new \RuntimeException(sprintf('Could not find %s with ID %s', Customer::class, $orderStruct->getCustomerId()));
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Customer::class, $orderStruct->getCustomerId()));
         }
         $order->setCustomer($customer);
 
         $dispatch = $this->modelManager->find(Dispatch::class, $orderStruct->getDispatchId());
         if (!$dispatch instanceof Dispatch) {
-            throw new \RuntimeException(sprintf('Could not find %s with ID %s', Dispatch::class, $orderStruct->getDispatchId()));
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Dispatch::class, $orderStruct->getDispatchId()));
         }
         $order->setDispatch($dispatch);
 
         $payment = $this->modelManager->find(Payment::class, $orderStruct->getPaymentId());
         if (!$payment instanceof Payment) {
-            throw new \RuntimeException(sprintf('Could not find %s with ID %s', Payment::class, $orderStruct->getPaymentId()));
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Payment::class, $orderStruct->getPaymentId()));
         }
         $order->setPayment($payment);
 
         $orderStatus = $this->modelManager->getReference(Status::class, self::ORDER_STATUS_OPEN);
         if (!$orderStatus instanceof Status) {
-            throw new \RuntimeException(sprintf('Could not find %s with ID %s', Status::class, self::ORDER_STATUS_OPEN));
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Status::class, self::ORDER_STATUS_OPEN));
         }
         $order->setOrderStatus($orderStatus);
 
         $paymentStatus = $this->modelManager->getReference(Status::class, self::PAYMENT_STATUS_OPEN);
         if (!$paymentStatus instanceof Status) {
-            throw new \RuntimeException(sprintf('Could not find %s with ID %s', Status::class, self::PAYMENT_STATUS_OPEN));
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Status::class, self::PAYMENT_STATUS_OPEN));
         }
         $order->setPaymentStatus($paymentStatus);
 
         $languageSubShop = $this->modelManager->find(Shop::class, $orderStruct->getLanguageShopId());
         if (!$languageSubShop instanceof Shop) {
-            throw new \RuntimeException(sprintf('Could not find %s with ID %s', Shop::class, $orderStruct->getLanguageShopId()));
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Shop::class, $orderStruct->getLanguageShopId()));
         }
         $order->setLanguageSubShop($languageSubShop);
 
