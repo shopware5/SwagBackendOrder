@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -15,21 +16,21 @@ use Shopware\Models\Customer\Customer;
 use Shopware\Models\Order\Order;
 use Shopware\Tests\Functional\Traits\DatabaseTransactionBehaviour;
 use SwagBackendOrder\Components\Order\B2BOrderService;
-use SwagBackendOrder\Tests\B2bOrderTrait;
+use SwagBackendOrder\Tests\Functional\B2bOrderTrait;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
 class B2BOrderServiceTest extends TestCase
 {
+    use ContainerTrait;
     use DatabaseTransactionBehaviour;
     use B2bOrderTrait;
 
     /**
      * @before
      */
-    public function isB2bPlugin()
+    public function isB2bPlugin(): void
     {
-        $isB2bPluginInstalled = $this->isB2bPluginInstalled();
-
-        if (!$isB2bPluginInstalled) {
+        if (!$this->isB2bPluginInstalled()) {
             static::markTestSkipped('SwagB2bPlugin is not installed');
         }
     }
@@ -77,17 +78,17 @@ class B2BOrderServiceTest extends TestCase
         static::assertSame('20001', $result[0]['ordernumber']);
     }
 
-    private function getB2BOrderService(bool $getEmptyService = false)
+    private function getB2BOrderService(bool $getEmptyService = false): B2BOrderService
     {
         if ($getEmptyService) {
             return new B2BOrderService(null, null, null, null);
         }
 
         return new B2BOrderService(
-            Shopware()->Container()->get('b2b_order.conversion_service'),
-            Shopware()->Container()->get('b2b_front_auth.login_context'),
-            Shopware()->Container()->get('b2b_front_auth.credential_builder'),
-            Shopware()->Container()->get('b2b_sales_representative.client_debtor_authentication_identity_loader')
+            $this->getContainer()->get('b2b_order.conversion_service'),
+            $this->getContainer()->get('b2b_front_auth.login_context'),
+            $this->getContainer()->get('b2b_front_auth.credential_builder'),
+            $this->getContainer()->get('b2b_sales_representative.client_debtor_authentication_identity_loader')
         );
     }
 

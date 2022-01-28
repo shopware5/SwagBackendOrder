@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,14 +8,17 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Functional\PriceCalculation\Hydrator;
+namespace SwagBackendOrder\Tests\Functional\Components\PriceCalculation\Hydrator;
 
 use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
 class PositionHydratorTest extends TestCase
 {
-    public function testHydrateValueCasting()
+    use ContainerTrait;
+
+    public function testHydrateValueCasting(): void
     {
         $data = [
             'price' => '99.99',
@@ -25,7 +29,10 @@ class PositionHydratorTest extends TestCase
             'discountType' => '12',
         ];
 
-        $position = (new PositionHydrator())->hydrate($data);
+        $position = (new PositionHydrator(
+            $this->getContainer()->get('models'),
+            $this->getContainer()->get('shopware_storefront.shop_context_factory')
+        ))->hydrate($data);
 
         // Should be float values
         static::assertSame(99.99, $position->getPrice());

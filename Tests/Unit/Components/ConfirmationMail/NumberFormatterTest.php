@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -20,47 +21,41 @@ class NumberFormatterTest extends TestCase
     public const LOCALE_ITALIA = 'it_IT';
     public const EMPTY_LOCALE = '';
 
-    public function testItCanBeCreated()
+    public function testItCanBeCreated(): void
     {
         $numberFormatterWrapper = new NumberFormatterWrapper();
 
         static::assertInstanceOf(NumberFormatterWrapper::class, $numberFormatterWrapper);
     }
 
-    public function testItShouldFormatNumberForLocaleDe()
+    public function testItShouldFormatNumberForLocaleDe(): void
     {
         $number = 1.988888;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper();
+        $formattedNumber = (new NumberFormatterWrapper())->format($number, self::LOCALE_GERMANY);
 
-        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GERMANY);
-
-        static::assertEquals('1,99', $formattedNumber);
+        static::assertSame('1,99', $formattedNumber);
     }
 
-    public function testItShouldAdd2DecimalDigits()
+    public function testItShouldAdd2DecimalDigits(): void
     {
         $number = 2;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper();
+        $formattedNumber = (new NumberFormatterWrapper())->format($number, self::LOCALE_GERMANY);
 
-        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GERMANY);
-
-        static::assertEquals('2,00', $formattedNumber);
+        static::assertSame('2,00', $formattedNumber);
     }
 
-    public function testItShouldFormatEnglishNumbers()
+    public function testItShouldFormatEnglishNumbers(): void
     {
         $number = 2;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper();
+        $formattedNumber = (new NumberFormatterWrapper())->format($number, self::LOCALE_GREAT_BRITAIN);
 
-        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_GREAT_BRITAIN);
-
-        static::assertEquals('2.00', $formattedNumber);
+        static::assertSame('2.00', $formattedNumber);
     }
 
-    public function testItShouldThrowExceptionIfLocaleIsEmpty()
+    public function testItShouldThrowExceptionIfLocaleIsEmpty(): void
     {
         $number = 1;
 
@@ -70,14 +65,12 @@ class NumberFormatterTest extends TestCase
         $numberFormatterWrapper->format($number, self::EMPTY_LOCALE);
     }
 
-    public function testItShouldUseEnglishNotationAsDefault()
+    public function testItShouldUseEnglishNotationAsDefault(): void
     {
         $number = 2;
 
-        $numberFormatterWrapper = new NumberFormatterWrapper();
+        $formattedNumber = (new NumberFormatterWrapper())->format($number, self::LOCALE_ITALIA);
 
-        $formattedNumber = $numberFormatterWrapper->format($number, self::LOCALE_ITALIA);
-
-        static::assertEquals('2.00', $formattedNumber);
+        static::assertSame('2.00', $formattedNumber);
     }
 }

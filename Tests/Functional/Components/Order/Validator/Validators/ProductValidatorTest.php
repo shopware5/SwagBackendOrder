@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,18 +8,20 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Functional\Order;
+namespace SwagBackendOrder\Tests\Functional\Components\Order\Validator\Validators;
 
 use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductContext;
 use SwagBackendOrder\Components\Order\Validator\Validators\ProductValidator;
-use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
+use SwagBackendOrder\Tests\Functional\DatabaseTestCaseTrait;
 
 class ProductValidatorTest extends TestCase
 {
+    use ContainerTrait;
     use DatabaseTestCaseTrait;
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $validator = $this->getProductValidator();
         $quantity = 10;
@@ -29,18 +32,12 @@ class ProductValidatorTest extends TestCase
         static::assertStringContainsString($this->getProductNumberWithActivatedOnSale(), $violation->getMessages()[0]);
     }
 
-    /**
-     * @return ProductValidator
-     */
-    private function getProductValidator()
+    private function getProductValidator(): ProductValidator
     {
-        return Shopware()->Container()->get('swag_backend_order.order.product_validator');
+        return $this->getContainer()->get('swag_backend_order.order.product_validator');
     }
 
-    /**
-     * @return string
-     */
-    private function getProductNumberWithActivatedOnSale()
+    private function getProductNumberWithActivatedOnSale(): string
     {
         return 'SW10198';
     }

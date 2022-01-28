@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,20 +8,21 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Functional\Order;
+namespace SwagBackendOrder\Tests\Functional\Components\Order\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
-use SwagBackendOrder\Components\Order\Factory\DetailFactory;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
 class DetailFactoryTest extends TestCase
 {
-    public function testCreateWithDiscount()
+    use ContainerTrait;
+
+    public function testCreateWithDiscount(): void
     {
-        /** @var DetailFactory $factory */
-        $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
+        $factory = $this->getContainer()->get('swag_backend_order.order.detail_factory');
 
         $positionStruct = new PositionStruct();
         $positionStruct->setMode(4);
@@ -35,10 +37,9 @@ class DetailFactoryTest extends TestCase
         static::assertInstanceOf(Detail::class, $result);
     }
 
-    public function testCreateWillThrowExceptionIfNoNumberWasProvided()
+    public function testCreateWillThrowExceptionIfNoNumberWasProvided(): void
     {
-        /** @var DetailFactory $factory */
-        $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
+        $factory = $this->getContainer()->get('swag_backend_order.order.detail_factory');
 
         $positionStruct = new PositionStruct();
         $positionStruct->setMode(4);
@@ -52,9 +53,9 @@ class DetailFactoryTest extends TestCase
         $factory->create($positionStruct, true);
     }
 
-    public function testCreateEnsureProductDetailIsSet()
+    public function testCreateEnsureProductDetailIsSet(): void
     {
-        $factory = Shopware()->Container()->get('swag_backend_order.order.detail_factory');
+        $factory = $this->getContainer()->get('swag_backend_order.order.detail_factory');
 
         $positionStruct = new PositionStruct();
         $positionStruct->setMode(1);

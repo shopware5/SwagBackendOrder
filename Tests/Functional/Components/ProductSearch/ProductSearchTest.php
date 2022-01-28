@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,7 +8,7 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Unit\Components\ProductSearch;
+namespace SwagBackendOrder\Tests\Functional\Components\ProductSearch;
 
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
@@ -17,16 +18,17 @@ use SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator;
 use SwagBackendOrder\Components\PriceCalculation\Hydrator\RequestHydrator;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 use SwagBackendOrder\Components\ProductSearch\ProductSearch;
-use SwagBackendOrder\Tests\KernelTestCaseTrait;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
+use SwagBackendOrder\Tests\Functional\DatabaseTestCaseTrait;
 
 class ProductSearchTest extends TestCase
 {
-    use KernelTestCaseTrait;
+    use ContainerTrait;
+    use DatabaseTestCaseTrait;
 
-    public function testPrepareProductPriceNormalSelectedPriceByCustomerGroup()
+    public function testPrepareProductPriceNormalSelectedPriceByCustomerGroup(): void
     {
-        $reflectionClass = new ReflectionClass(ProductSearch::class);
-        $method = $reflectionClass->getMethod('prepareProductPrice');
+        $method = (new ReflectionClass(ProductSearch::class))->getMethod('prepareProductPrice');
         $method->setAccessible(true);
 
         $product = [
@@ -47,10 +49,9 @@ class ProductSearchTest extends TestCase
         static::assertSame($expectedProduct['to'], $result['to']);
     }
 
-    public function testPrepareProductPriceWithPriceFromDefaultCustomerGroup()
+    public function testPrepareProductPriceWithPriceFromDefaultCustomerGroup(): void
     {
-        $reflectionClass = new ReflectionClass(ProductSearch::class);
-        $method = $reflectionClass->getMethod('prepareProductPrice');
+        $method = (new ReflectionClass(ProductSearch::class))->getMethod('prepareProductPrice');
         $method->setAccessible(true);
 
         $product = [
@@ -65,27 +66,29 @@ class ProductSearchTest extends TestCase
         $expectedProduct = [
             'price' => '20.0',
             'to' => 'beliebig',
-            'isFallbackPrice' => true,
         ];
 
         static::assertSame($expectedProduct['price'], $result['price']);
         static::assertSame($expectedProduct['to'], $result['to']);
-        static::assertSame($expectedProduct['isFallbackPrice'], $result['isFallbackPrice']);
+        static::assertTrue($result['isFallbackPrice']);
     }
 
-    private function getService()
+    private function getService(): ProductSearch
     {
         return new ProductSearch(
-            Shopware()->Container()->get('dbal_connection'),
+            $this->getContainer()->get('dbal_connection'),
             new ProductPriceCalculator(
                 new TaxCalculation(),
                 new CurrencyConverter()
             ),
-            Shopware()->Container()->get('shopware_storefront.context_service'),
+            $this->getContainer()->get('shopware_storefront.context_service'),
             new RequestHydrator(
-                new PositionHydrator()
+                new PositionHydrator(
+                    $this->getContainer()->get('models'),
+                    $this->getContainer()->get('shopware_storefront.shop_context_factory')
+                )
             ),
-            Shopware()->Container()->get('shopware_storefront.additional_text_service')
+            $this->getContainer()->get('shopware_storefront.additional_text_service')
         );
     }
 }

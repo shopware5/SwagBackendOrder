@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,14 +8,14 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Functional\Order\Hydrator;
+namespace SwagBackendOrder\Tests\Unit\Components\Order\Hydrator;
 
 use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\Order\Hydrator\PositionHydrator;
 
 class PositionHydratorTest extends TestCase
 {
-    public function testHydrateValueCasting()
+    public function testHydrateValueCasting(): void
     {
         $data = [
             'mode' => '12',
@@ -31,8 +32,7 @@ class PositionHydratorTest extends TestCase
             'ean' => 'EAN-CODE',
         ];
 
-        $hydrator = new PositionHydrator();
-        $position = $hydrator->hydrate($data);
+        $position = (new PositionHydrator())->hydrate($data);
 
         // should be int values
         static::assertSame(12, $position->getMode());

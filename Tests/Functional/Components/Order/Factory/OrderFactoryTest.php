@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -14,17 +15,20 @@ use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\Customer;
 use SwagBackendOrder\Components\Order\Factory\OrderFactory;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
 class OrderFactoryTest extends TestCase
 {
-    public function testCreateShippingAddressShoudAddDefaultShippingToCustomer()
+    use ContainerTrait;
+
+    public function testCreateShippingAddressShoudAddDefaultShippingToCustomer(): void
     {
         $orderFactory = $this->getOrderFactory();
 
         $reflectionMethod = (new \ReflectionClass(OrderFactory::class))->getMethod('createShippingAddress');
         $reflectionMethod->setAccessible(true);
 
-        $customer = Shopware()->Container()->get('models')->getRepository(Customer::class)->find(1);
+        $customer = $this->getContainer()->get('models')->getRepository(Customer::class)->find(1);
         static::assertInstanceOf(Customer::class, $customer);
         $oderStruct = new OrderStruct();
         $oderStruct->setShippingAddressId(1);
@@ -38,14 +42,14 @@ class OrderFactoryTest extends TestCase
         static::assertSame('Musterhausen', $result->getCity());
     }
 
-    public function testCreateBillingAddressShoudAddDefaultShippingToCustomer()
+    public function testCreateBillingAddressShoudAddDefaultShippingToCustomer(): void
     {
         $orderFactory = $this->getOrderFactory();
 
         $reflectionMethod = (new \ReflectionClass(OrderFactory::class))->getMethod('createBillingAddress');
         $reflectionMethod->setAccessible(true);
 
-        $customer = Shopware()->Container()->get('models')->getRepository(Customer::class)->find(1);
+        $customer = $this->getContainer()->get('models')->getRepository(Customer::class)->find(1);
         static::assertInstanceOf(Customer::class, $customer);
         $oderStruct = new OrderStruct();
         $oderStruct->setBillingAddressId(1);
@@ -59,11 +63,11 @@ class OrderFactoryTest extends TestCase
         static::assertSame('Musterhausen', $result->getCity());
     }
 
-    private function getOrderFactory()
+    private function getOrderFactory(): OrderFactory
     {
         return new OrderFactory(
-            Shopware()->Container()->get('models'),
-            Shopware()->Container()->get('swag_backend_order.order.detail_factory')
+            $this->getContainer()->get('models'),
+            $this->getContainer()->get('swag_backend_order.order.detail_factory')
         );
     }
 }
