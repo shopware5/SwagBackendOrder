@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,13 +8,13 @@
  *
  */
 
-namespace SwagBackendOrder\Tests;
+namespace SwagBackendOrder\Tests\Functional;
 
 trait B2bOrderTrait
 {
     protected function getB2bOrder(string $ordernumber = '20001'): ?array
     {
-        $result = Shopware()->Container()->get('dbal_connection')->createQueryBuilder()
+        $result = $this->getContainer()->get('dbal_connection')->createQueryBuilder()
             ->select('*')
             ->from('b2b_order_context')
             ->where('ordernumber = :ordernumber')
@@ -32,12 +33,12 @@ trait B2bOrderTrait
     {
         $sql = 'INSERT IGNORE INTO `s_user_attributes` (`id`, `userID`, `b2b_is_debtor`, `b2b_is_sales_representative`) VALUES (1, 2, 1, 1);';
 
-        Shopware()->Container()->get('dbal_connection')->exec($sql);
+        $this->getContainer()->get('dbal_connection')->exec($sql);
     }
 
     protected function isB2bPluginInstalled(): bool
     {
-        return (bool) Shopware()->Container()->get('dbal_connection')->fetchColumn(
+        return (bool) $this->getContainer()->get('dbal_connection')->fetchColumn(
             'SELECT 1 FROM s_core_plugins WHERE name = "SwagB2bPlugin" AND active = 1'
         );
     }

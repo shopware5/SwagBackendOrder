@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -29,22 +30,18 @@ class DetailFactory
     /**
      * @var \sArticles
      */
-    private $articleModule;
+    private $productCoreClass;
 
     public function __construct(ModelManager $modelManager, Modules $modules)
     {
         $this->modelManager = $modelManager;
-        $this->articleModule = $modules->Articles();
+        $this->productCoreClass = $modules->Articles();
     }
 
     /**
-     * @param bool $isTaxFree
-     *
      * @throws InvalidOrderException
-     *
-     * @return Detail
      */
-    public function create(PositionStruct $positionStruct, $isTaxFree)
+    public function create(PositionStruct $positionStruct, bool $isTaxFree): Detail
     {
         if (!$positionStruct->getNumber()) {
             throw new InvalidOrderException('No product number was passed.');
@@ -56,8 +53,7 @@ class DetailFactory
 
         $detail = new Detail();
 
-        $repository = $this->modelManager->getRepository(ProductVariant::class);
-        $productVariant = $repository->findOneBy(['number' => $positionStruct->getNumber()]);
+        $productVariant = $this->modelManager->getRepository(ProductVariant::class)->findOneBy(['number' => $positionStruct->getNumber()]);
         if (!$productVariant instanceof ProductVariant) {
             throw new \RuntimeException(sprintf('Could not find %s with number "%s"', ProductVariant::class, $positionStruct->getNumber()));
         }
@@ -70,7 +66,7 @@ class DetailFactory
             $detail->setTax($tax);
         }
 
-        $detail->setTaxRate((float) $tax->getTax());
+        $detail->setTaxRate((float) $positionStruct->getTaxRate());
 
         $detail->setEsdArticle(0);
 
@@ -82,14 +78,15 @@ class DetailFactory
 
         $detail->setArticleId($product->getId());
         $detail->setArticleDetail($productVariant);
-        $name = $this->articleModule->sGetArticleNameByOrderNumber($positionStruct->getNumber());
+        $name = $this->productCoreClass->sGetArticleNameByOrderNumber($positionStruct->getNumber());
+        $name = \is_string($name) ? $name : '';
         $detail->setArticleName($name);
         $detail->setArticleNumber($positionStruct->getNumber());
         $detail->setPrice($positionStruct->getPrice());
         $detail->setMode($positionStruct->getMode());
         $detail->setQuantity($positionStruct->getQuantity());
         $detail->setShipped(0);
-        $detail->setUnit($productVariant->getUnit() ? $productVariant->getUnit()->getName() : 0);
+        $detail->setUnit($productVariant->getUnit() ? $productVariant->getUnit()->getName() : '');
         $detail->setPackUnit($productVariant->getPackUnit());
         $detail->setAttribute($this->createDetailAttribute());
         $detail->setEan($positionStruct->getEan());
@@ -97,12 +94,7 @@ class DetailFactory
         return $detail;
     }
 
-    /**
-     * @param bool $isTaxFree
-     *
-     * @return Detail
-     */
-    private function createDiscount(PositionStruct $positionStruct, $isTaxFree)
+    private function createDiscount(PositionStruct $positionStruct, bool $isTaxFree): Detail
     {
         $detail = new Detail();
         $detail->setArticleNumber($positionStruct->getNumber());
@@ -112,7 +104,7 @@ class DetailFactory
 
         $detail->setQuantity(1);
         $detail->setShipped(0);
-        $detail->setArticleId($positionStruct->getArticleId());
+        $detail->setArticleId($positionStruct->getProductId());
         $detail->setEsdArticle(0);
 
         $tax = $this->modelManager->find(Tax::class, $positionStruct->getTaxId());
@@ -121,7 +113,7 @@ class DetailFactory
         if (!$isTaxFree) {
             $detail->setTax($tax);
         }
-        $detail->setTaxRate((float) $tax->getTax());
+        $detail->setTaxRate((float) $positionStruct->getTaxRate());
 
         $detailStatus = $this->modelManager->find(DetailStatus::class, 0);
         if (!$detailStatus instanceof DetailStatus) {
@@ -133,10 +125,7 @@ class DetailFactory
         return $detail;
     }
 
-    /**
-     * @return OrderDetail
-     */
-    private function createDetailAttribute()
+    private function createDetailAttribute(): OrderDetail
     {
         $orderDetailAttribute = new OrderDetail();
         $orderDetailAttribute->setAttribute1('');

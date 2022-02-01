@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -13,10 +14,7 @@ use SwagBackendOrder\Components\PriceCalculation\DiscountType;
 
 class DiscountCalculator
 {
-    /**
-     * @return array
-     */
-    public function calculateDiscount(array &$orderData)
+    public function calculateDiscount(array &$orderData): array
     {
         foreach ($orderData['positions'] as &$position) {
             //Check for absolute discount
@@ -37,12 +35,7 @@ class DiscountCalculator
         return $orderData;
     }
 
-    /**
-     * @param array $orderData
-     * @param array $discountPosition
-     * @param float $discount
-     */
-    private function updateOrderDetails(&$orderData, &$discountPosition, $discount)
+    private function updateOrderDetails(array &$orderData, array &$discountPosition, float $discount): void
     {
         $taxRate = $discountPosition['taxRate'];
         $discountNet = \round($discount / (100 + $taxRate) * 100, 3);

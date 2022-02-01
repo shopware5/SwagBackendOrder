@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -41,106 +42,67 @@ class PositionStruct
      */
     private $discountType;
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @return float
-     */
-    public function getNetPrice()
+    public function getNetPrice(): float
     {
-        return (float) $this->price / (1.0 + ($this->taxRate / 100));
+        return (float) ($this->price / (1.0 + ($this->taxRate / 100)));
     }
 
-    /**
-     * @param float $price
-     */
-    public function setPrice($price)
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
-    /**
-     * @param int $quantity
-     */
-    public function setQuantity($quantity)
+    public function setQuantity(int $quantity): void
     {
         $this->quantity = $quantity;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotal()
+    public function getTotal(): float
     {
         return $this->total;
     }
 
-    /**
-     * @param float $total
-     */
-    public function setTotal($total)
+    public function setTotal(float $total): void
     {
         $this->total = $total;
     }
 
-    /**
-     * @return float
-     */
-    public function getTaxRate()
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
 
-    /**
-     * @param float $taxRate
-     */
-    public function setTaxRate($taxRate)
+    public function setTaxRate(float $taxRate): void
     {
         $this->taxRate = $taxRate;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsDiscount()
+    public function getIsDiscount(): bool
     {
         return $this->isDiscount;
     }
 
-    /**
-     * @param bool $isDiscount
-     */
-    public function setIsDiscount($isDiscount)
+    public function setIsDiscount(bool $isDiscount): void
     {
         $this->isDiscount = $isDiscount;
     }
 
-    /**
-     * @return int
-     */
-    public function getDiscountType()
+    public function getDiscountType(): int
     {
         return $this->discountType;
     }
 
-    /**
-     * @param int $discountType
-     */
-    public function setDiscountType($discountType)
+    public function setDiscountType(int $discountType): void
     {
         $this->discountType = $discountType;
     }
@@ -148,7 +110,7 @@ class PositionStruct
     /**
      * @return array{price: float, quantity: int, total: float, taxRate: float, isDiscount: bool, discountType: int}
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'price' => $this->getPrice(),

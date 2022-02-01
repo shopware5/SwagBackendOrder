@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -14,32 +15,27 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
 class TaxCalculationTest extends TestCase
 {
-    public function testGetNetPrice()
+    public function testGetNetPrice(): void
     {
         $grossPrice = 59.99;
         $taxRate = 19.00;
 
-        $taxCalculation = $this->getTaxCalculation();
-        $netPrice = $taxCalculation->getNetPrice($grossPrice, $taxRate);
+        $netPrice = $this->getTaxCalculation()->getNetPrice($grossPrice, $taxRate);
 
-        static::assertEquals(50.411764705882355, $netPrice);
+        static::assertSame(50.411764705882355, $netPrice);
     }
 
-    public function testGetGrossPrice()
+    public function testGetGrossPrice(): void
     {
         $netPrice = 50.41;
         $taxRate = 19.00;
 
-        $taxCalculation = $this->getTaxCalculation();
-        $grossPrice = $taxCalculation->getGrossPrice($netPrice, $taxRate);
+        $grossPrice = $this->getTaxCalculation()->getGrossPrice($netPrice, $taxRate);
 
-        static::assertEquals(59.9879, $grossPrice);
+        static::assertSame(59.9879, $grossPrice);
     }
 
-    /**
-     * @return TaxCalculation
-     */
-    private function getTaxCalculation()
+    private function getTaxCalculation(): TaxCalculation
     {
         return new TaxCalculation();
     }

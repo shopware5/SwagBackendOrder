@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -9,12 +10,15 @@
 
 namespace SwagBackendOrder\Components\PriceCalculation\Struct;
 
+/**
+ * @phpstan-type PositionArray list<array{price: float, quantity: int, total: float, taxRate: float, isDiscount: bool, discountType: int}>
+ */
 class RequestStruct
 {
     /**
      * @var PositionStruct[]
      */
-    private $positions;
+    private $positions = [];
 
     /**
      * @var bool
@@ -27,7 +31,7 @@ class RequestStruct
     private $previousTaxFree;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $dispatchId;
 
@@ -74,15 +78,15 @@ class RequestStruct
     /**
      * @return PositionStruct[]
      */
-    public function getPositions()
+    public function getPositions(): array
     {
         return $this->positions;
     }
 
     /**
-     * @return list<array{price: float, quantity: int, total: float, taxRate: float, isDiscount: bool, discountType: int}>
+     * @return PositionArray
      */
-    public function getPositionsArray()
+    public function getPositionsArray(): array
     {
         $positions = [];
         foreach ($this->getPositions() as $position) {
@@ -95,122 +99,80 @@ class RequestStruct
     /**
      * @param PositionStruct[] $positions
      */
-    public function setPositions(array $positions)
+    public function setPositions(array $positions): void
     {
         $this->positions = $positions;
     }
 
-    /**
-     * @return bool
-     */
-    public function isTaxFree()
+    public function isTaxFree(): bool
     {
         return $this->taxFree;
     }
 
-    /**
-     * @param bool $taxFree
-     */
-    public function setTaxFree($taxFree)
+    public function setTaxFree(bool $taxFree): void
     {
         $this->taxFree = $taxFree;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPreviousTaxFree()
+    public function isPreviousTaxFree(): bool
     {
         return $this->previousTaxFree;
     }
 
-    /**
-     * @param bool $taxFreeChanged
-     */
-    public function setPreviousTaxFree($taxFreeChanged)
+    public function setPreviousTaxFree(bool $taxFreeChanged): void
     {
         $this->previousTaxFree = $taxFreeChanged;
     }
 
-    /**
-     * @return int
-     */
-    public function getDispatchId()
+    public function getDispatchId(): ?int
     {
         return $this->dispatchId;
     }
 
-    /**
-     * @param int $dispatchId
-     */
-    public function setDispatchId($dispatchId)
+    public function setDispatchId(int $dispatchId): void
     {
         $this->dispatchId = $dispatchId;
-        if ($dispatchId === 0) {
+        if ($this->dispatchId === 0) {
             $this->dispatchId = null;
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getCurrencyId()
+    public function getCurrencyId(): int
     {
         return $this->currencyId;
     }
 
-    /**
-     * @param int $currencyId
-     */
-    public function setCurrencyId($currencyId)
+    public function setCurrencyId(int $currencyId): void
     {
         $this->currencyId = $currencyId;
     }
 
-    /**
-     * @return int
-     */
-    public function getPreviousCurrencyId()
+    public function getPreviousCurrencyId(): int
     {
         return $this->previousCurrencyId;
     }
 
-    /**
-     * @param int $previousCurrencyId
-     */
-    public function setPreviousCurrencyId($previousCurrencyId)
+    public function setPreviousCurrencyId(int $previousCurrencyId): void
     {
         $this->previousCurrencyId = $previousCurrencyId;
     }
 
-    /**
-     * @return float
-     */
-    public function getShippingCosts()
+    public function getShippingCosts(): float
     {
         return $this->shippingCosts;
     }
 
-    /**
-     * @param float $shippingCosts
-     */
-    public function setShippingCosts($shippingCosts)
+    public function setShippingCosts(float $shippingCosts): void
     {
         $this->shippingCosts = $shippingCosts;
     }
 
-    /**
-     * @return float
-     */
-    public function getShippingCostsNet()
+    public function getShippingCostsNet(): float
     {
         return $this->shippingCostsNet;
     }
 
-    /**
-     * @param float $shippingCostsNet
-     */
-    public function setShippingCostsNet($shippingCostsNet)
+    public function setShippingCostsNet(float $shippingCostsNet): void
     {
         $this->shippingCostsNet = $shippingCostsNet;
     }
@@ -218,7 +180,7 @@ class RequestStruct
     /**
      * @return float[]
      */
-    public function getBasketTaxRates()
+    public function getBasketTaxRates(): array
     {
         return $this->basketTaxRates;
     }
@@ -226,55 +188,37 @@ class RequestStruct
     /**
      * @param float[] $basketTaxRates
      */
-    public function setBasketTaxRates(array $basketTaxRates)
+    public function setBasketTaxRates(array $basketTaxRates): void
     {
         $this->basketTaxRates = $basketTaxRates;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPreviousDisplayNet()
+    public function isPreviousDisplayNet(): bool
     {
         return $this->previousDisplayNet;
     }
 
-    /**
-     * @param bool $previousNetChanged
-     */
-    public function setPreviousDisplayNet($previousNetChanged)
+    public function setPreviousDisplayNet(bool $previousNetChanged): void
     {
         $this->previousDisplayNet = $previousNetChanged;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDisplayNet()
+    public function isDisplayNet(): bool
     {
         return $this->displayNet;
     }
 
-    /**
-     * @param bool $displayNet
-     */
-    public function setDisplayNet($displayNet)
+    public function setDisplayNet(bool $displayNet): void
     {
         $this->displayNet = $displayNet;
     }
 
-    /**
-     * @return float
-     */
-    public function getPreviousShippingTaxRate()
+    public function getPreviousShippingTaxRate(): float
     {
         return $this->previousShippingTaxRate;
     }
 
-    /**
-     * @param float $previousShippingTaxRate
-     */
-    public function setPreviousShippingTaxRate($previousShippingTaxRate)
+    public function setPreviousShippingTaxRate(float $previousShippingTaxRate): void
     {
         $this->previousShippingTaxRate = $previousShippingTaxRate;
     }

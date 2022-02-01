@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,63 +8,59 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Functional\PriceCalculation;
+namespace SwagBackendOrder\Tests\Functional\Components\PriceCalculation;
 
 use PHPUnit\Framework\TestCase;
-use SwagBackendOrder\Components\PriceCalculation\Calculator\DiscountCalculator;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
 class DiscountCalculatorTest extends TestCase
 {
-    public function testCalculateDiscountWithAbsoluteDiscount()
+    use ContainerTrait;
+
+    public function testCalculateDiscountWithAbsoluteDiscount(): void
     {
         $orderData = $this->getTestOrderDataWithAbsoluteDiscount();
 
-        /** @var DiscountCalculator $calculator */
-        $calculator = Shopware()->Container()->get('swag_backend_order.price_calculation.discount_calculator');
+        $calculator = $this->getContainer()->get('swag_backend_order.price_calculation.discount_calculator');
 
         $result = $calculator->calculateDiscount($orderData);
 
-        static::assertEquals(91.597, $result['totalWithoutTax']);
-        static::assertEquals(90, $result['total']);
-        static::assertEquals(90, $result['sum']);
-        static::assertEquals(17.40343, $result['taxSum']);
+        static::assertSame(91.597, $result['totalWithoutTax']);
+        static::assertSame(90.0, $result['total']);
+        static::assertSame(90.0, $result['sum']);
+        static::assertSame(17.40343, $result['taxSum']);
     }
 
-    public function testCalculateDiscountWithPercentageDiscount()
+    public function testCalculateDiscountWithPercentageDiscount(): void
     {
         $orderData = $this->getTestOrderDataWithPercentageDiscount();
 
-        /** @var DiscountCalculator $calculator */
-        $calculator = Shopware()->Container()->get('swag_backend_order.price_calculation.discount_calculator');
+        $calculator = $this->getContainer()->get('swag_backend_order.price_calculation.discount_calculator');
 
         $result = $calculator->calculateDiscount($orderData);
 
-        static::assertEquals(45.798, $result['totalWithoutTax']);
-        static::assertEquals(45, $result['total']);
-        static::assertEquals(45, $result['sum']);
-        static::assertEquals(-5, $result['positions'][1]['total']);
-        static::assertEquals(8.70162, $result['taxSum']);
+        static::assertSame(45.798, $result['totalWithoutTax']);
+        static::assertSame(45.0, $result['total']);
+        static::assertSame(45.0, $result['sum']);
+        static::assertSame(-5.0, $result['positions'][1]['total']);
+        static::assertSame(8.70162, $result['taxSum']);
     }
 
-    public function testCalculateDiscountWithTaxFreeOrder()
+    public function testCalculateDiscountWithTaxFreeOrder(): void
     {
         $orderData = $this->getTestOrderDataTaxFree();
 
-        /** @var DiscountCalculator $calculator */
-        $calculator = Shopware()->Container()->get('swag_backend_order.price_calculation.discount_calculator');
+        $calculator = $this->getContainer()->get('swag_backend_order.price_calculation.discount_calculator');
 
         $result = $calculator->calculateDiscount($orderData);
 
-        static::assertEquals(90, $result['totalWithoutTax']);
-        static::assertEquals(90, $result['total']);
-        static::assertEquals(90, $result['sum']);
-        static::assertEquals(0, $result['taxSum']);
+        static::assertSame(90.0, $result['totalWithoutTax']);
+        static::assertSame(90.0, $result['total']);
+        static::assertSame(90.0, $result['sum']);
+        static::assertNull($result['taxSum']);
     }
 
-    /**
-     * @return array
-     */
-    private function getTestOrderDataWithAbsoluteDiscount()
+    private function getTestOrderDataWithAbsoluteDiscount(): array
     {
         return [
             'isTaxFree' => false,
@@ -88,10 +85,7 @@ class DiscountCalculatorTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getTestOrderDataWithPercentageDiscount()
+    private function getTestOrderDataWithPercentageDiscount(): array
     {
         return [
             'isTaxFree' => false,
@@ -114,10 +108,7 @@ class DiscountCalculatorTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getTestOrderDataTaxFree()
+    private function getTestOrderDataTaxFree(): array
     {
         return [
             'isTaxFree' => true,

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -49,29 +50,44 @@ class OrderFactory
         $this->detailFactory = $detailFactory;
     }
 
-    /**
-     * @return Order
-     */
-    public function create(OrderStruct $orderStruct)
+    public function create(OrderStruct $orderStruct): Order
     {
         $order = $this->initOrderModel($orderStruct);
 
         $customer = $this->modelManager->find(Customer::class, $orderStruct->getCustomerId());
+        if (!$customer instanceof Customer) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Customer::class, $orderStruct->getCustomerId()));
+        }
         $order->setCustomer($customer);
 
         $dispatch = $this->modelManager->find(Dispatch::class, $orderStruct->getDispatchId());
+        if (!$dispatch instanceof Dispatch) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Dispatch::class, $orderStruct->getDispatchId()));
+        }
         $order->setDispatch($dispatch);
 
         $payment = $this->modelManager->find(Payment::class, $orderStruct->getPaymentId());
+        if (!$payment instanceof Payment) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Payment::class, $orderStruct->getPaymentId()));
+        }
         $order->setPayment($payment);
 
         $orderStatus = $this->modelManager->getReference(Status::class, self::ORDER_STATUS_OPEN);
+        if (!$orderStatus instanceof Status) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Status::class, self::ORDER_STATUS_OPEN));
+        }
         $order->setOrderStatus($orderStatus);
 
         $paymentStatus = $this->modelManager->getReference(Status::class, self::PAYMENT_STATUS_OPEN);
+        if (!$paymentStatus instanceof Status) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Status::class, self::PAYMENT_STATUS_OPEN));
+        }
         $order->setPaymentStatus($paymentStatus);
 
         $languageSubShop = $this->modelManager->find(Shop::class, $orderStruct->getLanguageShopId());
+        if (!$languageSubShop instanceof Shop) {
+            throw new \RuntimeException(sprintf('Could not find %s with ID "%s"', Shop::class, $orderStruct->getLanguageShopId()));
+        }
         $order->setLanguageSubShop($languageSubShop);
 
         $order->setInvoiceShippingNet($orderStruct->getShippingCostsNet());
@@ -132,28 +148,31 @@ class OrderFactory
 
     /**
      * Workaround to fix 'Partner can not be null.' exception.
-     *
-     * @return Order
      */
-    private function initOrderModel(OrderStruct $orderStruct)
+    private function initOrderModel(OrderStruct $orderStruct): Order
     {
         $connection = $this->modelManager->getConnection();
         $sql = 'INSERT INTO s_order (ordernumber) VALUES (?)';
         $connection->executeQuery($sql, [$orderStruct->getNumber()]);
 
-        return $this->modelManager->find(Order::class, $connection->lastInsertId());
+        $order = $this->modelManager->find(Order::class, $connection->lastInsertId());
+        if (!$order instanceof Order) {
+            throw new \RuntimeException('Order with number "%s" could not be created properly');
+        }
+
+        return $order;
     }
 
     /**
      * @return Detail[]
      */
-    private function createOrderDetails(OrderStruct $orderStruct, Order $order)
+    private function createOrderDetails(OrderStruct $orderStruct, Order $order): array
     {
         $details = [];
 
         foreach ($orderStruct->getPositions() as $positionStruct) {
             $detail = $this->detailFactory->create($positionStruct, $orderStruct->getNetOrder());
-            $detail->setNumber($orderStruct->getNumber());
+            $detail->setNumber((string) $orderStruct->getNumber());
             $detail->setOrder($order);
             $details[] = $detail;
         }
@@ -161,12 +180,9 @@ class OrderFactory
         return $details;
     }
 
-    /**
-     * @return PaymentInstance
-     */
-    private function createPaymentInstance(Order $orderModel)
+    private function createPaymentInstance(Order $orderModel): PaymentInstance
     {
-        $paymentId = $orderModel->getPayment()->getId();
+        $paymentId = (int) $orderModel->getPayment()->getId();
         $paymentInstance = new PaymentInstance();
 
         if (!$orderModel->getCustomer() instanceof Customer) {
@@ -174,21 +190,21 @@ class OrderFactory
         }
 
         $paymentDataModel = $orderModel->getCustomer()->getPaymentData()->filter(function (PaymentData $paymentData) use ($paymentId) {
-            return $paymentData->getPaymentMeanId() == $paymentId;
+            return (int) $paymentData->getPaymentMeanId() === $paymentId;
         });
 
         if ($paymentDataModel[0] instanceof PaymentData) {
             $paymentDataModel = $paymentDataModel[0];
 
-            $paymentInstance->setBankName($paymentDataModel->getBankName());
-            $paymentInstance->setBankCode($paymentDataModel->getBankCode());
-            $paymentInstance->setAccountHolder($paymentDataModel->getAccountHolder());
+            $paymentInstance->setBankName((string) $paymentDataModel->getBankName());
+            $paymentInstance->setBankCode((string) $paymentDataModel->getBankCode());
+            $paymentInstance->setAccountHolder((string) $paymentDataModel->getAccountHolder());
 
-            $paymentInstance->setIban($paymentDataModel->getIban());
-            $paymentInstance->setBic($paymentDataModel->getBic());
+            $paymentInstance->setIban((string) $paymentDataModel->getIban());
+            $paymentInstance->setBic((string) $paymentDataModel->getBic());
 
-            $paymentInstance->setBankCode($paymentDataModel->getBankCode());
-            $paymentInstance->setAccountNumber($paymentDataModel->getAccountHolder());
+            $paymentInstance->setBankCode((string) $paymentDataModel->getBankCode());
+            $paymentInstance->setAccountNumber((string) $paymentDataModel->getAccountHolder());
         }
 
         $paymentInstance->setPaymentMean($orderModel->getPayment());
@@ -210,10 +226,7 @@ class OrderFactory
         return $paymentInstance;
     }
 
-    /**
-     * @return OrderAttributes
-     */
-    private function createOrderAttributes(OrderStruct $orderStruct)
+    private function createOrderAttributes(OrderStruct $orderStruct): OrderAttributes
     {
         $attributeData = $orderStruct->getAttributes();
 
@@ -228,19 +241,19 @@ class OrderFactory
         return $attributes;
     }
 
-    /**
-     * @param Customer $customer
-     *
-     * @return Shipping
-     */
-    private function createShippingAddress(OrderStruct $orderStruct, $customer)
+    private function createShippingAddress(OrderStruct $orderStruct, Customer $customer): Shipping
     {
         $shipping = new Shipping();
 
-        if ($customer->getDefaultShippingAddress()->getId() === $orderStruct->getShippingAddressId()) {
-            $shipping->fromAddress($customer->getDefaultShippingAddress());
+        $shippingAddressId = $orderStruct->getShippingAddressId();
+        $defaultShippingAddress = $customer->getDefaultShippingAddress();
+        if ($defaultShippingAddress instanceof Address && $defaultShippingAddress->getId() === $shippingAddressId) {
+            $shipping->fromAddress($defaultShippingAddress);
         } else {
-            $shippingAddress = $this->modelManager->find(Address::class, $orderStruct->getShippingAddressId());
+            $shippingAddress = $this->modelManager->find(Address::class, $shippingAddressId);
+            if (!$shippingAddress instanceof Address) {
+                throw new \RuntimeException(sprintf('Order struct contains invalid shipping address ID %s', $shippingAddressId));
+            }
             $shipping->fromAddress($shippingAddress);
         }
 
@@ -249,19 +262,19 @@ class OrderFactory
         return $shipping;
     }
 
-    /**
-     * @param Customer $customer
-     *
-     * @return Billing
-     */
-    private function createBillingAddress(OrderStruct $orderStruct, $customer)
+    private function createBillingAddress(OrderStruct $orderStruct, Customer $customer): Billing
     {
         $billing = new Billing();
 
-        if ($customer->getDefaultBillingAddress()->getId() === $orderStruct->getBillingAddressId()) {
-            $billing->fromAddress($customer->getDefaultBillingAddress());
+        $billingAddressId = $orderStruct->getBillingAddressId();
+        $defaultBillingAddress = $customer->getDefaultBillingAddress();
+        if ($defaultBillingAddress instanceof Address && $defaultBillingAddress->getId() === $billingAddressId) {
+            $billing->fromAddress($defaultBillingAddress);
         } else {
-            $billingAddress = $this->modelManager->find(Address::class, $orderStruct->getBillingAddressId());
+            $billingAddress = $this->modelManager->find(Address::class, $billingAddressId);
+            if (!$billingAddress instanceof Address) {
+                throw new \RuntimeException(sprintf('Order struct contains invalid billing address ID %s', $billingAddressId));
+            }
             $billing->fromAddress($billingAddress);
         }
 

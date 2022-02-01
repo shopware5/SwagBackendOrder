@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -8,6 +9,8 @@
  */
 
 namespace SwagBackendOrder\Components\Order\Validator\Validators;
+
+use SwagBackendOrder\Components\Order\Struct\PositionStruct;
 
 class ProductContext
 {
@@ -21,39 +24,27 @@ class ProductContext
      */
     private $quantity;
 
-    /**
-     * @param string $orderNumber
-     * @param int    $quantity
-     */
-    public function __construct($orderNumber, $quantity)
+    public function __construct(string $orderNumber, int $quantity)
     {
         $this->orderNumber = $orderNumber;
         $this->quantity = $quantity;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrderNumber()
+    public function getOrderNumber(): string
     {
         return $this->orderNumber;
     }
 
-    /**
-     * @return int
-     */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
     /**
-     * Returns a value indicating whether or not this product is of type discount.
-     *
-     * @return bool
+     * Returns a value indicating whether this product is of type discount.
      */
-    public function isDiscount()
+    public function isDiscount(): bool
     {
-        return \strpos($this->getOrderNumber(), 'DISCOUNT.') === 0;
+        return \strpos($this->getOrderNumber(), PositionStruct::DISCOUNT_ORDER_NUMBER_PREFIX) === 0;
     }
 }

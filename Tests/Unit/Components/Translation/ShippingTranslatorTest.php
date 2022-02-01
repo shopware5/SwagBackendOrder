@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -21,7 +22,7 @@ class ShippingTranslatorTest extends TestCase
     public const DISPATCH_DESCRIPTION_GERMAN = 'Beschreibung der Versandart';
     public const DISPATCH_DESCRIPTION_ENGLISH = 'Description of the shipping type';
 
-    public function testItCanBeCreated()
+    public function testItCanBeCreated(): void
     {
         $shippingTranslator = new ShippingTranslator(
             $this->createMock(\Shopware_Components_Translation::class)
@@ -30,7 +31,7 @@ class ShippingTranslatorTest extends TestCase
         static::assertInstanceOf(ShippingTranslator::class, $shippingTranslator);
     }
 
-    public function testItShouldTranslateDispatch()
+    public function testItShouldTranslateDispatch(): void
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
@@ -50,11 +51,10 @@ class ShippingTranslatorTest extends TestCase
             'dispatch_name' => self::DISPATCH_NAME_GERMAN,
         ];
 
-        $shippingTranslator = new ShippingTranslator($translationComponentMock);
-        $translatedDispatch = $shippingTranslator->translate($dispatch, self::LANGUAGE_ID_ENGLISH);
+        $translatedDispatch = (new ShippingTranslator($translationComponentMock))->translate($dispatch, self::LANGUAGE_ID_ENGLISH);
 
-        static::assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['name']);
-        static::assertEquals(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['dispatch_name']);
-        static::assertEquals(self::DISPATCH_DESCRIPTION_ENGLISH, $translatedDispatch['description']);
+        static::assertSame(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['name']);
+        static::assertSame(self::DISPATCH_NAME_ENGLISH, $translatedDispatch['dispatch_name']);
+        static::assertSame(self::DISPATCH_DESCRIPTION_ENGLISH, $translatedDispatch['description']);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -32,10 +33,7 @@ class ShippingPriceCalculator
         $this->taxCalculation = $taxCalculation;
     }
 
-    /**
-     * @return PriceResult
-     */
-    public function calculate(PriceContext $context)
+    public function calculate(PriceContext $context): PriceResult
     {
         $priceStruct = new PriceResult();
 
@@ -58,7 +56,7 @@ class ShippingPriceCalculator
     /**
      * @return float the base/gross shipping price in the standard currency
      */
-    public function calculateBasePrice(PriceContext $context)
+    public function calculateBasePrice(PriceContext $context): float
     {
         $basePrice = $this->currencyConverter->getBaseCurrencyPrice(
             $context->getPrice(),

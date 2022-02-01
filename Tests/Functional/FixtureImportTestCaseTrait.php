@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,16 +8,15 @@
  *
  */
 
-namespace SwagBackendOrder\Tests;
-
-use Doctrine\DBAL\Connection;
+namespace SwagBackendOrder\Tests\Functional;
 
 trait FixtureImportTestCaseTrait
 {
-    public function importFixtures($file)
+    public function importFixtures(string $file): void
     {
-        /** @var Connection $connection */
         $connection = Shopware()->Container()->get('dbal_connection');
-        $connection->executeQuery(\file_get_contents($file));
+        $sql = \file_get_contents($file);
+        static::assertIsString($sql);
+        $connection->executeQuery($sql);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -27,14 +28,10 @@ class OrderValidator implements OrderValidatorInterface
         $this->productValidator = $productValidator;
     }
 
-    /**
-     * @return ValidationResult
-     */
-    public function validate(OrderStruct $order)
+    public function validate(OrderStruct $order): ValidationResult
     {
         $result = new ValidationResult();
 
-        /** @var PositionStruct[] $positions */
         $positions = $order->getPositions();
         $violations = $this->validateOrderDetails($positions);
 
@@ -45,14 +42,11 @@ class OrderValidator implements OrderValidatorInterface
 
     /**
      * @param PositionStruct[] $positions
-     *
-     * @return ValidationResult
      */
-    protected function validateOrderDetails(array $positions)
+    private function validateOrderDetails(array $positions): ValidationResult
     {
         $violations = new ValidationResult();
 
-        /** @var PositionStruct $position */
         foreach ($positions as $position) {
             $result = $this->productValidator->validate($this->getProductContext($position));
             $violations->addMessages($result->getMessages());
@@ -61,10 +55,7 @@ class OrderValidator implements OrderValidatorInterface
         return $violations;
     }
 
-    /**
-     * @return ProductContext
-     */
-    private function getProductContext(PositionStruct $positionStruct)
+    private function getProductContext(PositionStruct $positionStruct): ProductContext
     {
         return new ProductContext($positionStruct->getNumber(), $positionStruct->getQuantity());
     }

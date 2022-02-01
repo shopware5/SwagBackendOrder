@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -11,24 +12,12 @@ namespace SwagBackendOrder\Components\PriceCalculation;
 
 class CurrencyConverter
 {
-    /**
-     * @param float $currencyFactor
-     * @param float $price
-     *
-     * @return float
-     */
-    public function getBaseCurrencyPrice($price, $currencyFactor)
+    public function getBaseCurrencyPrice(float $price, float $currencyFactor): float
     {
         return $price / $currencyFactor;
     }
 
-    /**
-     * @param float $currencyFactor
-     * @param float $price
-     *
-     * @return float
-     */
-    public function getCurrencyPrice($price, $currencyFactor)
+    public function getCurrencyPrice(float $price, float $currencyFactor): float
     {
         return $price * $currencyFactor;
     }

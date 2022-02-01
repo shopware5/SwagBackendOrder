@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -34,29 +35,24 @@ class CustomProductsValidation extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /** @var CustomProduct $constraint */
         if ($constraint instanceof CustomProduct === false) {
             return;
         }
 
-        if (!$this->isCustomProductsActivated($constraint)) {
+        if (!$this->isCustomProductsPluginActivate($constraint)) {
             return;
         }
 
-        if ($this->isCustomProductArticle($value)) {
-            $namespace = $this->snippetManager->getNamespace($constraint->namespace);
-            $message = $namespace->get($constraint->snippet);
+        if ($this->isCustomProduct($value)) {
+            $message = $this->snippetManager->getNamespace($constraint->namespace)->get($constraint->snippet);
 
             $this->context->addViolation(\sprintf($message, $value));
         }
     }
 
-    /**
-     * @return bool|string
-     */
-    private function isCustomProductsActivated(CustomProduct $constraint)
+    private function isCustomProductsPluginActivate(CustomProduct $constraint): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('plugins.name');
@@ -67,15 +63,10 @@ class CustomProductsValidation extends ConstraintValidator
 
         $stmt = $builder->execute();
 
-        return $stmt->fetchColumn();
+        return (bool) $stmt->fetchColumn();
     }
 
-    /**
-     * @param string $orderNumber
-     *
-     * @return bool|string
-     */
-    private function isCustomProductArticle($orderNumber)
+    private function isCustomProduct(string $orderNumber): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('article.id');
@@ -87,6 +78,6 @@ class CustomProductsValidation extends ConstraintValidator
 
         $stmt = $builder->execute();
 
-        return $stmt->fetchColumn();
+        return (bool) $stmt->fetchColumn();
     }
 }

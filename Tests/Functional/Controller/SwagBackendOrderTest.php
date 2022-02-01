@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -11,20 +12,21 @@ namespace SwagBackendOrder\Tests\Functional\Controller;
 
 require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 
-use Enlight_Controller_Request_RequestHttp;
 use Enlight_View_Default;
 use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
-use SwagBackendOrder\Tests\B2bOrderTrait;
-use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
+use SwagBackendOrder\Tests\Functional\B2bOrderTrait;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
+use SwagBackendOrder\Tests\Functional\DatabaseTestCaseTrait;
 
 class SwagBackendOrderTest extends TestCase
 {
+    use ContainerTrait;
     use DatabaseTestCaseTrait;
     use B2bOrderTrait;
 
-    public function testCalculateBasket()
+    public function testCalculateBasket(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoData());
@@ -38,14 +40,14 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(142.43, $result['totalWithoutTax']);
-        static::assertEquals(154.94, $result['sum']);
-        static::assertEquals(16.4, \round($result['taxSum'], 1));
-        static::assertEquals(59.99, $result['positions'][0]['price']);
-        static::assertEquals(59.99, $result['positions'][0]['total']);
+        static::assertSame(142.43, $result['totalWithoutTax']);
+        static::assertSame(154.94, $result['sum']);
+        static::assertSame(16.4, \round($result['taxSum'], 1));
+        static::assertSame(59.99, $result['positions'][0]['price']);
+        static::assertSame(59.99, $result['positions'][0]['total']);
     }
 
-    public function testCalculateBasketWithEmptyDispatchId()
+    public function testCalculateBasketWithEmptyDispatchId(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithEmptyDispatch());
@@ -59,11 +61,11 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(3.9, $result['shippingCosts']);
-        static::assertEquals(3.9, $result['shippingCostsNet']);
+        static::assertSame(3.9, $result['shippingCosts']);
+        static::assertSame(3.9, $result['shippingCostsNet']);
     }
 
-    public function testCalculateBasketWithInvalidDispatchId()
+    public function testCalculateBasketWithInvalidDispatchId(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithInvalidDispatch());
@@ -77,7 +79,7 @@ class SwagBackendOrderTest extends TestCase
         $controller->calculateBasketAction();
     }
 
-    public function testCalculateBasketWithEmptyBasketTaxRates()
+    public function testCalculateBasketWithEmptyBasketTaxRates(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithEmptyPositions());
@@ -91,11 +93,11 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
         Shopware()->Front()->Router()->assemble();
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(3.9, $result['shippingCosts']);
-        static::assertEquals(3.9, $result['shippingCostsNet']);
+        static::assertSame(3.9, $result['shippingCosts']);
+        static::assertSame(3.9, $result['shippingCostsNet']);
     }
 
-    public function testBasketCalculationWithChangedDisplayNetFlag()
+    public function testBasketCalculationWithChangedDisplayNetFlag(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoWithChangedDisplayNetFlag());
@@ -109,20 +111,20 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(50.41, \round($result['sum'], 2));
+        static::assertSame(50.41, \round($result['sum'], 2));
 
-        static::assertEquals(3.90, $result['shippingCosts']);
-        static::assertEquals(3.28, $result['shippingCostsNet']);
+        static::assertSame(3.90, $result['shippingCosts']);
+        static::assertSame(3.28, $result['shippingCostsNet']);
 
-        static::assertEquals(10.20, $result['taxSum']);
+        static::assertSame(10.20, $result['taxSum']);
 
-        static::assertEquals(63.89, $result['total']);
-        static::assertEquals(53.69, $result['totalWithoutTax']);
+        static::assertSame(63.89, $result['total']);
+        static::assertSame(53.69, $result['totalWithoutTax']);
 
-        static::assertEquals(50.41, \round($result['positions'][0]['price'], 2));
+        static::assertSame(50.41, \round($result['positions'][0]['price'], 2));
     }
 
-    public function testBasketCalculationWithChangedTaxfreeFlag()
+    public function testBasketCalculationWithChangedTaxfreeFlag(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoWithChangedTaxfreeFlag());
@@ -136,20 +138,20 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(50.41, \round($result['sum'], 2));
+        static::assertSame(50.41, \round($result['sum'], 2));
 
-        static::assertEquals(3.28, $result['shippingCosts']);
-        static::assertEquals(3.28, $result['shippingCostsNet']);
+        static::assertSame(3.28, $result['shippingCosts']);
+        static::assertSame(3.28, $result['shippingCostsNet']);
 
-        static::assertEquals(0, $result['taxSum']);
+        static::assertSame(0.0, $result['taxSum']);
 
-        static::assertEquals(53.69, $result['total']);
-        static::assertEquals(53.69, $result['totalWithoutTax']);
+        static::assertSame(53.69, $result['total']);
+        static::assertSame(53.69, $result['totalWithoutTax']);
 
-        static::assertEquals(50.41, \round($result['positions'][0]['price'], 2));
+        static::assertSame(50.41, \round($result['positions'][0]['price'], 2));
     }
 
-    public function testBasketCalculationWithChangedCurrency()
+    public function testBasketCalculationWithChangedCurrency(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDemoDataWithChangedCurrency());
@@ -163,21 +165,21 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals(271.08, $result['sum']);
+        static::assertSame(271.08, $result['sum']);
 
-        static::assertEquals(5.31, $result['shippingCosts']);
-        static::assertEquals(4.47, $result['shippingCostsNet']);
+        static::assertSame(5.31, $result['shippingCosts']);
+        static::assertSame(4.47, $result['shippingCostsNet']);
 
-        static::assertEquals(41.68, $result['taxSum']);
+        static::assertSame(41.68, $result['taxSum']);
 
-        static::assertEquals(276.39, $result['total']);
-        static::assertEquals(234.71, $result['totalWithoutTax']);
+        static::assertSame(276.39, $result['total']);
+        static::assertSame(234.71, $result['totalWithoutTax']);
 
-        static::assertEquals(81.74, \round($result['positions'][0]['price'], 2));
-        static::assertEquals(245.21, \round($result['positions'][0]['total'], 2));
+        static::assertSame(81.74, \round($result['positions'][0]['price'], 2));
+        static::assertSame(245.21, \round($result['positions'][0]['total'], 2));
     }
 
-    public function testGetProduct()
+    public function testGetProduct(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductDemoData());
@@ -191,11 +193,11 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals('SW10002.1', $result['number']);
-        static::assertEquals(59.99, $result['price']);
+        static::assertSame('SW10002.1', $result['number']);
+        static::assertSame(59.99, $result['price']);
     }
 
-    public function testGetDiscountAbsolute()
+    public function testGetDiscountAbsolute(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_ABSOLUTE, 50.0, 'Test_absolute'));
@@ -208,19 +210,19 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals('Test_absolute', $result['articleName']);
-        static::assertEquals('DISCOUNT.1', $result['articleNumber']);
-        static::assertEquals(0, $result['articleId']);
-        static::assertEquals(-50.0, $result['price']);
-        static::assertEquals(4, $result['mode']);
-        static::assertEquals(1, $result['quantity']);
-        static::assertEquals(1, $result['inStock']);
+        static::assertSame('Test_absolute', $result['articleName']);
+        static::assertSame('DISCOUNT.1', $result['articleNumber']);
+        static::assertSame(0, $result['articleId']);
+        static::assertSame(-50.0, $result['price']);
+        static::assertSame(4, $result['mode']);
+        static::assertSame(1, $result['quantity']);
+        static::assertSame(1, $result['inStock']);
         static::assertTrue($result['isDiscount']);
-        static::assertEquals(DiscountType::DISCOUNT_ABSOLUTE, $result['discountType']);
-        static::assertEquals(-50.0, $result['total']);
+        static::assertSame(DiscountType::DISCOUNT_ABSOLUTE, $result['discountType']);
+        static::assertSame(-50.0, $result['total']);
     }
 
-    public function testGetDiscountPercentage()
+    public function testGetDiscountPercentage(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_PERCENTAGE, 10.0, 'Test_percentage'));
@@ -233,19 +235,19 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals('Test_percentage', $result['articleName']);
-        static::assertEquals('DISCOUNT.0', $result['articleNumber']);
-        static::assertEquals(0, $result['articleId']);
-        static::assertEquals(-10.0, $result['price']);
-        static::assertEquals(4, $result['mode']);
-        static::assertEquals(1, $result['quantity']);
-        static::assertEquals(1, $result['inStock']);
+        static::assertSame('Test_percentage', $result['articleName']);
+        static::assertSame('DISCOUNT.0', $result['articleNumber']);
+        static::assertSame(0, $result['articleId']);
+        static::assertSame(-10.0, $result['price']);
+        static::assertSame(4, $result['mode']);
+        static::assertSame(1, $result['quantity']);
+        static::assertSame(1, $result['inStock']);
         static::assertTrue($result['isDiscount']);
-        static::assertEquals(DiscountType::DISCOUNT_PERCENTAGE, $result['discountType']);
-        static::assertEquals(-10.0, $result['total']);
+        static::assertSame(DiscountType::DISCOUNT_PERCENTAGE, $result['discountType']);
+        static::assertSame(-10.0, $result['total']);
     }
 
-    public function testGetDiscountAbsoluteWillFailDueToInvalidAmount()
+    public function testGetDiscountAbsoluteWillFailDueToInvalidAmount(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getDiscountRequestData(DiscountType::DISCOUNT_ABSOLUTE, 999.0, 'Test_absolute'));
@@ -258,7 +260,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertFalse($view->getAssign('success'));
     }
 
-    public function testGetProductWithBlockPrices()
+    public function testGetProductWithBlockPrices(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductDemoDataWithBlockPrices());
@@ -302,10 +304,10 @@ class SwagBackendOrderTest extends TestCase
             static::assertSame(\round($blockPrice['gross'], 2), \round($expectedBlockPricesArray[$index]['gross'], 2));
         }
 
-        static::assertEquals(0.9044, $result['price']);
+        static::assertSame(0.9044, $result['price']);
     }
 
-    public function testGetProductWithDisplayNet()
+    public function testGetProductWithDisplayNet(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductDemoDataWithDisplayNetFlag());
@@ -319,11 +321,11 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertEquals('SW10002.1', $result['number']);
-        static::assertEquals(50.41, $result['price']);
+        static::assertSame('SW10002.1', $result['number']);
+        static::assertSame(50.41, $result['price']);
     }
 
-    public function testGetProductWithBlockPricesAndDisplayNet()
+    public function testGetProductWithBlockPricesAndDisplayNet(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductDemoDataWithBlockPricesAndDisplayNetFlag());
@@ -367,7 +369,7 @@ class SwagBackendOrderTest extends TestCase
             static::assertSame(\round($blockPrice['gross'], 2), \round($expectedBlockPricesArray[$index]['gross'], 2));
         }
 
-        static::assertEquals(0.76, $result['price']);
+        static::assertSame(0.76, $result['price']);
     }
 
     public function testGetCustomerList(): void
@@ -407,7 +409,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['city'], $result['city']);
     }
 
-    public function testGetCustomerSingle()
+    public function testGetCustomerSingle(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParam('searchParam', 1);
@@ -434,7 +436,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['number'], $result['number']);
     }
 
-    public function testGetArticles()
+    public function testGetProducts(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams($this->getProductSearchData());
@@ -443,40 +445,41 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
         static::assertCount(1, $result);
-        static::assertEquals('SW10239', $result[0]['number']);
+        static::assertSame('SW10239', $result[0]['number']);
     }
 
-    public function testGetArticlesMultiple()
+    public function testGetProductsMultiple(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
             'query' => 'flip flop',
+            'limit' => 50,
         ]);
 
         $view = $this->getView();
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
         static::assertCount(35, $result);
-        static::assertEquals('SW10153.1', $result[0]['number']);
+        static::assertSame('SW10153.1', $result[0]['number']);
     }
 
-    public function testGetArticlesByOrdernumber()
+    public function testGetProductsByOrdernumber(): void
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         static::assertIsString($sql);
-        Shopware()->Container()->get('dbal_connection')->exec($sql);
+        $this->getContainer()->get('dbal_connection')->executeUpdate($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
@@ -487,20 +490,20 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
         static::assertCount(1, $result);
-        static::assertEquals('SW_10002_test_123', $result[0]['number']);
+        static::assertSame('SW_10002_test_123', $result[0]['number']);
     }
 
-    public function testGetArticlesBySupplier()
+    public function testGetProductsBySupplier(): void
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         static::assertIsString($sql);
-        Shopware()->Container()->get('dbal_connection')->exec($sql);
+        $this->getContainer()->get('dbal_connection')->executeUpdate($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
@@ -511,16 +514,16 @@ class SwagBackendOrderTest extends TestCase
 
         $controller = $this->getControllerMock($request, $view);
 
-        $controller->getArticlesAction();
+        $controller->getProductsAction();
 
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
         static::assertCount(1, $result);
-        static::assertEquals('SW_10002_test_123', $result[0]['number']);
+        static::assertSame('SW_10002_test_123', $result[0]['number']);
     }
 
-    public function testCreateOrderWithEAN()
+    public function testCreateOrderWithEAN(): void
     {
         if ($this->isB2bPluginInstalled() === false) {
             static::markTestSkipped('SwagB2bPlugin is not installed');
@@ -540,18 +543,16 @@ class SwagBackendOrderTest extends TestCase
         static::assertNotEmpty($viewResult['ordernumber']);
 
         $sql = 'SELECT ean FROM s_order_details WHERE orderID = ?';
-        $result = Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
+        $result = $this->getContainer()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
         static::assertSame('UnitTestEAN', $result);
 
         $b2bResult = $this->getB2bOrder($viewResult['ordernumber']);
         static::assertNull($b2bResult);
     }
 
-    public function testCreateOrderWithB2bOrder()
+    public function testCreateOrderWithB2bOrder(): void
     {
-        $isB2bPluginInstalled = $this->isB2bPluginInstalled();
-
-        if (!$isB2bPluginInstalled) {
+        if (!$this->isB2bPluginInstalled()) {
             static::markTestSkipped('SwagB2bPlugin is not installed');
         }
 
@@ -573,7 +574,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertNotEmpty($viewResult['ordernumber']);
 
         $sql = 'SELECT ean FROM s_order_details WHERE orderID = ?';
-        $result = Shopware()->Container()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
+        $result = $this->getContainer()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
 
         static::assertSame('UnitTestEAN', $result);
 
@@ -583,10 +584,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($viewResult['ordernumber'], $b2bResult[0]['ordernumber']);
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoData()
+    private function getDemoData(): array
     {
         return [
             'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":1,"price":"59.99","total":"59.99"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":5,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"94.95"}]',
@@ -603,10 +601,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoDataWithEmptyDispatch()
+    private function getDemoDataWithEmptyDispatch(): array
     {
         return [
             'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":1,"price":"59.99","total":"59.99"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":5,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"94.95"}]',
@@ -622,10 +617,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoDataWithInvalidDispatch()
+    private function getDemoDataWithInvalidDispatch(): array
     {
         return [
             'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":1,"price":"59.99","total":"59.99"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":5,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"94.95"}]',
@@ -642,10 +634,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoDataWithEmptyPositions()
+    private function getDemoDataWithEmptyPositions(): array
     {
         return [
             'shippingCosts' => 3.90,
@@ -661,10 +650,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoDataWithChangedCurrency()
+    private function getDemoDataWithChangedCurrency(): array
     {
         return [
                 'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":3,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":-4,"price":"59.99","total":"179.97"},{"id":0,"create_backend_order_id":0,"mode":0,"articleId":272,"detailId":0,"articleNumber":"SW10239","articleName":"Spachtelmasse","quantity":1,"statusId":0,"statusDescription":"","taxId":4,"taxRate":7,"taxDescription":"","inStock":-1,"price":"18.99","total":"18.99"}]',
@@ -676,10 +662,7 @@ class SwagBackendOrderTest extends TestCase
             ] + $this->getDemoData();
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoWithChangedDisplayNetFlag()
+    private function getDemoWithChangedDisplayNetFlag(): array
     {
         return [
             'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":-7,"price":"59.99","total":"59.99"}]',
@@ -696,10 +679,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getDemoWithChangedTaxfreeFlag()
+    private function getDemoWithChangedTaxfreeFlag(): array
     {
         return [
             'positions' => '[{"id":0,"create_backend_order_id":0,"mode":0,"articleId":2,"detailId":0,"articleNumber":"SW10002.1","articleName":"M\u00fcnsterl\u00e4nder Lagerkorn 32% 1,5 Liter","quantity":1,"statusId":0,"statusDescription":"","taxId":1,"taxRate":19,"taxDescription":"","inStock":-7,"price":"59.99","total":"59.99"}]',
@@ -716,10 +696,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getProductDemoData()
+    private function getProductDemoData(): array
     {
         return [
             'ordernumber' => 'SW10002.1',
@@ -732,10 +709,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getProductDemoDataWithBlockPrices()
+    private function getProductDemoDataWithBlockPrices(): array
     {
         return [
             'ordernumber' => 'SW10208',
@@ -748,10 +722,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getProductDemoDataWithDisplayNetFlag()
+    private function getProductDemoDataWithDisplayNetFlag(): array
     {
         return [
             'ordernumber' => 'SW10002.1',
@@ -763,10 +734,7 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getProductDemoDataWithBlockPricesAndDisplayNetFlag()
+    private function getProductDemoDataWithBlockPricesAndDisplayNetFlag(): array
     {
         return [
             'ordernumber' => 'SW10208',
@@ -779,47 +747,30 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    /**
-     * @return Enlight_View_Default
-     */
-    private function getView()
+    private function getView(): Enlight_View_Default
     {
         return new Enlight_View_Default(
             new \Enlight_Template_Manager()
         );
     }
 
-    /**
-     * @return SwagBackendOrderMock
-     */
-    private function getControllerMock(Enlight_Controller_Request_RequestHttp $request, Enlight_View_Default $view)
+    private function getControllerMock(\Enlight_Controller_Request_RequestTestCase $request, Enlight_View_Default $view): SwagBackendOrderMock
     {
         return new SwagBackendOrderMock(
             $request,
-            Shopware()->Container(),
+            $this->getContainer(),
             $view
         );
     }
 
-    /**
-     * @return array
-     */
-    private function getProductSearchData()
+    private function getProductSearchData(): array
     {
         return [
             'query' => 'spachtel',
         ];
     }
 
-    /**
-     * @param string $type
-     * @param float  $value
-     * @param string $name
-     * @param float  $currentTotal
-     *
-     * @return array
-     */
-    private function getDiscountRequestData($type, $value, $name, $currentTotal = 500.0)
+    private function getDiscountRequestData(int $type, float $value, string $name, float $currentTotal = 500.0): array
     {
         return [
             'type' => $type,

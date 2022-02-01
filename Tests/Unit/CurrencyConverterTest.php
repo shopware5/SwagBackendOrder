@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -14,32 +15,27 @@ use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 
 class CurrencyConverterTest extends TestCase
 {
-    public function testGetBaseCurrencyPrice()
+    public function testGetBaseCurrencyPrice(): void
     {
         $price = 81.74;
         $currencyFactor = 1.3625;
 
-        $currencyCalculation = $this->getCurrencyCalculation();
-        $actualPrice = $currencyCalculation->getBaseCurrencyPrice($price, $currencyFactor);
+        $actualPrice = $this->getCurrencyCalculation()->getBaseCurrencyPrice($price, $currencyFactor);
 
-        static::assertEquals(59.992660550458709, $actualPrice);
+        static::assertSame(59.992660550458709, $actualPrice);
     }
 
-    public function testGetCurrencyPrice()
+    public function testGetCurrencyPrice(): void
     {
         $price = 59.99;
         $currencyFactor = 1.3625;
 
-        $currencyCalculation = $this->getCurrencyCalculation();
-        $actualPrice = $currencyCalculation->getCurrencyPrice($price, $currencyFactor);
+        $actualPrice = $this->getCurrencyCalculation()->getCurrencyPrice($price, $currencyFactor);
 
-        static::assertEquals(81.73637500000001, $actualPrice);
+        static::assertSame(81.73637500000001, $actualPrice);
     }
 
-    /**
-     * @return CurrencyConverter
-     */
-    private function getCurrencyCalculation()
+    private function getCurrencyCalculation(): CurrencyConverter
     {
         return new CurrencyConverter();
     }

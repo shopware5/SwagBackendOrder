@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -11,10 +12,13 @@ namespace SwagBackendOrder\Tests\Functional\Components;
 
 use PHPUnit\Framework\TestCase;
 use SwagBackendOrder\Components\CustomerRepository;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
 
 class CustomerRepositoryTest extends TestCase
 {
-    public function testGetListWithOneMatch()
+    use ContainerTrait;
+
+    public function testGetListWithOneMatch(): void
     {
         $expectedUser = [
             [
@@ -40,7 +44,7 @@ class CustomerRepositoryTest extends TestCase
         static::assertSame($expectedUser[0]['city'], $result[0]['city']);
     }
 
-    public function testGetListWithAllMatches()
+    public function testGetListWithAllMatches(): void
     {
         $expectedUsers = [
             [
@@ -64,7 +68,7 @@ class CustomerRepositoryTest extends TestCase
             ],
         ];
 
-        $result = $this->getCustomerRepository()->getList(null);
+        $result = $this->getCustomerRepository()->getList();
 
         $result1 = null;
         $result2 = null;
@@ -98,7 +102,7 @@ class CustomerRepositoryTest extends TestCase
         static::assertSame($expectedUsers[1]['city'], $result2['city']);
     }
 
-    public function testGetOneCustomer()
+    public function testGetOneCustomer(): void
     {
         $expectedUser = [
             'email' => 'test@example.com',
@@ -115,17 +119,14 @@ class CustomerRepositoryTest extends TestCase
         static::assertSame($expectedUser['number'], $result['number']);
     }
 
-    public function testGetOneCustomerByInvalidId()
+    public function testGetOneCustomerByInvalidId(): void
     {
         $result = $this->getCustomerRepository()->get(999);
         static::assertNull($result['email']);
     }
 
-    /**
-     * @return CustomerRepository
-     */
-    private function getCustomerRepository()
+    private function getCustomerRepository(): CustomerRepository
     {
-        return Shopware()->Container()->get('swag_backend_order.customer_repository');
+        return $this->getContainer()->get('swag_backend_order.customer_repository');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -7,38 +8,37 @@
  *
  */
 
-namespace SwagBackendOrder\Tests\Functional\Order;
+namespace SwagBackendOrder\Tests\Functional\Components\Order;
 
 use PHPUnit\Framework\TestCase;
 use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\Order;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
-use SwagBackendOrder\Tests\DatabaseTestCaseTrait;
+use SwagBackendOrder\Tests\Functional\ContainerTrait;
+use SwagBackendOrder\Tests\Functional\DatabaseTestCaseTrait;
 
 class OrderServiceTest extends TestCase
 {
+    use ContainerTrait;
     use DatabaseTestCaseTrait;
 
-    public function testCreateOrder()
+    public function testCreateOrder(): void
     {
-        $orderService = Shopware()->Container()->get('swag_backend_order.order.service');
+        $orderService = $this->getContainer()->get('swag_backend_order.order.service');
         $orderStruct = $this->getOrderStruct();
 
         $order = $orderService->create($orderStruct);
-        $order = Shopware()->Container()->get('models')->find(Order::class, $order->getId());
+        $order = $this->getContainer()->get('models')->find(Order::class, $order->getId());
         static::assertInstanceOf(Order::class, $order);
 
-        static::assertEquals($orderStruct->getTotal(), $order->getInvoiceAmount());
+        static::assertSame($orderStruct->getTotal(), $order->getInvoiceAmount());
         $firstPosition = $order->getDetails()->get(0);
         static::assertInstanceOf(Detail::class, $firstPosition);
-        static::assertEquals($orderStruct->getPositions()[0]->getPrice(), $firstPosition->getPrice());
+        static::assertSame($orderStruct->getPositions()[0]->getPrice(), $firstPosition->getPrice());
     }
 
-    /**
-     * @return OrderStruct
-     */
-    private function getOrderStruct()
+    private function getOrderStruct(): OrderStruct
     {
         $orderStruct = new OrderStruct();
         $orderStruct->setCustomerId(1);
@@ -65,12 +65,12 @@ class OrderServiceTest extends TestCase
     /**
      * @return PositionStruct[]
      */
-    private function getPositions()
+    private function getPositions(): array
     {
         $positionStruct = new PositionStruct();
 
         $positionStruct->setMode(0);
-        $positionStruct->setArticleId(2);
+        $positionStruct->setProductId(2);
         $positionStruct->setNumber('SW10002.1');
         $positionStruct->setName('Münsterländer Lagerkorn 32% 1,5 Liter');
         $positionStruct->setQuantity(1);
@@ -85,10 +85,7 @@ class OrderServiceTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getAttributes()
+    private function getAttributes(): array
     {
         return [
             'attribute1' => 'Freitext 1',

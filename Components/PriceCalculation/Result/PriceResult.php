@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -28,74 +29,47 @@ class PriceResult
      */
     private $taxRate;
 
-    /**
-     * @return float
-     */
-    public function getNet()
+    public function getNet(): float
     {
         return $this->net;
     }
 
-    /**
-     * @param float $net
-     */
-    public function setNet($net)
+    public function setNet(float $net): void
     {
         $this->net = $net;
     }
 
-    /**
-     * @return float
-     */
-    public function getGross()
+    public function getGross(): float
     {
         return $this->gross;
     }
 
-    /**
-     * @param float $gross
-     */
-    public function setGross($gross)
+    public function setGross(float $gross): void
     {
         $this->gross = $gross;
     }
 
-    /**
-     * @return float
-     */
-    public function getRoundedNetPrice()
+    public function getRoundedNetPrice(): float
     {
         return \round($this->getNet(), self::ROUND_PRECISION);
     }
 
-    /**
-     * @return float
-     */
-    public function getRoundedGrossPrice()
+    public function getRoundedGrossPrice(): float
     {
         return \round($this->getGross(), self::ROUND_PRECISION);
     }
 
-    /**
-     * @return float
-     */
-    public function getTaxRate()
+    public function getTaxRate(): float
     {
         return $this->taxRate;
     }
 
-    /**
-     * @param float $taxRate
-     */
-    public function setTaxRate($taxRate)
+    public function setTaxRate(float $taxRate): void
     {
         $this->taxRate = $taxRate;
     }
 
-    /**
-     * @return float
-     */
-    public function getTaxSum()
+    public function getTaxSum(): float
     {
         return $this->getRoundedGrossPrice() - $this->getRoundedNetPrice();
     }

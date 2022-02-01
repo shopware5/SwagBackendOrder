@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -22,14 +23,14 @@ class PaymentTranslatorTest extends TestCase
     public const PAYMENT_ADDITIONAL_DESCRIPTION_GERMAN = 'Payment beschreibung';
     public const PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH = 'Payment description';
 
-    public function testItCanBeCreated()
+    public function testItCanBeCreated(): void
     {
         $paymentTranslator = new PaymentTranslator($this->createMock(\Shopware_Components_Translation::class));
 
         static::assertInstanceOf(PaymentTranslator::class, $paymentTranslator);
     }
 
-    public function testItShouldTranslatePaymentDescription()
+    public function testItShouldTranslatePaymentDescription(): void
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
@@ -45,15 +46,13 @@ class PaymentTranslatorTest extends TestCase
             'description' => self::PAYMENT_DESCRIPTION_GERMAN,
         ];
 
-        $paymentTranslator = new PaymentTranslator($translationComponentMock);
+        $translatedPaymentMethod = (new PaymentTranslator($translationComponentMock))->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
 
-        $translatedPaymentMethod = $paymentTranslator->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
-
-        static::assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
-        static::assertEquals(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
+        static::assertSame(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
+        static::assertSame(self::PAYMENT_DESCRIPTION_ENGLISH, $translatedPaymentMethod['description']);
     }
 
-    public function testItShouldTranslatePaymentAdditionalDescription()
+    public function testItShouldTranslatePaymentAdditionalDescription(): void
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
@@ -68,15 +67,13 @@ class PaymentTranslatorTest extends TestCase
             'additionalDescription' => self::PAYMENT_DESCRIPTION_GERMAN,
         ];
 
-        $paymentTranslator = new PaymentTranslator($translationComponentMock);
+        $translatedPaymentMethod = (new PaymentTranslator($translationComponentMock))->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
 
-        $translatedPaymentMethod = $paymentTranslator->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
-
-        static::assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionalDescription']);
-        static::assertEquals(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionaldescription']);
+        static::assertSame(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionalDescription']);
+        static::assertSame(self::PAYMENT_ADDITIONAL_DESCRIPTION_ENGLISH, $translatedPaymentMethod['additionaldescription']);
     }
 
-    public function testItShouldGivenDescriptionIfNoTranslationIsAvailable()
+    public function testItShouldGivenDescriptionIfNoTranslationIsAvailable(): void
     {
         $translationComponentMock = $this->createMock(\Shopware_Components_Translation::class);
         $translationComponentMock
@@ -91,9 +88,8 @@ class PaymentTranslatorTest extends TestCase
             'description' => self::PAYMENT_DESCRIPTION_GERMAN,
         ];
 
-        $paymentTranslator = new PaymentTranslator($translationComponentMock);
-        $translatedPaymentMethod = $paymentTranslator->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
+        $translatedPaymentMethod = (new PaymentTranslator($translationComponentMock))->translate($paymentMethod, self::LANGUAGE_ID_ENGLISH);
 
-        static::assertEquals(self::PAYMENT_DESCRIPTION_GERMAN, $translatedPaymentMethod['description']);
+        static::assertSame(self::PAYMENT_DESCRIPTION_GERMAN, $translatedPaymentMethod['description']);
     }
 }

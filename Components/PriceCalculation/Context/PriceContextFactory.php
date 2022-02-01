@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -24,32 +25,23 @@ class PriceContextFactory
         $this->modelManager = $modelManager;
     }
 
-    /**
-     * @param float $price
-     * @param float $taxRate
-     * @param bool  $taxFree
-     * @param bool  $isNetPrice
-     * @param int   $currencyId
-     *
-     * @return PriceContext
-     */
-    public function create($price, $taxRate, $taxFree, $isNetPrice, $currencyId)
+    public function create(float $price, float $taxRate, bool $taxFree, bool $isNetPrice, int $currencyId): PriceContext
     {
         $currency = $this->modelManager->find(Currency::class, $currencyId);
-        if ($currency === null) {
+        if (!$currency instanceof Currency) {
             $currency = $this->getBaseCurrency();
         }
 
         return new PriceContext($price, $taxRate, $taxFree, $isNetPrice, $currency->getFactor());
     }
 
-    /**
-     * @return Currency
-     */
-    private function getBaseCurrency()
+    private function getBaseCurrency(): Currency
     {
-        $repository = $this->modelManager->getRepository(Currency::class);
+        $currency = $this->modelManager->getRepository(Currency::class)->findOneBy(['default' => 1]);
+        if (!$currency instanceof Currency) {
+            throw new \RuntimeException('Default currency not found');
+        }
 
-        return $repository->findOneBy(['default' => 1]);
+        return $currency;
     }
 }

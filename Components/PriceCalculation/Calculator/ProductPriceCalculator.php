@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -36,10 +37,8 @@ class ProductPriceCalculator
 
     /**
      * @throws \RuntimeException
-     *
-     * @return PriceResult
      */
-    public function calculate(PriceContext $context)
+    public function calculate(PriceContext $context): PriceResult
     {
         if (!$context->isNetPrice()) {
             throw new \RuntimeException('The given price is not a net price.');
@@ -58,10 +57,7 @@ class ProductPriceCalculator
         return $result;
     }
 
-    /**
-     * @return float
-     */
-    public function calculateBasePrice(PriceContext $priceContext)
+    public function calculateBasePrice(PriceContext $priceContext): float
     {
         $baseCurrencyPrice = $this->currencyConverter->getBaseCurrencyPrice(
             $priceContext->getPrice(),
@@ -76,27 +72,20 @@ class ProductPriceCalculator
         return $this->taxCalculation->getNetPrice($baseCurrencyPrice, $priceContext->getTaxRate());
     }
 
-    /**
-     * @param float $price
-     *
-     * @return float
-     */
-    public function calculatePrice($price, Tax $tax, ShopContextInterface $context)
+    public function calculatePrice(float $price, Tax $tax, ShopContextInterface $context): float
     {
         $customerGroup = $context->getCurrentCustomerGroup();
 
         if ($customerGroup->useDiscount() && $customerGroup->getPercentageDiscount()) {
-            $price = $price - ($price / 100 * $customerGroup->getPercentageDiscount());
+            $price -= ($price / 100 * $customerGroup->getPercentageDiscount());
         }
 
-        $price = $price * $context->getCurrency()->getFactor();
+        $price *= $context->getCurrency()->getFactor();
 
         if (!$customerGroup->displayGrossPrices()) {
             return $price;
         }
 
-        $price = $price * (100 + $tax->getTax()) / 100;
-
-        return $price;
+        return $price * (100 + $tax->getTax()) / 100;
     }
 }

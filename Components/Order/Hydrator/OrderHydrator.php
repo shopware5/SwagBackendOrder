@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -23,10 +24,7 @@ class OrderHydrator
         $this->positionHydrator = $positionHydrator;
     }
 
-    /**
-     * @return OrderStruct
-     */
-    public function hydrateFromRequest(\Enlight_Controller_Request_Request $request)
+    public function hydrateFromRequest(\Enlight_Controller_Request_Request $request): OrderStruct
     {
         $data = $request->getParams();
         $data = $data['data'];

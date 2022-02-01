@@ -418,6 +418,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
     onSelectBillingAddress: function (record) {
         var me = this;
         me.orderModel.set('billingAddressId', record.get('id'));
+
+        me.onCalculateBasket();
     },
 
     /**
@@ -789,7 +791,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                 taxFree: me.orderModel.get('taxFree'),
                 previousDisplayNet: me.previousOrderModel.get('displayNet'),
                 previousTaxFree: me.previousOrderModel.get('taxFree'),
-                previousDispatchTaxRate: me.previousDispatchTaxRate
+                previousDispatchTaxRate: me.previousDispatchTaxRate,
+                billingAddressId: me.orderModel.get('billingAddressId')
             },
             success: function (response) {
                 var totalCostsJson = Ext.JSON.decode(response.responseText),
@@ -824,6 +827,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
                     position.suspendEvents();
                     position.set('price', record.positions[i].price);
                     position.set('total', record.positions[i].total);
+                    position.set('taxRate', record.positions[i].taxRate);
                     position.resumeEvents();
                 }
 

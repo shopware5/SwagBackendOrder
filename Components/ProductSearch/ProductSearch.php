@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -22,6 +23,10 @@ use SwagBackendOrder\Components\PriceCalculation\Result\PriceResult;
 
 class ProductSearch implements ProductSearchInterface
 {
+    private const MYSQL_WILDCARD = '_';
+    private const MYSQL_WILDCARD_ESCAPED = '\_';
+    private const MYSQL_WILDCARD_PERCENT = '%';
+
     /**
      * @var int
      */
@@ -69,7 +74,7 @@ class ProductSearch implements ProductSearchInterface
     /**
      * {@inheritdoc}
      */
-    public function getLastResultTotalCount()
+    public function getLastResultTotalCount(): int
     {
         return $this->totalCount;
     }
@@ -77,13 +82,17 @@ class ProductSearch implements ProductSearchInterface
     /**
      * {@inheritdoc}
      */
-    public function findProducts($searchTerm, $shopId, $limit = 10, $offset = 0)
+    public function findProducts(string $searchTerm, int $shopId, int $limit, int $offset): array
     {
         // Escape "_" (MySQL wildcards) and surround with "%" (MySQL wildcards)
-        $searchTerm = '%' . \str_replace('_', '\_', $searchTerm) . '%';
+        $searchTerm = sprintf(
+            '%s%s%s',
+            self::MYSQL_WILDCARD_PERCENT,
+            \str_replace(self::MYSQL_WILDCARD, self::MYSQL_WILDCARD_ESCAPED, $searchTerm),
+            self::MYSQL_WILDCARD_PERCENT
+        );
 
-        $queryBuilder = $this->getSearchBaseQuery();
-        $searchResult = $queryBuilder
+        $searchResult = $this->getSearchBaseQuery()
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->setParameter('searchTerm', $searchTerm)
@@ -110,7 +119,7 @@ class ProductSearch implements ProductSearchInterface
     /**
      * {@inheritdoc}
      */
-    public function getProduct($orderNumber, $params, $shopId, $customerGroupKey)
+    public function getProduct(string $orderNumber, array $params, int $shopId, string $customerGroupKey): array
     {
         $product = $this->getProductByNumber($orderNumber, $customerGroupKey, $shopId);
 
@@ -129,17 +138,17 @@ class ProductSearch implements ProductSearchInterface
 
         if ($product['to'] !== 'beliebig') {
             $blockPrices = $this->getBlockPrices(
-                $product['productDetailId'],
+                (int) $product['productDetailId'],
                 $product['isFallbackPrice'] ? $shopContext->getFallbackCustomerGroup()->getKey() : $customerGroupKey
             );
 
             $blockPricesResult = [];
             foreach ($blockPrices as $price) {
                 $blockPricesResult[$price['from']] = [
-                    'net' => \round($price['price'], PriceResult::ROUND_PRECISION),
+                    'net' => \round((float) $price['price'], PriceResult::ROUND_PRECISION),
                     'gross' => \round(
                         $this->calculatePrice(
-                            $price['price'],
+                            (float) $price['price'],
                             $tax,
                             $shopContext
                         ),
@@ -158,7 +167,7 @@ class ProductSearch implements ProductSearchInterface
         }
 
         $product['price'] = $this->calculatePrice(
-            $product['price'],
+            (float) $product['price'],
             $tax,
             $shopContext,
             $params['displayNet'] === 'true'
@@ -167,18 +176,12 @@ class ProductSearch implements ProductSearchInterface
         return $product;
     }
 
-    /**
-     * @param float $price
-     * @param bool  $getNetPrice
-     *
-     * @return float
-     */
     private function calculatePrice(
-        $price,
+        float $price,
         TaxStruct $tax,
         ShopContextInterface $shopContext,
-        $getNetPrice = false
-    ) {
+        bool $getNetPrice = false
+    ): float {
         if ($getNetPrice) {
             return \round($price, PriceResult::ROUND_PRECISION);
         }
@@ -186,13 +189,7 @@ class ProductSearch implements ProductSearchInterface
         return $this->productPriceCalculator->calculatePrice($price, $tax, $shopContext);
     }
 
-    /**
-     * @param int    $productDetailsId
-     * @param string $customerGroupKey
-     *
-     * @return array
-     */
-    private function getBlockPrices($productDetailsId, $customerGroupKey)
+    private function getBlockPrices(int $productDetailsId, string $customerGroupKey): array
     {
         return $this->connection->createQueryBuilder()
             ->select(['price.from', 'price.price'])
@@ -205,14 +202,7 @@ class ProductSearch implements ProductSearchInterface
             ->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * @param string $orderNumber
-     * @param string $customerGroupKey
-     * @param int    $shopId
-     *
-     * @return array
-     */
-    private function getProductByNumber($orderNumber, $customerGroupKey, $shopId)
+    private function getProductByNumber(string $orderNumber, string $customerGroupKey, int $shopId): array
     {
         $queryBuilder = $this->connection->createQueryBuilder();
         $defaultCustomerGroup = $this->contextService->createShopContext($shopId)->getFallbackCustomerGroup()->getKey();
@@ -247,10 +237,7 @@ class ProductSearch implements ProductSearchInterface
         return $this->prepareProductPrice($product);
     }
 
-    /**
-     * @return array
-     */
-    private function prepareProductPrice(array $product)
+    private function prepareProductPrice(array $product): array
     {
         if (!$product['price']) {
             $product['price'] = $product['defaultPrice'];
@@ -264,14 +251,9 @@ class ProductSearch implements ProductSearchInterface
         return $product;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    private function getSearchBaseQuery()
+    private function getSearchBaseQuery(): QueryBuilder
     {
-        $queryBuilder = $this->connection->createQueryBuilder();
-
-        return $queryBuilder->select([
+        return $this->connection->createQueryBuilder()->select([
             'article.name',
             'article.active AS articleActive',
             'details.ordernumber AS number',

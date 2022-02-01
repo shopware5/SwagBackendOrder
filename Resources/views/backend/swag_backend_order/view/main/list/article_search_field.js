@@ -94,7 +94,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
 
         config.tpl = Ext.create('Ext.XTemplate',
             '<tpl for=".">',
-                '<div class="x-boundlist-item">' +
+            '<div class="x-boundlist-item">' +
                     // active renderer
                     '<tpl if="articleActive && variantActive">' +
                         '[{s name="active_single_selection"}{/s}]' +
@@ -109,7 +109,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
                     '<tpl if="additionalText">' +
                         '<i>{literal} ({additionalText})</i>{/literal}' +
                     '</tpl>',
-                '</div>',
+            '</div>',
             '</tpl>'
         );
 

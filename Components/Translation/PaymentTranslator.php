@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -23,12 +24,7 @@ class PaymentTranslator
         $this->translationComponent = $translationComponent;
     }
 
-    /**
-     * @param int $languageId
-     *
-     * @return array
-     */
-    public function translate(array $paymentMethod, $languageId)
+    public function translate(array $paymentMethod, int $languageId): array
     {
         $paymentTranslations = $this->translationComponent->read($languageId, 'config_payment');
 

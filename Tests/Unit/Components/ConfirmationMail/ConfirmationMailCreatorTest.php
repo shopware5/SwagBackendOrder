@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -20,7 +21,7 @@ use SwagBackendOrder\Components\Translation\ShippingTranslator;
 
 class ConfirmationMailCreatorTest extends TestCase
 {
-    public function testItCanBeCreated()
+    public function testItCanBeCreated(): void
     {
         $confirmationMailCreator = new ConfirmationMailCreator(
             $this->createMock(TaxCalculation::class),

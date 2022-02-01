@@ -9,7 +9,9 @@
 
         <!-- Subscriber -->
         <service id="swag_backend_order.subscriber.backend_controller" class="SwagBackendOrder\Subscriber\BackendController">
-            <argument type="service" id="service_container"/>
+            <argument type="service" id="template"/>
+            <argument type="service" id="snippets"/>
+            <argument>%swag_backend_orders.plugin_dir%</argument>
             <tag name="shopware.event_subscriber"/>
         </service>
 
@@ -21,7 +23,7 @@
         </service>
 
         <service id="swag_backend_order.subscriber.order" class="SwagBackendOrder\Subscriber\Order">
-            <argument type="service" id="service_container"/>
+            <argument>%swag_backend_orders.plugin_dir%</argument>
             <tag name="shopware.event_subscriber"/>
         </service>
 
@@ -109,7 +111,10 @@
             <argument type="service" id="swag_backend_order.price_calculation.position_hydrator" />
         </service>
 
-        <service id="swag_backend_order.price_calculation.position_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator"/>
+        <service id="swag_backend_order.price_calculation.position_hydrator" class="SwagBackendOrder\Components\PriceCalculation\Hydrator\PositionHydrator">
+            <argument type="service" id="models"/>
+            <argument type="service" id="Shopware\Bundle\StoreFrontBundle\Service\Core\ShopContextFactoryInterface"/>
+        </service>
 
         <service id="swag_backend_order.price_calculation.price_context_factory" class="SwagBackendOrder\Components\PriceCalculation\Context\PriceContextFactory">
             <argument type="service" id="models"/>

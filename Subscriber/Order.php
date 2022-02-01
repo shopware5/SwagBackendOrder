@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -10,24 +11,23 @@
 namespace SwagBackendOrder\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Order implements SubscriberInterface
 {
     /**
-     * @var ContainerInterface
+     * @var string
      */
-    private $container;
+    private $pluginDir;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(string $pluginDir)
     {
-        $this->container = $container;
+        $this->pluginDir = $pluginDir;
     }
 
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'Enlight_Controller_Action_PostDispatch_Backend_Order' => 'onOrderPostDispatch',
@@ -37,13 +37,13 @@ class Order implements SubscriberInterface
     /**
      * adds the templates directories which expand the order module
      */
-    public function onOrderPostDispatch(\Enlight_Controller_ActionEventArgs $args)
+    public function onOrderPostDispatch(\Enlight_Controller_ActionEventArgs $args): void
     {
         $view = $args->getSubject()->View();
 
         // Add view directory
         $args->getSubject()->View()->addTemplateDir(
-            $this->getPluginPath() . '/Resources/views/'
+            $this->pluginDir . '/Resources/views/'
         );
 
         if ($args->getRequest()->getActionName() === 'load') {
@@ -51,13 +51,5 @@ class Order implements SubscriberInterface
                 'backend/order/view/create_backend_order/list.js'
             );
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function getPluginPath()
-    {
-        return $this->container->getParameter('swag_backend_orders.plugin_dir');
     }
 }

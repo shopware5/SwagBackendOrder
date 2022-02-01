@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -44,7 +45,7 @@ class OrderStruct
     /**
      * @var float
      */
-    private $shippingCostsTaxRate;
+    private $shippingCostsTaxRate = 0.0;
 
     /**
      * @var int
@@ -104,233 +105,149 @@ class OrderStruct
     /**
      * @var bool
      */
-    private $taxFree;
+    private $taxFree = false;
 
     /**
      * @var array
      */
     private $attributes;
 
-    /**
-     * @return int
-     */
-    public function getCustomerId()
+    public function getCustomerId(): int
     {
         return $this->customerId;
     }
 
-    /**
-     * @param int $customerId
-     */
-    public function setCustomerId($customerId)
+    public function setCustomerId(int $customerId): void
     {
         $this->customerId = $customerId;
     }
 
-    /**
-     * @return int
-     */
-    public function getBillingAddressId()
+    public function getBillingAddressId(): int
     {
         return $this->billingAddressId;
     }
 
-    /**
-     * @param int $billingAddressId
-     */
-    public function setBillingAddressId($billingAddressId)
+    public function setBillingAddressId(int $billingAddressId): void
     {
         $this->billingAddressId = $billingAddressId;
     }
 
-    /**
-     * @return int
-     */
-    public function getShippingAddressId()
+    public function getShippingAddressId(): int
     {
         return $this->shippingAddressId;
     }
 
-    /**
-     * @param int $shippingAddressId
-     */
-    public function setShippingAddressId($shippingAddressId)
+    public function setShippingAddressId(int $shippingAddressId): void
     {
         $this->shippingAddressId = $shippingAddressId;
     }
 
-    /**
-     * @return float
-     */
-    public function getShippingCosts()
+    public function getShippingCosts(): float
     {
         return $this->shippingCosts;
     }
 
-    /**
-     * @param float $shippingCosts
-     */
-    public function setShippingCosts($shippingCosts)
+    public function setShippingCosts(float $shippingCosts): void
     {
         $this->shippingCosts = $shippingCosts;
     }
 
-    /**
-     * @return float
-     */
-    public function getShippingCostsNet()
+    public function getShippingCostsNet(): float
     {
         return $this->shippingCostsNet;
     }
 
-    /**
-     * @param float $shippingCostsNet
-     */
-    public function setShippingCostsNet($shippingCostsNet)
+    public function setShippingCostsNet(float $shippingCostsNet): void
     {
         $this->shippingCostsNet = $shippingCostsNet;
     }
 
-    /**
-     * @return float
-     */
-    public function getShippingCostsTaxRate()
+    public function getShippingCostsTaxRate(): float
     {
         return $this->shippingCostsTaxRate;
     }
 
-    /**
-     * @param float $shippingCostsTaxRate
-     */
-    public function setShippingCostsTaxRate($shippingCostsTaxRate)
+    public function setShippingCostsTaxRate(float $shippingCostsTaxRate): void
     {
         $this->shippingCostsTaxRate = $shippingCostsTaxRate;
     }
 
-    /**
-     * @return int
-     */
-    public function getPaymentId()
+    public function getPaymentId(): int
     {
         return $this->paymentId;
     }
 
-    /**
-     * @param int $paymentId
-     */
-    public function setPaymentId($paymentId)
+    public function setPaymentId(int $paymentId): void
     {
         $this->paymentId = $paymentId;
     }
 
-    /**
-     * @return int
-     */
-    public function getDispatchId()
+    public function getDispatchId(): int
     {
         return $this->dispatchId;
     }
 
-    /**
-     * @param int $dispatchId
-     */
-    public function setDispatchId($dispatchId)
+    public function setDispatchId(int $dispatchId): void
     {
         $this->dispatchId = $dispatchId;
     }
 
-    /**
-     * @return int
-     */
-    public function getLanguageShopId()
+    public function getLanguageShopId(): int
     {
         return $this->languageShopId;
     }
 
-    /**
-     * @param int $languageShopId
-     */
-    public function setLanguageShopId($languageShopId)
+    public function setLanguageShopId(int $languageShopId): void
     {
         $this->languageShopId = $languageShopId;
     }
 
-    /**
-     * @return string
-     */
-    public function getCurrency()
+    public function getCurrency(): string
     {
         return $this->currency;
     }
 
-    /**
-     * @param string $currency
-     */
-    public function setCurrency($currency)
+    public function setCurrency(string $currency): void
     {
         $this->currency = $currency;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotal()
+    public function getTotal(): float
     {
         return $this->total;
     }
 
-    /**
-     * @param float $total
-     */
-    public function setTotal($total)
+    public function setTotal(float $total): void
     {
         $this->total = $total;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeviceType()
+    public function getDeviceType(): string
     {
         return $this->deviceType;
     }
 
-    /**
-     * @param string $deviceType
-     */
-    public function setDeviceType($deviceType)
+    public function setDeviceType(string $deviceType): void
     {
         $this->deviceType = $deviceType;
     }
 
-    /**
-     * @return bool
-     */
-    public function getNetOrder()
+    public function getNetOrder(): bool
     {
         return $this->netOrder;
     }
 
-    /**
-     * @param bool $netOrder
-     */
-    public function setNetOrder($netOrder)
+    public function setNetOrder(bool $netOrder): void
     {
         $this->netOrder = $netOrder;
     }
 
-    /**
-     * @return bool
-     */
-    public function getSendMail()
+    public function getSendMail(): bool
     {
         return $this->sendMail;
     }
 
-    /**
-     * @param bool $sendMail
-     */
-    public function setSendMail($sendMail)
+    public function setSendMail(bool $sendMail): void
     {
         $this->sendMail = $sendMail;
     }
@@ -338,7 +255,7 @@ class OrderStruct
     /**
      * @return PositionStruct[]
      */
-    public function getPositions()
+    public function getPositions(): array
     {
         return $this->positions;
     }
@@ -346,92 +263,62 @@ class OrderStruct
     /**
      * @param PositionStruct[] $positions
      */
-    public function setPositions(array $positions)
+    public function setPositions(array $positions): void
     {
         $this->positions = $positions;
     }
 
-    public function addPosition(PositionStruct $position)
+    public function addPosition(PositionStruct $position): void
     {
         $this->positions[] = $position;
     }
 
-    /**
-     * @param float $totalWithoutTax
-     */
-    public function setTotalWithoutTax($totalWithoutTax)
+    public function setTotalWithoutTax(float $totalWithoutTax): void
     {
         $this->totalWithoutTax = $totalWithoutTax;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalWithoutTax()
+    public function getTotalWithoutTax(): float
     {
         return $this->totalWithoutTax;
     }
 
-    /**
-     * @return int
-     */
-    public function getCurrencyId()
+    public function getCurrencyId(): int
     {
         return $this->currencyId;
     }
 
-    /**
-     * @param int $currencyId
-     */
-    public function setCurrencyId($currencyId)
+    public function setCurrencyId(int $currencyId): void
     {
         $this->currencyId = $currencyId;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumber()
+    public function getNumber(): int
     {
         return $this->number;
     }
 
-    /**
-     * @param int $number
-     */
-    public function setNumber($number)
+    public function setNumber(int $number): void
     {
         $this->number = $number;
     }
 
-    /**
-     * @return bool
-     */
-    public function isTaxFree()
+    public function isTaxFree(): bool
     {
         return $this->taxFree;
     }
 
-    /**
-     * @param bool $taxFree
-     */
-    public function setTaxFree($taxFree)
+    public function setTaxFree(bool $taxFree): void
     {
         $this->taxFree = $taxFree;
     }
 
-    /**
-     * @return array
-     */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    /**
-     * @param array $attributes
-     */
-    public function setAttributes($attributes)
+    public function setAttributes(array $attributes): void
     {
         $this->attributes = $attributes;
     }

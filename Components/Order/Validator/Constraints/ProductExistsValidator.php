@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -34,27 +35,20 @@ class ProductExistsValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /** @var ProductExists $constraint */
         if ($constraint instanceof ProductExists === false) {
             return;
         }
 
         if (!$this->productExists($value)) {
-            $namespace = $this->snippetManager->getNamespace($constraint->namespace);
-            $message = $namespace->get($constraint->snippet);
+            $message = $this->snippetManager->getNamespace($constraint->namespace)->get($constraint->snippet);
 
             $this->context->addViolation(\sprintf($message, $value));
         }
     }
 
-    /**
-     * @param string $orderNumber
-     *
-     * @return bool
-     */
-    private function productExists($orderNumber)
+    private function productExists(string $orderNumber): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('details.id');
@@ -62,8 +56,6 @@ class ProductExistsValidator extends ConstraintValidator
         $builder->where('ordernumber = :number');
         $builder->setParameter('number', $orderNumber);
 
-        $stmt = $builder->execute();
-
-        return $stmt->fetchColumn();
+        return (bool) $builder->execute()->fetchColumn();
     }
 }

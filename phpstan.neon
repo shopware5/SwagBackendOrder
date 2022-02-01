@@ -9,6 +9,7 @@ parameters:
         container_xml_path: ../../../var/cache/production____REVISION___/container.xml
         console_application_loader: ../../../tests/phpstan-console-application.php
     doctrine:
+        queryBuilderClass: Shopware\Components\Model\QueryBuilder
         repositoryClass: Shopware\Components\Model\ModelRepository
         objectManagerLoader: ../../../tests/phpstan-doctrine-model-manager.php
     excludePaths:
@@ -16,4 +17,4 @@ parameters:
         - vendor
     ignoreErrors:
         # Needs some improvements in the doctrine PHPStan extensions: see https://github.com/phpstan/phpstan-doctrine/pull/167
-        - '#Cannot call method fetch.*\(\) on Doctrine\\DBAL\\.*Statement\|int#'
+        - '#Cannot call method fetch.*\(\) on Doctrine\\DBAL\\.*\|int#'

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -53,10 +54,8 @@ class OrderService implements OrderServiceInterface
 
     /**
      * @throws InvalidOrderException
-     *
-     * @return Order
      */
-    public function create(OrderStruct $orderStruct)
+    public function create(OrderStruct $orderStruct): Order
     {
         $number = $this->numberRangeIncrementer->increment('invoice');
         $orderStruct->setNumber($number);

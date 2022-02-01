@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -9,8 +10,8 @@
 
 namespace SwagBackendOrder\Subscriber;
 
-use Composer\Plugin\PluginManager;
 use Enlight\Event\SubscriberInterface;
+use Enlight_Plugin_PluginManager as PluginManager;
 use Shopware\Components\Validator\EmailValidator;
 
 class Customer implements SubscriberInterface
@@ -30,10 +31,7 @@ class Customer implements SubscriberInterface
      */
     private $pluginManager;
 
-    /**
-     * @param string $pluginDir
-     */
-    public function __construct($pluginDir, EmailValidator $emailValidator, \Enlight_Plugin_PluginManager $pluginManager)
+    public function __construct(string $pluginDir, EmailValidator $emailValidator, PluginManager $pluginManager)
     {
         $this->pluginDir = $pluginDir;
         $this->emailValidator = $emailValidator;
@@ -43,7 +41,7 @@ class Customer implements SubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Customer' => 'onCustomerPostDispatchSecure',
@@ -51,17 +49,13 @@ class Customer implements SubscriberInterface
         ];
     }
 
-    /**
-     * @return bool|null
-     */
-    public function onPostDispatchCustomer(\Enlight_Event_EventArgs $arguments)
+    public function onPostDispatchCustomer(\Enlight_Event_EventArgs $arguments): ?bool
     {
         $controller = $arguments->get('subject');
         $request = $controller->Request();
         $mail = $request->getParam('value');
-        $isBackendOrder = $request->getParam('isBackendOrder', false);
 
-        if (!$isBackendOrder) {
+        if (!$request->getParam('isBackendOrder', false)) {
             return null;
         }
 
@@ -77,7 +71,7 @@ class Customer implements SubscriberInterface
     /**
      * adds the templates directories which expand the customer module
      */
-    public function onCustomerPostDispatchSecure(\Enlight_Controller_ActionEventArgs $args)
+    public function onCustomerPostDispatchSecure(\Enlight_Controller_ActionEventArgs $args): void
     {
         $view = $args->getSubject()->View();
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -32,29 +33,22 @@ class EsdProductValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $value
+     * {@inheritdoc}
      */
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
-        /** @var EsdProduct $constraint */
         if ($constraint instanceof EsdProduct === false) {
             return;
         }
 
         if ($this->isEsdProduct($value)) {
-            $namespace = $this->snippetManager->getNamespace($constraint->namespace);
-            $message = $namespace->get($constraint->snippet);
+            $message = $this->snippetManager->getNamespace($constraint->namespace)->get($constraint->snippet);
 
             $this->context->addViolation(\sprintf($message, $value));
         }
     }
 
-    /**
-     * @param string $orderNumber
-     *
-     * @return bool|string
-     */
-    private function isEsdProduct($orderNumber)
+    private function isEsdProduct(string $orderNumber): bool
     {
         $builder = $this->connection->createQueryBuilder();
         $builder->select('details.id');
@@ -65,6 +59,6 @@ class EsdProductValidator extends ConstraintValidator
 
         $stmt = $builder->execute();
 
-        return $stmt->fetchColumn();
+        return (bool) $stmt->fetchColumn();
     }
 }

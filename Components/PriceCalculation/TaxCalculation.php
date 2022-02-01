@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * (c) shopware AG <info@shopware.com>
  *
@@ -11,24 +12,12 @@ namespace SwagBackendOrder\Components\PriceCalculation;
 
 class TaxCalculation
 {
-    /**
-     * @param float $price
-     * @param float $taxRate
-     *
-     * @return float
-     */
-    public function getNetPrice($price, $taxRate)
+    public function getNetPrice(float $price, float $taxRate): float
     {
         return $price / ((100 + $taxRate) / 100);
     }
 
-    /**
-     * @param float $price
-     * @param float $taxRate
-     *
-     * @return float
-     */
-    public function getGrossPrice($price, $taxRate)
+    public function getGrossPrice(float $price, float $taxRate): float
     {
         return $price * ((100 + $taxRate) / 100);
     }
