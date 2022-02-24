@@ -13,7 +13,7 @@ namespace SwagBackendOrder\Components\Order\Struct;
 class OrderStruct
 {
     /**
-     * @var int
+     * @var string
      */
     private $number;
 
@@ -293,12 +293,12 @@ class OrderStruct
         $this->currencyId = $currencyId;
     }
 
-    public function getNumber(): int
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    public function setNumber(int $number): void
+    public function setNumber(string $number): void
     {
         $this->number = $number;
     }
