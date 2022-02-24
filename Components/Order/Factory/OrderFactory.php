@@ -172,7 +172,7 @@ class OrderFactory
 
         foreach ($orderStruct->getPositions() as $positionStruct) {
             $detail = $this->detailFactory->create($positionStruct, $orderStruct->getNetOrder());
-            $detail->setNumber((string) $orderStruct->getNumber());
+            $detail->setNumber($orderStruct->getNumber());
             $detail->setOrder($order);
             $details[] = $detail;
         }
