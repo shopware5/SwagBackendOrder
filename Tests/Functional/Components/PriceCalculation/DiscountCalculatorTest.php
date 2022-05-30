@@ -17,6 +17,8 @@ class DiscountCalculatorTest extends TestCase
 {
     use ContainerTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testCalculateDiscountWithAbsoluteDiscount(): void
     {
         $orderData = $this->getTestOrderDataWithAbsoluteDiscount();
@@ -25,10 +27,10 @@ class DiscountCalculatorTest extends TestCase
 
         $result = $calculator->calculateDiscount($orderData);
 
-        static::assertSame(91.597, $result['totalWithoutTax']);
-        static::assertSame(90.0, $result['total']);
-        static::assertSame(90.0, $result['sum']);
-        static::assertSame(17.40343, $result['taxSum']);
+        static::assertEqualsWithDelta(91.597, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(90.0, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(90.0, $result['sum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(17.40343, $result['taxSum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateDiscountWithPercentageDiscount(): void
@@ -39,11 +41,11 @@ class DiscountCalculatorTest extends TestCase
 
         $result = $calculator->calculateDiscount($orderData);
 
-        static::assertSame(45.798, $result['totalWithoutTax']);
-        static::assertSame(45.0, $result['total']);
-        static::assertSame(45.0, $result['sum']);
-        static::assertSame(-5.0, $result['positions'][1]['total']);
-        static::assertSame(8.70162, $result['taxSum']);
+        static::assertEqualsWithDelta(45.798, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(45.0, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(45.0, $result['sum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(-5.0, $result['positions'][1]['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(8.70162, $result['taxSum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateDiscountWithTaxFreeOrder(): void
@@ -54,9 +56,9 @@ class DiscountCalculatorTest extends TestCase
 
         $result = $calculator->calculateDiscount($orderData);
 
-        static::assertSame(90.0, $result['totalWithoutTax']);
-        static::assertSame(90.0, $result['total']);
-        static::assertSame(90.0, $result['sum']);
+        static::assertEqualsWithDelta(90.0, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(90.0, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(90.0, $result['sum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
         static::assertNull($result['taxSum']);
     }
 

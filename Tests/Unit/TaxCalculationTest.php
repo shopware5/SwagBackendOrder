@@ -15,6 +15,8 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
 class TaxCalculationTest extends TestCase
 {
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testGetNetPrice(): void
     {
         $grossPrice = 59.99;
@@ -22,7 +24,7 @@ class TaxCalculationTest extends TestCase
 
         $netPrice = $this->getTaxCalculation()->getNetPrice($grossPrice, $taxRate);
 
-        static::assertSame(50.411764705882355, $netPrice);
+        static::assertEqualsWithDelta(50.411764705882355, $netPrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetGrossPrice(): void
@@ -32,7 +34,7 @@ class TaxCalculationTest extends TestCase
 
         $grossPrice = $this->getTaxCalculation()->getGrossPrice($netPrice, $taxRate);
 
-        static::assertSame(59.9879, $grossPrice);
+        static::assertEqualsWithDelta(59.9879, $grossPrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     private function getTaxCalculation(): TaxCalculation

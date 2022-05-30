@@ -21,6 +21,8 @@ class TotalPriceCalculatorTest extends TestCase
     use ContainerTrait;
     use DatabaseTestCaseTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     /**
      * @var TotalPriceCalculator
      */
@@ -42,17 +44,17 @@ class TotalPriceCalculatorTest extends TestCase
 
         $result = $this->totalPriceCalculator->calculate($positionPrices, $shippingPrice);
 
-        static::assertSame(63.69, $result->getTotal()->getNet());
-        static::assertSame(75.79, $result->getTotal()->getGross());
+        static::assertEqualsWithDelta(63.69, $result->getTotal()->getNet(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(75.79, $result->getTotal()->getGross(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(60.41, $result->getSum()->getNet());
-        static::assertSame(71.89, $result->getSum()->getGross());
+        static::assertEqualsWithDelta(60.41, $result->getSum()->getNet(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(71.89, $result->getSum()->getGross(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(3.28, $result->getShipping()->getNet());
-        static::assertSame(3.90, $result->getShipping()->getGross());
+        static::assertEqualsWithDelta(3.28, $result->getShipping()->getNet(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(3.90, $result->getShipping()->getGross(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame($expectedTaxRates['19'], $result->getTaxes()['19']);
-        static::assertSame($expectedTaxRates['19.5'], $result->getTaxes()['19.5']);
+        static::assertEqualsWithDelta($expectedTaxRates['19'], $result->getTaxes()['19'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta($expectedTaxRates['19.5'], $result->getTaxes()['19.5'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     /**

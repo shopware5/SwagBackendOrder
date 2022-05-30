@@ -15,6 +15,8 @@ use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
 
 class CurrencyConverterTest extends TestCase
 {
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testGetBaseCurrencyPrice(): void
     {
         $price = 81.74;
@@ -22,7 +24,7 @@ class CurrencyConverterTest extends TestCase
 
         $actualPrice = $this->getCurrencyCalculation()->getBaseCurrencyPrice($price, $currencyFactor);
 
-        static::assertSame(59.992660550458709, $actualPrice);
+        static::assertEqualsWithDelta(59.992660550458709, $actualPrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetCurrencyPrice(): void
@@ -32,7 +34,7 @@ class CurrencyConverterTest extends TestCase
 
         $actualPrice = $this->getCurrencyCalculation()->getCurrencyPrice($price, $currencyFactor);
 
-        static::assertSame(81.73637500000001, $actualPrice);
+        static::assertEqualsWithDelta(81.73637500000001, $actualPrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     private function getCurrencyCalculation(): CurrencyConverter
