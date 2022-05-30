@@ -26,6 +26,8 @@ class SwagBackendOrderTest extends TestCase
     use DatabaseTestCaseTrait;
     use B2bOrderTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testCalculateBasket(): void
     {
         $request = new \Enlight_Controller_Request_RequestTestCase();
@@ -40,11 +42,11 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertSame(142.43, $result['totalWithoutTax']);
-        static::assertSame(154.94, $result['sum']);
-        static::assertSame(16.4, \round($result['taxSum'], 1));
-        static::assertSame(59.99, $result['positions'][0]['price']);
-        static::assertSame(59.99, $result['positions'][0]['total']);
+        static::assertEqualsWithDelta(142.43, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(154.94, $result['sum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(16.4, \round($result['taxSum'], 1), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(59.99, $result['positions'][0]['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(59.99, $result['positions'][0]['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasketWithEmptyDispatchId(): void
@@ -61,8 +63,8 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertSame(3.9, $result['shippingCosts']);
-        static::assertSame(3.9, $result['shippingCostsNet']);
+        static::assertEqualsWithDelta(3.9, $result['shippingCosts'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(3.9, $result['shippingCostsNet'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasketWithInvalidDispatchId(): void
@@ -93,8 +95,8 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
         Shopware()->Front()->Router()->assemble();
         static::assertTrue($view->getAssign('success'));
-        static::assertSame(3.9, $result['shippingCosts']);
-        static::assertSame(3.9, $result['shippingCostsNet']);
+        static::assertEqualsWithDelta(3.9, $result['shippingCosts'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(3.9, $result['shippingCostsNet'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testBasketCalculationWithChangedDisplayNetFlag(): void
@@ -111,17 +113,17 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertSame(50.41, \round($result['sum'], 2));
+        static::assertEqualsWithDelta(50.41, \round($result['sum'], 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(3.90, $result['shippingCosts']);
-        static::assertSame(3.28, $result['shippingCostsNet']);
+        static::assertEqualsWithDelta(3.90, $result['shippingCosts'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(3.28, $result['shippingCostsNet'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(10.20, $result['taxSum']);
+        static::assertEqualsWithDelta(10.20, $result['taxSum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(63.89, $result['total']);
-        static::assertSame(53.69, $result['totalWithoutTax']);
+        static::assertEqualsWithDelta(63.89, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(53.69, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(50.41, \round($result['positions'][0]['price'], 2));
+        static::assertEqualsWithDelta(50.41, \round($result['positions'][0]['price'], 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testBasketCalculationWithChangedTaxfreeFlag(): void
@@ -138,17 +140,17 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertSame(50.41, \round($result['sum'], 2));
+        static::assertEqualsWithDelta(50.41, \round($result['sum'], 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(3.28, $result['shippingCosts']);
-        static::assertSame(3.28, $result['shippingCostsNet']);
+        static::assertEqualsWithDelta(3.28, $result['shippingCosts'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(3.28, $result['shippingCostsNet'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(0.0, $result['taxSum']);
+        static::assertEqualsWithDelta(0.0, $result['taxSum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(53.69, $result['total']);
-        static::assertSame(53.69, $result['totalWithoutTax']);
+        static::assertEqualsWithDelta(53.69, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(53.69, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(50.41, \round($result['positions'][0]['price'], 2));
+        static::assertEqualsWithDelta(50.41, \round($result['positions'][0]['price'], 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testBasketCalculationWithChangedCurrency(): void
@@ -165,18 +167,18 @@ class SwagBackendOrderTest extends TestCase
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
-        static::assertSame(271.08, $result['sum']);
+        static::assertEqualsWithDelta(271.08, $result['sum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(5.31, $result['shippingCosts']);
-        static::assertSame(4.47, $result['shippingCostsNet']);
+        static::assertEqualsWithDelta(5.31, $result['shippingCosts'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(4.47, $result['shippingCostsNet'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(41.68, $result['taxSum']);
+        static::assertEqualsWithDelta(41.68, $result['taxSum'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(276.39, $result['total']);
-        static::assertSame(234.71, $result['totalWithoutTax']);
+        static::assertEqualsWithDelta(276.39, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(234.71, $result['totalWithoutTax'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
-        static::assertSame(81.74, \round($result['positions'][0]['price'], 2));
-        static::assertSame(245.21, \round($result['positions'][0]['total'], 2));
+        static::assertEqualsWithDelta(81.74, \round($result['positions'][0]['price'], 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(245.21, \round($result['positions'][0]['total'], 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetProduct(): void
@@ -194,7 +196,7 @@ class SwagBackendOrderTest extends TestCase
 
         static::assertTrue($view->getAssign('success'));
         static::assertSame('SW10002.1', $result['number']);
-        static::assertSame(59.99, $result['price']);
+        static::assertEqualsWithDelta(59.99, $result['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetDiscountAbsolute(): void
@@ -213,13 +215,13 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame('Test_absolute', $result['articleName']);
         static::assertSame('DISCOUNT.1', $result['articleNumber']);
         static::assertSame(0, $result['articleId']);
-        static::assertSame(-50.0, $result['price']);
+        static::assertEqualsWithDelta(-50.0, $result['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
         static::assertSame(4, $result['mode']);
         static::assertSame(1, $result['quantity']);
         static::assertSame(1, $result['inStock']);
         static::assertTrue($result['isDiscount']);
         static::assertSame(DiscountType::DISCOUNT_ABSOLUTE, $result['discountType']);
-        static::assertSame(-50.0, $result['total']);
+        static::assertEqualsWithDelta(-50.0, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetDiscountPercentage(): void
@@ -238,13 +240,13 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame('Test_percentage', $result['articleName']);
         static::assertSame('DISCOUNT.0', $result['articleNumber']);
         static::assertSame(0, $result['articleId']);
-        static::assertSame(-10.0, $result['price']);
+        static::assertEqualsWithDelta(-10.0, $result['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
         static::assertSame(4, $result['mode']);
         static::assertSame(1, $result['quantity']);
         static::assertSame(1, $result['inStock']);
         static::assertTrue($result['isDiscount']);
         static::assertSame(DiscountType::DISCOUNT_PERCENTAGE, $result['discountType']);
-        static::assertSame(-10.0, $result['total']);
+        static::assertEqualsWithDelta(-10.0, $result['total'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetDiscountAbsoluteWillFailDueToInvalidAmount(): void
@@ -304,7 +306,7 @@ class SwagBackendOrderTest extends TestCase
             static::assertSame(\round($blockPrice['gross'], 2), \round($expectedBlockPricesArray[$index]['gross'], 2));
         }
 
-        static::assertSame(0.9044, $result['price']);
+        static::assertEqualsWithDelta(0.9044, $result['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetProductWithDisplayNet(): void
@@ -322,7 +324,7 @@ class SwagBackendOrderTest extends TestCase
 
         static::assertTrue($view->getAssign('success'));
         static::assertSame('SW10002.1', $result['number']);
-        static::assertSame(50.41, $result['price']);
+        static::assertEqualsWithDelta(50.41, $result['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetProductWithBlockPricesAndDisplayNet(): void
@@ -369,7 +371,7 @@ class SwagBackendOrderTest extends TestCase
             static::assertSame(\round($blockPrice['gross'], 2), \round($expectedBlockPricesArray[$index]['gross'], 2));
         }
 
-        static::assertSame(0.76, $result['price']);
+        static::assertEqualsWithDelta(0.76, $result['price'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testGetCustomerList(): void

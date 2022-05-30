@@ -22,6 +22,8 @@ class DetailFactoryTest extends TestCase
 {
     use ContainerTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testCreateWithDiscount(): void
     {
         $factory = $this->getContainer()->get('swag_backend_order.order.detail_factory');
@@ -85,7 +87,7 @@ class DetailFactoryTest extends TestCase
         $positionStruct->setTaxRate(20.0);
         $detail = $factory->create($positionStruct, false);
 
-        static::assertSame(20.0, $detail->getTaxRate());
+        static::assertEqualsWithDelta(20.0, $detail->getTaxRate(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
         static::assertInstanceOf(Tax::class, $detail->getTax());
         static::assertSame(1, $detail->getTax()->getId());
         static::assertNotSame($detail->getTax()->getTax(), $detail->getTaxRate());

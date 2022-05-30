@@ -15,6 +15,8 @@ use SwagBackendOrder\Components\Order\Hydrator\PositionHydrator;
 
 class PositionHydratorTest extends TestCase
 {
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testHydrateValueCasting(): void
     {
         $data = [
@@ -42,9 +44,9 @@ class PositionHydratorTest extends TestCase
         static::assertSame(12, $position->getStatusId());
         static::assertSame(12, $position->getTaxId());
         // should be float values
-        static::assertSame(19.9, $position->getTaxRate());
-        static::assertSame(99.9, $position->getPrice());
-        static::assertSame(199.9, $position->getTotal());
+        static::assertEqualsWithDelta(19.9, $position->getTaxRate(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(99.9, $position->getPrice(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(199.9, $position->getTotal(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
         // should be float values
         static::assertSame('8154711', $position->getNumber());
         static::assertSame('PhpUnitTest ProductName', $position->getName());

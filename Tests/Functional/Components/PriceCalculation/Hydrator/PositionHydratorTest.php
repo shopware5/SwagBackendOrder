@@ -19,6 +19,8 @@ class PositionHydratorTest extends TestCase
 {
     use ContainerTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     public function testHydrateValueCasting(): void
     {
         $data = [
@@ -36,9 +38,9 @@ class PositionHydratorTest extends TestCase
         ))->hydrate($data);
 
         // Should be float values
-        static::assertSame(99.99, $position->getPrice());
-        static::assertSame(99.99, $position->getTotal());
-        static::assertSame(22.2, $position->getTaxRate());
+        static::assertEqualsWithDelta(99.99, $position->getPrice(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(99.99, $position->getTotal(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(22.2, $position->getTaxRate(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
 
         // Should be int values
         static::assertSame(12, $position->getQuantity());

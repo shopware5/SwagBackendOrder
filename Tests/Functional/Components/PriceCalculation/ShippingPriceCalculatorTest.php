@@ -23,6 +23,8 @@ class ShippingPriceCalculatorTest extends TestCase
     use ContainerTrait;
     use DatabaseTestCaseTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     /**
      * @var ShippingPriceCalculator
      */
@@ -41,8 +43,8 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(3.90, 19.00, false, false, 1.3625);
 
         $price = $this->shippingPriceCalculator->calculate($context);
-        static::assertSame(5.31375, $price->getGross());
-        static::assertSame(4.4653361344537812, $price->getNet());
+        static::assertEqualsWithDelta(5.31375, $price->getGross(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(4.4653361344537812, $price->getNet(), self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePriceNet(): void
@@ -50,7 +52,7 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(5.31, 19.00, false, false, 1.3625);
 
         $price = $this->shippingPriceCalculator->calculateBasePrice($context);
-        static::assertSame(3.8972477064220179, $price);
+        static::assertEqualsWithDelta(3.8972477064220179, $price, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePrice(): void
@@ -58,7 +60,7 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(5.31, 19.00, true, false, 1.3625);
 
         $price = $this->shippingPriceCalculator->calculateBasePrice($context);
-        static::assertSame(3.8972477064220179, $price);
+        static::assertEqualsWithDelta(3.8972477064220179, $price, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePriceTaxfree(): void
@@ -66,6 +68,6 @@ class ShippingPriceCalculatorTest extends TestCase
         $context = new PriceContext(4.47, 19.00, true, true, 1.3625);
 
         $price = $this->shippingPriceCalculator->calculateBasePrice($context);
-        static::assertSame(3.9040733944954122, $price);
+        static::assertEqualsWithDelta(3.9040733944954122, $price, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 }

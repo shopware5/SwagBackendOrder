@@ -23,6 +23,8 @@ class ProductPriceCalculatorTest extends TestCase
     use ContainerTrait;
     use DatabaseTestCaseTrait;
 
+    private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+
     /**
      * @var ProductPriceCalculator
      */
@@ -41,8 +43,8 @@ class ProductPriceCalculatorTest extends TestCase
         $context = new PriceContext(50.41, 19.00, true, false, 1.3625);
 
         $price = $this->productPriceCalculator->calculate($context);
-        static::assertSame(68.68, \round($price->getNet(), 2));
-        static::assertSame(81.73, \round($price->getGross(), 2));
+        static::assertEqualsWithDelta(68.68, \round($price->getNet(), 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
+        static::assertEqualsWithDelta(81.73, \round($price->getGross(), 2), self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePriceFromGrossPriceWithCurrencyFactor(): void
@@ -51,7 +53,7 @@ class ProductPriceCalculatorTest extends TestCase
         $context = new PriceContext(81.74, 19.00, false, false, $currencyFactor);
 
         $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
-        static::assertSame(50.414000462570343, $basePrice);
+        static::assertEqualsWithDelta(50.414000462570343, $basePrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePriceFromNetPrice(): void
@@ -59,7 +61,7 @@ class ProductPriceCalculatorTest extends TestCase
         $context = new PriceContext(50.00, 19.00, true);
 
         $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
-        static::assertSame(50.00, $basePrice);
+        static::assertEqualsWithDelta(50.00, $basePrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePriceFromTaxFreePrice(): void
@@ -67,7 +69,7 @@ class ProductPriceCalculatorTest extends TestCase
         $context = new PriceContext(50.00, 19.00, false, true);
 
         $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
-        static::assertSame(50.00, $basePrice);
+        static::assertEqualsWithDelta(50.00, $basePrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 
     public function testCalculateBasePriceFromTaxFreePriceWithCurrencyFactor(): void
@@ -76,6 +78,6 @@ class ProductPriceCalculatorTest extends TestCase
         $context = new PriceContext(50.00, 19.00, false, true, $currencyFactor);
 
         $basePrice = $this->productPriceCalculator->calculateBasePrice($context);
-        static::assertSame(25.0, $basePrice);
+        static::assertEqualsWithDelta(25.0, $basePrice, self::FORMER_PHPUNIT_FLOAT_EPSILON);
     }
 }
