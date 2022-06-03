@@ -33,8 +33,8 @@ class ProductValidator
     {
         $result = new ValidationResult();
 
-        //A discount can not be validated like a regular product, since there is
-        //no product referenced to it. Therefore, we have to early return the result here.
+        // A discount can not be validated like a regular product, since there is
+        // no product referenced to it. Therefore, we have to early return the result here.
         if ($context->isDiscount()) {
             return $result;
         }

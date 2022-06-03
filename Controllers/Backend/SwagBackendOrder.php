@@ -88,7 +88,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $modelManager->getConnection()->beginTransaction();
         try {
-            //we need to fake a shop instance if we want to use the Articles Module
+            // we need to fake a shop instance if we want to use the Articles Module
             $shopRepository = $this->get('models')->getRepository(Shop::class);
             $shop = $shopRepository->getActiveById($orderStruct->getLanguageShopId());
 
@@ -391,7 +391,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
         $result = $builder->getQuery()->getArrayResult();
 
-        //Gets the correct language name for every shop
+        // Gets the correct language name for every shop
         foreach ($result as &$shop) {
             $shopModel = $this->get('models')->find(Shop::class, $shop['id']);
             $shop['name'] = $shopModel->getLocale()->getLanguage();
@@ -444,7 +444,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $config = $this->container->get('config');
         $proportionalTaxCalculation = ((bool) $config->get('proportionalTaxCalculation')) && !$requestStruct->isTaxFree();
 
-        //Basket position price calculation
+        // Basket position price calculation
         $positionPrices = [];
         foreach ($requestStruct->getPositions() as $position) {
             $positionPrice = $this->getPositionPrice($position, $requestStruct);
@@ -458,13 +458,13 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 $totalPositionPrice->setGross($this->getTotalPrice($calculatedGross, $position->getQuantity()));
             }
 
-            //Don't set the total amount of the product if it's a discount.
+            // Don't set the total amount of the product if it's a discount.
             if (!$position->getIsDiscount()) {
                 $positionPrices[] = $totalPositionPrice;
 
                 $position->setPrice($positionPrice->getGross());
 
-                //Use net prices if it's configured like that
+                // Use net prices if it's configured like that
                 if ($requestStruct->isTaxFree() || $requestStruct->isDisplayNet()) {
                     $position->setPrice($positionPrice->getNet());
                 }
@@ -513,7 +513,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $mail->addTo($context['additional']['user']['email']);
             $mail->send();
 
-            //If configured email to the shop owner
+            // If configured email to the shop owner
             $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
             if (!$mailNotToShopOwner) {
                 $mail->clearRecipients();
@@ -578,7 +578,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             $taxSum = 0.00;
         }
 
-        //Total prices calculation
+        // Total prices calculation
         $totalNetPrice = $totalPriceResult->getTotal()->getRoundedNetPrice();
         $shippingCostsNet = $totalPriceResult->getShipping()->getRoundedNetPrice();
 

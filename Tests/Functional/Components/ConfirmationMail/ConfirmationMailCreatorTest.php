@@ -70,7 +70,7 @@ class ConfirmationMailCreatorTest extends TestCase
     {
         $this->importFixtures(__DIR__ . '/test-fixtures.sql');
 
-        //Insert the discount into the order
+        // Insert the discount into the order
         $order = $this->getContainer()->get('models')->find(Order::class, self::ORDER_ID);
         static::assertInstanceOf(Order::class, $order);
         $confirmationMailCreator = $this->createConfirmationMailCreator();

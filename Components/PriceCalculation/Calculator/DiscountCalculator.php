@@ -17,15 +17,15 @@ class DiscountCalculator
     public function calculateDiscount(array &$orderData): array
     {
         foreach ($orderData['positions'] as &$position) {
-            //Check for absolute discount
+            // Check for absolute discount
             if ($position['isDiscount'] && $position['discountType'] === DiscountType::DISCOUNT_ABSOLUTE) {
                 $this->updateOrderDetails($orderData, $position, $position['price']);
                 continue;
             }
 
-            //Check for percentage discount
+            // Check for percentage discount
             if ($position['isDiscount'] && $position['discountType'] === DiscountType::DISCOUNT_PERCENTAGE) {
-                //Don't include the shipping costs in this calculation
+                // Don't include the shipping costs in this calculation
                 $totalDiscount = (float) $orderData['sum'] / 100 * (float) $position['price'];
 
                 $this->updateOrderDetails($orderData, $position, $totalDiscount);
@@ -40,14 +40,14 @@ class DiscountCalculator
         $taxRate = $discountPosition['taxRate'];
         $discountNet = \round($discount / (100 + $taxRate) * 100, 3);
 
-        //Update order amount
+        // Update order amount
         $orderData['sum'] += $discount;
         $orderData['total'] += $discount;
 
-        //If this is not a net order,
-        //we have to calculate the tax value of the discount and add it to the order tax sum.
+        // If this is not a net order,
+        // we have to calculate the tax value of the discount and add it to the order tax sum.
         if (!$orderData['isTaxFree']) {
-            //taxValue is always a negative number
+            // taxValue is always a negative number
             $taxValue = $discountNet / 100 * $discountPosition['taxRate'];
 
             $orderData['taxSum'] += $taxValue;
@@ -56,7 +56,7 @@ class DiscountCalculator
             $orderData['totalWithoutTax'] += $discount;
         }
 
-        //Update position
+        // Update position
         $discountPosition['total'] = $discount;
     }
 }

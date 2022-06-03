@@ -70,7 +70,7 @@ class CustomerRepository
     {
         $builder = $this->modelManager->createQueryBuilder();
 
-        //add the displayed columns
+        // add the displayed columns
         $builder->select([
             'customer.id',
             'customer.email',
@@ -85,20 +85,20 @@ class CustomerRepository
         $builder->from(Customer::class, 'customer')
             ->join('customer.defaultBillingAddress', 'billing');
 
-        //filter the displayed columns with the passed filter string
+        // filter the displayed columns with the passed filter string
         if ($filter !== null) {
             $fullNameExp = $builder->expr()->concat('customer.firstname', $builder->expr()->concat($builder->expr()->literal(' '), 'customer.lastname'));
             $fullNameReversedExp = $builder->expr()->concat('customer.lastname', $builder->expr()->concat($builder->expr()->literal(' '), 'customer.firstname'));
 
-            $builder->where('customer.number LIKE ?1') //Search only the beginning of the customer number.
-                ->orWhere('customer.firstname LIKE ?2') //Full text search for the first name of the customer
-                ->orWhere('customer.lastname LIKE ?2') //Full text search for the last name of the customer
-                ->orWhere($fullNameExp . ' LIKE ?2') //Full text search for the full name of the customer
-                ->orWhere($fullNameReversedExp . ' LIKE ?2') //Full text search for the full name in reversed order of the customer
-                ->orWhere('customer.email LIKE ?2') //Full text search for the customer email
-                ->orWhere('billing.company LIKE ?2') //Full text search for the company of the customer
-                ->orWhere('billing.city LIKE ?2') //Full text search for the city of the customer
-                ->orWhere('billing.zipcode LIKE ?1') //Search only the beginning of the customer number.
+            $builder->where('customer.number LIKE ?1') // Search only the beginning of the customer number.
+                ->orWhere('customer.firstname LIKE ?2') // Full text search for the first name of the customer
+                ->orWhere('customer.lastname LIKE ?2') // Full text search for the last name of the customer
+                ->orWhere($fullNameExp . ' LIKE ?2') // Full text search for the full name of the customer
+                ->orWhere($fullNameReversedExp . ' LIKE ?2') // Full text search for the full name in reversed order of the customer
+                ->orWhere('customer.email LIKE ?2') // Full text search for the customer email
+                ->orWhere('billing.company LIKE ?2') // Full text search for the company of the customer
+                ->orWhere('billing.city LIKE ?2') // Full text search for the city of the customer
+                ->orWhere('billing.zipcode LIKE ?1') // Search only the beginning of the customer number.
                 ->setParameter(1, $filter . '%')
                 ->setParameter(2, '%' . $filter . '%');
         }

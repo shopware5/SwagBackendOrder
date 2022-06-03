@@ -104,7 +104,7 @@ class ConfirmationMailCreator
         $details = $this->confirmationMailRepository->getOrderDetailsByOrderId($orderModel->getId());
 
         foreach ($details as &$result) {
-            //Handle position as discount
+            // Handle position as discount
             if ((int) $result['modus'] === self::PAYMENT_SURCHARGE_OR_DISCOUNT) {
                 $result['ordernumber'] = $result['articleordernumber'];
                 $result['articlename'] = $result['name'];
@@ -206,7 +206,7 @@ class ConfirmationMailCreator
         $result['additional']['show_net'] = $orderModel->getNet();
         $result['additional']['charge_var'] = 1;
 
-        //Prevent displaying of gross prices on confirmation mail.
+        // Prevent displaying of gross prices on confirmation mail.
         if ($orderModel->getTaxFree() === 1) {
             $result['sNet'] = 1;
         }

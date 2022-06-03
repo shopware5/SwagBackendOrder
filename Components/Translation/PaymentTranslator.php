@@ -34,7 +34,7 @@ class PaymentTranslator
             $paymentMethod['description'] = $paymentTranslations[$paymentId]['description'];
         }
 
-        //for the confirmation mail template
+        // for the confirmation mail template
         $paymentMethod['additionaldescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
         $paymentMethod['additionalDescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
 

@@ -46,7 +46,7 @@ class SwagBackendOrder extends Plugin
 
         $plugin = $pluginManager->getPluginByName($this->getName());
 
-        //Finally set the plugin config value to the core config value.
+        // Finally set the plugin config value to the core config value.
         $pluginManager->saveConfigElement($plugin, 'sendMail', $sendMailConfigGlobal);
     }
 }
