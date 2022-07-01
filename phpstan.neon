@@ -12,6 +12,10 @@ parameters:
         queryBuilderClass: Shopware\Components\Model\QueryBuilder
         repositoryClass: Shopware\Components\Model\ModelRepository
         objectManagerLoader: ../../../tests/phpstan-doctrine-model-manager.php
+    scanDirectories:
+        - ../../../var/cache/production____REVISION___/doctrine
+    bootstrapFiles:
+        - ../../../tests/phpstan-dba-bootstrap.php
     excludePaths:
         - .githooks
         - vendor
