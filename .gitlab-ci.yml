@@ -42,8 +42,6 @@ default:
         - /entrypoint supervisord &>/dev/null &
 
 JavaScript analyze:
-    tags:
-        - t3.nano
     stage: Code Analysis
     image: node:alpine
     services: []
