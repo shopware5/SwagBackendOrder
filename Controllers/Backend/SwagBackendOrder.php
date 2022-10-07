@@ -34,6 +34,7 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 
 /**
  * @phpstan-import-type PositionArray from RequestStruct
+ *
  * @phpstan-type TaxArray list<array{taxRate: float, tax: float}>
  */
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
