@@ -15,10 +15,12 @@ require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 use Enlight_View_Default;
 use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
+use Shopware\Models\Shop\Locale;
 use SwagBackendOrder\Components\PriceCalculation\DiscountType;
 use SwagBackendOrder\Tests\Functional\B2bOrderTrait;
 use SwagBackendOrder\Tests\Functional\ContainerTrait;
 use SwagBackendOrder\Tests\Functional\DatabaseTestCaseTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SwagBackendOrderTest extends TestCase
 {
@@ -586,6 +588,27 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($viewResult['ordernumber'], $b2bResult[0]['ordernumber']);
     }
 
+    public function testGetShippingCostsAction(): void
+    {
+        $view = $this->getView();
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+
+        $container = $this->createContainerWithMockedAuthComponent();
+        $controller = new SwagBackendOrderMock($request, $container, $view);
+
+        $controller->getShippingCostsAction();
+
+        $viewResult = $view->getAssign();
+
+        $position = 0;
+        static::assertTrue($viewResult['success']);
+        foreach ($viewResult['data'] as $shipping) {
+            $currentPosition = $shipping['dispatch']['position'];
+            static::assertGreaterThanOrEqual($position, $currentPosition, 'Shipping methods are not sorted ascending');
+            $position = $currentPosition;
+        }
+    }
+
     private function getDemoData(): array
     {
         return [
@@ -780,6 +803,40 @@ class SwagBackendOrderTest extends TestCase
             'name' => $name,
             'currentTotal' => $currentTotal,
         ];
+    }
+
+    private function createContainerWithMockedAuthComponent(): Container
+    {
+        $locale = $this->createMock(Locale::class);
+        $locale->method('getId')->willReturn(1);
+
+        $identity = new \stdClass();
+        $identity->locale = $locale;
+
+        $auth = $this->createMock(\Shopware_Components_Auth::class);
+        $auth->method('getIdentity')->willReturn($identity);
+
+        $authBootstrap = $this->createMock(\Shopware_Plugins_Backend_Auth_Bootstrap::class);
+        $authBootstrap->method('checkAuth')->willReturn($auth);
+
+        $backendPlugins = $this->createMock(\Enlight_Plugin_PluginCollection::class);
+        $backendPlugins->method('__call')->willReturnCallback(function () use ($authBootstrap) {
+            return $authBootstrap;
+        });
+
+        $plugins = $this->createMock(\Enlight_Plugin_PluginManager::class);
+        $plugins->method('__call')->willReturnCallback(function () use ($backendPlugins) {
+            return $backendPlugins;
+        });
+
+        $container = $this->createMock(Container::class);
+        $container->method('get')->willReturnMap([
+            ['swag_backend_order.shipping_translator', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->getContainer()->get('swag_backend_order.shipping_translator')],
+            ['models', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->getContainer()->get('models')],
+            ['plugins', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $plugins],
+        ]);
+
+        return $container;
     }
 }
 

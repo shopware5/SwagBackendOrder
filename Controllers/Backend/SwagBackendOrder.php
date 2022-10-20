@@ -511,15 +511,15 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
                 $orderModel->getLanguageSubShop()->getLocale()
             );
 
-            $mail = Shopware()->TemplateMail()->createMail('sORDER', $context);
+            $mail = $this->container->get('templatemail')->createMail('sORDER', $context);
             $mail->addTo($context['additional']['user']['email']);
             $mail->send();
 
             // If configured email to the shop owner
-            $mailNotToShopOwner = Shopware()->Config()->get('no_order_mail');
+            $mailNotToShopOwner = $this->container->get('config')->get('no_order_mail');
             if (!$mailNotToShopOwner) {
                 $mail->clearRecipients();
-                $mail->addTo(Shopware()->Config()->get('mail'));
+                $mail->addTo($this->container->get('config')->get('mail'));
                 $mail->send();
             }
         } catch (\Exception $e) {
@@ -529,7 +529,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
 
     private function getBackendLanguage(): int
     {
-        $auth = Shopware()->Plugins()->Backend()->Auth()->checkAuth();
+        $auth = $this->container->get('plugins')->Backend()->Auth()->checkAuth();
         if (!$auth instanceof Shopware_Components_Auth) {
             throw new RuntimeException('User not logged in');
         }
