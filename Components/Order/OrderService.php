@@ -59,7 +59,7 @@ class OrderService implements OrderServiceInterface
     {
         $violations = $this->validator->validate($orderStruct);
         if ($violations->getMessages()) {
-            throw new InvalidOrderException(sprintf("Invalid %s given.", OrderStruct::class));
+            throw new InvalidOrderException(sprintf('Invalid %s given.', OrderStruct::class));
         }
 
         $number = $this->numberRangeIncrementer->increment('invoice');

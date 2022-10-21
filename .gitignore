@@ -1,3 +1,4 @@
 vendor
 .phpunit.result.cache
 .psh.yml.override
+.php-cs-fixer.cache
