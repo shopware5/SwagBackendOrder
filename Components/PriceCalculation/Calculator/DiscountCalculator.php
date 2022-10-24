@@ -42,16 +42,15 @@ class DiscountCalculator
         // Update order amount
         $orderData['sum'] += $discount;
 
-        //If showing net prices, discount is implied to be a net value.
-        //We will add taxes now so that the results are correct
+        // If showing net prices, discount is implied to be a net value.
+        // Add taxes now, so that the results are correct
         if (!$orderData['isDisplayNet']) {
-          $orderData['total'] += $discount;
-          $discountNet = round($discount / (100 + $taxRate) * 100, 3);
+            $orderData['total'] += $discount;
+            $discountNet = round($discount / (100 + $taxRate) * 100, 3);
         } else {
-          $orderData['total'] += round( $discount * (1 + $taxRate / 100), 3);
-          $discountNet = $discount;
+            $orderData['total'] += round($discount * (1 + $taxRate / 100), 3);
+            $discountNet = $discount;
         }
-
 
         // If this is not a net order,
         // we have to calculate the tax value of the discount and add it to the order tax sum.

@@ -14,10 +14,12 @@
 
     <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION">
         <changes lang="de">
+            PT-10672 - Steuerberechnung korrigiert, wenn ein Rabatt hinzugefügt wird und Netto-Preise angezeigt werden
             PT-10676 - Die Bestellnummer wird nun nur noch generiert, wenn die Bestellung korrekt ist;
             PT-11985 - Versandkostenarten werden nun nach Position sortiert;
         </changes>
         <changes lang="en">
+            PT-10672 - Fix tax calculation when a discount is added and net prices are displayed
             PT-10676 - Now the order number is only generated, if the order is valid;
             PT-11985 - Shipping costs methods are sorted by position now;
         </changes>

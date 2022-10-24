@@ -36,6 +36,7 @@ use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
  * @phpstan-import-type PositionArray from RequestStruct
  *
  * @phpstan-type TaxArray list<array{taxRate: float, tax: float}>
+ * @phpstan-type CalculateBasketResult array{totalWithoutTax: float, sum: float, total: float, shippingCosts: float, shippingCostsNet: float, shippingCostsTaxRate: float, taxSum: float, positions: PositionArray, dispatchTaxRate: float, proportionalTaxCalculation: bool, taxes: TaxArray}
  */
 class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers_Backend_ExtJs
 {
@@ -181,8 +182,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $type = (int) $this->Request()->getParam('type');
         $value = (float) $this->Request()->getParam('value');
         $productName = $this->Request()->getParam('name');
-        $totalAmount = $this->Request()->getParam('currentTotal');
-        $taxRate = $this->Request()->getParam('tax');
+        $totalAmount = (float) $this->Request()->getParam('currentTotal');
+        $taxRate = (float) $this->Request()->getParam('tax');
 
         if ($type === DiscountType::DISCOUNT_ABSOLUTE && $totalAmount < $value) {
             $this->view->assign(['success' => false]);
@@ -559,7 +560,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
     }
 
     /**
-     * @return array{totalWithoutTax: float, sum: float, total: float, shippingCosts: float, shippingCostsNet: float, shippingCostsTaxRate: float, taxSum: float, positions: PositionArray, dispatchTaxRate: float, proportionalTaxCalculation: bool, taxes: TaxArray}
+     * @return CalculateBasketResult
      */
     private function createBasketCalculationResult(
         TotalPricesResult $totalPriceResult,
