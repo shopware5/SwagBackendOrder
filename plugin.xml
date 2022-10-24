@@ -13,8 +13,14 @@
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
     <changelog version="REPLACE_GLOBAL_WITH_NEXT_VERSION">
-        <changes lang="de">PT-10676 - Die Bestellnummer wird nun nur noch generiert, wenn die Bestellung korrekt ist;</changes>
-        <changes lang="en">PT-10676 - Now the order number is only generated, if the order is valid;</changes>
+        <changes lang="de">
+            PT-10676 - Die Bestellnummer wird nun nur noch generiert, wenn die Bestellung korrekt ist;
+            PT-11985 - Versandkostenarten werden nun nach Position sortiert;
+        </changes>
+        <changes lang="en">
+            PT-10676 - Now the order number is only generated, if the order is valid;
+            PT-11985 - Shipping costs methods are sorted by position now;
+        </changes>
     </changelog>
 
     <changelog version="3.0.1">
