@@ -90,7 +90,7 @@ class OrderStruct
     /**
      * @var PositionStruct[]
      */
-    private $positions;
+    private $positions = [];
 
     /**
      * @var float

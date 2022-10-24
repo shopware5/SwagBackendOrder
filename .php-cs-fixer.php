@@ -32,7 +32,6 @@ EOF;
 return (new Config())
     ->registerCustomFixers(new Fixers())
     ->setRiskyAllowed(true)
-    ->setUsingCache(false)
     ->setRules([
         '@PSR12' => true,
         '@Symfony' => true,

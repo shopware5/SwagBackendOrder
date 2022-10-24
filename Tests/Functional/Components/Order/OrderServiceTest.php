@@ -11,10 +11,15 @@ declare(strict_types=1);
 namespace SwagBackendOrder\Tests\Functional\Components\Order;
 
 use PHPUnit\Framework\TestCase;
+use Shopware\Components\Model\ModelManager;
+use Shopware\Components\NumberRangeIncrementerInterface;
 use Shopware\Models\Order\Detail;
 use Shopware\Models\Order\Order;
+use SwagBackendOrder\Components\Order\Factory\OrderFactory;
+use SwagBackendOrder\Components\Order\OrderService;
 use SwagBackendOrder\Components\Order\Struct\OrderStruct;
 use SwagBackendOrder\Components\Order\Struct\PositionStruct;
+use SwagBackendOrder\Components\Order\Validator\InvalidOrderException;
 use SwagBackendOrder\Tests\Functional\ContainerTrait;
 use SwagBackendOrder\Tests\Functional\DatabaseTestCaseTrait;
 
@@ -36,6 +41,25 @@ class OrderServiceTest extends TestCase
         $firstPosition = $order->getDetails()->get(0);
         static::assertInstanceOf(Detail::class, $firstPosition);
         static::assertSame($orderStruct->getPositions()[0]->getPrice(), $firstPosition->getPrice());
+    }
+
+    public function testCreateOrderDoesNotIncreaseOrderNumberRange(): void
+    {
+        $numberRangeIncrementer = $this->createMock(NumberRangeIncrementerInterface::class);
+        $numberRangeIncrementer->expects(static::never())->method('increment');
+        $orderService = new OrderService(
+            $this->createMock(OrderFactory::class),
+            $this->createMock(ModelManager::class),
+            $numberRangeIncrementer,
+            $this->getContainer()->get('swag_backend_order.order.order_validator')
+        );
+
+        $orderStruct = new OrderStruct();
+        $orderStruct->addPosition(new PositionStruct());
+
+        $this->expectException(InvalidOrderException::class);
+        $this->expectExceptionMessage('Invalid SwagBackendOrder\Components\Order\Struct\OrderStruct given.');
+        $orderService->create($orderStruct);
     }
 
     private function getOrderStruct(): OrderStruct
