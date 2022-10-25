@@ -211,21 +211,6 @@ parameters:
 			path: Tests/Functional/Components/Order/OrderServiceTest.php
 
 		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:getTestOrderDataTaxFree\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Tests/Functional/Components/PriceCalculation/DiscountCalculatorTest.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:getTestOrderDataWithAbsoluteDiscount\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Tests/Functional/Components/PriceCalculation/DiscountCalculatorTest.php
-
-		-
-			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Components\\\\PriceCalculation\\\\DiscountCalculatorTest\\:\\:getTestOrderDataWithPercentageDiscount\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Tests/Functional/Components/PriceCalculation/DiscountCalculatorTest.php
-
-		-
 			message: "#^Method SwagBackendOrder\\\\Tests\\\\Functional\\\\Controller\\\\SwagBackendOrderTest\\:\\:getB2bOrder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Tests/Functional/Controller/SwagBackendOrderTest.php
