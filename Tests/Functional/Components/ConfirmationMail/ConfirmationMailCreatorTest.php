@@ -15,7 +15,6 @@ use Shopware\Models\Article\Detail;
 use Shopware\Models\Order\Detail as OrderDetailModel;
 use Shopware\Models\Order\DetailStatus;
 use Shopware\Models\Order\Order;
-use Shopware_Components_Translation;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailCreator;
 use SwagBackendOrder\Components\ConfirmationMail\ConfirmationMailRepository;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
@@ -111,8 +110,8 @@ class ConfirmationMailCreatorTest extends TestCase
     {
         return new ConfirmationMailCreator(
             new TaxCalculation(),
-            new PaymentTranslator(new Shopware_Components_Translation($this->getContainer()->get('dbal_connection'), $this->getContainer())),
-            new ShippingTranslator(new Shopware_Components_Translation($this->getContainer()->get('dbal_connection'), $this->getContainer())),
+            new PaymentTranslator(new \Shopware_Components_Translation($this->getContainer()->get('dbal_connection'), $this->getContainer())),
+            new ShippingTranslator(new \Shopware_Components_Translation($this->getContainer()->get('dbal_connection'), $this->getContainer())),
             new ConfirmationMailRepository($this->getContainer()->get('dbal_connection')),
             $this->getContainer()->get('models')->getRepository(Detail::class),
             $this->getContainer()->get('config'),

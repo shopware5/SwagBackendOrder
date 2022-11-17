@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace SwagBackendOrder\Components\ConfirmationMail;
 
-use sArticles;
 use Shopware\Models\Article\Detail as ProductVariant;
 use Shopware\Models\Article\Repository;
 use Shopware\Models\Country\State;
@@ -20,7 +19,6 @@ use Shopware\Models\Order\Order;
 use Shopware\Models\Order\Shipping;
 use Shopware\Models\Shop\Locale;
 use Shopware\Models\Shop\Shop;
-use Shopware_Components_Config;
 use SwagBackendOrder\Components\PriceCalculation\TaxCalculation;
 use SwagBackendOrder\Components\Translation\PaymentTranslator;
 use SwagBackendOrder\Components\Translation\ShippingTranslator;
@@ -58,12 +56,12 @@ class ConfirmationMailCreator
     private $productVariantRepository;
 
     /**
-     * @var sArticles
+     * @var \sArticles
      */
     private $productCoreClass;
 
     /**
-     * @var Shopware_Components_Config
+     * @var \Shopware_Components_Config
      */
     private $config;
 
@@ -78,9 +76,9 @@ class ConfirmationMailCreator
         ShippingTranslator $shippingTranslator,
         ConfirmationMailRepository $confirmationMailRepository,
         Repository $productVariantRepository,
-        Shopware_Components_Config $config,
+        \Shopware_Components_Config $config,
         NumberFormatterWrapper $numberFormatterWrapper,
-        sArticles $productCoreClass
+        \sArticles $productCoreClass
     ) {
         $this->taxCalculation = $taxCalculation;
         $this->paymentTranslator = $paymentTranslator;

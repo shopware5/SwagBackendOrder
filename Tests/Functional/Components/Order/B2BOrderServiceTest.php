@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace SwagBackendOrder\Tests\Functional\Components\Order;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Shopware\Models\Customer\Customer;
 use Shopware\Models\Order\Order;
 use Shopware\Tests\Functional\Traits\DatabaseTransactionBehaviour;
@@ -97,12 +96,12 @@ class B2BOrderServiceTest extends TestCase
         // Order with id 15 has the number 20001
         // User with id 1 is the default ShopCustomer
         $order = new Order();
-        $orderReflectionProperty = (new ReflectionClass(Order::class))->getProperty('id');
+        $orderReflectionProperty = (new \ReflectionClass(Order::class))->getProperty('id');
         $orderReflectionProperty->setAccessible(true);
         $orderReflectionProperty->setValue($order, $orderId);
 
         $customer = new Customer();
-        $customerReflectionProperty = (new ReflectionClass(Customer::class))->getProperty('id');
+        $customerReflectionProperty = (new \ReflectionClass(Customer::class))->getProperty('id');
         $customerReflectionProperty->setAccessible(true);
         $customerReflectionProperty->setValue($customer, $customerId);
 

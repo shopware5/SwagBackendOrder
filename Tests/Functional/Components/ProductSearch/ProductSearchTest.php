@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace SwagBackendOrder\Tests\Functional\Components\ProductSearch;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 use Shopware\Bundle\StoreFrontBundle\Service\Core\ShopContextFactoryInterface;
 use SwagBackendOrder\Components\PriceCalculation\Calculator\ProductPriceCalculator;
 use SwagBackendOrder\Components\PriceCalculation\CurrencyConverter;
@@ -29,7 +28,7 @@ class ProductSearchTest extends TestCase
 
     public function testPrepareProductPriceNormalSelectedPriceByCustomerGroup(): void
     {
-        $method = (new ReflectionClass(ProductSearch::class))->getMethod('prepareProductPrice');
+        $method = (new \ReflectionClass(ProductSearch::class))->getMethod('prepareProductPrice');
         $method->setAccessible(true);
 
         $product = [
@@ -52,7 +51,7 @@ class ProductSearchTest extends TestCase
 
     public function testPrepareProductPriceWithPriceFromDefaultCustomerGroup(): void
     {
-        $method = (new ReflectionClass(ProductSearch::class))->getMethod('prepareProductPrice');
+        $method = (new \ReflectionClass(ProductSearch::class))->getMethod('prepareProductPrice');
         $method->setAccessible(true);
 
         $product = [

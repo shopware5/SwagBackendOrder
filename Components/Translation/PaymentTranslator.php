@@ -10,16 +10,14 @@ declare(strict_types=1);
 
 namespace SwagBackendOrder\Components\Translation;
 
-use Shopware_Components_Translation;
-
 class PaymentTranslator
 {
     /**
-     * @var Shopware_Components_Translation
+     * @var \Shopware_Components_Translation
      */
     private $translationComponent;
 
-    public function __construct(Shopware_Components_Translation $translationComponent)
+    public function __construct(\Shopware_Components_Translation $translationComponent)
     {
         $this->translationComponent = $translationComponent;
     }

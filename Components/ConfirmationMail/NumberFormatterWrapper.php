@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace SwagBackendOrder\Components\ConfirmationMail;
 
-use RuntimeException;
-
 class NumberFormatterWrapper
 {
     public const LOCALE_GREAT_BRITAIN = 'en_EN';
@@ -21,7 +19,7 @@ class NumberFormatterWrapper
     {
         $decimalPoint = '.';
         if (!$locale) {
-            throw new RuntimeException('$locale is empty.');
+            throw new \RuntimeException('$locale is empty.');
         }
 
         if ($locale === self::LOCALE_GERMANY) {

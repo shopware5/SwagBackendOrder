@@ -12,7 +12,6 @@ namespace SwagBackendOrder\Tests\Functional\Controller;
 
 require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 
-use Enlight_View_Default;
 use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
 use Shopware\Models\Shop\Locale;
@@ -772,14 +771,14 @@ class SwagBackendOrderTest extends TestCase
         ];
     }
 
-    private function getView(): Enlight_View_Default
+    private function getView(): \Enlight_View_Default
     {
-        return new Enlight_View_Default(
+        return new \Enlight_View_Default(
             new \Enlight_Template_Manager()
         );
     }
 
-    private function getControllerMock(\Enlight_Controller_Request_RequestTestCase $request, Enlight_View_Default $view): SwagBackendOrderMock
+    private function getControllerMock(\Enlight_Controller_Request_RequestTestCase $request, \Enlight_View_Default $view): SwagBackendOrderMock
     {
         return new SwagBackendOrderMock(
             $request,
@@ -845,7 +844,7 @@ class SwagBackendOrderMock extends \Shopware_Controllers_Backend_SwagBackendOrde
     public function __construct(
         \Enlight_Controller_Request_RequestTestCase $request,
         Container $container,
-        Enlight_View_Default $view
+        \Enlight_View_Default $view
     ) {
         $this->request = $request;
         $this->response = new \Enlight_Controller_Response_ResponseTestCase();

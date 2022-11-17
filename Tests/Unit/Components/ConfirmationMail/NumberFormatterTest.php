@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace SwagBackendOrder\Tests\Unit\Components\ConfirmationMail;
 
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 use SwagBackendOrder\Components\ConfirmationMail\NumberFormatterWrapper;
 
 class NumberFormatterTest extends TestCase
@@ -61,7 +60,7 @@ class NumberFormatterTest extends TestCase
 
         $numberFormatterWrapper = new NumberFormatterWrapper();
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $numberFormatterWrapper->format($number, self::EMPTY_LOCALE);
     }
 
