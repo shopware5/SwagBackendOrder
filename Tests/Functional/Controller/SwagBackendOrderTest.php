@@ -94,7 +94,7 @@ class SwagBackendOrderTest extends TestCase
         $controller->calculateBasketAction();
 
         $result = $view->getAssign('data');
-        Shopware()->Front()->Router()->assemble();
+        $this->getContainer()->get('router')->assemble();
         static::assertTrue($view->getAssign('success'));
         static::assertEqualsWithDelta(3.9, $result['shippingCosts'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
         static::assertEqualsWithDelta(3.9, $result['shippingCostsNet'], self::FORMER_PHPUNIT_FLOAT_EPSILON);
