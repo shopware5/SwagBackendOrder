@@ -1,0 +1,23 @@
+name: Run plugin workflow
+
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    call-plugin-workflow:
+        strategy:
+            matrix:
+                include:
+                    - shopware-version: 5.6
+                      php-version: 5.6
+                    - shopware-version: 5.7
+                      php-version: 7.4
+                    - shopware-version: 5.7
+                      php-version: 8.2
+
+        uses: shopware5/docker-images-testing/.github/workflows/plugin-workflow.yml@main
+        with:
+            plugin-name: SwagBackendOrder
+            php-version: ${{ matrix.php-version }}
+            shopware-version: ${{ matrix.shopware-version }}
