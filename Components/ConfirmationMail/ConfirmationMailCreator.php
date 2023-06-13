@@ -248,6 +248,9 @@ class ConfirmationMailCreator
         return $mailOrderPositions;
     }
 
+    /**
+     * @return array<int, float>
+     */
     private function getOrderTaxRate(Order $orderModel): array
     {
         $details = $this->confirmationMailRepository->getOrderDetailsByOrderId($orderModel->getId());
@@ -274,6 +277,7 @@ class ConfirmationMailCreator
 
             if (isset($taxRates[$shippingTaxRate])) {
                 $taxRates[$shippingTaxRate] += $shippingTaxAmount;
+
                 return $taxRates;
             }
 
