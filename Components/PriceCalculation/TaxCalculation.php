@@ -21,4 +21,9 @@ class TaxCalculation
     {
         return $price * ((100 + $taxRate) / 100);
     }
+
+    public function getTaxAmount(float $grossPrice, float $taxRate): float
+    {
+        return $grossPrice / (100 + $taxRate) * $taxRate;
+    }
 }

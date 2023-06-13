@@ -46,6 +46,7 @@ class ConfirmationMailCreatorTest extends TestCase
         static::assertSame('63,89 EUR', $mailData['sAmount']);
         static::assertSame('53,69 EUR', $mailData['sAmountNet']);
         static::assertSame('3,90 EUR', $mailData['sShippingCosts']);
+        static::assertSame('9,58 EUR', $mailData['sTaxRates'][19]);
     }
 
     public function testPrepareOrderDetailsConfirmationMailDataShouldReturnLocalizedBillingSums(): void

@@ -248,6 +248,41 @@ class ConfirmationMailCreator
         return $mailOrderPositions;
     }
 
+    private function getOrderTaxRate(Order $orderModel): array
+    {
+        $details = $this->confirmationMailRepository->getOrderDetailsByOrderId($orderModel->getId());
+
+        $taxRates = [];
+
+        foreach ($details as $detail) {
+            $rate = (float) $detail['tax_rate'];
+            $price = (float) $detail['price'];
+            $quantity = (int) $detail['quantity'];
+
+            $posTaxAmount = $this->taxCalculation->getTaxAmount($price, $rate) * $quantity;
+
+            if (isset($taxRates[$rate])) {
+                $taxRates[$rate] += $posTaxAmount;
+                continue;
+            }
+
+            $taxRates[$rate] = $posTaxAmount;
+        }
+
+        if ($shippingTaxRate = $orderModel->getInvoiceShippingTaxRate()) {
+            $shippingTaxAmount = $this->taxCalculation->getTaxAmount($orderModel->getInvoiceShipping(), $shippingTaxRate);
+
+            if (isset($taxRates[$shippingTaxRate])) {
+                $taxRates[$shippingTaxRate] += $shippingTaxAmount;
+                return $taxRates;
+            }
+
+            $taxRates[$shippingTaxRate] = $shippingTaxAmount;
+        }
+
+        return $taxRates;
+    }
+
     private function setOrderCosts(Order $orderModel, array $orderMail, Locale $localeModel): array
     {
         $orderMail['sCurrency'] = $orderModel->getCurrency();
@@ -274,6 +309,16 @@ class ConfirmationMailCreator
             );
             $orderMail['sShippingCosts'] = $formattedShippingCostsNet . ' ' . $orderModel->getCurrency();
         }
+
+        $orderTaxAmount = $this->getOrderTaxRate($orderModel);
+        $formattedTaxAmount = [];
+
+        foreach ($orderTaxAmount as $tax => $amount) {
+            $formattedAmount = $this->numberFormatterWrapper->format($amount, $localeModel->getLocale());
+            $formattedTaxAmount[$tax] = $formattedAmount . ' ' . $orderModel->getCurrency();
+        }
+
+        $orderMail['sTaxRates'] = $formattedTaxAmount;
 
         return $orderMail;
     }
