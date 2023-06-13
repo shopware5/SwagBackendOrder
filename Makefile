@@ -29,9 +29,9 @@ install-test-environment: ## Installs the plugin test environment
 
 run-tests: ## Execute the php unit tests... (You can use the filter parameter "make run-tests filter=yourFilterPhrase")
 ifeq ($(filter), "default")
-	SHOPWARE_ENV=$(envname) ./../../../vendor/phpunit/phpunit/phpunit --verbose
+	SHOPWARE_ENV=$(envname) ./../../../vendor/phpunit/phpunit/phpunit --verbose  --stderr
 else
-	SHOPWARE_ENV=$(envname) ./../../../vendor/phpunit/phpunit/phpunit --verbose --filter $(filter)
+	SHOPWARE_ENV=$(envname) ./../../../vendor/phpunit/phpunit/phpunit --verbose  --stderr --filter $(filter)
 endif
 
 CS_FIXER_RUN=
