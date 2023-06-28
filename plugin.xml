@@ -5,7 +5,7 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>3.1.1</version>
+    <version>3.1.0</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>https://store.shopware.com</link>
@@ -23,9 +23,11 @@
 
     <changelog version="3.1.0">
         <changes lang="de">
+            PT-13118 - Verbessert Kompatibilität mit anderen Plugins;
             PT-13027 - Die Steuern sind nun im Template der Bestellbestätigungsmail verfügbar;
         </changes>
         <changes lang="en">
+            PT-13118 - Improve compatibility with other plugins;
             PT-13027 - Taxes are now available in the order confirmation email template;
         </changes>
     </changelog>
