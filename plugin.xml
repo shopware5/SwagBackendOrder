@@ -14,9 +14,11 @@
 
     <changelog version="3.1.0">
         <changes lang="de">
+            PT-13118 - Verbessert Kompatibilität mit anderen Plugins;
             PT-13027 - Die Steuern sind nun im Template der Bestellbestätigungsmail verfügbar;
         </changes>
         <changes lang="en">
+            PT-13118 - Improve compatibility with other plugins;
             PT-13027 - Taxes are now available in the order confirmation email template;
         </changes>
     </changelog>

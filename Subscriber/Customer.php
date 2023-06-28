@@ -12,7 +12,7 @@ namespace SwagBackendOrder\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
 use Enlight_Plugin_PluginManager as PluginManager;
-use Shopware\Components\Validator\EmailValidator;
+use Shopware\Components\Validator\EmailValidatorInterface;
 
 class Customer implements SubscriberInterface
 {
@@ -22,7 +22,7 @@ class Customer implements SubscriberInterface
     private $pluginDir;
 
     /**
-     * @var EmailValidator
+     * @var EmailValidatorInterface
      */
     private $emailValidator;
 
@@ -31,7 +31,7 @@ class Customer implements SubscriberInterface
      */
     private $pluginManager;
 
-    public function __construct(string $pluginDir, EmailValidator $emailValidator, PluginManager $pluginManager)
+    public function __construct(string $pluginDir, EmailValidatorInterface $emailValidator, PluginManager $pluginManager)
     {
         $this->pluginDir = $pluginDir;
         $this->emailValidator = $emailValidator;
