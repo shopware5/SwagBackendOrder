@@ -5,12 +5,21 @@
     <label lang="de">Backend Bestellungen</label>
     <label lang="en">Backend orders</label>
 
-    <version>3.1.0</version>
+    <version>3.1.1</version>
     <copyright>(c) by shopware AG</copyright>
     <license>proprietary</license>
     <link>https://store.shopware.com</link>
     <author>shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
+
+    <changelog version="3.1.1">
+        <changes lang="de">
+            PT-13118 - Verwendung des EmailValidatorInterface anstatt des EmailValidator Services, was das Auslösen eines Fehlers verhindert;
+        </changes>
+        <changes lang="en">
+            PT-13118 - Using EmailValidatorInterface instead of the EmailValidator class, which prevents throwing an error;
+        </changes>
+    </changelog>
 
     <changelog version="3.1.0">
         <changes lang="de">
