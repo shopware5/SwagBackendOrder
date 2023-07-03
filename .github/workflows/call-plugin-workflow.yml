@@ -13,15 +13,15 @@ jobs:
         strategy:
             matrix:
                 include:
-                    - shopware-version: '5.6'
-                      php-version: '7.2'
-                      mysql-version: '5.7'
-                    - shopware-version: '5.7'
-                      php-version: '7.4'
-                      mysql-version: '8.0'
-                    - shopware-version: '5.7'
-                      php-version: '8.2'
-                      mysql-version: '8.0'
+                    -   shopware-version: '5.6'
+                        php-version: '7.2'
+                        mysql-version: '5.7'
+                    -   shopware-version: '5.7'
+                        php-version: '7.4'
+                        mysql-version: '8.0'
+                    -   shopware-version: '5.7'
+                        php-version: '8.2'
+                        mysql-version: '8.0'
 
         uses: shopware5/docker-images-testing/.github/workflows/php-unit-tests-shopware.yml@main
         with:
@@ -31,7 +31,13 @@ jobs:
             mysql-version: ${{ matrix.mysql-version }}
 
     call-analyse-workflow:
-      name: Analyse code for SwagBackendOrder
-      uses: shopware5/docker-images-testing/.github/workflows/php-code-analysis.yml@main
-      with:
-        plugin-name: SwagBackendOrder
+        name: Analyse code for SwagBackendOrder
+        uses: shopware5/docker-images-testing/.github/workflows/php-code-analysis.yml@main
+        with:
+            plugin-name: SwagBackendOrder
+
+    call-javascript-workflow:
+        name: Analyse Javascript Code for SwagBackendOrder
+        uses: shopware5/docker-images-testing/.github/workflows/javascript-analysis.yml@main
+        with:
+            plugin-name: SwagBackendOrder
