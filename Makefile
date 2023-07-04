@@ -41,6 +41,8 @@ fix-cs: ## Run the code style fixer
 fix-cs-dry: CS_FIXER_RUN= --dry-run
 fix-cs-dry: fix-cs  ## Run the code style fixer in dry mode
 
+check-js-code: check-eslint-backend
+
 ESLINT_FIX=
 check-eslint-backend:
 	./../../../themes/node_modules/eslint/bin/eslint.js --ignore-path .eslintignore -c ./../../../themes/Backend/.eslintrc.js Resources/views/backend $(ESLINT_FIX)
