@@ -12,6 +12,15 @@
     <author>shopware AG</author>
     <compatibility minVersion="5.6.0" maxVersion="5.99.99"/>
 
+    <changelog version="REPLACE_GLOBALLY_WITH_NEXT_VERSION(3.1.1)">
+        <changes lang="de">
+            PT-12411 - Deaktivierte Zahlungs- und Versandarten werden nicht mehr in den entsprechenden Auswahl-Listen zur Verfügung gestellt;
+        </changes>
+        <changes lang="en">
+            PT-12411 - Deactivated payment and shipping methods aren't available anymore in the corresponding selections;
+        </changes>
+    </changelog>
+
     <changelog version="3.1.0">
         <changes lang="de">
             PT-13118 - Verbessert Kompatibilität mit anderen Plugins;
