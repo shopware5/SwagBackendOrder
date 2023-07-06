@@ -19,8 +19,10 @@ parameters:
     excludePaths:
         - .githooks
         - vendor
-        - Components/Order/B2BOrderService
-        - Tests/Functional/Components/Order/B2BOrderServiceTest.php
     ignoreErrors:
         # Needs some improvements in the doctrine PHPStan extensions: see https://github.com/phpstan/phpstan-doctrine/pull/167
         - '#Cannot call method fetch.*\(\) on Doctrine\\DBAL\\.*\|int#'
+
+        # Needs B2B plugin, which is not available on GitHub
+        - '#.*Shopware\\B2B\\.*#'
+        - '#Service "b2b_.* is not registered in the container#'
