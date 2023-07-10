@@ -12,6 +12,7 @@ namespace SwagBackendOrder\Tests\Functional\Controller;
 
 require_once __DIR__ . '/../../../Controllers/Backend/SwagBackendOrder.php';
 
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Shopware\Components\DependencyInjection\Container;
 use Shopware\Models\Shop\Locale;
@@ -28,6 +29,20 @@ class SwagBackendOrderTest extends TestCase
     use B2bOrderTrait;
 
     private const FORMER_PHPUNIT_FLOAT_EPSILON = 0.0000000001;
+    private const PAYMENT_NAME_NOT_ACTIVE = 'debit';
+    private const DISPATCH_NAME_NOT_ACTIVE = 'Standard Versand';
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->connection = $this->getContainer()->get('dbal_connection');
+    }
 
     public function testCalculateBasket(): void
     {
@@ -482,7 +497,7 @@ class SwagBackendOrderTest extends TestCase
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         static::assertIsString($sql);
-        $this->getContainer()->get('dbal_connection')->executeUpdate($sql);
+        $this->connection->executeUpdate($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
@@ -506,7 +521,7 @@ class SwagBackendOrderTest extends TestCase
     {
         $sql = \file_get_contents(__DIR__ . '/_fixtures/createProduct.sql');
         static::assertIsString($sql);
-        $this->getContainer()->get('dbal_connection')->executeUpdate($sql);
+        $this->connection->executeUpdate($sql);
 
         $request = new \Enlight_Controller_Request_RequestTestCase();
         $request->setParams([
@@ -546,7 +561,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertNotEmpty($viewResult['ordernumber']);
 
         $sql = 'SELECT ean FROM s_order_details WHERE orderID = ?';
-        $result = $this->getContainer()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
+        $result = $this->connection->fetchColumn($sql, [$viewResult['orderId']]);
         static::assertSame('UnitTestEAN', $result);
 
         $b2bResult = $this->getB2bOrder($viewResult['ordernumber']);
@@ -577,7 +592,7 @@ class SwagBackendOrderTest extends TestCase
         static::assertNotEmpty($viewResult['ordernumber']);
 
         $sql = 'SELECT ean FROM s_order_details WHERE orderID = ?';
-        $result = $this->getContainer()->get('dbal_connection')->fetchColumn($sql, [$viewResult['orderId']]);
+        $result = $this->connection->fetchColumn($sql, [$viewResult['orderId']]);
 
         static::assertSame('UnitTestEAN', $result);
 
@@ -605,6 +620,47 @@ class SwagBackendOrderTest extends TestCase
             $currentPosition = $shipping['dispatch']['position'];
             static::assertGreaterThanOrEqual($position, $currentPosition, 'Shipping methods are not sorted ascending');
             $position = $currentPosition;
+        }
+    }
+
+    public function testGetShippingCostsActionShallNotReturnInactiveDispatches(): void
+    {
+        $sql = 'UPDATE s_premium_dispatch SET active = 0 WHERE name = :discountName';
+        $this->connection->executeUpdate($sql, ['discountName' => self::DISPATCH_NAME_NOT_ACTIVE]);
+
+        $view = $this->getView();
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+
+        $container = $this->createContainerWithMockedAuthComponent();
+        $controller = new SwagBackendOrderMock($request, $container, $view);
+
+        $controller->getShippingCostsAction();
+
+        $viewResult = $view->getAssign();
+        static::assertTrue($viewResult['success']);
+        static::assertSame(4, $viewResult['total']);
+
+        foreach ($viewResult['data'] as $dispatch) {
+            static::assertNotSame(self::DISPATCH_NAME_NOT_ACTIVE, $dispatch['name']);
+        }
+    }
+
+    public function testGetPaymentActionShallNotReturnInactivePayments(): void
+    {
+        $view = $this->getView();
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+
+        $container = $this->createContainerWithMockedAuthComponent();
+        $controller = new SwagBackendOrderMock($request, $container, $view);
+
+        $controller->getPaymentAction();
+
+        $viewResult = $view->getAssign();
+        static::assertTrue($viewResult['success']);
+        static::assertSame(4, $viewResult['total']);
+
+        foreach ($viewResult['data'] as $payment) {
+            static::assertNotSame(self::PAYMENT_NAME_NOT_ACTIVE, $payment['name']);
         }
     }
 
@@ -831,6 +887,7 @@ class SwagBackendOrderTest extends TestCase
         $container = $this->createMock(Container::class);
         $container->method('get')->willReturnMap([
             ['swag_backend_order.shipping_translator', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->getContainer()->get('swag_backend_order.shipping_translator')],
+            ['swag_backend_order.payment_translator', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->getContainer()->get('swag_backend_order.payment_translator')],
             ['models', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $this->getContainer()->get('models')],
             ['plugins', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE, $plugins],
         ]);

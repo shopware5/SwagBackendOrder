@@ -221,7 +221,9 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder = $this->get('models')->createQueryBuilder();
         $builder->select(['payment'])
             ->from(Payment::class, 'payment')
-            ->orderBy('payment.active', 'DESC');
+            ->where('payment.active = :isActive')
+            ->setParameter('isActive', 1)
+            ->orderBy('payment.position', 'ASC');
 
         $paymentMethods = $builder->getQuery()->getArrayResult();
 
@@ -255,6 +257,8 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $builder->select(['dispatch', 'shipping'])
             ->from(ShippingCost::class, 'shipping')
             ->innerJoin('shipping.dispatch', 'dispatch')
+            ->where('dispatch.active = :isActive')
+            ->setParameter('isActive', 1)
             ->groupBy('dispatch.id')
             ->orderBy('dispatch.position', 'ASC');
         $shippingCosts = $builder->getQuery()->getArrayResult();
