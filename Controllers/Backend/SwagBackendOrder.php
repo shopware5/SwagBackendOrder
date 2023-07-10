@@ -223,7 +223,7 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
             ->from(Payment::class, 'payment')
             ->where('payment.active = :isActive')
             ->setParameter('isActive', 1)
-            ->orderBy('payment.description', 'ASC');
+            ->orderBy('payment.position', 'ASC');
 
         $paymentMethods = $builder->getQuery()->getArrayResult();
 
