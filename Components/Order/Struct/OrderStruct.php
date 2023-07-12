@@ -112,6 +112,11 @@ class OrderStruct
      */
     private $attributes;
 
+    /**
+     * @var bool
+     */
+    private $isProportionalCalculation = false;
+
     public function getCustomerId(): int
     {
         return $this->customerId;
@@ -311,6 +316,16 @@ class OrderStruct
     public function setTaxFree(bool $taxFree): void
     {
         $this->taxFree = $taxFree;
+    }
+
+    public function isProportionalCalculation(): bool
+    {
+        return $this->isProportionalCalculation;
+    }
+
+    public function setIsProportionalCalculation(bool $proportionalCalculation): void
+    {
+        $this->isProportionalCalculation = $proportionalCalculation;
     }
 
     public function getAttributes(): array

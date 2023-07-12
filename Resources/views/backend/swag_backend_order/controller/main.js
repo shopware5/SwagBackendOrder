@@ -295,6 +295,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.controller.Main', {
          */
         me.orderModel.set('total', me.totalCostsModel.get('total'));
         me.orderModel.set('totalWithoutTax', me.totalCostsModel.get('totalWithoutTax'));
+        me.orderModel.set('proportionalTaxCalculation', me.totalCostsModel.get('proportionalTaxCalculation'));
 
         me.createBackendOrderStore.sync({
             success: function (response) {

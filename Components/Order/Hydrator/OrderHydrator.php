@@ -56,6 +56,7 @@ class OrderHydrator
         $orderStruct->setShippingCostsNet((float) $data['shippingCostsNet']);
         $orderStruct->setShippingCosts((float) $data['shippingCosts']);
         $orderStruct->setShippingCostsTaxRate((float) $data['shippingCostsTaxRate']);
+        $orderStruct->setIsProportionalCalculation((bool) $data['proportionalTaxCalculation']);
 
         $orderStruct->setAttributes($data['orderAttribute'][0]);
 
