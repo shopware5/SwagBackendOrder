@@ -62,6 +62,11 @@ class Shopware_Controllers_Backend_SwagBackendOrder extends Shopware_Controllers
         $customerId = (int) $this->Request()->get('searchParam');
         $result = $repository->get($customerId);
 
+        foreach ($result['address'] as &$address) {
+            $address['countryName'] = $address['country']['name'];
+            $address['stateName'] = $address['state']['name'];
+        }
+
         $this->view->assign([
             'data' => $result,
             'total' => \count($result),

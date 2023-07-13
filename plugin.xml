@@ -14,9 +14,11 @@
 
     <changelog version="REPLACE_GLOBALLY_WITH_NEXT_VERSION(3.1.1)">
         <changes lang="de">
+            PT-12385 - Land und Bundeland werden nun auch in der Addressauswahl angezeigt;
             PT-12411 - Deaktivierte Zahlungs- und Versandarten werden nicht mehr in den entsprechenden Auswahl-Listen zur Verfügung gestellt;
         </changes>
         <changes lang="en">
+            PT-12385 - Country and state are now also displayed in the address selection;
             PT-12411 - Deactivated payment and shipping methods aren't available anymore in the corresponding selections;
         </changes>
     </changelog>

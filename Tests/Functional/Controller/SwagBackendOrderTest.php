@@ -452,6 +452,13 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['firstname'], $result['firstname']);
         static::assertSame($expectedUser['lastname'], $result['lastname']);
         static::assertSame($expectedUser['number'], $result['number']);
+
+        static::assertIsArray($result['address']);
+        static::assertCount(2, $result['address']);
+        foreach ($result['address'] as $address) {
+            static::assertArrayHasKey('countryName', $address);
+            static::assertArrayHasKey('stateName', $address);
+        }
     }
 
     public function testGetProducts(): void
