@@ -152,7 +152,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
 
     createShippingAddressComboTpl: function () {
         var me = this;
-
+        console.log('asd')
         return new Ext.XTemplate(
             '{literal}<tpl for=".">',
             '<div class= "x-combo-list-item x-boundlist-item">',
@@ -166,11 +166,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             me.snippets.salutation.miss + ' ',
             '</tpl>',
             '{firstname} {lastname},<br/>{zipcode} {city},<br/>{street}',
-            '<tpl if="state">',
-            ',<br/>{state}',
+            '<tpl if="stateName">',
+            ',<br/>{stateName}',
             '</tpl>',
-            '<tpl if="country">',
-            ',<br/>{country}',
+            '<tpl if="countryName">',
+            ',<br/>{countryName}',
             '</tpl>',
             '</div>',
             '</tpl>{/literal}'
@@ -215,10 +215,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             '<span>{city}</span>',
             '</p>',
             '<p>',
-            '<span>{state}</span>',
+            '<span>{stateName}</span>',
             '</p>',
             '<p>',
-            '<span>{country}</span>',
+            '<span>{countryName}</span>',
             '</p>',
             '</div>',
             '</div>',

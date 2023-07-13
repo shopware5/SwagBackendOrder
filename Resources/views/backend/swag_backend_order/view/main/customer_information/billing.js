@@ -43,6 +43,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
         me.customerStore.on('load', function () {
             if (Ext.isObject(me.customerStore) && me.customerStore.count() == 1) {
                 me.billingStore = me.customerStore.getAt(0).billing();
+                // TODO: REMOVE AFTER DEBUG
+                console.log(me.billingStore);
+                // TODO: REMOVE AFTER DEBUG
                 me.billingAddressComboBox.bindStore(me.billingStore);
 
                 me.resetFields();
@@ -87,6 +90,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             listeners: {
                 'select': function (comboBox, record) {
                     me.fireEvent('selectBillingAddress', record[0], me);
+
+                    // TODO: REMOVE AFTER DEBUG
+                    console.log(record);
+                    // TODO: REMOVE AFTER DEBUG
 
                     billingAddressTemplateStore = Ext.create('Ext.data.Store', {
                         model: 'Shopware.apps.SwagBackendOrder.model.Address',
@@ -133,11 +140,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             me.snippets.salutation.miss + ' ',
             '</tpl>',
             '{firstname} {lastname},<br/>{zipcode} {city},<br/>{street}',
-            '<tpl if="state">',
-            ',<br/>{state}',
+            '<tpl if="stateName">',
+            ',<br/>{stateName}',
             '</tpl>',
-            '<tpl if="country">',
-            ',<br/>{country}',
+            '<tpl if="countryName">',
+            ',<br/>{countryName}',
             '</tpl>',
             '</div>',
             '</tpl>{/literal}'
@@ -187,10 +194,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Billing
             '<span>{city}</span>',
             '</p>',
             '<p>',
-            '<span>{state}</span>',
+            '<span>{stateName}</span>',
             '</p>',
             '<p>',
-            '<span>{country}</span>',
+            '<span>{countryName}</span>',
             '</p>',
             '</div>',
             '</div>',
