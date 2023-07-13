@@ -445,6 +445,11 @@ class SwagBackendOrderTest extends TestCase
             'number' => '20001',
         ];
 
+        $expectedAddresses = [
+            ['countryName' => 'Deutschland', 'stateName' => 'Nordrhein-Westfalen'],
+            ['countryName' => 'Deutschland', 'stateName' => null],
+        ];
+
         $result = $view->getAssign('data');
 
         static::assertTrue($view->getAssign('success'));
@@ -452,6 +457,15 @@ class SwagBackendOrderTest extends TestCase
         static::assertSame($expectedUser['firstname'], $result['firstname']);
         static::assertSame($expectedUser['lastname'], $result['lastname']);
         static::assertSame($expectedUser['number'], $result['number']);
+
+        static::assertIsArray($result['address']);
+        static::assertCount(2, $result['address']);
+        foreach ($result['address'] as $index => $address) {
+            static::assertArrayHasKey('countryName', $address);
+            static::assertArrayHasKey('stateName', $address);
+            static::assertSame($expectedAddresses[$index]['countryName'], $address['countryName']);
+            static::assertSame($expectedAddresses[$index]['stateName'], $address['stateName']);
+        }
     }
 
     public function testGetProducts(): void

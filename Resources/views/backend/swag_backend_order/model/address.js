@@ -25,6 +25,8 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Address', {
         { name: 'additionalAddressLine2', type: 'string' },
         { name: 'salutationSnippet', type: 'string' },
         { name: 'countryId', type: 'int', useNull: true },
+        { name: 'countryName', type: 'string' },
+        { name: 'stateName', type: 'string' },
         {
             name: 'displayField',
             type: 'string',
@@ -38,7 +40,6 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.Address', {
             }
         }
     ]
-
 });
 //{/block}
 
