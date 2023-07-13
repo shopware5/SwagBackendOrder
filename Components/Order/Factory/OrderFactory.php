@@ -279,6 +279,7 @@ class OrderFactory
         }
 
         $billing->setCustomer($customer);
+        $billing->setNumber($customer->getNumber());
 
         return $billing;
     }

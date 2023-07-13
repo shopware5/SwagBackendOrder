@@ -60,6 +60,7 @@ class OrderFactoryTest extends TestCase
         static::assertInstanceOf(Address::class, $defaultBillingAddress);
         static::assertSame(1, $defaultBillingAddress->getId());
         static::assertSame('20001', $result->getCustomer()->getNumber());
+        static::assertSame('20001', $result->getNumber());
         static::assertSame('Musterhausen', $result->getCity());
     }
 
