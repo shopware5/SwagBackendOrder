@@ -28,13 +28,14 @@ class PaymentTranslator
 
         $paymentId = $paymentMethod['id'];
 
-        if (!\is_null($paymentTranslations[$paymentId]['description'])) {
+        if ($paymentTranslations[$paymentId]['description'] !== null) {
             $paymentMethod['description'] = $paymentTranslations[$paymentId]['description'];
         }
 
-        // for the confirmation mail template
-        $paymentMethod['additionaldescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
-        $paymentMethod['additionalDescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
+        if ($paymentTranslations[$paymentId]['additionalDescription'] !== null) {
+            $paymentMethod['additionaldescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
+            $paymentMethod['additionalDescription'] = $paymentTranslations[$paymentId]['additionalDescription'];
+        }
 
         return $paymentMethod;
     }
