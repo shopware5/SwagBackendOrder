@@ -15,9 +15,11 @@
     <changelog version="REPLACE_GLOBALLY_WITH_NEXT_VERSION(3.1.1)">
         <changes lang="de">
             PT-12411 - Deaktivierte Zahlungs- und Versandarten werden nicht mehr in den entsprechenden Auswahl-Listen zur Verfügung gestellt;
+            PT-12831 - Beim erstellen einer Bestellung wird nun auch die Kundennummer an der Rechnungsadresse gespeichert;
         </changes>
         <changes lang="en">
             PT-12411 - Deactivated payment and shipping methods aren't available anymore in the corresponding selections;
+            PT-12831 - When creating an order, the customer number is now stored at the billing address;
         </changes>
     </changelog>
 
