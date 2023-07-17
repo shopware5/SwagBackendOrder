@@ -28,12 +28,14 @@ class ShippingTranslator
 
         $dispatchId = $shipping['id'];
 
-        if (!\is_null($shippingTranslations[$dispatchId]['dispatch_name'])) {
+        if ($shippingTranslations[$dispatchId]['dispatch_name'] !== null) {
             $shipping['name'] = $shippingTranslations[$dispatchId]['dispatch_name'];
             $shipping['dispatch_name'] = $shippingTranslations[$dispatchId]['dispatch_name'];
         }
 
-        $shipping['description'] = $shippingTranslations[$dispatchId]['description'];
+        if ($shippingTranslations[$dispatchId]['description'] !== null) {
+            $shipping['description'] = $shippingTranslations[$dispatchId]['description'];
+        }
 
         return $shipping;
     }
