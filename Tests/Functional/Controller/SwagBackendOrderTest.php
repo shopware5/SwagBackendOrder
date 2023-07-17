@@ -678,6 +678,37 @@ class SwagBackendOrderTest extends TestCase
         }
     }
 
+    public function testCreateOrderActionWithProportionateTaxesEnabledWillSetFlagInTheDatabase(): void
+    {
+        $this->enableProportionateTaxes();
+
+        $params = require __DIR__ . '/_fixtures/paramsCreateOrder.php';
+        static::assertIsArray($params);
+        $request = new \Enlight_Controller_Request_RequestTestCase();
+        $request->setParams($params);
+
+        $view = $this->getView();
+        $controller = $this->getControllerMock($request, $view);
+
+        $controller->createOrderAction();
+        $result = $view->getAssign();
+
+        static::assertTrue($result['success']);
+
+        $sql = 'SELECT `is_proportional_calculation` FROM `s_order` WHERE id = ' . $result['orderId'];
+        static::assertSame('1', $this->connection->fetchColumn($sql));
+    }
+
+    private function enableProportionateTaxes(): void
+    {
+        $config = $this->getContainer()->get('config');
+        $this->getContainer()->get('config_writer')->save('proportionalTaxCalculation', true);
+        $this->getContainer()->get('cache')->clean();
+        $config->setShop($this->getContainer()->get('shop'));
+
+        static::assertTrue((bool) $config->get('proportionalTaxCalculation'));
+    }
+
     private function getDemoData(): array
     {
         return [
