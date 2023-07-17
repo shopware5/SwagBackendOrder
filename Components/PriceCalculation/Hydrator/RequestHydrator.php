@@ -36,7 +36,7 @@ class RequestHydrator
             $positionsArray = \json_decode($data['positions'], true);
             $positions = [];
             foreach ($positionsArray as $position) {
-                $positions[] = $this->positionHydrator->hydrate($position, (int) $data['billingAddressId']);
+                $positions[] = $this->positionHydrator->hydrate($position, (int) $data['shippingAddressId']);
             }
             $requestStruct->setPositions($positions);
         }

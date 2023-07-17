@@ -39,35 +39,35 @@ class PositionHydrator
     /**
      * @param array<string, mixed> $data
      */
-    public function hydrate(array $data, int $billingAddressId = 0): PositionStruct
+    public function hydrate(array $data, int $shippingAddressId = 0): PositionStruct
     {
         $position = new PositionStruct();
         $position->setPrice((float) $data['price']);
         $position->setQuantity((int) $data['quantity']);
         $position->setTotal((float) $data['total']);
-        $position->setTaxRate($this->calculateTax((float) $data['taxRate'], $billingAddressId, (int) $data['taxId']));
+        $position->setTaxRate($this->calculateTax((float) $data['taxRate'], $shippingAddressId, (int) $data['taxId']));
         $position->setIsDiscount((bool) $data['isDiscount']);
         $position->setDiscountType((int) $data['discountType']);
 
         return $position;
     }
 
-    private function calculateTax(float $taxRate, int $billingAddressId, int $taxId): float
+    private function calculateTax(float $taxRate, int $shippingAddressId, int $taxId): float
     {
-        if ($billingAddressId === 0) {
+        if ($shippingAddressId === 0) {
             return $taxRate;
         }
 
-        $billingAddress = $this->modelManager->getRepository(Address::class)->find($billingAddressId);
-        if (!$billingAddress instanceof Address) {
+        $shippingAddress = $this->modelManager->getRepository(Address::class)->find($shippingAddressId);
+        if (!$shippingAddress instanceof Address) {
             return $taxRate;
         }
 
-        $shop = $billingAddress->getCustomer()->getShop();
+        $shop = $shippingAddress->getCustomer()->getShop();
         $areaId = null;
         $countryId = null;
 
-        $country = $billingAddress->getCountry();
+        $country = $shippingAddress->getCountry();
         if ($country instanceof Country) {
             $countryId = $country->getId();
 
@@ -85,6 +85,7 @@ class PositionHydrator
             $areaId,
             $countryId
         );
+
         $taxRule = $shopContext->getTaxRule($taxId);
         if ($taxRule instanceof TaxStruct) {
             return (float) $taxRule->getTax();

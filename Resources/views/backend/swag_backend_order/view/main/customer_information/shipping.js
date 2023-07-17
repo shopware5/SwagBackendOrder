@@ -51,9 +51,9 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
                 me.shippingAddressComboBox.setValue('');
                 me.remove('shippingDataView', true);
                 me.doLayout();
-
-                me.fireEvent('selectBillingAsShippingAddress');
             }
+
+            me.fireEvent('selectBillingAsShippingAddress', me.billingAsShippingCheckbox.getValue());
         });
 
         me.callParent(arguments);
@@ -87,7 +87,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
             flex: 1,
             disabled: true,
             displayField: 'displayField',
-            valueField: 'displayField',
+            valueField: 'id',
             listConfig: {
                 maxHeight: 200
             },
@@ -141,7 +141,10 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.CustomerInformation.Shippin
                         me.shippingAddressComboBox.disable();
                     } else {
                         me.shippingAddressComboBox.enable();
-                        me.shippingAddressComboBox.setValue(me.shippingStore.getAt(0).get(me.shippingAddressComboBox.valueField));
+
+                        if (me.shippingStore) {
+                            me.shippingAddressComboBox.setValue(me.shippingStore.getAt(0).get(me.shippingAddressComboBox.valueField));
+                        }
                     }
                 }
             }
