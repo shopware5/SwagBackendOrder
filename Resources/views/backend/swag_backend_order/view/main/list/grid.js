@@ -13,6 +13,29 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
 
     renderTo: Ext.getBody(),
 
+    priceFieldEditorKeyMap: [
+        Ext.EventObject.ZERO,
+        Ext.EventObject.ONE,
+        Ext.EventObject.TWO,
+        Ext.EventObject.THREE,
+        Ext.EventObject.FOUR,
+        Ext.EventObject.FIVE,
+        Ext.EventObject.SIX,
+        Ext.EventObject.SEVEN,
+        Ext.EventObject.EIGHT,
+        Ext.EventObject.NINE,
+        Ext.EventObject.NUM_ZERO,
+        Ext.EventObject.NUM_ONE,
+        Ext.EventObject.NUM_TWO,
+        Ext.EventObject.NUM_THREE,
+        Ext.EventObject.NUM_FOUR,
+        Ext.EventObject.NUM_FIVE,
+        Ext.EventObject.NUM_SIX,
+        Ext.EventObject.NUM_SEVEN,
+        Ext.EventObject.NUM_EIGHT,
+        Ext.EventObject.NUM_NINE
+    ],
+
     snippets: {
         title: '{s namespace="backend/swag_backend_order/view/grid" name="swag_backend_order/position/grid/title"}Positions{/s}',
         columns: {
@@ -47,7 +70,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         }
     },
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         me.title = me.snippets.title;
@@ -56,7 +79,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             clicksToMoveEditor: 2,
             autoCancel: true,
             listeners: {
-                beforeEdit: function (editor, event) {
+                beforeEdit: function(editor, event) {
                     var record = event.record;
 
                     // Discounts do not support inline editing!
@@ -87,7 +110,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      *
      * @return void
      */
-    registerEvents: function () {
+    registerEvents: function() {
         this.addEvents(
             'addPosition',
 
@@ -125,28 +148,28 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         );
     },
 
-    traceGridEvents: function () {
+    traceGridEvents: function() {
         var me = this;
 
         /**
          * initializes the product search fields
          */
-        me.articleNumberSearch.on('valueselect', function (grid, record) {
+        me.articleNumberSearch.on('valueselect', function(grid, record) {
             me.fireEvent('articleNumberSelect', me.rowEditing, record);
         });
 
-        me.articleNameSearch.on('valueselect', function (grid, record) {
+        me.articleNameSearch.on('valueselect', function(grid, record) {
             me.fireEvent('articleNameSelect', me.rowEditing, record);
         });
 
         /**
          * deletes new rows if editing will be cancelled
          */
-        me.rowEditing.on('canceledit', function (grid, eOpts) {
+        me.rowEditing.on('canceledit', function(grid, eOpts) {
             me.fireEvent('cancelEdit', grid, eOpts);
         });
 
-        me.rowEditing.on('edit', function (editor, e) {
+        me.rowEditing.on('edit', function(editor, e) {
             var productId,
                 positionModel,
                 productPosition,
@@ -168,10 +191,11 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
 
                     // if there are block prices for the product, set a new price
                     blockPrices = productModel.get('blockPrices');
-                    if (blockPrices !== '') {
+
+                    if (blockPrices !== '' && !me.isManualPriceEdit) {
                         blockPrices = Ext.JSON.decode(blockPrices);
                         quantity = positionModel.get('quantity');
-                        Ext.iterate(blockPrices, function (from, price) {
+                        Ext.iterate(blockPrices, function(from, price) {
                             from = parseInt(from, 10);
                             if (quantity >= from) {
                                 if (me.orderModel.get('taxFree') || me.orderModel.get('displayNet')) {
@@ -188,23 +212,27 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             me.fireEvent('calculateBasket');
         });
 
-        me.rowEditing.on('validateedit', function (editor, e) {
+        me.rowEditing.on('validateedit', function(editor, e) {
             var record = me.store.getAt(e.rowIdx);
 
             Ext.Ajax.request({
                 url: '{url action="validateEdit"}',
                 params: e.newValues,
-                success: function (response) {
+                success: function(response) {
                     var responseObj = Ext.JSON.decode(response.responseText),
                         message = '';
 
                     if (!responseObj.success) {
-                        Ext.Array.forEach(responseObj.violations, function (item) {
+                        Ext.Array.forEach(responseObj.violations, function(item) {
                             message += item + '<br />';
                         });
 
                         Ext.Msg.alert('{s namespace="backend/swag_backend_order/validations" name="title"}{/s}', message);
                         editor.startEdit(record, 0);
+                    }
+
+                    if (responseObj.success) {
+                        me.isManualPriceEdit = false;
                     }
                 }
             });
@@ -215,7 +243,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      * returns the columns of the grid
      * @returns { Array }
      */
-    getColumns: function () {
+    getColumns: function() {
         var me = this;
         me.articleStore = Ext.create('Shopware.apps.SwagBackendOrder.store.Article');
         me.articleNumberSearch = me.createArticleSearch(me.articleStore, 'number', 'articleNumber', 'number');
@@ -250,20 +278,16 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 header: me.snippets.columns.price,
                 dataIndex: 'price',
                 flex: 1,
-                renderer: function (value, metaData, record) {
+                renderer: function(value, metaData, record) {
                     return me.renderPrice(value, record);
                 },
-                editor: {
-                    xtype: 'numberfield',
-                    allowBlank: false,
-                    minValue: 0
-                }
+                editor: me.createPriceFieldEditor()
             },
             {
                 header: me.snippets.columns.total,
                 dataIndex: 'total',
                 flex: 1,
-                renderer: function (value, metaData, record, row, col, store) {
+                renderer: function(value, metaData, record, row, col, store) {
                     var total = me.renderTotal(value, record);
                     store.getAt(row).set('total', total);
 
@@ -274,7 +298,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 header: me.snippets.columns.tax,
                 dataIndex: 'taxRate',
                 flex: 1,
-                renderer: function (value, metaData, record, row) {
+                renderer: function(value, metaData, record, row) {
                     return me.renderTaxRate(value, row);
                 },
                 editor: {
@@ -304,13 +328,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 items: [
                     {
                         iconCls: 'sprite-minus-circle-frame',
-                        handler: function (view, rowIndex) {
+                        handler: function(view, rowIndex) {
                             var articleName = me.store.getAt(rowIndex).get('articleName');
 
                             Ext.MessageBox.confirm(
                                 me.snippets.confirmMsg.deleteRowTitle,
                                 me.snippets.confirmMsg.deleteRowMsg1 + ' <b>' + articleName + '</b> ' + me.snippets.confirmMsg.deleteRowMsg2,
-                                function (button) {
+                                function(button) {
                                     if (button === 'yes') {
                                         me.store.removeAt(rowIndex);
                                     }
@@ -320,7 +344,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                     },
                     {
                         iconCls: 'sprite-inbox',
-                        handler: function (view, rowIndex) {
+                        handler: function(view, rowIndex) {
                             var store = view.getStore(),
                                 record = store.getAt(rowIndex);
 
@@ -332,20 +356,38 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         ];
     },
 
+    createPriceFieldEditor: function() {
+        var me = this;
+
+        return Ext.create('Ext.form.field.Number', {
+            allowBlank: false,
+            minValue: 0,
+            name: 'priceField',
+            enableKeyEvents: true,
+            listeners: {
+                keydown: function(field, event) {
+                    if (Ext.Array.contains(me.priceFieldEditorKeyMap, event.getCharCode())) {
+                        me.isManualPriceEdit = true;
+                    }
+                }
+            }
+        });
+    },
+
     /**
      * creates toolbar items and return the toolbar for the position grid
      * it contains the add and delete button
      *
      * @returns { Ext.toolbar.Toolbar }
      */
-    createToolbarItems: function () {
+    createToolbarItems: function() {
         var me = this;
 
         me.addPositionButton = Ext.create('Ext.button.Button', {
             iconCls: 'sprite-plus-circle-frame',
             text: me.snippets.toolbar.add,
             action: 'addPosition',
-            handler: function () {
+            handler: function() {
                 me.rowEditing.cancelEdit();
 
                 var r = Ext.create('Shopware.apps.SwagBackendOrder.model.Position', {
@@ -364,7 +406,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
             iconCls: 'sprite-minus-circle-frame',
             text: me.snippets.toolbar.delete,
             disabled: true,
-            handler: function () {
+            handler: function() {
                 var selModel = me.getSelectionModel();
                 var sel = selModel.selected.items;
 
@@ -379,7 +421,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
                 Ext.MessageBox.confirm(
                     title,
                     message,
-                    function (button) {
+                    function(button) {
                         if (button === 'yes') {
                             for (var i = 0; i < sel.length; i++) {
                                 me.store.remove(sel[i]);
@@ -408,7 +450,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
         });
     },
 
-    showDiscountModal: function () {
+    showDiscountModal: function() {
         Ext.create('Shopware.apps.SwagBackendOrder.view.main.discount.Window').show();
     },
 
@@ -417,13 +459,13 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      *
      * @return { Ext.selection.CheckboxModel } grid selection model
      */
-    getGridSelModel: function () {
+    getGridSelModel: function() {
         var me = this;
 
         return Ext.create('Ext.selection.CheckboxModel', {
             listeners: {
                 // Unlocks the save button if the user has checked at least one checkbox
-                selectionchange: function (sm, selections) {
+                selectionchange: function(sm, selections) {
                     me.deletePositionsButton.setDisabled(selections.length === 0);
                 }
             }
@@ -437,7 +479,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      * @param { string } displayField
      * @return { Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField }
      */
-    createArticleSearch: function (store, returnValue, name, displayField) {
+    createArticleSearch: function(store, returnValue, name, displayField) {
         displayField = displayField || 'name';
 
         return Ext.create('Shopware.apps.SwagBackendOrder.view.main.list.ArticleSearchField', {
@@ -457,7 +499,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      *
      * @returns string
      */
-    renderTotal: function (value, record) {
+    renderTotal: function(value, record) {
         var me = this,
             currencyStore, currencyStoreIndex, symbol, total;
 
@@ -485,7 +527,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      *
      * @returns string
      */
-    renderPrice: function (value, record) {
+    renderPrice: function(value, record) {
         var me = this,
             currencyStore, currencyStoreIndex, symbol;
 
@@ -511,7 +553,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.view.main.list.Grid', {
      * @param row
      * @returns int
      */
-    renderTaxRate: function (value, row) {
+    renderTaxRate: function(value, row) {
         var me = this,
             taxIndex = me.taxStore.findExact('tax', value),
             taxRate = value,
