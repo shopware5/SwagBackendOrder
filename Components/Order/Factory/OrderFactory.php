@@ -97,6 +97,8 @@ class OrderFactory
         $order->setInvoiceAmount($orderStruct->getTotal());
         $order->setInvoiceAmountNet($orderStruct->getTotalWithoutTax());
 
+        $order->setIsProportionalCalculation($orderStruct->isProportionalCalculation());
+
         $order->setShop($customer->getShop());
 
         $order->setOrderTime(new \DateTime());
