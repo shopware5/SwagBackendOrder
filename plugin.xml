@@ -18,6 +18,7 @@
             PT-12385 - Land und Bundesland werden nun auch in der Adressauswahl angezeigt;
             PT-12411 - Deaktivierte Zahlungs- und Versandarten werden nicht mehr in den entsprechenden Auswahl-Listen zur Verfügung gestellt;
             PT-12676 - Ändern von Preisen wieder möglich, wenn das Produkt Staffelpreise hat;
+            PT-12781 - Steuern werden nun anhand der Lieferadresse berechnet;
             PT-12831 - Beim erstellen einer Bestellung wird nun auch die Kundennummer an der Rechnungsadresse gespeichert;
             PT-13078 - Rechnung einer Bestellung mit aktivierter Option für "anteilige Steuerberechnung" wird jetzt korrekt erstellt;
         </changes>
@@ -26,6 +27,7 @@
             PT-12385 - Country and state are now also displayed in the address selection;
             PT-12411 - Deactivated payment and shipping methods aren't available anymore in the corresponding selections;
             PT-12676 - Changing prices possible again if the product has graduated prices;
+            PT-12781 - Taxes are now calculated based on the shipping address;
             PT-12831 - When creating an order, the customer number is now stored at the billing address;
             PT-13078 - Invoice of an order with activated option for "Proportional tax calculation" is now created correctly;
         </changes>

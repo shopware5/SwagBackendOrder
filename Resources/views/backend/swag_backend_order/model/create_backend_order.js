@@ -33,6 +33,7 @@ Ext.define('Shopware.apps.SwagBackendOrder.model.CreateBackendOrder', {
         { name: 'sendMail', type: 'boolean' },
         { name: 'taxFree', type: 'boolean' },
         { name: 'proportionalTaxCalculation', type: 'boolean' },
+        { name: 'billingAsShipping', type: 'boolean' },
     ],
 
     hasMany: [
