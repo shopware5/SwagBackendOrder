@@ -6,6 +6,8 @@ on:
     push:
         branches:
             - main
+    schedule:
+        -   cron: '01 01 * * *'
 
 jobs:
     call-test-workflow:
